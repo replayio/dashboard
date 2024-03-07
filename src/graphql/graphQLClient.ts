@@ -4,10 +4,10 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 
-export let client: ApolloClient<NormalizedCacheObject>;
+export let graphQLClient: ApolloClient<NormalizedCacheObject>;
 
-export function configureClient(accessToken: string) {
-  client = new ApolloClient({
+export function configureGraphQLClient(accessToken: string) {
+  graphQLClient = new ApolloClient({
     uri: "https://api.replay.io/v1/graphql",
     cache: new InMemoryCache(),
     headers: {

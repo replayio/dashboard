@@ -1,7 +1,8 @@
-import { configureClient } from "@/graphql/client";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { configureGraphQLClient } from "@/graphql/graphQLClient";
+import { getAccessToken, getSession, handleLogin } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import assert from "assert";
+import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
 
 export const metadata = {
@@ -20,13 +21,17 @@ export default function RootLayout({ children }: PropsWithChildren) {
   );
 }
 
-// TODO Do I need to pass through access token to the protocl?
-// "Authentication.setAccessToken"
 async function Authenticated({ children }: PropsWithChildren) {
+  const session = await getSession();
+  if (session == null) {
+    redirect("/api/auth/login");
+    return null;
+  }
+
   const { accessToken } = await getAccessToken();
   assert(accessToken, "accessToken is required");
 
-  configureClient(accessToken);
+  configureGraphQLClient(accessToken);
 
   return <>{children}</>;
 }
