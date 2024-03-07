@@ -5,6 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev -p 8080",
+    "graphql": "pnpm graphql-schema && pnpm graphql-types",
     "graphql-schema": "gq https://graphql.replay.io/v1/graphql -H \"X-Hasura-Admin-Secret: $HASURA_KEY\" --introspect > schema.graphql",
     "graphql-types": "graphql-codegen --config codegen.ts",
     "lint": "next lint",

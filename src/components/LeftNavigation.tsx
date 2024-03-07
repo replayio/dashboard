@@ -1,15 +1,25 @@
 import { getNonPendingWorkspaces } from "@/graphql/queries/getNonPendingWorkspaces";
+import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 
 export async function LeftNavigation() {
   const workspaces = await getNonPendingWorkspaces();
+  const user = await getCurrentUser();
+  console.log(user);
 
   return (
-    <ul>
+    <div className="flex flex-col h-full px-2 py-1">
       {workspaces.map(({ id, isTest, name }) => (
-        <li key={id}>
+        <div key={id}>
           {isTest} {name}
-        </li>
+        </div>
       ))}
-    </ul>
+      <div className="grow" />
+      <div className="flex flex-row items-center gap-2">
+        {user.picture && (
+          <img src={user.picture} className="rounded-full w-8 h-8" />
+        )}
+        <div>{user.name}</div>
+      </div>
+    </div>
   );
 }

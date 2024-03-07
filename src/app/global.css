@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-xl;
+    @apply my-4;
+  }
+  h2 {
+    @apply text-lg;
+    @apply my-4;
+  }
+  p {
+    @apply mb-4;
+  }
+  a {
+    @apply text-blue-600;
+  }
+}
+
+:root {
+  font-size: 14px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}

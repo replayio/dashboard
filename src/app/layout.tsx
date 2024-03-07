@@ -5,6 +5,8 @@ import assert from "assert";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
 
+import "./global.css";
+
 export const metadata = {
   title: "Replay",
 };
