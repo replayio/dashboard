@@ -6,7 +6,7 @@ export async function LeftNavigation() {
   const user = await getCurrentUser();
 
   return (
-    <div className="flex flex-col h-full px-2 py-1">
+    <nav className="flex flex-col h-full px-2 py-1 bg-slate-800 text-white overflow-auto">
       {workspaces.map(({ id, isTest, name }) => (
         <div key={id}>
           {isTest} {name}
@@ -19,6 +19,6 @@ export async function LeftNavigation() {
         )}
         <div>{user.name}</div>
       </div>
-    </div>
+    </nav>
   );
 }

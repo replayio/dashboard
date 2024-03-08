@@ -2,7 +2,7 @@ import {
   GetWorkspaceRecordingsQuery,
   GetWorkspaceRecordingsQueryVariables,
 } from "@/graphql/generated/graphql";
-import { graphQLClient } from "@/graphql/graphQLClient";
+import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { WorkspaceRecording } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import assert from "assert";
@@ -11,6 +11,7 @@ export async function getWorkspaceRecordings(
   id: string,
   filter: string = ""
 ): Promise<WorkspaceRecording[]> {
+  const graphQLClient = await getGraphQLClient();
   const response = await graphQLClient.query<
     GetWorkspaceRecordingsQuery,
     GetWorkspaceRecordingsQueryVariables

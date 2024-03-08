@@ -1,12 +1,10 @@
-import { graphQLClient } from "@/graphql/graphQLClient";
-import {
-  GetNonPendingWorkspacesQuery,
-  GetUserQuery,
-} from "@/graphql/generated/graphql";
+import { GetUserQuery } from "@/graphql/generated/graphql";
+import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { gql } from "@apollo/client";
 import assert from "assert";
 
 export async function getCurrentUser() {
+  const graphQLClient = await getGraphQLClient();
   const response = await graphQLClient.query<GetUserQuery>({
     query: gql`
       query GetUser {

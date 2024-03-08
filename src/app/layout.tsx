@@ -1,10 +1,6 @@
-import { configureGraphQLClient } from "@/graphql/graphQLClient";
-import { getAccessToken, getSession, handleLogin } from "@auth0/nextjs-auth0";
+import { LeftNavigation } from "@/components/LeftNavigation";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import assert from "assert";
-import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
-
 import "./global.css";
 
 export const metadata = {
@@ -15,25 +11,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <UserProvider>
-        <Authenticated>
-          <body>{children}</body>
-        </Authenticated>
+        <body className="flex h-screen w-screen flex-row bg-slate-900">
+          <LeftNavigation />
+          <main className="p-4 grow overflow-auto">{children}</main>
+        </body>
       </UserProvider>
     </html>
   );
-}
-
-async function Authenticated({ children }: PropsWithChildren) {
-  const session = await getSession();
-  if (session == null) {
-    redirect("/api/auth/login");
-    return null;
-  }
-
-  const { accessToken } = await getAccessToken();
-  assert(accessToken, "accessToken is required");
-
-  configureGraphQLClient(accessToken);
-
-  return <>{children}</>;
 }
