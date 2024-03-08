@@ -12,11 +12,13 @@ export function LeftNavigationLink({
   isTest: boolean;
   name: string;
 }) {
-  const { id: currentId } = useParams();
+  const { id: currentId = "" } = useParams();
 
   const isActive =
     id ===
-    decodeURIComponent(Array.isArray(currentId) ? currentId[0] : currentId);
+    decodeURIComponent(
+      Array.isArray(currentId) ? currentId[0] ?? "" : currentId
+    );
 
   return (
     <Link
