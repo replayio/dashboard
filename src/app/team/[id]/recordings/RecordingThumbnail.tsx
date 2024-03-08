@@ -15,6 +15,10 @@ export function RecordingThumbnail({ recordingId }: { recordingId: string }) {
 function RecordingThumbnailSuspends({ recordingId }: { recordingId: string }) {
   const thumbnail = useRecordingThumbnail(recordingId);
   return thumbnail ? (
-    <img className="w-full h-9 rounded-sm" src={thumbnail} />
+    <img
+      alt="Recording thumbnail"
+      className="w-full h-9 rounded-sm"
+      src={thumbnail}
+    />
   ) : null;
 }

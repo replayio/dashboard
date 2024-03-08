@@ -27,7 +27,11 @@ export async function NavList() {
       <div className="grow" />
       <div className="flex flex-row items-center gap-2 bg-slate-700 px-2 py-1">
         {user.picture && (
-          <img src={user.picture} className="rounded-full w-8 h-8" />
+          <img
+            alt={`${user.name} avatar`}
+            className="rounded-full w-8 h-8"
+            src={user.picture}
+          />
         )}
         <div>{user.name}</div>
       </div>
