@@ -1,11 +1,14 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 
 export function useSearchParam(
   name: string
-): [string | null, (value: string) => void] {
+): [string | null, (value: string) => void, isPending: boolean] {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
+
+  const [isPending, startTransition] = useTransition();
 
   const value = searchParams.get(name);
 
@@ -13,8 +16,10 @@ export function useSearchParam(
     const params = new URLSearchParams(searchParams);
     params.set(name, value);
 
-    replace(`${pathname}?${params.toString()}`);
+    startTransition(() => {
+      replace(`${pathname}?${params.toString()}`);
+    });
   };
 
-  return [value, setValue];
+  return [value, setValue, isPending];
 }

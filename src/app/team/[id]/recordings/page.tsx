@@ -1,6 +1,6 @@
 import { LibrarySearch } from "@/app/team/[id]/recordings/LibrarySearch";
 import { Recording } from "@/app/team/[id]/recordings/Recording";
-import { ShowMoreButton } from "@/app/team/[id]/recordings/ShowMoreButton";
+import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecordingsRow";
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
 import { Button } from "@/components/Button";
 import { getPersonalRecordings } from "@/graphql/queries/getPersonalRecordings";
@@ -39,10 +39,8 @@ export default async function Page({
           {recordingToDisplay.map((recording) => (
             <Recording key={recording.uuid} recording={recording} />
           ))}
+          <ShowMoreRecordingsRow maxLimit={recordings.length} />
         </div>
-        <center>
-          <ShowMoreButton maxLimit={recordings.length} />
-        </center>
       </div>
     </div>
   );
