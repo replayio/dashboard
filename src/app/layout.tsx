@@ -3,13 +3,12 @@ import { NavList } from "@/components/LeftNavigation/NavList";
 import { PanelClient } from "@/components/ResizablePanels/PanelClient";
 import { PanelGroupClient } from "@/components/ResizablePanels/PanelGroupClient";
 import { PanelResizeHandleClient } from "@/components/ResizablePanels/PanelResizeHandleClient";
+import { getPanelGroupSavedLayout } from "@/components/ResizablePanels/getPanelGroupSavedLayout";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import assert from "assert";
-import { cookies } from "next/headers";
 import { PropsWithChildren } from "react";
 import "./global.css";
-import { getPanelGroupSavedLayout } from "@/components/ResizablePanels/getPanelGroupSavedLayout";
 
 export const metadata = {
   title: "Replay",
