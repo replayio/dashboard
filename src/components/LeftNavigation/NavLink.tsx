@@ -1,5 +1,6 @@
 "use client";
 
+import { useNextLink } from "@/hooks/useNextLink";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -14,6 +15,8 @@ export function NavLink({
 }) {
   const { id: currentId = "" } = useParams();
 
+  const { isPending, onClick } = useNextLink();
+
   const isActive =
     id ===
     decodeURIComponent(
@@ -22,10 +25,11 @@ export function NavLink({
 
   return (
     <Link
-      className={`flex flex-row gap-2 items-center text-white px-4 py-1 ${
-        isActive ? "bg-sky-500 pointer-default" : "pointer-cursor"
-      }`}
+      className={`flex flex-row gap-2 items-center text-white px-4 py-1 transition-opacity ${
+        isActive ? "bg-sky-900 cursor-default" : "hover:bg-sky-900"
+      } ${isPending ? "bg-sky-900 opacity-75" : ""}`}
       href={`/team/${id}/recordings`}
+      onClick={onClick}
     >
       <svg
         className="w-4 h-4"
