@@ -4,7 +4,6 @@ import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 export async function LeftNavigation() {
   const workspaces = await getNonPendingWorkspaces();
   const user = await getCurrentUser();
-  console.log(user);
 
   return (
     <div className="flex flex-col h-full px-2 py-1">
