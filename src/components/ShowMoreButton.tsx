@@ -1,6 +1,7 @@
 "use client";
 
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
+import { Button } from "@/components/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function ShowMoreButton({ maxLimit }: { maxLimit: number }) {
@@ -24,12 +25,5 @@ export function ShowMoreButton({ maxLimit }: { maxLimit: number }) {
     replace(`${pathname}?${params.toString()}`);
   }
 
-  return (
-    <button
-      className="bg-sky-500 text-white rounded cursor-pointer px-2 py-1"
-      onClick={onClick}
-    >
-      Show More
-    </button>
-  );
+  return <Button onClick={onClick}>Show More</Button>;
 }

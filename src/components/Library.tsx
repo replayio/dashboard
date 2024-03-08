@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { RecordingThumbnail } from "@/components/RecordingThumbnail";
 import { ShowMoreButton } from "@/components/ShowMoreButton";
 import { WorkspaceRecording } from "@/graphql/types";
@@ -18,8 +19,11 @@ export async function Library({
 
   return (
     <div className="flex flex-col gap-4 overflow-auto overflow-hidden p-4">
-      <div className="text-xl text-white">
-        Your library ({formatNumber(recordings.length)})
+      <div className="flex flex-row items-center justify-between">
+        <div className="text-xl text-white">
+          {formatNumber(recordings.length)} recordings
+        </div>
+        <Button>Launch Replay</Button>
       </div>
       <div className="overflow-auto flex flex-col gap-2">
         <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px">

@@ -24,9 +24,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang="en">
       <UserProvider>
         <WithAuth>
-          <body className="flex h-screen w-screen flex-row bg-slate-900">
+          <body className="h-screen w-screen">
             <PanelGroupClient
               autoSaveId="react-resizable-panel:layout"
+              className="flex h-screen w-screen flex-row bg-slate-900"
               direction="horizontal"
             >
               <PanelClient
@@ -37,10 +38,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
                 <LeftNavigation />
               </PanelClient>
               <PanelResizeHandleClient />
-              <PanelClient defaultSize={defaultSizeRight ?? 75}>
-                <main className="flex flex-col grow overflow-auto">
-                  {children}
-                </main>
+              <PanelClient
+                className="flex flex-col grow overflow-auto"
+                defaultSize={defaultSizeRight ?? 75}
+              >
+                {children}
               </PanelClient>
             </PanelGroupClient>
           </body>
