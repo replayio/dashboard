@@ -2,7 +2,7 @@ import {
   GetMyRecordingsQuery,
   GetMyRecordingsQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
+import { getGraphQLClientServer } from "@/graphql/graphQLClient";
 import { WorkspaceRecording } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import assert from "assert";
@@ -10,7 +10,7 @@ import assert from "assert";
 export async function getPersonalRecordings(
   filter: string = ""
 ): Promise<WorkspaceRecording[]> {
-  const graphQLClient = await getGraphQLClient();
+  const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<
     GetMyRecordingsQuery,
     GetMyRecordingsQueryVariables
@@ -53,7 +53,7 @@ export async function getPersonalRecordings(
   );
 
   return response.data.viewer.recordings.edges.map(({ node }) => ({
-    createdAt: `${node.createdAt}`,
+    createdAt: new Date(`${node.createdAt}`),
     duration: node.duration || 0,
     numComments: node.comments?.length ?? 0,
     owner: node.owner

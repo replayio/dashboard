@@ -2,7 +2,7 @@ import {
   GetWorkspaceRecordingsQuery,
   GetWorkspaceRecordingsQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
+import { getGraphQLClientServer } from "@/graphql/graphQLClient";
 import { WorkspaceRecording } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import assert from "assert";
@@ -11,7 +11,7 @@ export async function getWorkspaceRecordings(
   id: string,
   filter: string = ""
 ): Promise<WorkspaceRecording[]> {
-  const graphQLClient = await getGraphQLClient();
+  const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<
     GetWorkspaceRecordingsQuery,
     GetWorkspaceRecordingsQueryVariables
@@ -60,20 +60,20 @@ export async function getWorkspaceRecordings(
   );
 
   return response.data.node.recordings.edges.map(({ node }) => ({
-    createdAt: `${node.createdAt}`,
-    duration: node.duration || 0,
+    createdAt: new Date(`${node.createdAt}`),
+    duration: node.duration ?? 0,
     numComments: node.comments?.length ?? 0,
     owner: node.owner
       ? {
           id: node.owner.id,
-          name: node.owner.name || "",
-          picture: node.owner.picture || "",
+          name: node.owner.name ?? "",
+          picture: node.owner.picture ?? "",
         }
       : null,
     private: node.private,
-    title: node.title || "",
-    url: node.url || "",
+    title: node.title ?? "",
+    url: node.url ?? "",
     userRole: node.userRole,
-    uuid: node.uuid || "",
+    uuid: node.uuid ?? "",
   }));
 }

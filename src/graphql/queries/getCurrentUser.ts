@@ -1,10 +1,10 @@
 import { GetUserQuery } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
+import { getGraphQLClientServer } from "@/graphql/graphQLClient";
 import { gql } from "@apollo/client";
 import assert from "assert";
 
 export async function getCurrentUser() {
-  const graphQLClient = await getGraphQLClient();
+  const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<GetUserQuery>({
     query: gql`
       query GetUser {

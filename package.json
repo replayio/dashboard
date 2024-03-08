@@ -16,8 +16,11 @@
   "dependencies": {
     "@apollo/client": "^3.9.6",
     "@auth0/nextjs-auth0": "^3.5.0",
+    "date-fns": "^3.3.1",
     "graphql": "^16.8.1",
+    "lodash": "^4.17.21",
     "next": "14.1.0",
+    "pretty-ms": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -25,6 +28,7 @@
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/client-preset": "4.2.4",
     "@graphql-typed-document-node/core": "^3.2.0",
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",

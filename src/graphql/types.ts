@@ -1,5 +1,5 @@
 export type WorkspaceRecording = {
-  createdAt: string;
+  createdAt: Date;
   duration: number;
   numComments: number;
   owner: WorkspaceRecordingOwner | null;
