@@ -21,23 +21,24 @@ export async function getPersonalRecordings(
           recordings(filter: $filter) {
             edges {
               node {
-                uuid
-                url
-                title
+                buildId
                 duration
-                createdAt
-                private
-                userRole
-                owner {
-                  id
-                  name
-                  picture
-                }
                 comments {
                   user {
                     id
                   }
                 }
+                createdAt
+                owner {
+                  id
+                  name
+                  picture
+                }
+                private
+                title
+                url
+                userRole
+                uuid
               }
             }
           }
@@ -53,6 +54,7 @@ export async function getPersonalRecordings(
   );
 
   return response.data.viewer.recordings.edges.map(({ node }) => ({
+    buildId: node.buildId ?? "",
     createdAt: new Date(`${node.createdAt}`),
     duration: node.duration || 0,
     numComments: node.comments?.length ?? 0,

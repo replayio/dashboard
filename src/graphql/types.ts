@@ -1,4 +1,5 @@
 export type WorkspaceRecording = {
+  buildId: string;
   createdAt: Date;
   duration: number;
   numComments: number;

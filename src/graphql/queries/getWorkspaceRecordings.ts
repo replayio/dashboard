@@ -24,24 +24,25 @@ export async function getWorkspaceRecordings(
             recordings(filter: $filter) {
               edges {
                 node {
-                  uuid
-                  url
-                  title
-                  duration
+                  buildId
+                  comments {
+                    user {
+                      id
+                    }
+                  }
                   createdAt
-                  private
-                  userRole
+                  duration
                   metadata
                   owner {
                     id
                     name
                     picture
                   }
-                  comments {
-                    user {
-                      id
-                    }
-                  }
+                  private
+                  title
+                  url
+                  userRole
+                  uuid
                 }
               }
             }
@@ -60,6 +61,7 @@ export async function getWorkspaceRecordings(
   );
 
   return response.data.node.recordings.edges.map(({ node }) => ({
+    buildId: node.buildId ?? "",
     createdAt: new Date(`${node.createdAt}`),
     duration: node.duration ?? 0,
     numComments: node.comments?.length ?? 0,
