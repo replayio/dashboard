@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button";
-import { RecordingThumbnail } from "@/components/RecordingThumbnail";
-import { ShowMoreButton } from "@/components/ShowMoreButton";
+import { RecordingThumbnail } from "@/components/Library/RecordingThumbnail";
+import { ShowMoreButton } from "@/components/Library/ShowMoreButton";
 import { WorkspaceRecording } from "@/graphql/types";
 import {
   formatDuration,

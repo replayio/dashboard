@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-export function LeftNavigationLink({
+export function NavLink({
   id,
   isTest,
   name,

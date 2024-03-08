@@ -1,10 +1,9 @@
-import { LeftNavigationLink } from "@/components/LeftNavigationLink";
+import { NavLink } from "@/components/LeftNavigation/NavLink";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { getNonPendingWorkspaces } from "@/graphql/queries/getNonPendingWorkspaces";
 import Image from "next/image";
 
-// TODO Highlight selected team
-export async function LeftNavigation() {
+export async function NavList() {
   const workspaces = await getNonPendingWorkspaces();
   const user = await getCurrentUser();
 
@@ -20,9 +19,9 @@ export async function LeftNavigation() {
         />
       </div>
       <div className="flex flex-col overflow-auto">
-        <LeftNavigationLink id="me" isTest={false} name="Your Library" />
+        <NavLink id="me" isTest={false} name="Your Library" />
         {workspaces.map(({ id, isTest, name }) => (
-          <LeftNavigationLink id={id} isTest={isTest} key={id} name={name} />
+          <NavLink id={id} isTest={isTest} key={id} name={name} />
         ))}
       </div>
       <div className="grow" />

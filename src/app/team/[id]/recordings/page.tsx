@@ -1,5 +1,5 @@
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
-import { Library } from "@/components/Library";
+import { Library } from "@/components/Library/Library";
 import { getPersonalRecordings } from "@/graphql/queries/getPersonalRecordings";
 import { getWorkspaceRecordings } from "@/graphql/queries/getWorkspaceRecordings";
 import { Suspense } from "react";
