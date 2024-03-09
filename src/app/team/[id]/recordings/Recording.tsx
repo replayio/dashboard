@@ -1,3 +1,4 @@
+import { RecordingDropdown } from "@/app/team/[id]/recordings/RecordingDropdown";
 import { RecordingThumbnail } from "@/app/team/[id]/recordings/RecordingThumbnail";
 import { WorkspaceRecording } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
@@ -56,6 +57,9 @@ export function Recording({ recording }: { recording: WorkspaceRecording }) {
               </svg>
             </>
           )}
+        </div>
+        <div className="w-6 shrink-0">
+          <RecordingDropdown recording={recording} />
         </div>
       </div>
     </Link>

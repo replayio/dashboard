@@ -23,7 +23,8 @@
     "pretty-ms": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-resizable-panels": "^2.0.1"
+    "react-resizable-panels": "^2.0.1",
+    "use-context-menu": "^0.4.13"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",

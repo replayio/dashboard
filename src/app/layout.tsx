@@ -8,7 +8,9 @@ import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import assert from "assert";
 import { PropsWithChildren } from "react";
+
 import "./global.css";
+import "use-context-menu/styles.css";
 
 export const metadata = {
   title: "Replay",
