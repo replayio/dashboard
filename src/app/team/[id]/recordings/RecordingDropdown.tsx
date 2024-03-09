@@ -1,7 +1,10 @@
 "use client";
 
+import { DeleteDialog } from "@/app/team/[id]/recordings/DeleteDialog";
+import { ShareDialog } from "@/app/team/[id]/recordings/ShareDialog";
+import { Icon } from "@/components/Icon";
 import { WorkspaceRecording } from "@/graphql/types";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { ContextMenuItem, useContextMenu } from "use-context-menu";
 
 export function RecordingDropdown({
@@ -9,20 +12,29 @@ export function RecordingDropdown({
 }: {
   recording: WorkspaceRecording;
 }) {
-  const todo = () => {
-    // TODO
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+
+  const onDelete = () => {
+    setShowDeleteDialog(true);
+  };
+
+  const onDismissShareDialog = () => {
+    setShowDeleteDialog(false);
+    setShowShareDialog(false);
+  };
+
+  const onShare = () => {
+    setShowShareDialog(true);
   };
 
   const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
     <>
-      <ContextMenuItem className="text-sm px-4 py-2" onSelect={todo}>
-        Rename
+      <ContextMenuItem className="text-sm px-4 py-2" onSelect={onShare}>
+        Share
       </ContextMenuItem>
-      <ContextMenuItem className="text-sm px-4 py-2" onSelect={todo}>
+      <ContextMenuItem className="text-sm px-4 py-2" onSelect={onDelete}>
         Delete
-      </ContextMenuItem>
-      <ContextMenuItem className="text-sm px-4 py-2" onSelect={todo}>
-        Make public
       </ContextMenuItem>
     </>
   );
@@ -35,21 +47,20 @@ export function RecordingDropdown({
   return (
     <>
       <button
-        className="w-4 h-4 flex items-center justify-center"
+        className="bg-white/10 hover:bg-white/20 p-1 rounded transition"
         onClick={onClick}
         onKeyDown={onKeyDown}
         tabIndex={0}
       >
-        <svg
-          className="w-4 h-4 fill-slate-300"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-        </svg>
+        <Icon className="w-4 h-4 fill-slate-300" type="vertical-dots" />
       </button>
       {contextMenu}
+      {showDeleteDialog && (
+        <DeleteDialog onDismiss={onDismissShareDialog} recording={recording} />
+      )}
+      {showShareDialog && (
+        <ShareDialog onDismiss={onDismissShareDialog} recording={recording} />
+      )}
     </>
   );
 }
