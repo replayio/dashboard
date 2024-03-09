@@ -7,7 +7,7 @@ import { WorkspaceRecording } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import assert from "assert";
 
-export async function getWorkspaceRecordings(
+export async function getWorkspaceRecordingsServer(
   id: string,
   filter: string = ""
 ): Promise<WorkspaceRecording[]> {

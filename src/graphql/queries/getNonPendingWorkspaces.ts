@@ -2,7 +2,7 @@ import { GetNonPendingWorkspacesQuery } from "@/graphql/generated/graphql";
 import { getGraphQLClientServer } from "@/graphql/graphQLClient";
 import { gql } from "@apollo/client";
 
-export async function getNonPendingWorkspaces() {
+export async function getNonPendingWorkspacesServer() {
   const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<GetNonPendingWorkspacesQuery>({
     query: gql`

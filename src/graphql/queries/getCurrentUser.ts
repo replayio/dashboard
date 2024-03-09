@@ -3,7 +3,7 @@ import { getGraphQLClientServer } from "@/graphql/graphQLClient";
 import { gql } from "@apollo/client";
 import assert from "assert";
 
-export async function getCurrentUser() {
+export async function getCurrentUserServer() {
   const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<GetUserQuery>({
     query: gql`

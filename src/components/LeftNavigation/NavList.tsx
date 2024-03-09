@@ -1,12 +1,12 @@
 import { NavLink } from "@/components/LeftNavigation/NavLink";
-import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
-import { getNonPendingWorkspaces } from "@/graphql/queries/getNonPendingWorkspaces";
+import { getCurrentUserServer } from "@/graphql/queries/getCurrentUser";
+import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
 import Image from "next/image";
 import Link from "next/link";
 
 export async function NavList() {
-  const workspaces = await getNonPendingWorkspaces();
-  const user = await getCurrentUser();
+  const workspaces = await getNonPendingWorkspacesServer();
+  const user = await getCurrentUserServer();
 
   return (
     <nav className="flex flex-col h-full bg-slate-800 text-white overflow-auto shrink-0">

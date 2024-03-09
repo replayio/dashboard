@@ -3,8 +3,8 @@ import { Recording } from "@/app/team/[id]/recordings/Recording";
 import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecordingsRow";
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
 import { Button } from "@/components/Button";
-import { getPersonalRecordings } from "@/graphql/queries/getPersonalRecordings";
-import { getWorkspaceRecordings } from "@/graphql/queries/getWorkspaceRecordings";
+import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
+import { getWorkspaceRecordingsServer } from "@/graphql/queries/getWorkspaceRecordings";
 
 export default async function Page({
   params,
@@ -23,8 +23,8 @@ export default async function Page({
 
   const recordings =
     id === "me"
-      ? await getPersonalRecordings(filter)
-      : await getWorkspaceRecordings(id, filter);
+      ? await getPersonalRecordingsServer(filter)
+      : await getWorkspaceRecordingsServer(id, filter);
 
   const recordingToDisplay = recordings.slice(0, limit);
 
