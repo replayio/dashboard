@@ -40,7 +40,7 @@ export function Button({
 
   return (
     <button
-      className={`inline-flex flex-row items-center gap-2 rounded px-2 py-1 font-bold ${defaultColorsClassName} ${className}`}
+      className={`inline-flex flex-row items-center gap-2 rounded px-2 py-1 font-bold transition ${defaultColorsClassName} ${className}`}
       disabled={disabled}
       {...rest}
     />

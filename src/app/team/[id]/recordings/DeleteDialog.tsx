@@ -5,7 +5,7 @@ import { useDeleteRecording } from "@/graphql/queries/deleteRecording";
 import { WorkspaceRecording } from "@/graphql/types";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useRef } from "react";
+import { MouseEvent, useRef, useState } from "react";
 
 export function DeleteDialog({
   onDismiss,
@@ -14,14 +14,23 @@ export function DeleteDialog({
   onDismiss: () => void;
   recording: WorkspaceRecording;
 }) {
+  const [confirmed, setConfirmed] = useState(false);
+
   const router = useRouter();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   useModalDismissSignal(modalRef, onDismiss);
 
-  const { deleteRecording, loading } = useDeleteRecording(() => {
+  const { deleteRecording } = useDeleteRecording(async () => {
+    setConfirmed(true);
+
     router.refresh();
+
+    // Deleted recordings aren't immediately removed from the list;
+    // wait a second before dismissing the modal to give the server time to update
+    await new Promise((resolve) => setTimeout(resolve, 1_000));
+
     onDismiss();
   });
 
@@ -45,7 +54,11 @@ export function DeleteDialog({
           <Button onClick={onDismiss} variant="outline">
             Cancel
           </Button>
-          <Button disabled={loading} onClick={onDeleteClick} color="secondary">
+          <Button
+            disabled={confirmed}
+            onClick={onDeleteClick}
+            color="secondary"
+          >
             Delete
           </Button>
         </div>
