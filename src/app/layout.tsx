@@ -1,13 +1,9 @@
 import { AuthContextProvider } from "@/components/AuthContext";
 import { NavList } from "@/components/LeftNavigation/NavList";
-import { PanelClient } from "@/components/ResizablePanels/PanelClient";
-import { PanelGroupClient } from "@/components/ResizablePanels/PanelGroupClient";
-import { PanelResizeHandleClient } from "@/components/ResizablePanels/PanelResizeHandleClient";
-import { getPanelGroupSavedLayout } from "@/components/ResizablePanels/getPanelGroupSavedLayout";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import { PropsWithChildren, Suspense } from "react";
 import Head from "next/head";
+import { PropsWithChildren, Suspense } from "react";
 
 import { Icon } from "@/components/Icon";
 import { redirect } from "next/navigation";
@@ -19,10 +15,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
-  const [defaultSizeLeft, defaultSizeRight] = getPanelGroupSavedLayout(
-    "react-resizable-panel:layout"
-  );
-
   return (
     <html lang="en">
       <Head>
@@ -30,39 +22,23 @@ export default function RootLayout({ children }: PropsWithChildren) {
       </Head>
       <UserProvider>
         <WithAuth>
-          <body className="h-screen w-screen">
-            <PanelGroupClient
-              autoSaveId="react-resizable-panel:layout"
-              className="flex h-screen w-screen flex-row bg-slate-900"
-              direction="horizontal"
-            >
-              <PanelClient
-                defaultSize={defaultSizeLeft ?? 25}
-                minSize={15}
-                maxSize={35}
+          <body className="flex h-screen w-screen flex-row bg-slate-900">
+            <NavList />
+            <main className="flex flex-col grow overflow-auto">
+              <Suspense
+                fallback={
+                  <div className="flex flex-row items-center gap-2 text-slate-500 p-4">
+                    <Icon
+                      className="w-6 h-6 animate-spin"
+                      type="loading-spinner"
+                    />
+                    <div className="text-lg">Loading...</div>
+                  </div>
+                }
               >
-                <NavList />
-              </PanelClient>
-              <PanelResizeHandleClient />
-              <PanelClient
-                className="flex flex-col grow overflow-auto"
-                defaultSize={defaultSizeRight ?? 75}
-              >
-                <Suspense
-                  fallback={
-                    <div className="flex flex-row items-center gap-2 text-slate-500 p-4">
-                      <Icon
-                        className="w-6 h-6 animate-spin"
-                        type="loading-spinner"
-                      />
-                      <div className="text-lg">Loading...</div>
-                    </div>
-                  }
-                >
-                  {children}
-                </Suspense>
-              </PanelClient>
-            </PanelGroupClient>
+                {children}
+              </Suspense>
+            </main>
           </body>
         </WithAuth>
       </UserProvider>
