@@ -6,13 +6,12 @@ import { PanelResizeHandleClient } from "@/components/ResizablePanels/PanelResiz
 import { getPanelGroupSavedLayout } from "@/components/ResizablePanels/getPanelGroupSavedLayout";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import assert from "assert";
 import { PropsWithChildren, Suspense } from "react";
 
-import "./global.css";
-import "use-context-menu/styles.css";
-import { redirect } from "next/navigation";
 import { Icon } from "@/components/Icon";
+import { redirect } from "next/navigation";
+import "use-context-menu/styles.css";
+import "./global.css";
 
 export const metadata = {
   title: "Replay",

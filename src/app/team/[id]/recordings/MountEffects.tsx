@@ -1,11 +1,11 @@
 "use client";
 
-import { updateDefaultWorkspace } from "@/app/actions";
+import { setCookieValue } from "@/utils/cookie";
 import { useEffect } from "react";
 
 export function MountEffects({ workspaceId }: { workspaceId: string }) {
   useEffect(() => {
-    updateDefaultWorkspace(workspaceId);
+    setCookieValue("replay:dashboard:default-workspace", workspaceId);
   }, [workspaceId]);
 
   return null;

@@ -1,8 +1,14 @@
-import { cookies } from "next/headers";
-import { RedirectType, redirect } from "next/navigation";
+"use client";
+
+import { getCookieValue } from "@/utils/cookie";
+import { useEffect } from "react";
 
 export default function Home() {
-  const id = cookies().get("replay:dashboard:default-workspace")?.value ?? "me";
+  useEffect(() => {
+    const id = getCookieValue("replay:dashboard:default-workspace") ?? "me";
 
-  redirect(`/team/${id}/recordings`, RedirectType.replace);
+    window.location.replace(`/team/${id}/recordings`);
+  }, []);
+
+  return null;
 }
