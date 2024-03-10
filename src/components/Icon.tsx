@@ -9,6 +9,7 @@ export type IconType =
   | "email"
   | "folder"
   | "loading-spinner"
+  | "show-more"
   | "test-suite"
   | "vertical-dots";
 
@@ -53,6 +54,9 @@ export function Icon({
     case "loading-spinner":
       path =
         "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z";
+      break;
+    case "show-more":
+      path = "M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z";
       break;
     case "test-suite":
       path =
