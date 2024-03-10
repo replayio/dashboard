@@ -1,8 +1,7 @@
 import { NavLink } from "@/components/LeftNavigation/NavLink";
+import { ReplayLogo } from "@/components/ReplayLogo";
 import { getCurrentUserServer } from "@/graphql/queries/getCurrentUser";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
-import Image from "next/image";
-import Link from "next/link";
 
 export async function NavList() {
   const workspaces = await getNonPendingWorkspacesServer();
@@ -11,13 +10,7 @@ export async function NavList() {
   return (
     <nav className="flex flex-col h-full bg-slate-800 text-white overflow-auto shrink-0">
       <div className="p-4">
-        <Image
-          alt="Replay logo"
-          className="h-8 w-8"
-          height={32}
-          src="/images/replay-logo.svg"
-          width={32}
-        />
+        <ReplayLogo />
       </div>
       <div className="flex flex-col overflow-auto">
         <NavLink id="me" isTest={false} name="Your Library" />

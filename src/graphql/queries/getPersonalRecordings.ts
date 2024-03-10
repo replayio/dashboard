@@ -25,9 +25,7 @@ export async function getPersonalRecordingsServer(
                 buildId
                 duration
                 comments {
-                  user {
-                    id
-                  }
+                  id
                 }
                 createdAt
                 owner {
@@ -38,7 +36,6 @@ export async function getPersonalRecordingsServer(
                 private
                 title
                 url
-                userRole
                 uuid
               }
             }
@@ -69,7 +66,6 @@ export async function getPersonalRecordingsServer(
     private: node.private,
     title: node.title || "",
     url: node.url || "",
-    userRole: node.userRole,
     uuid: node.uuid || "",
   }));
 }

@@ -3,6 +3,7 @@
 import { DeleteDialog } from "@/app/team/[id]/recordings/DeleteDialog";
 import { ShareDialog } from "@/app/team/[id]/recordings/ShareDialog";
 import { Icon } from "@/components/Icon";
+import { IconButton } from "@/components/IconButton";
 import { WorkspaceRecording } from "@/graphql/types";
 import { MouseEvent, useState } from "react";
 import { ContextMenuItem, useContextMenu } from "use-context-menu";
@@ -46,14 +47,7 @@ export function RecordingDropdown({
 
   return (
     <>
-      <button
-        className="bg-white/10 hover:bg-white/20 p-1 rounded transition"
-        onClick={onClick}
-        onKeyDown={onKeyDown}
-        tabIndex={0}
-      >
-        <Icon className="w-4 h-4 fill-slate-300" type="vertical-dots" />
-      </button>
+      <IconButton onClick={onClick} iconType="vertical-dots" />
       {contextMenu}
       {showDeleteDialog && (
         <DeleteDialog onDismiss={onDismissShareDialog} recording={recording} />

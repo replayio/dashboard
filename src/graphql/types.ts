@@ -7,7 +7,6 @@ export type WorkspaceRecording = {
   private: boolean;
   title: string;
   url: string;
-  userRole: string;
   uuid: string;
 };
 

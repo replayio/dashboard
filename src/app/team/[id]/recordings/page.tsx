@@ -1,8 +1,8 @@
+import { LaunchReplayButton } from "@/app/team/[id]/recordings/LaunchReplayButton";
 import { LibrarySearch } from "@/app/team/[id]/recordings/LibrarySearch";
 import { Recording } from "@/app/team/[id]/recordings/Recording";
 import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecordingsRow";
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
-import { Button } from "@/components/Button";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
 import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
 import { getWorkspaceRecordingsServer } from "@/graphql/queries/getWorkspaceRecordings";
@@ -38,6 +38,8 @@ export default async function Page({
     const limit = searchParams.limit ?? PAGE_SIZE;
     const filter = searchParams.filter ?? "";
 
+    // TODO GraphQL queries should be pulling down only the data we need;
+    // else we risk wasting bandwidth (and exceeding NextJS's 2MB cache limit)
     const allRecordings =
       id === "me"
         ? await getPersonalRecordingsServer(filter)
@@ -51,7 +53,7 @@ export default async function Page({
     <div className="flex flex-col gap-4 overflow-auto overflow-hidden p-4">
       <div className="flex flex-row items-center gap-4 justify-between">
         <LibrarySearch numRecordings={totalRecordings} />
-        <Button>Launch Replay</Button>
+        <LaunchReplayButton />
       </div>
       <div className="overflow-auto flex flex-col gap-2">
         {isTestWorkspace ? (

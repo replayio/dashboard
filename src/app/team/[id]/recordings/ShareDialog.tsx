@@ -1,18 +1,13 @@
 "use client";
 
 import { Icon } from "@/components/Icon";
+import { IconButton } from "@/components/IconButton";
+import { ModalDialog } from "@/components/ModalDialog";
 import { useAddRecordingCollaborator } from "@/graphql/queries/addRecordingCollaborator";
 import { useDeleteRecordingCollaborator } from "@/graphql/queries/deleteRecordingCollaborator";
 import { useRecordingCollaborators } from "@/graphql/queries/getRecordingCollaborators";
 import { WorkspaceRecording } from "@/graphql/types";
-import useModalDismissSignal from "@/hooks/useModalDismissSignal";
-import {
-  ChangeEvent,
-  KeyboardEvent,
-  MouseEvent,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 
 export function ShareDialog({
   onDismiss,
@@ -21,10 +16,6 @@ export function ShareDialog({
   onDismiss: () => void;
   recording: WorkspaceRecording;
 }) {
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useModalDismissSignal(modalRef, onDismiss);
-
   const collaborators = useRecordingCollaborators(recording.uuid);
 
   const [email, setEmail] = useState("");
@@ -48,56 +39,44 @@ export function ShareDialog({
   };
 
   return (
-    <div className="backdrop-blur overflow-y-auto cursor-default fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center bg-black/50">
-      <div
-        className="w-96 max-h-full rounded-lg shadow bg-slate-800 flex flex-col gap-4 p-4 pt-2"
-        onClick={stopPropagation}
-        ref={modalRef}
-      >
-        <div className="text-xl font-bold">Share</div>
-        <div className="flex flex-col gap-2">
-          <div className="font-bold">Add people</div>
-          <input
-            className={`bg-slate-950 text-white px-4 py-2 outline-none rounded grow ${
-              addingCollaborator ? "opacity-50" : ""
-            }`}
-            disabled={addingCollaborator}
-            name="email"
-            onChange={onChange}
-            onKeyDown={onKeyDown}
-            placeholder="Email address"
-            type="text"
-            value={email}
-          />
-          {errorAdding && (
-            <div className="bg-red-600 text-white px-2 py-1 rounded">
-              {errorAdding.message ?? "Something went wrong"}
-            </div>
-          )}
-        </div>
-        {recording.owner && (
-          <Collaborator
-            collaborationId={null}
-            name={recording.owner.name}
-            picture={recording.owner.picture}
-          />
+    <ModalDialog onDismiss={onDismiss} title="Share">
+      <div className="flex flex-col gap-2">
+        <div className="font-bold">Add people</div>
+        <input
+          className={`bg-slate-950 text-white px-4 py-2 outline-none rounded grow ${
+            addingCollaborator ? "opacity-50" : ""
+          }`}
+          disabled={addingCollaborator}
+          name="email"
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          placeholder="Email address"
+          type="text"
+          value={email}
+        />
+        {errorAdding && (
+          <div className="bg-red-600 text-white px-2 py-1 rounded">
+            {errorAdding.message ?? "Something went wrong"}
+          </div>
         )}
-        {collaborators.map((collaborator) => (
-          <Collaborator
-            collaborationId={collaborator.collaborationId}
-            key={collaborator.collaborationId}
-            name={collaborator.name}
-            picture={collaborator.picture}
-          />
-        ))}
       </div>
-    </div>
+      {recording.owner && (
+        <Collaborator
+          collaborationId={null}
+          name={recording.owner.name}
+          picture={recording.owner.picture}
+        />
+      )}
+      {collaborators.map((collaborator) => (
+        <Collaborator
+          collaborationId={collaborator.collaborationId}
+          key={collaborator.collaborationId}
+          name={collaborator.name}
+          picture={collaborator.picture}
+        />
+      ))}
+    </ModalDialog>
   );
-}
-
-function stopPropagation(event: MouseEvent) {
-  event.preventDefault();
-  event.stopPropagation();
 }
 
 function Collaborator({
@@ -134,13 +113,11 @@ function Collaborator({
       </div>
       <div className="shrink-0 w-4 text-right">
         {collaborationId != null && (
-          <button
-            className="bg-white/10 hover:bg-white/20 p-1 rounded transition"
+          <IconButton
             disabled={deletingCollaborator}
             onClick={onDeleteClick}
-          >
-            <Icon className="w-4 h-4 fill-slate-300" type="delete" />
-          </button>
+            iconType="delete"
+          />
         )}
       </div>
     </div>

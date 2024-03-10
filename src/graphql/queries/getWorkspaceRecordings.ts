@@ -27,9 +27,7 @@ export async function getWorkspaceRecordingsServer(
                 node {
                   buildId
                   comments {
-                    user {
-                      id
-                    }
+                    id
                   }
                   createdAt
                   duration
@@ -42,7 +40,6 @@ export async function getWorkspaceRecordingsServer(
                   private
                   title
                   url
-                  userRole
                   uuid
                 }
               }
@@ -76,7 +73,6 @@ export async function getWorkspaceRecordingsServer(
     private: node.private,
     title: node.title ?? "",
     url: node.url ?? "",
-    userRole: node.userRole,
     uuid: node.uuid ?? "",
   }));
 }
