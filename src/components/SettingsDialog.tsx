@@ -12,14 +12,16 @@ export function SettingsDialog<
   defaultPanel,
   onDismiss,
   panels,
+  title,
 }: {
   defaultPanel: keyof Panels;
   onDismiss: () => void;
   panels: Panels;
+  title: string;
 }) {
   const [activePanel, setActivePanel] = useState<keyof Panels>(defaultPanel);
   return (
-    <ModalDialog onDismiss={onDismiss} title={`${name} settings`}>
+    <ModalDialog onDismiss={onDismiss} title={title}>
       <div className="flex flex-row gap-4">
         <ul className="flex flex-col gap-4 shrink-0">
           {Object.entries(panels).map(([id, { icon, label }]) => (

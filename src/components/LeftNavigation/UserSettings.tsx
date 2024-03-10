@@ -32,6 +32,7 @@ export function UserSettings({
           label: "Legal",
         },
       }}
+      title="Settings"
     />
   );
 }

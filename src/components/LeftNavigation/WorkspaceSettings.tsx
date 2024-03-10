@@ -37,6 +37,7 @@ export function WorkspaceSettings({
           label: "Delete team",
         },
       }}
+      title={`${name} settings`}
     />
   );
 }
