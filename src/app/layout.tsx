@@ -2,7 +2,6 @@ import { AuthContextProvider } from "@/components/AuthContext";
 import { NavList } from "@/components/LeftNavigation/NavList";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import Head from "next/head";
 import { PropsWithChildren, Suspense } from "react";
 
 import { Icon } from "@/components/Icon";
@@ -17,9 +16,6 @@ export const metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <Head>
-        <title>Replay</title>
-      </Head>
       <UserProvider>
         <WithAuth>
           <body className="flex h-screen w-screen flex-row bg-slate-900">
