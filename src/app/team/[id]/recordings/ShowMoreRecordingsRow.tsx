@@ -25,7 +25,7 @@ export function ShowMoreRecordingsRow({ maxLimit }: { maxLimit: number }) {
 
   return (
     <Link
-      className={`flex flex-row items-center justify-center gap-4 px-4 py-2 bg-slate-800 font-bold text-white ${
+      className={`flex flex-row items-center justify-center gap-4 px-4 py-2 bg-slate-800 font-bold  ${
         isPending ? "text-gray-500" : ""
       }`}
       onClick={onClick}

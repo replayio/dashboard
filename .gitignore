@@ -3,5 +3,4 @@
 .next
 node_modules
 schema.graphql
-src/graphql/generated
 tsconfig.tsbuildinfo
