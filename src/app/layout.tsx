@@ -11,6 +11,7 @@ import { PropsWithChildren } from "react";
 
 import "./global.css";
 import "use-context-menu/styles.css";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Replay",
@@ -54,8 +55,15 @@ export default function RootLayout({ children }: PropsWithChildren) {
 }
 
 async function WithAuth({ children }: PropsWithChildren) {
-  const { accessToken } = await getAccessToken();
-  assert(accessToken, "accessToken is required");
+  let accessToken: string | undefined;
+
+  try {
+    accessToken = (await getAccessToken())?.accessToken;
+  } catch (error) {}
+
+  if (accessToken === undefined) {
+    redirect("/api/auth/login");
+  }
 
   return (
     <AuthContextProvider accessToken={accessToken}>
