@@ -8,6 +8,7 @@ export type IconType =
   | "delete"
   | "email"
   | "folder"
+  | "loading-spinner"
   | "test-suite"
   | "vertical-dots";
 
@@ -48,6 +49,10 @@ export function Icon({
     case "folder":
       path =
         "M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z";
+      break;
+    case "loading-spinner":
+      path =
+        "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z";
       break;
     case "test-suite":
       path =

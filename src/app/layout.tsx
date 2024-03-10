@@ -7,11 +7,12 @@ import { getPanelGroupSavedLayout } from "@/components/ResizablePanels/getPanelG
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import assert from "assert";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, Suspense } from "react";
 
 import "./global.css";
 import "use-context-menu/styles.css";
 import { redirect } from "next/navigation";
+import { Icon } from "@/components/Icon";
 
 export const metadata = {
   title: "Replay",
@@ -44,7 +45,19 @@ export default function RootLayout({ children }: PropsWithChildren) {
                 className="flex flex-col grow overflow-auto"
                 defaultSize={defaultSizeRight ?? 75}
               >
-                {children}
+                <Suspense
+                  fallback={
+                    <div className="flex flex-row items-center gap-2 text-slate-500 p-4">
+                      <Icon
+                        className="w-6 h-6 animate-spin "
+                        type="loading-spinner"
+                      />
+                      <div className="text-lg">Loading...</div>
+                    </div>
+                  }
+                >
+                  {children}
+                </Suspense>
               </PanelClient>
             </PanelGroupClient>
           </body>
