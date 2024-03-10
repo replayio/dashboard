@@ -49,7 +49,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
                   fallback={
                     <div className="flex flex-row items-center gap-2 text-slate-500 p-4">
                       <Icon
-                        className="w-6 h-6 animate-spin "
+                        className="w-6 h-6 animate-spin"
                         type="loading-spinner"
                       />
                       <div className="text-lg">Loading...</div>
