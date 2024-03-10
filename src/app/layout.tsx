@@ -7,6 +7,7 @@ import { getPanelGroupSavedLayout } from "@/components/ResizablePanels/getPanelG
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { PropsWithChildren, Suspense } from "react";
+import Head from "next/head";
 
 import { Icon } from "@/components/Icon";
 import { redirect } from "next/navigation";
@@ -24,6 +25,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
 
   return (
     <html lang="en">
+      <Head>
+        <title>Replay</title>
+      </Head>
       <UserProvider>
         <WithAuth>
           <body className="h-screen w-screen">
