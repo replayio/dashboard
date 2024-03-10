@@ -1,6 +1,6 @@
 "use client";
 
-import { ModalDialog } from "@/components/ModalDialog";
+import { SettingsDialog } from "@/components/SettingsDialog";
 
 export function WorkspaceSettings({
   id,
@@ -12,8 +12,35 @@ export function WorkspaceSettings({
   onDismiss: () => void;
 }) {
   return (
-    <ModalDialog onDismiss={onDismiss} title={`${name} settings`}>
-      <div>Coming soon...</div>
-    </ModalDialog>
+    <SettingsDialog
+      defaultPanel="team-members"
+      onDismiss={onDismiss}
+      panels={{
+        "team-members": {
+          children: <ComingSoon />,
+          icon: "team-members",
+          label: "Team members",
+        },
+        billing: {
+          children: <ComingSoon />,
+          icon: "billing",
+          label: "Billing",
+        },
+        "api-keys": {
+          children: <ComingSoon />,
+          icon: "api-keys",
+          label: "API keys",
+        },
+        delete: {
+          children: <ComingSoon />,
+          icon: "delete",
+          label: "Delete team",
+        },
+      }}
+    />
   );
+}
+
+function ComingSoon() {
+  return <div>Not yet implemented...</div>;
 }

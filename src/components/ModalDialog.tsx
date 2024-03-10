@@ -19,7 +19,7 @@ export function ModalDialog({
   return (
     <div className="backdrop-blur overflow-y-auto cursor-default fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center bg-black/50">
       <div
-        className="w-96 max-h-full rounded-lg shadow bg-slate-800 text-white flex flex-col gap-4 p-4 pt-2 relative"
+        className="min-w-96 max-h-full rounded-lg shadow bg-slate-800 text-white flex flex-col gap-4 p-4 pt-2 relative"
         onClick={stopPropagation}
         ref={modalRef}
       >

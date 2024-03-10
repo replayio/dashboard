@@ -1,6 +1,9 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, ReactElement } from "react";
 
 export type IconType =
+  | "account"
+  | "api-keys"
+  | "billing"
   | "calendar"
   | "clock"
   | "close"
@@ -8,9 +11,13 @@ export type IconType =
   | "delete"
   | "email"
   | "folder"
+  | "legal"
   | "loading-spinner"
+  | "logout"
   | "settings"
   | "show-more"
+  | "support"
+  | "team-members"
   | "test-suite"
   | "vertical-dots";
 
@@ -22,8 +29,20 @@ export function Icon({
   className?: string;
   type: IconType;
 }) {
-  let path: string | null = null;
+  let path: string | ReactElement | null = null;
   switch (type) {
+    case "account":
+      path =
+        "M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z";
+      break;
+    case "api-keys":
+      path =
+        "M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z";
+      break;
+    case "billing":
+      path =
+        "M18,4H6C3.79,4,2,5.79,2,8v8c0,2.21,1.79,4,4,4h12c2.21,0,4-1.79,4-4V8C22,5.79,20.21,4,18,4z M16.14,13.77 c-0.24,0.2-0.57,0.28-0.88,0.2L4.15,11.25C4.45,10.52,5.16,10,6,10h12c0.67,0,1.26,0.34,1.63,0.84L16.14,13.77z M6,6h12 c1.1,0,2,0.9,2,2v0.55C19.41,8.21,18.73,8,18,8H6C5.27,8,4.59,8.21,4,8.55V8C4,6.9,4.9,6,6,6z";
+      break;
     case "calendar":
       path =
         "M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zm0-12H5V5h14v2zM7 11h5v5H7z";
@@ -52,9 +71,17 @@ export function Icon({
       path =
         "M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z";
       break;
+    case "legal":
+      path =
+        "M21,5l-9-4L3,5v6c0,5.55,3.84,10.74,9,12c2.3-0.56,4.33-1.9,5.88-3.71l-3.12-3.12c-1.94,1.29-4.58,1.07-6.29-0.64 c-1.95-1.95-1.95-5.12,0-7.07c1.95-1.95,5.12-1.95,7.07,0c1.71,1.71,1.92,4.35,0.64,6.29l2.9,2.9C20.29,15.69,21,13.38,21,11V5z";
+      break;
     case "loading-spinner":
       path =
         "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z";
+      break;
+    case "logout":
+      path =
+        "M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z";
       break;
     case "settings":
       path =
@@ -62,6 +89,20 @@ export function Icon({
       break;
     case "show-more":
       path = "M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z";
+      break;
+    case "support":
+      path = (
+        <g xmlns="http://www.w3.org/2000/svg">
+          <path d="M21,12.22C21,6.73,16.74,3,12,3c-4.69,0-9,3.65-9,9.28C2.4,12.62,2,13.26,2,14v2c0,1.1,0.9,2,2,2h1v-6.1 c0-3.87,3.13-7,7-7s7,3.13,7,7V19h-8v2h8c1.1,0,2-0.9,2-2v-1.22c0.59-0.31,1-0.92,1-1.64v-2.3C22,11.14,21.59,12.53,21,12.22z" />
+          <circle cx="9" cy="13" r="1" />
+          <circle cx="15" cy="13" r="1" />
+          <path d="M18,11.03C17.52,8.18,15.04,6,12.05,6c-3.03,0-6.29,2.51-6.03,6.45c2.47-1.01,4.33-3.21,4.86-5.89 C12.19,9.19,14.88,11,18,11.03z" />
+        </g>
+      );
+      break;
+    case "team-members":
+      path =
+        "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z";
       break;
     case "test-suite":
       path =
@@ -73,6 +114,10 @@ export function Icon({
       break;
   }
 
+  if (typeof path === "string") {
+    path = <path d={path} />;
+  }
+
   return (
     <svg
       className={className}
@@ -81,7 +126,7 @@ export function Icon({
       {...rest}
     >
       <path d="M0 0h24v24H0z" fill="none" />
-      <path d={path} />
+      {path}
     </svg>
   );
 }

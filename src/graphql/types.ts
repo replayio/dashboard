@@ -28,3 +28,12 @@ export type WorkspaceRecordingComments = {
     id: string;
   };
 };
+
+export type User = {
+  email: string;
+  id: string;
+  isInternal: boolean;
+  nags: string[];
+  name: string;
+  picture: string;
+};

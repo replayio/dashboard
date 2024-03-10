@@ -1,9 +1,10 @@
 import { GetUserQuery } from "@/graphql/generated/graphql";
 import { getGraphQLClientServer } from "@/graphql/graphQLClient";
+import { User } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import assert from "assert";
 
-export async function getCurrentUserServer() {
+export async function getCurrentUserServer(): Promise<User> {
   const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<GetUserQuery>({
     query: gql`
@@ -26,8 +27,10 @@ export async function getCurrentUserServer() {
 
   return {
     email: response.data.viewer.email,
-    internal: response.data.viewer.internal,
+    id: response.data.viewer.user.id,
+    isInternal: response.data.viewer.internal,
     nags: response.data.viewer.nags,
-    ...response.data.viewer.user,
+    name: response.data.viewer.user.name ?? "",
+    picture: response.data.viewer.user.picture ?? "",
   };
 }

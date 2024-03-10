@@ -1,3 +1,4 @@
+import { ExternalLink } from "@/components/ExternalLink";
 import { ModalDialog } from "@/components/ModalDialog";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import Link from "next/link";
@@ -20,32 +21,26 @@ export function LaunchReplayModal({ onDismiss }: { onDismiss: () => void }) {
     >
       <div className="text-center">
         {"Download it for "}
-        <Link
+        <ExternalLink
           href="https://static.replay.io/downloads/replay.dmg"
-          rel="noopener noreferrer"
-          target="_blank"
           title="Download for Mac"
         >
           Mac
-        </Link>
+        </ExternalLink>
         {", "}
-        <Link
+        <ExternalLink
           href="https://static.replay.io/downloads/linux-replay.tar.bz2"
-          rel="noopener noreferrer"
-          target="_blank"
           title="Download for Linux"
         >
           Linux
-        </Link>
+        </ExternalLink>
         {", or "}
-        <Link
+        <ExternalLink
           href="https://static.replay.io/downloads/windows-replay.zip"
-          rel="noopener noreferrer"
-          target="_blank"
           title="Download for Windows"
         >
           Windows
-        </Link>
+        </ExternalLink>
       </div>
     </ModalDialog>
   );
