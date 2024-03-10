@@ -1,5 +1,6 @@
 import { LaunchReplayButton } from "@/app/team/[id]/recordings/LaunchReplayButton";
 import { LibrarySearch } from "@/app/team/[id]/recordings/LibrarySearch";
+import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
 import { Recording } from "@/app/team/[id]/recordings/Recording";
 import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecordingsRow";
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
@@ -69,6 +70,7 @@ export default async function Page({
           </div>
         )}
       </div>
+      <MountEffects workspaceId={id} />
     </div>
   );
 }

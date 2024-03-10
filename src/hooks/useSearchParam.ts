@@ -1,3 +1,4 @@
+import assert from "assert";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
@@ -10,9 +11,11 @@ export function useSearchParam(
 
   const [isPending, startTransition] = useTransition();
 
-  const value = searchParams.get(name);
+  const value = searchParams?.get(name) ?? null;
 
   const setValue = (value: string) => {
+    assert(searchParams != null);
+
     const params = new URLSearchParams(searchParams);
     params.set(name, value);
 
@@ -21,5 +24,5 @@ export function useSearchParam(
     });
   };
 
-  return [value, setValue, isPending];
+  return [value, setValue, isPending && searchParams != null];
 }

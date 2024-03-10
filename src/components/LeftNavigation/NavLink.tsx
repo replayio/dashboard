@@ -14,7 +14,8 @@ export function NavLink({
   isTest: boolean;
   name: string;
 }) {
-  const { id: currentId = "" } = useParams();
+  const params = useParams();
+  const currentId = params?.id ?? "";
 
   const { isPending, onClick } = useNextLink();
 

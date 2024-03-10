@@ -7,14 +7,19 @@ export function useSearchParamLink(
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const value = searchParams.get(name);
+  const value = searchParams?.get(name) ?? null;
   const newValue = getNextValue(value);
   if (newValue === null) {
     return null;
   }
 
-  const params = new URLSearchParams(searchParams);
-  params.set(name, newValue);
+  let paramsString = "";
+  if (searchParams) {
+    const params = new URLSearchParams(searchParams);
+    params.set(name, newValue);
 
-  return `${pathname}?${params.toString()}`;
+    paramsString = params.toString();
+  }
+
+  return `${pathname}?${paramsString}`;
 }

@@ -1,6 +1,8 @@
-import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { RedirectType, redirect } from "next/navigation";
 
 export default function Home() {
-  // TODO Redirect to the most recently viewed team/page
-  return redirect("/team/me/recordings");
+  const id = cookies().get("replay:dashboard:default-workspace")?.value ?? "me";
+
+  redirect(`/team/${id}/recordings`, RedirectType.replace);
 }
