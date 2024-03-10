@@ -31,6 +31,7 @@ export default async function Page({
   }
 
   let recordings: WorkspaceRecording[];
+  let totalRecordings: number = 0;
   if (isTestWorkspace) {
     recordings = [];
   } else {
@@ -43,12 +44,13 @@ export default async function Page({
         : await getWorkspaceRecordingsServer(id, filter);
 
     recordings = allRecordings.slice(0, limit);
+    totalRecordings = allRecordings.length;
   }
 
   return (
     <div className="flex flex-col gap-4 overflow-auto overflow-hidden p-4">
       <div className="flex flex-row items-center gap-4 justify-between">
-        <LibrarySearch numRecordings={recordings.length} />
+        <LibrarySearch numRecordings={totalRecordings} />
         <Button>Launch Replay</Button>
       </div>
       <div className="overflow-auto flex flex-col gap-2">
@@ -61,7 +63,7 @@ export default async function Page({
             {recordings.map((recording) => (
               <Recording key={recording.uuid} recording={recording} />
             ))}
-            <ShowMoreRecordingsRow maxLimit={recordings.length} />
+            <ShowMoreRecordingsRow maxLimit={totalRecordings} />
           </div>
         )}
       </div>

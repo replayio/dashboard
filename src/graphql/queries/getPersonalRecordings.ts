@@ -7,6 +7,7 @@ import { WorkspaceRecording } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import assert from "assert";
 
+// TODO limit the number of recordings returned
 export async function getPersonalRecordingsServer(
   filter: string = ""
 ): Promise<WorkspaceRecording[]> {
