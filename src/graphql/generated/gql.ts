@@ -16,6 +16,7 @@ const documents = {
     "\n      mutation AddCollaborator($email: String!, $recordingId: ID!) {\n        addRecordingCollaborator(\n          input: { email: $email, recordingId: $recordingId }\n        ) {\n          success\n        }\n      }\n    ": types.AddCollaboratorDocument,
     "\n      mutation DeleteRecording($recordingId: ID!) {\n        deleteRecording(input: { id: $recordingId }) {\n          success\n        }\n      }\n    ": types.DeleteRecordingDocument,
     "\n      mutation DeleteCollaborator($collaborationId: ID!) {\n        removeRecordingCollaborator(input: { id: $collaborationId }) {\n          success\n        }\n      }\n    ": types.DeleteCollaboratorDocument,
+    "\n      mutation DeleteWorkspace(\n        $workspaceId: ID!\n        $shouldDeleteRecordings: Boolean!\n      ) {\n        deleteWorkspace(\n          input: {\n            workspaceId: $workspaceId\n            shouldDeleteRecordings: $shouldDeleteRecordings\n          }\n        ) {\n          success\n        }\n      }\n    ": types.DeleteWorkspaceDocument,
     "\n      query GetUser {\n        viewer {\n          email\n          internal\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    ": types.GetUserDocument,
     "\n      query GetDefaultWorkspace {\n        viewer {\n          defaultWorkspace {\n            id\n          }\n        }\n      }\n    ": types.GetDefaultWorkspaceDocument,
     "\n      query GetNonPendingWorkspaces {\n        viewer {\n          workspaces {\n            edges {\n              node {\n                id\n                name\n                isTest\n              }\n            }\n          }\n        }\n      }\n    ": types.GetNonPendingWorkspacesDocument,
@@ -52,6 +53,10 @@ export function graphql(source: "\n      mutation DeleteRecording($recordingId: 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation DeleteCollaborator($collaborationId: ID!) {\n        removeRecordingCollaborator(input: { id: $collaborationId }) {\n          success\n        }\n      }\n    "): (typeof documents)["\n      mutation DeleteCollaborator($collaborationId: ID!) {\n        removeRecordingCollaborator(input: { id: $collaborationId }) {\n          success\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation DeleteWorkspace(\n        $workspaceId: ID!\n        $shouldDeleteRecordings: Boolean!\n      ) {\n        deleteWorkspace(\n          input: {\n            workspaceId: $workspaceId\n            shouldDeleteRecordings: $shouldDeleteRecordings\n          }\n        ) {\n          success\n        }\n      }\n    "): (typeof documents)["\n      mutation DeleteWorkspace(\n        $workspaceId: ID!\n        $shouldDeleteRecordings: Boolean!\n      ) {\n        deleteWorkspace(\n          input: {\n            workspaceId: $workspaceId\n            shouldDeleteRecordings: $shouldDeleteRecordings\n          }\n        ) {\n          success\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
