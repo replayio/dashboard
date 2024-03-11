@@ -1,4 +1,5 @@
 import { ExternalLink } from "@/components/ExternalLink";
+import { Icon } from "@/components/Icon";
 import { ModalDialog } from "@/components/ModalDialog";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import Link from "next/link";
@@ -39,7 +40,7 @@ export function LaunchReplayModal({ onDismiss }: { onDismiss: () => void }) {
           href="https://static.replay.io/downloads/windows-replay.zip"
           title="Download for Windows"
         >
-          Windows
+          Windows <small className="text-yellow-300">(beta)</small>
         </ExternalLink>
       </div>
     </ModalDialog>
