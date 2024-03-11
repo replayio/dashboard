@@ -2,7 +2,6 @@
 
 import { DeleteDialog } from "@/app/team/[id]/recordings/DeleteDialog";
 import { ShareDialog } from "@/app/team/[id]/recordings/ShareDialog";
-import { Icon } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
 import { WorkspaceRecording } from "@/graphql/types";
 import { MouseEvent, useState } from "react";

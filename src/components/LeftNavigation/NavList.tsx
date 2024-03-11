@@ -1,3 +1,4 @@
+import { CreateTeamButton } from "@/components/LeftNavigation/CreateTeamButton";
 import { CurrentUser } from "@/components/LeftNavigation/CurrentUser";
 import { NavLink } from "@/components/LeftNavigation/NavLink";
 import { ReplayLogo } from "@/components/ReplayLogo";
@@ -18,9 +19,7 @@ export async function NavList() {
         {workspaces.map(({ id, isTest, name }) => (
           <NavLink id={id} isTest={isTest} key={id} name={name} />
         ))}
-        <button className="pl-10 text-white px-4 py-1 underline w-full text-left">
-          Create new team
-        </button>
+        <CreateTeamButton />
       </div>
       <div className="grow" />
       <CurrentUser user={user} />
