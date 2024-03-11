@@ -35,7 +35,7 @@ export function SettingsDialog<
             </li>
           ))}
         </ul>
-        <div className="h-full w-96">
+        <div className="h-full w-96 min-h-48">
           {panels[activePanel]?.children ?? null}
         </div>
       </div>

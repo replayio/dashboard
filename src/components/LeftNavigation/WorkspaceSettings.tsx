@@ -19,7 +19,7 @@ export function WorkspaceSettings({
         "team-members": {
           children: <ComingSoon />,
           icon: "team-members",
-          label: "Team members",
+          label: "Members",
         },
         billing: {
           children: <ComingSoon />,
@@ -33,8 +33,8 @@ export function WorkspaceSettings({
         },
         delete: {
           children: <ComingSoon />,
-          icon: "delete",
-          label: "Delete team",
+          icon: "delete-team",
+          label: "Delete",
         },
       }}
       title={`${name} settings`}

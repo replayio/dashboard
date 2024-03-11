@@ -1,8 +1,10 @@
 "use client";
 
+import { Button } from "@/components/Button";
 import { ExternalLink } from "@/components/ExternalLink";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { User } from "@/graphql/types";
+import { useState } from "react";
 
 export function UserSettings({
   onDismiss,
@@ -17,7 +19,7 @@ export function UserSettings({
       onDismiss={onDismiss}
       panels={{
         account: {
-          children: <Account />,
+          children: <Account user={user} />,
           icon: "account",
           label: "Account",
         },
@@ -37,8 +39,27 @@ export function UserSettings({
   );
 }
 
-function Account() {
-  return <div>Accounts settings not yet implemented...</div>;
+function Account({ user }: { user: User }) {
+  const [isPending, setIsPending] = useState(false);
+
+  const onClick = async () => {
+    setIsPending(true);
+
+    window.location.replace("/api/auth/logout");
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div>
+        <span className="font-bold">Signed in as</span>: {user.name}
+      </div>
+      <div>
+        <Button disabled={isPending} onClick={onClick}>
+          Sign out
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 function Legal() {
