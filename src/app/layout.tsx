@@ -8,6 +8,7 @@ import { Icon } from "@/components/Icon";
 import { redirect } from "next/navigation";
 import "use-context-menu/styles.css";
 import "./global.css";
+import assert from "assert";
 
 export const metadata = {
   title: "Replay",
@@ -43,15 +44,8 @@ export default function RootLayout({ children }: PropsWithChildren) {
 }
 
 async function WithAuth({ children }: PropsWithChildren) {
-  let accessToken: string | undefined;
-
-  try {
-    accessToken = (await getAccessToken())?.accessToken;
-  } catch (error) {}
-
-  if (accessToken === undefined) {
-    redirect("/api/auth/login");
-  }
+  const { accessToken } = await getAccessToken();
+  assert(accessToken !== undefined, "accessToken is required");
 
   return (
     <AuthContextProvider accessToken={accessToken}>
