@@ -9,6 +9,7 @@ export function InviteTeamMember({ workspaceId }: { workspaceId: string }) {
 
   const { inviteWorkspaceMember } = useInviteWorkspaceMember(() => {
     setIsPending(false);
+    setEmail("");
   });
 
   const onConfirm = () => {
@@ -27,7 +28,7 @@ export function InviteTeamMember({ workspaceId }: { workspaceId: string }) {
         placeholder="Email address"
         value={email}
       />
-      <Button disabled={isPending} onClick={onConfirm}>
+      <Button disabled={!email || isPending} onClick={onConfirm}>
         Invite
       </Button>
     </div>

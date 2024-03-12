@@ -91,3 +91,18 @@ export type WorkspaceMember = {
   picture: string | null;
   roles: string[];
 };
+
+export type ApiKeyScope = "admin:all" | "write:sourcemap";
+
+export type ApiKey = {
+  id: string;
+  createdAt: Date;
+  label: string;
+  maxRecordings: number;
+  recordingCount: number;
+  scopes: ApiKeyScope[];
+};
+
+export type UserSettings = {
+  apiKeys: ApiKey[];
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import { UserSettings } from "@/components/LeftNavigation/UserSettings";
+import { UserSettingsDialog } from "@/components/LeftNavigation/UserSettings/UserSettingsDialog";
 import { User } from "@/graphql/types";
 import { useState } from "react";
 
@@ -24,7 +24,7 @@ export function CurrentUser({ user }: { user: User }) {
         <div className="text-sm text-slate-400">View settings</div>
       </div>
       {showSettingsDialog && (
-        <UserSettings
+        <UserSettingsDialog
           user={user}
           onDismiss={() => setShowSettingsDialog(false)}
         />

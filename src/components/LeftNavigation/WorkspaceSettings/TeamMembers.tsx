@@ -19,10 +19,12 @@ export function TeamMembers({
     .sort((a, b) => Number(b.isPending) - Number(a.isPending));
 
   return (
-    <div className="flex flex-col gap-4">
-      <InviteTeamMember workspaceId={id} />
+    <div className="flex flex-col gap-4 max-h-full">
+      <div className="shrink-0">
+        <InviteTeamMember workspaceId={id} />
+      </div>
 
-      <div className="flex flex-col gap-1 max-h-40 overflow-auto">
+      <div className="flex flex-col gap-1 overflow-auto shrink">
         {loading && <div className="text-slate-500">Loading...</div>}{" "}
         {error && (
           <div
@@ -45,14 +47,16 @@ export function TeamMembers({
             <div className="truncate shrink-0 text-sm text-slate-300">
               {getPrimaryRole(member.roles)}{" "}
               {member.isPending && (
-                <small className="text-yellow-500">(pending)</small>
+                <small className="text-yellow-300">(pending)</small>
               )}
             </div>
           </div>
         ))}
       </div>
 
-      <InvitationLink invitationCode={invitationCode} />
+      <div className="shrink-0">
+        <InvitationLink invitationCode={invitationCode} />
+      </div>
     </div>
   );
 }

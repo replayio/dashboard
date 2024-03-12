@@ -1,7 +1,9 @@
 "use client";
 
+import { Billing } from "@/components/LeftNavigation/WorkspaceSettings/Billing";
 import { DeleteWorkspace } from "@/components/LeftNavigation/WorkspaceSettings/DeleteWorkspace";
 import { TeamMembers } from "@/components/LeftNavigation/WorkspaceSettings/TeamMembers";
+import { WorkspaceApiKeys } from "@/components/LeftNavigation/WorkspaceSettings/WorkspaceApiKeys";
 import { SettingsDialog } from "@/components/SettingsDialog";
 
 export function WorkspaceSettingsDialog({
@@ -26,12 +28,12 @@ export function WorkspaceSettingsDialog({
           label: "Members",
         },
         billing: {
-          children: <ComingSoon />,
+          children: <Billing workspaceId={id} />,
           icon: "billing",
           label: "Billing",
         },
         "api-keys": {
-          children: <ComingSoon />,
+          children: <WorkspaceApiKeys workspaceId={id} />,
           icon: "api-keys",
           label: "API keys",
         },
@@ -44,8 +46,4 @@ export function WorkspaceSettingsDialog({
       title={`${name} settings`}
     />
   );
-}
-
-function ComingSoon() {
-  return <div>Not yet implemented...</div>;
 }
