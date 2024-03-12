@@ -1,3 +1,5 @@
+import { Recording } from "@/graphql/generated/graphql";
+
 export enum RecordingTarget {
   gecko = "gecko",
   chromium = "chromium",
@@ -24,4 +26,12 @@ export function getRecordingTarget(buildId: string): RecordingTarget {
     return RecordingTarget.node;
   }
   return RecordingTarget.unknown;
+}
+
+export function getURL(id: string, buildId: string) {
+  const target = getRecordingTarget(buildId);
+
+  return target === "chromium"
+    ? `https://app.replay.io/recording/${id}`
+    : `https://legacy.replay.io/recording/${id}`;
 }

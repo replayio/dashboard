@@ -3,16 +3,11 @@ import { RecordingThumbnail } from "@/app/team/[id]/recordings/Recordings/Record
 import { Icon } from "@/components/Icon";
 import { WorkspaceRecording } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
-import { getRecordingTarget } from "@/utils/recording";
+import { getURL } from "@/utils/recording";
 import Link from "next/link";
 
-export function Recording({ recording }: { recording: WorkspaceRecording }) {
-  const target = getRecordingTarget(recording.buildId);
-
-  const href =
-    target === "chromium"
-      ? `https://app.replay.io/recording/${recording.uuid}`
-      : `https://legacy.replay.io/recording/${recording.uuid}`;
+export function RecordingRow({ recording }: { recording: WorkspaceRecording }) {
+  const href = getURL(recording.uuid, recording.buildId);
 
   return (
     <Link

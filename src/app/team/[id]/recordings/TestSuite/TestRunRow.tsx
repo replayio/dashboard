@@ -5,7 +5,7 @@ import { TestRun } from "@/graphql/types";
 import { useNextLink } from "@/hooks/useNextLink";
 import { useSearchParamLink } from "@/hooks/useSearchParamLink";
 import { formatRelativeTime } from "@/utils/number";
-import { getTestRunTitle } from "@/utils/test-runs";
+import { getTestRunTitle } from "@/utils/test-suites";
 import Link from "next/link";
 
 export function TestRunRow({

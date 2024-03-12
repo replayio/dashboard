@@ -68,15 +68,16 @@ export type TestSuiteTestAttemptResult =
 export type TestSuiteTest = {
   durationMs: number;
   errors: string[] | null;
+  id: string;
   recordings: TestSuiteTestRecording[];
   scope: string[];
   sourcePath: string;
   status: TestSuiteTestStatus;
-  testId: string;
   title: string;
 };
 
 export type TestSuiteTestRecording = {
+  buildId: string;
   createdAt: Date;
   duration: number;
   id: string;

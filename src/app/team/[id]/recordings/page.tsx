@@ -13,6 +13,7 @@ export default async function Page({
     recordingFilter?: string;
     recordingLimit?: number;
     testFilter?: string;
+    testId?: string;
     testRunBranch?: string;
     testRunFilter?: string;
     testRunId?: string;
@@ -35,6 +36,7 @@ export default async function Page({
     return (
       <TestSuitesPage
         testFilter={searchParams.testFilter ?? ""}
+        testId={searchParams.testId ?? null}
         testRunBranch={searchParams.testRunBranch ?? ""}
         testRunFilter={searchParams.testRunFilter ?? ""}
         testRunId={searchParams.testRunId ?? null}

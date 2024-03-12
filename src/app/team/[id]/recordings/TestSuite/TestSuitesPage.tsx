@@ -6,14 +6,22 @@ import { TestRow } from "@/app/team/[id]/recordings/TestSuite/TestRow";
 import { TestRunRow } from "@/app/team/[id]/recordings/TestSuite/TestRunRow";
 import { getTestSuiteTests } from "@/graphql/queries/getTestSuiteTests";
 import { getTestSuiteTestRuns } from "@/graphql/queries/getTestSuiteTestRuns";
-import { filterTest, filterTestRun, getTestRunTitle } from "@/utils/test-runs";
+import {
+  filterTest,
+  filterTestRun,
+  getColorClassName,
+  getTestRunTitle,
+} from "@/utils/test-suites";
 import { TestStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestStatusMenu";
 import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilterInput";
 import { getRelativeDate } from "@/utils/date";
 import { TestRunStats } from "@/app/team/[id]/recordings/TestSuite/TestRunStats";
+import { TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
+import { RecordingRow } from "@/app/team/[id]/recordings/TestSuite/RecordingRow";
 
 export async function TestSuitesPage({
   testFilter,
+  testId,
   testRunBranch,
   testRunFilter,
   testRunId,
@@ -22,6 +30,7 @@ export async function TestSuitesPage({
   workspaceId,
 }: {
   testFilter: string;
+  testId: string | null;
   testRunBranch: string;
   testRunFilter: string;
   testRunId: string | null;
@@ -69,6 +78,45 @@ export async function TestSuitesPage({
     (testRun) => testRun.id === testRunId
   );
 
+  const selectedTest = filteredTests?.find((test) => test.id === testId);
+
+  const categorizedTests = {
+    failed: {
+      color: getColorClassName("failed"),
+      count: selectedTestRun?.numFailed ?? 0,
+      label: "Failed",
+      tests: [] as TestSuiteTest[],
+    },
+    flaky: {
+      color: getColorClassName("flaky"),
+      count: selectedTestRun?.numFlaky ?? 0,
+      label: "Flaky",
+      tests: [] as TestSuiteTest[],
+    },
+    passed: {
+      color: getColorClassName("passed"),
+      count: selectedTestRun?.numPassed ?? 0,
+      label: "Passed",
+      tests: [] as TestSuiteTest[],
+    },
+  };
+
+  filteredTests?.forEach((test) => {
+    switch (test.status) {
+      case "failed": {
+        categorizedTests.failed.tests.push(test);
+        break;
+      }
+      case "flaky": {
+        categorizedTests.flaky.tests.push(test);
+        break;
+      }
+      case "passed": {
+        categorizedTests.passed.tests.push(test);
+      }
+    }
+  });
+
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2">
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
@@ -111,65 +159,66 @@ export async function TestSuitesPage({
             </div>
             <TestRunStats durationMs={durationMs} testRun={selectedTestRun} />
             <div className="overflow-auto -mx-1">
-              {selectedTestRun.numFailed > 0 && (
-                <>
-                  <div className="font-bold text-red-500 mx-1">
-                    {selectedTestRun.numFailed === 1
-                      ? "1 Failed test"
-                      : `${selectedTestRun.numFailed} Failed tests`}
-                  </div>
-                  {filteredTests
-                    ?.filter((test) => test.status === "failed")
-                    ?.map((test, index) => (
-                      <TestRow
-                        key={index}
-                        test={test}
-                        workspaceId={workspaceId}
-                      />
-                    ))}
-                </>
-              )}
-              {selectedTestRun.numFlaky > 0 && (
-                <>
-                  <div className="font-bold text-yellow-400 mx-1">
-                    {selectedTestRun.numFlaky === 1
-                      ? "1 Flaky test"
-                      : `${selectedTestRun.numFlaky} Flaky tests`}
-                  </div>
-                  {filteredTests
-                    ?.filter((test) => test.status === "flaky")
-                    ?.map((test, index) => (
-                      <TestRow
-                        key={index}
-                        test={test}
-                        workspaceId={workspaceId}
-                      />
-                    ))}
-                </>
-              )}
-              {selectedTestRun.numPassed > 0 && (
-                <>
-                  <div className="font-bold text-green-500 mx-1">
-                    {selectedTestRun.numPassed === 1
-                      ? "1 Passed test"
-                      : `${selectedTestRun.numPassed} Passed tests`}
-                  </div>
-                  {filteredTests
-                    ?.filter((test) => test.status === "passed")
-                    ?.map((test, index) => (
-                      <TestRow
-                        key={index}
-                        test={test}
-                        workspaceId={workspaceId}
-                      />
-                    ))}
-                </>
+              {Object.values(categorizedTests).map(
+                ({ color, count, label, tests }) =>
+                  count > 0 ? (
+                    <>
+                      <div className={`font-bold mx-1 ${color}`}>
+                        {count === 1
+                          ? `1 ${label} test`
+                          : `${count} ${label} tests`}
+                      </div>
+                      {tests.map((test, index) => (
+                        <TestRow
+                          currentTestId={testId}
+                          key={index}
+                          test={test}
+                        />
+                      ))}
+                    </>
+                  ) : null
               )}
             </div>
           </>
         )}
       </div>
-      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-1"></div>
+      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+        {selectedTest && (
+          <>
+            <div className="overflow-auto -mx-1">
+              {selectedTest.recordings.map((recording, index) => {
+                let status: TestSuiteTestStatus;
+                switch (selectedTest.status) {
+                  case "failed": {
+                    status = "failed";
+                    break;
+                  }
+                  case "flaky": {
+                    status =
+                      index === selectedTest.recordings.length - 1
+                        ? "passed"
+                        : "flaky";
+                    break;
+                  }
+                  case "passed": {
+                    status = "passed";
+                    break;
+                  }
+                }
+
+                return (
+                  <RecordingRow
+                    key={recording.id}
+                    recording={recording}
+                    status={status}
+                  />
+                );
+              })}
+            </div>
+            {/* TODO Errors */}
+          </>
+        )}
+      </div>
     </div>
   );
 }

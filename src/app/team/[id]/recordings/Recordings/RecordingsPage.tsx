@@ -1,7 +1,7 @@
 import { LaunchReplayButton } from "@/app/team/[id]/recordings/Recordings/LaunchReplayButton";
 import { LibrarySearchInput } from "@/app/team/[id]/recordings/Recordings/LibrarySearchInput";
 import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
-import { Recording } from "@/app/team/[id]/recordings/Recordings/Recording";
+import { RecordingRow } from "@/app/team/[id]/recordings/Recordings/RecordingRow";
 import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/Recordings/ShowMoreRecordingsRow";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
 import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
@@ -42,7 +42,7 @@ export async function RecordingsPage({
       <div className="overflow-auto flex flex-col gap-2">
         <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px">
           {recordings.map((recording) => (
-            <Recording key={recording.uuid} recording={recording} />
+            <RecordingRow key={recording.uuid} recording={recording} />
           ))}
           <ShowMoreRecordingsRow maxLimit={totalRecordings} />
         </div>

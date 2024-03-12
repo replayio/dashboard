@@ -1,4 +1,4 @@
-import { TestRun, TestSuiteTest } from "@/graphql/types";
+import { TestRun, TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
 
 export function filterTest(
   test: TestSuiteTest,
@@ -78,6 +78,17 @@ export function filterTestRun(
   }
 
   return true;
+}
+
+export function getColorClassName(status: TestSuiteTestStatus) {
+  switch (status) {
+    case "failed":
+      return "text-red-500";
+    case "flaky":
+      return "text-yellow-400";
+    case "passed":
+      return "text-green-500";
+  }
 }
 
 export function getTestRunTitle(groupedTestCases: TestRun): string {

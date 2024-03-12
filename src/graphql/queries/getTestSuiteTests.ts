@@ -41,6 +41,7 @@ export async function getTestSuiteTests(
                     executions {
                       result
                       recordings {
+                        buildId
                         uuid
                         duration
                         isProcessed
@@ -93,6 +94,7 @@ export async function getTestSuiteTests(
 
       recordings.forEach((recording) => {
         mappedRecordings.push({
+          buildId: recording.buildId ?? "",
           createdAt: new Date(recording.createdAt),
           duration: recording.duration ?? 0,
           id: recording.uuid as string,
@@ -105,11 +107,11 @@ export async function getTestSuiteTests(
     return {
       durationMs: test.durationMs,
       errors: test.errors ?? null,
+      id: test.testId,
       recordings: mappedRecordings,
       scope: test.scope,
       sourcePath: test.sourcePath,
       status: numFailed === 0 ? "passed" : numPassed === 0 ? "failed" : "flaky",
-      testId: test.testId,
       title: test.title,
     };
   });
