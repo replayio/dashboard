@@ -76,20 +76,18 @@ export async function getTestSuiteTests(
   assert(testRun, "Test run not found");
 
   return testRun.node.tests.map((test) => {
-    let status: TestSuiteTestStatus = "passed";
+    let numFailed = 0;
+    let numPassed = 0;
 
     const mappedRecordings: TestSuiteTestRecording[] = [];
     test.executions.forEach(({ recordings, result }) => {
       switch (result as TestSuiteTestAttemptResult) {
-        case "flaky": {
-          if (status === "passed") {
-            status = "flaky";
-          }
+        case "failed": {
+          numFailed++;
           break;
         }
-        case "failed": {
-          status = "failed";
-          break;
+        case "passed": {
+          numPassed++;
         }
       }
 
@@ -110,7 +108,7 @@ export async function getTestSuiteTests(
       recordings: mappedRecordings,
       scope: test.scope,
       sourcePath: test.sourcePath,
-      status,
+      status: numFailed === 0 ? "passed" : numPassed === 0 ? "failed" : "flaky",
       testId: test.testId,
       title: test.title,
     };

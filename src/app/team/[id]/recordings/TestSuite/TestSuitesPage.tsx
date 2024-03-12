@@ -84,7 +84,7 @@ export async function TestSuitesPage({
         <div className="text-center">
           Failure rate: {Math.round(testRunFailureRate * 100)}%
         </div>
-        <div className="overflow-auto -mx-1">
+        <div className="overflow-y-auto -mx-1">
           {filteredTestRuns.map((testRun) => (
             <TestRunRow
               currentTestRunId={testRunId}
@@ -105,10 +105,61 @@ export async function TestSuitesPage({
               {getTestRunTitle(selectedTestRun)}
             </div>
             <TestRunStats testRun={selectedTestRun} />
-            <div className="overflow-auto">
-              {filteredTests?.map((test, index) => (
-                <TestRow key={index} test={test} workspaceId={workspaceId} />
-              ))}
+            <div className="overflow-auto -mx-1">
+              {selectedTestRun.numFailed > 0 && (
+                <>
+                  <div className="font-bold text-red-500 mx-1">
+                    {selectedTestRun.numFailed === 1
+                      ? "1 Failed test"
+                      : `${selectedTestRun.numFailed} Failed tests`}
+                  </div>
+                  {filteredTests
+                    ?.filter((test) => test.status === "failed")
+                    ?.map((test, index) => (
+                      <TestRow
+                        key={index}
+                        test={test}
+                        workspaceId={workspaceId}
+                      />
+                    ))}
+                </>
+              )}
+              {selectedTestRun.numFlaky > 0 && (
+                <>
+                  <div className="font-bold text-yellow-400 mx-1">
+                    {selectedTestRun.numFlaky === 1
+                      ? "1 Flaky test"
+                      : `${selectedTestRun.numFlaky} Flaky tests`}
+                  </div>
+                  {filteredTests
+                    ?.filter((test) => test.status === "flaky")
+                    ?.map((test, index) => (
+                      <TestRow
+                        key={index}
+                        test={test}
+                        workspaceId={workspaceId}
+                      />
+                    ))}
+                </>
+              )}
+              {selectedTestRun.numPassed > 0 && (
+                <>
+                  <div className="font-bold text-green-500 mx-1">
+                    {selectedTestRun.numPassed === 1
+                      ? "1 Passed test"
+                      : `${selectedTestRun.numPassed} Passed tests`}
+                  </div>
+                  {filteredTests
+                    ?.filter((test) => test.status === "passed")
+                    ?.map((test, index) => (
+                      <TestRow
+                        key={index}
+                        test={test}
+                        workspaceId={workspaceId}
+                      />
+                    ))}
+                </>
+              )}
             </div>
           </>
         )}

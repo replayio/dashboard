@@ -17,16 +17,17 @@ export function TestRow({
 
   // const url = new URL(window.location.href);
   // url.searchParams.set("testRunId", test.id);
+  const isActive = false; // TODO
 
   return (
     <Link
-      className={`flex flex-row items-center gap-2 whitespace-nowrap text-white  ${
-        isPending ? "opacity-50" : ""
-      }`}
+      className={`flex flex-row items-center gap-2 text-white px-2 py-1 rounded ${
+        isActive ? "bg-slate-700" : "hover:bg-slate-700"
+      } ${isPending ? "opacity-50" : ""}`}
       href=""
       onClick={onClick}
     >
-      {test.title}
+      <div className="truncate shrink">{test.title}</div>
     </Link>
   );
 }
