@@ -18,6 +18,7 @@ import { getRelativeDate } from "@/utils/date";
 import { TestRunStats } from "@/app/team/[id]/recordings/TestSuite/TestRunStats";
 import { TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
 import { RecordingRow } from "@/app/team/[id]/recordings/TestSuite/RecordingRow";
+import { TestErrors } from "@/app/team/[id]/recordings/TestSuite/TestErrors";
 
 export async function TestSuitesPage({
   testFilter,
@@ -186,6 +187,7 @@ export async function TestSuitesPage({
         {selectedTest && (
           <>
             <div className="overflow-auto -mx-1">
+              <div className="font-bold mb-2">Replays</div>
               {selectedTest.recordings.map((recording, index) => {
                 let status: TestSuiteTestStatus;
                 switch (selectedTest.status) {
@@ -215,7 +217,7 @@ export async function TestSuitesPage({
                 );
               })}
             </div>
-            {/* TODO Errors */}
+            <TestErrors test={selectedTest} />
           </>
         )}
       </div>

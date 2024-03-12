@@ -24,7 +24,7 @@ export function RecordingRow({
       href={url ?? ""}
     >
       <Icon className={`w-6 h-6 shrink-0 ${colorClassName}`} type={iconType} />
-      <div className="truncate shrink">View Replay</div>
+      <div className="truncate shrink">View recording</div>
     </Link>
   );
 }
