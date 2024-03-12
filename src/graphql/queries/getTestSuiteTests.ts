@@ -1,26 +1,28 @@
 import {
-  GetTestRunRecordingsQuery,
-  GetTestRunRecordingsQueryVariables,
+  GetTestsQuery,
+  GetTestsQueryVariables,
 } from "@/graphql/generated/graphql";
 import { getGraphQLClientServer } from "@/graphql/graphQLClient";
 import {
-  TestSuiteTestRunRecording,
-  TestSuiteTestRunWithRecordings,
+  TestSuiteTestRecording,
+  TestSuiteTest,
+  TestSuiteTestStatus,
+  TestSuiteTestAttemptResult,
 } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import assert from "assert";
 
-export async function getTestSuiteTestRunRecordings(
+export async function getTestSuiteTests(
   workspaceId: string,
   testRunId: string
-): Promise<TestSuiteTestRunWithRecordings[]> {
+): Promise<TestSuiteTest[]> {
   const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<
-    GetTestRunRecordingsQuery,
-    GetTestRunRecordingsQueryVariables
+    GetTestsQuery,
+    GetTestsQueryVariables
   >({
     query: gql`
-      query GetTestRunRecordings($workspaceId: ID!, $id: String!) {
+      query GetTests($workspaceId: ID!, $id: String!) {
         node(id: $workspaceId) {
           ... on Workspace {
             id
@@ -74,8 +76,23 @@ export async function getTestSuiteTestRunRecordings(
   assert(testRun, "Test run not found");
 
   return testRun.node.tests.map((test) => {
-    const mappedRecordings: TestSuiteTestRunRecording[] = [];
-    test.executions.forEach(({ recordings }) => {
+    let status: TestSuiteTestStatus = "passed";
+
+    const mappedRecordings: TestSuiteTestRecording[] = [];
+    test.executions.forEach(({ recordings, result }) => {
+      switch (result as TestSuiteTestAttemptResult) {
+        case "flaky": {
+          if (status === "passed") {
+            status = "flaky";
+          }
+          break;
+        }
+        case "failed": {
+          status = "failed";
+          break;
+        }
+      }
+
       recordings.forEach((recording) => {
         mappedRecordings.push({
           createdAt: new Date(recording.createdAt),
@@ -93,6 +110,7 @@ export async function getTestSuiteTestRunRecordings(
       recordings: mappedRecordings,
       scope: test.scope,
       sourcePath: test.sourcePath,
+      status,
       testId: test.testId,
       title: test.title,
     };

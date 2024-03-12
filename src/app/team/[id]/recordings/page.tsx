@@ -10,11 +10,14 @@ export default async function Page({
 }: {
   params: { id: string };
   searchParams: {
-    branch?: string;
-    filter?: string;
-    limit?: number;
-    status?: string;
+    recordingFilter?: string;
+    recordingLimit?: number;
+    testFilter?: string;
+    testRunBranch?: string;
+    testRunFilter?: string;
     testRunId?: string;
+    testRunStatus?: string;
+    testStatus?: string;
   };
 }) {
   const id = decodeURIComponent(params.id);
@@ -31,19 +34,21 @@ export default async function Page({
   if (isTestWorkspace) {
     return (
       <TestSuitesPage
-        branch={searchParams.branch ?? ""}
-        filter={searchParams.filter ?? ""}
-        status={searchParams.status ?? ""}
+        testFilter={searchParams.testFilter ?? ""}
+        testRunBranch={searchParams.testRunBranch ?? ""}
+        testRunFilter={searchParams.testRunFilter ?? ""}
         testRunId={searchParams.testRunId ?? null}
+        testRunStatus={searchParams.testRunStatus ?? ""}
+        testStatus={searchParams.testStatus ?? ""}
         workspaceId={id}
       />
     );
   } else {
     return (
       <RecordingsPage
-        filter={searchParams.filter ?? ""}
+        filter={searchParams.recordingFilter ?? ""}
         id={id}
-        limit={searchParams.limit ?? PAGE_SIZE}
+        limit={searchParams.recordingLimit ?? PAGE_SIZE}
       />
     );
   }

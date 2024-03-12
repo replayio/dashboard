@@ -2,7 +2,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 export function useSearchParamLink(
   name: string,
-  getNextValue: (value: string | null) => string | null
+  getNextValue: (value: string | null) => string | null,
+  modifySearchParams?: (params: URLSearchParams) => void
 ): string | null {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -17,6 +18,10 @@ export function useSearchParamLink(
   if (searchParams) {
     const params = new URLSearchParams(searchParams);
     params.set(name, newValue);
+
+    if (modifySearchParams) {
+      modifySearchParams(params);
+    }
 
     paramsString = params.toString();
   }

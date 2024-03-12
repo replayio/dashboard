@@ -56,17 +56,27 @@ export type TestRun = {
   user: string | null;
 };
 
-export type TestSuiteTestRunWithRecordings = {
+export type TestSuiteTestStatus = "passed" | "failed" | "flaky";
+export type TestSuiteTestAttemptResult =
+  | "passed"
+  | "failed"
+  | "flaky"
+  | "skipped"
+  | "timedOut"
+  | "unknown";
+
+export type TestSuiteTest = {
   durationMs: number;
   errors: string[] | null;
-  recordings: TestSuiteTestRunRecording[];
+  recordings: TestSuiteTestRecording[];
   scope: string[];
   sourcePath: string;
+  status: TestSuiteTestStatus;
   testId: string;
   title: string;
 };
 
-export type TestSuiteTestRunRecording = {
+export type TestSuiteTestRecording = {
   createdAt: Date;
   duration: number;
   id: string;

@@ -8,20 +8,26 @@ import { formatRelativeTime } from "@/utils/number";
 import { getTestRunTitle } from "@/utils/test-runs";
 import Link from "next/link";
 
-export function TestSuiteRunsRow({
+export function TestRunRow({
   currentTestRunId,
   testRun,
-  workspaceId,
 }: {
   currentTestRunId: string | null;
   testRun: TestRun;
-  workspaceId: string;
 }) {
   const { isPending, onClick } = useNextLink();
 
   const isActive = testRun.id === currentTestRunId;
 
-  const url = useSearchParamLink("testRunId", (value) => testRun.id);
+  const url = useSearchParamLink(
+    "testRunId",
+    () => testRun.id,
+    (searchParams: URLSearchParams) => {
+      // Reset test filters on change
+      searchParams.set("testFilter", "");
+      searchParams.set("testStatus", "");
+    }
+  );
 
   return (
     <Link

@@ -1,17 +1,14 @@
 "use client";
 
-import { Icon } from "@/components/Icon";
-import { TestRun, TestSuiteTestRunWithRecordings } from "@/graphql/types";
+import { TestSuiteTest } from "@/graphql/types";
 import { useNextLink } from "@/hooks/useNextLink";
 import Link from "next/link";
-import { formatRelativeTime } from "@/utils/number";
-import { getTestRunTitle } from "@/utils/test-runs";
 
-export function TestSuiteRunWithRecordingsRow({
+export function TestRow({
   test,
   workspaceId,
 }: {
-  test: TestSuiteTestRunWithRecordings;
+  test: TestSuiteTest;
   workspaceId: string;
 }) {
   const { isPending, onClick } = useNextLink();

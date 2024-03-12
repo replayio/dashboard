@@ -4,29 +4,29 @@ import { DropDownTrigger } from "@/components/DropDownTrigger";
 import { useSearchParam } from "@/hooks/useSearchParam";
 import { ContextMenuItem, useContextMenu } from "use-context-menu";
 
-export function TestRunBranchMenu() {
-  const [value, setValue, isPending] = useSearchParam("testRunBranch");
+export function TestStatusMenu() {
+  const [value, setValue, isPending] = useSearchParam("testStatus");
 
-  const showAllBranches = () => {
+  const showAllRuns = () => {
     setValue("all");
   };
 
-  const showOnlyPrimaryBranch = () => {
-    setValue("primary");
+  const showOnlyFailures = () => {
+    setValue("failed");
   };
 
-  const label = value === "primary" ? "Only primary branch" : "All branches";
+  const label = value === "failed" ? "Failed and flaky" : "All runs";
 
   const { contextMenu, onContextMenu: onClick } = useContextMenu(
     <>
-      <ContextMenuItem className="text-sm px-4 py-2" onSelect={showAllBranches}>
-        All branches
+      <ContextMenuItem className="text-sm px-4 py-2" onSelect={showAllRuns}>
+        All runs
       </ContextMenuItem>
       <ContextMenuItem
         className="text-sm px-4 py-2"
-        onSelect={showOnlyPrimaryBranch}
+        onSelect={showOnlyFailures}
       >
-        Only primary branch
+        Failed and flaky
       </ContextMenuItem>
     </>,
     {

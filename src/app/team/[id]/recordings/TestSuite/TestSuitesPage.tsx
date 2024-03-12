@@ -2,38 +2,52 @@ import { TestRunStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunS
 import { TestRunBranchMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsBranchMenu";
 import { TestRunsDateRangeMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsDateRangeMenu";
 import { TestRunsFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestRunsFilterInput";
-import { TestSuiteRunWithRecordingsRow } from "@/app/team/[id]/recordings/TestSuite/TestSuiteRunWithRecordingsRow";
-import { TestSuiteRunsRow } from "@/app/team/[id]/recordings/TestSuite/TestSuiteRunsRow";
-import { getTestSuiteTestRunRecordings } from "@/graphql/queries/getTestSuiteTestRunRecordings";
+import { TestRow } from "@/app/team/[id]/recordings/TestSuite/TestRow";
+import { TestRunRow } from "@/app/team/[id]/recordings/TestSuite/TestRunRow";
+import { getTestSuiteTests } from "@/graphql/queries/getTestSuiteTests";
 import { getTestSuiteTestRuns } from "@/graphql/queries/getTestSuiteTestRuns";
-import { filterTestRun } from "@/utils/test-runs";
+import { filterTest, filterTestRun } from "@/utils/test-runs";
+import { TestStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestStatusMenu";
+import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilterInput";
 
 export async function TestSuitesPage({
-  branch,
-  filter,
-  status,
+  testFilter,
+  testRunBranch,
+  testRunFilter,
   testRunId,
+  testRunStatus,
+  testStatus,
   workspaceId,
 }: {
-  branch: string;
-  filter: string;
-  status: string;
+  testFilter: string;
+  testRunBranch: string;
+  testRunFilter: string;
   testRunId: string | null;
+  testRunStatus: string;
+  testStatus: string;
   workspaceId: string;
 }) {
   const testRuns = await getTestSuiteTestRuns(workspaceId);
-  const testRunWithRecordings = testRunId
-    ? await getTestSuiteTestRunRecordings(workspaceId, testRunId)
+  const tests = testRunId
+    ? await getTestSuiteTests(workspaceId, testRunId)
     : null;
 
   const filteredTestRuns = testRuns.filter((testRun) =>
     filterTestRun(testRun, {
-      branch,
-      status,
-      text: filter,
+      branch: testRunBranch,
+      status: testRunStatus,
+      text: testRunFilter,
     })
   );
-  console.log("filteredTestRuns by", { branch, status });
+
+  const filteredTests = tests
+    ? tests.filter((test) =>
+        filterTest(test, {
+          status: testStatus,
+          text: testFilter,
+        })
+      )
+    : null;
 
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2">
@@ -54,23 +68,24 @@ export async function TestSuitesPage({
         </div>
         <div className="overflow-auto">
           {filteredTestRuns.map((testRun) => (
-            <TestSuiteRunsRow
+            <TestRunRow
               currentTestRunId={testRunId}
               key={testRun.id}
               testRun={testRun}
-              workspaceId={workspaceId}
             />
           ))}
         </div>
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-1">
-        {testRunWithRecordings?.map((test, index) => (
-          <TestSuiteRunWithRecordingsRow
-            key={index}
-            test={test}
-            workspaceId={workspaceId}
-          />
-        ))}
+        <div className="flex flex-col gap-2 p-1">
+          <TestStatusMenu />
+          <TestFilterInput key={testRunId} />
+        </div>
+        <div className="overflow-auto">
+          {filteredTests?.map((test, index) => (
+            <TestRow key={index} test={test} workspaceId={workspaceId} />
+          ))}
+        </div>
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-1"></div>
     </div>

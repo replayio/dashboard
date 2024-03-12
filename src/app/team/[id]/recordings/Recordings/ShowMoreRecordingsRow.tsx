@@ -7,7 +7,7 @@ import { useSearchParamLink } from "@/hooks/useSearchParamLink";
 import Link from "next/link";
 
 export function ShowMoreRecordingsRow({ maxLimit }: { maxLimit: number }) {
-  const href = useSearchParamLink("limit", (limitString) => {
+  const href = useSearchParamLink("recordingLimit", (limitString) => {
     const limit = limitString ? parseInt(limitString, 10) : PAGE_SIZE;
     if (limit >= maxLimit) {
       return null;

@@ -1,4 +1,31 @@
-import { TestRun } from "@/graphql/types";
+import { TestRun, TestSuiteTest } from "@/graphql/types";
+
+export function filterTest(
+  test: TestSuiteTest,
+  {
+    status,
+    text,
+  }: {
+    status: string;
+    text: string;
+  }
+) {
+  if (status === "failed") {
+    if (test.status === "passed") {
+      return false;
+    }
+  }
+
+  if (text !== "") {
+    const lowerCaseText = text.toLowerCase();
+
+    if (!test.title.toLowerCase().includes(lowerCaseText)) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 export function filterTestRun(
   testRun: TestRun,
@@ -12,7 +39,6 @@ export function filterTestRun(
     branch: string;
   }
 ) {
-  const lowerCaseText = text.toLowerCase();
   if (status === "failed") {
     if (testRun.numFailed === 0) {
       return false;
@@ -29,6 +55,8 @@ export function filterTestRun(
   }
 
   if (text !== "") {
+    const lowerCaseText = text.toLowerCase();
+
     const user = testRun.user ?? "";
     const title = getTestRunTitle(testRun);
 

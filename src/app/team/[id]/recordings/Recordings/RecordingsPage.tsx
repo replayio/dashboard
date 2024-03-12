@@ -1,5 +1,5 @@
 import { LaunchReplayButton } from "@/app/team/[id]/recordings/Recordings/LaunchReplayButton";
-import { LibrarySearch } from "@/app/team/[id]/recordings/Recordings/LibrarySearch";
+import { LibrarySearchInput } from "@/app/team/[id]/recordings/Recordings/LibrarySearchInput";
 import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
 import { Recording } from "@/app/team/[id]/recordings/Recordings/Recording";
 import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/Recordings/ShowMoreRecordingsRow";
@@ -36,7 +36,7 @@ export async function RecordingsPage({
   return (
     <div className="flex flex-col gap-2 overflow-auto overflow-hidden p-2">
       <div className="flex flex-row items-center gap-2 justify-between">
-        <LibrarySearch numRecordings={totalRecordings} />
+        <LibrarySearchInput numRecordings={totalRecordings} />
         <LaunchReplayButton />
       </div>
       <div className="overflow-auto flex flex-col gap-2">

@@ -5,17 +5,17 @@ import { useSearchParam } from "@/hooks/useSearchParam";
 import { ContextMenuItem, useContextMenu } from "use-context-menu";
 
 export function TestRunStatusMenu() {
-  const [branch, setBranch, isPending] = useSearchParam("status");
+  const [value, setValue, isPending] = useSearchParam("testRunStatus");
 
   const showAllRuns = () => {
-    setBranch("all");
+    setValue("all");
   };
 
   const showOnlyFailures = () => {
-    setBranch("failed");
+    setValue("failed");
   };
 
-  const label = branch === "failed" ? "Only failures" : "All runs";
+  const label = value === "failed" ? "Only failures" : "All runs";
 
   const { contextMenu, onContextMenu: onClick } = useContextMenu(
     <>

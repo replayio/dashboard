@@ -4,13 +4,13 @@ import { useTransition } from "react";
 
 export function useSearchParam(
   name: string
-): [string | null, (value: string) => void, isPending: boolean] {
+): [string | undefined, (value: string) => void, isPending: boolean] {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
 
   const [isPending, startTransition] = useTransition();
 
-  const value = searchParams?.get(name) ?? null;
+  const value = searchParams?.get(name) ?? undefined;
 
   const setValue = (value: string) => {
     assert(searchParams != null);
