@@ -1,12 +1,10 @@
+import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
 import { LaunchReplayButton } from "@/app/team/[id]/recordings/Recordings/LaunchReplayButton";
 import { LibrarySearchInput } from "@/app/team/[id]/recordings/Recordings/LibrarySearchInput";
-import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
 import { RecordingRow } from "@/app/team/[id]/recordings/Recordings/RecordingRow";
 import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/Recordings/ShowMoreRecordingsRow";
-import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
 import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
 import { getWorkspaceRecordingsServer } from "@/graphql/queries/getWorkspaceRecordings";
-import assert from "assert";
 
 export async function RecordingsPage({
   filter,
@@ -17,12 +15,6 @@ export async function RecordingsPage({
   id: string;
   limit: number;
 }) {
-  if (id !== "me") {
-    const workspaces = await getNonPendingWorkspacesServer();
-    const workspace = workspaces.find((workspace) => workspace.id === id);
-    assert(workspace, `Workspace "${id}" not found`);
-  }
-
   // TODO GraphQL queries should be pulling down only the data we need;
   // else we risk wasting bandwidth (and exceeding NextJS's 2MB cache limit)
   const allRecordings =
@@ -45,6 +37,9 @@ export async function RecordingsPage({
             <RecordingRow key={recording.uuid} recording={recording} />
           ))}
           <ShowMoreRecordingsRow maxLimit={totalRecordings} />
+          {recordings.length === 0 && (
+            <div>No recordings have been uploaded yet.</div>
+          )}
         </div>
       </div>
       <MountEffects workspaceId={id} />

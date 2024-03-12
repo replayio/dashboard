@@ -3,12 +3,12 @@ import { NavList } from "@/components/LeftNavigation/NavList";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { PropsWithChildren, Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { Icon } from "@/components/Icon";
-import { redirect } from "next/navigation";
+import assert from "assert";
 import "use-context-menu/styles.css";
 import "./global.css";
-import assert from "assert";
 
 export const metadata = {
   title: "Replay",
@@ -22,19 +22,30 @@ export default function RootLayout({ children }: PropsWithChildren) {
           <body className="flex h-screen w-screen flex-row bg-slate-900">
             <NavList />
             <main className="flex flex-col grow overflow-auto">
-              <Suspense
+              <ErrorBoundary
                 fallback={
-                  <div className="flex flex-row items-center gap-2 text-slate-500 p-4">
-                    <Icon
-                      className="w-6 h-6 animate-spin"
-                      type="loading-spinner"
-                    />
-                    <div className="text-lg">Loading...</div>
+                  <div
+                    className="bg-red-400 text-red-900 px-2 py-1 rounded m-2 font-bold inline-block"
+                    role="alert"
+                  >
+                    Something went wrong =(
                   </div>
                 }
               >
-                {children}
-              </Suspense>
+                <Suspense
+                  fallback={
+                    <div className="flex flex-row items-center gap-2 text-slate-500 p-4">
+                      <Icon
+                        className="w-6 h-6 animate-spin"
+                        type="loading-spinner"
+                      />
+                      <div className="text-lg">Loading...</div>
+                    </div>
+                  }
+                >
+                  {children}
+                </Suspense>
+              </ErrorBoundary>
             </main>
           </body>
         </WithAuth>

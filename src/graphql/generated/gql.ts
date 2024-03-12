@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n      mutation AddCollaborator($email: String!, $recordingId: ID!) {\n        addRecordingCollaborator(\n          input: { email: $email, recordingId: $recordingId }\n        ) {\n          success\n        }\n      }\n    ": types.AddCollaboratorDocument,
+    "\n      mutation CreateNewWorkspace($name: String!, $planKey: String!) {\n        createWorkspace(input: { name: $name, planKey: $planKey }) {\n          success\n          workspace {\n            id\n            invitationCode\n            domain\n            isDomainLimitedCode\n          }\n        }\n      }\n    ": types.CreateNewWorkspaceDocument,
     "\n      mutation DeleteRecording($recordingId: ID!) {\n        deleteRecording(input: { id: $recordingId }) {\n          success\n        }\n      }\n    ": types.DeleteRecordingDocument,
     "\n      mutation DeleteCollaborator($collaborationId: ID!) {\n        removeRecordingCollaborator(input: { id: $collaborationId }) {\n          success\n        }\n      }\n    ": types.DeleteCollaboratorDocument,
     "\n      mutation DeleteWorkspace(\n        $workspaceId: ID!\n        $shouldDeleteRecordings: Boolean!\n      ) {\n        deleteWorkspace(\n          input: {\n            workspaceId: $workspaceId\n            shouldDeleteRecordings: $shouldDeleteRecordings\n          }\n        ) {\n          success\n        }\n      }\n    ": types.DeleteWorkspaceDocument,
@@ -47,6 +48,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n      mutation AddCollaborator($email: String!, $recordingId: ID!) {\n        addRecordingCollaborator(\n          input: { email: $email, recordingId: $recordingId }\n        ) {\n          success\n        }\n      }\n    "): (typeof documents)["\n      mutation AddCollaborator($email: String!, $recordingId: ID!) {\n        addRecordingCollaborator(\n          input: { email: $email, recordingId: $recordingId }\n        ) {\n          success\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n      mutation CreateNewWorkspace($name: String!, $planKey: String!) {\n        createWorkspace(input: { name: $name, planKey: $planKey }) {\n          success\n          workspace {\n            id\n            invitationCode\n            domain\n            isDomainLimitedCode\n          }\n        }\n      }\n    "): (typeof documents)["\n      mutation CreateNewWorkspace($name: String!, $planKey: String!) {\n        createWorkspace(input: { name: $name, planKey: $planKey }) {\n          success\n          workspace {\n            id\n            invitationCode\n            domain\n            isDomainLimitedCode\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

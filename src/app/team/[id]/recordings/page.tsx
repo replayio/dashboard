@@ -1,8 +1,7 @@
 import { RecordingsPage } from "@/app/team/[id]/recordings/Recordings/RecordingsPage";
-import { TestSuitesPage } from "@/app/team/[id]/recordings/TestSuite/TestSuitesPage";
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/Recordings/shared";
+import { TestSuitesPage } from "@/app/team/[id]/recordings/TestSuite/TestSuitesPage";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
-import assert from "assert";
 
 export default async function Page({
   params,
@@ -27,9 +26,8 @@ export default async function Page({
   if (id !== "me") {
     const workspaces = await getNonPendingWorkspacesServer();
     const workspace = workspaces.find((workspace) => workspace.id === id);
-    assert(workspace, `Workspace "${id}" not found`);
 
-    isTestWorkspace = workspace.isTest;
+    isTestWorkspace = workspace?.isTest == true;
   }
 
   if (isTestWorkspace) {
