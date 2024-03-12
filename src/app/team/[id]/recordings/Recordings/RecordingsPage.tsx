@@ -1,8 +1,8 @@
-import { LaunchReplayButton } from "@/app/team/[id]/recordings/LaunchReplayButton";
-import { LibrarySearch } from "@/app/team/[id]/recordings/LibrarySearch";
+import { LaunchReplayButton } from "@/app/team/[id]/recordings/Recordings/LaunchReplayButton";
+import { LibrarySearch } from "@/app/team/[id]/recordings/Recordings/LibrarySearch";
 import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
-import { Recording } from "@/app/team/[id]/recordings/Recording";
-import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecordingsRow";
+import { Recording } from "@/app/team/[id]/recordings/Recordings/Recording";
+import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/Recordings/ShowMoreRecordingsRow";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
 import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
 import { getWorkspaceRecordingsServer } from "@/graphql/queries/getWorkspaceRecordings";

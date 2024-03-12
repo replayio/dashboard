@@ -1,6 +1,6 @@
-import { RecordingsPage } from "@/app/team/[id]/recordings/RecordingsPage";
-import { TestSuitesPage } from "@/app/team/[id]/recordings/TestSuitesPage";
-import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
+import { RecordingsPage } from "@/app/team/[id]/recordings/Recordings/RecordingsPage";
+import { TestSuitesPage } from "@/app/team/[id]/recordings/TestSuite/TestSuitesPage";
+import { PAGE_SIZE } from "@/app/team/[id]/recordings/Recordings/shared";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
 import assert from "assert";
 

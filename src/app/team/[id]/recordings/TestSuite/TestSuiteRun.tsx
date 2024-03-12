@@ -18,8 +18,8 @@ export function TestSuiteRun({
 
   // TODO Convert to a tree (memoized)
 
-  const params = new URLSearchParams("");
-  // params.set("testRunId", testRun.id);
+  // const url = new URL(location.href);
+  // url.searchParams.set("testRunId", test.id);
 
   return (
     <Link

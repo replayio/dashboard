@@ -1,5 +1,5 @@
-import { TestSuiteRun } from "@/app/team/[id]/recordings/TestSuiteRun";
-import { TestSuiteRuns } from "@/app/team/[id]/recordings/TestSuiteRuns";
+import { TestSuiteRun } from "@/app/team/[id]/recordings/TestSuite/TestSuiteRun";
+import { TestSuiteRuns } from "@/app/team/[id]/recordings/TestSuite/TestSuiteRuns";
 import { getTestSuiteTestRunRecordings } from "@/graphql/queries/getTestSuiteTestRunRecordings";
 import { getTestSuiteTestRuns } from "@/graphql/queries/getTestSuiteTestRuns";
 

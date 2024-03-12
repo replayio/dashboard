@@ -20,15 +20,15 @@ export function TestSuiteRuns({
 
   const isActive = testRun.id === currentTestRunId;
 
-  const params = new URLSearchParams("");
-  params.set("testRunId", testRun.id);
+  const url = new URL(location.href);
+  url.searchParams.set("testRunId", testRun.id);
 
   return (
     <Link
       className={`flex flex-row items-center gap-2 whitespace-nowrap text-white p-1 rounded ${
         isActive ? "bg-slate-700" : "hover:bg-slate-700"
       } ${isPending ? "opacity-50" : ""}`}
-      href={`/team/${workspaceId}/recordings?${params.toString()}`}
+      href={url}
       onClick={onClick}
     >
       {isPending ? (
