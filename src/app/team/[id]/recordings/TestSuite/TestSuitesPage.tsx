@@ -9,6 +9,7 @@ import { getTestSuiteTestRuns } from "@/graphql/queries/getTestSuiteTestRuns";
 import { filterTest, filterTestRun } from "@/utils/test-runs";
 import { TestStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestStatusMenu";
 import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilterInput";
+import { getRelativeDate } from "@/utils/date";
 
 export async function TestSuitesPage({
   testFilter,
@@ -34,6 +35,7 @@ export async function TestSuitesPage({
 
   const filteredTestRuns = testRuns.filter((testRun) =>
     filterTestRun(testRun, {
+      afterDate: getRelativeDate({ daysAgo: 7 }),
       branch: testRunBranch,
       status: testRunStatus,
       text: testRunFilter,
@@ -48,6 +50,14 @@ export async function TestSuitesPage({
         })
       )
     : null;
+
+  let testRunFailureRate = 0;
+  {
+    const failuresCount = filteredTestRuns.filter(
+      ({ numFailed }) => numFailed > 0
+    ).length;
+    testRunFailureRate = failuresCount / filteredTestRuns.length;
+  }
 
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2">
@@ -65,6 +75,9 @@ export async function TestSuitesPage({
             </div>
           </div>
           <TestRunsFilterInput />
+        </div>
+        <div className="px-1 text-center">
+          Failure rate: {Math.round(testRunFailureRate * 100)}%
         </div>
         <div className="overflow-auto">
           {filteredTestRuns.map((testRun) => (

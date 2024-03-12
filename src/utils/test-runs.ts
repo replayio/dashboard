@@ -30,15 +30,23 @@ export function filterTest(
 export function filterTestRun(
   testRun: TestRun,
   {
+    afterDate,
+    branch,
     status,
     text,
-    branch,
   }: {
+    afterDate: Date;
+    branch: string;
     status: string;
     text: string;
-    branch: string;
   }
 ) {
+  const startOfDay = new Date(testRun.date);
+  startOfDay.setHours(0, 0, 0, 0);
+  if (startOfDay < afterDate) {
+    return false;
+  }
+
   if (status === "failed") {
     if (testRun.numFailed === 0) {
       return false;
