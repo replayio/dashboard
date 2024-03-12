@@ -1,11 +1,17 @@
 import { ExternalLink } from "@/components/ExternalLink";
 import { Icon } from "@/components/Icon";
 import { TestRun } from "@/graphql/types";
-import { formatRelativeTime } from "@/utils/number";
+import { formatDuration, formatRelativeTime } from "@/utils/number";
 
-export function TestRunStats({ testRun }: { testRun: TestRun }) {
+export function TestRunStats({
+  durationMs,
+  testRun,
+}: {
+  durationMs: number;
+  testRun: TestRun;
+}) {
   return (
-    <div className="flex flex-row flex-wrap gap-x-4 p-1 bg-slate-700 rounded">
+    <div className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded">
       <div className="flex flex-row items-center gap-1">
         <Icon className="w-4 h-4" type="clock" />
         {formatRelativeTime(testRun.date)}
@@ -25,6 +31,12 @@ export function TestRunStats({ testRun }: { testRun: TestRun }) {
             }
           />
           {testRun.branchName}
+        </div>
+      )}
+      {durationMs > 0 && (
+        <div className="flex flex-row items-center gap-1">
+          <Icon className="w-4 h-4" type="clock" />
+          {formatDuration(durationMs)}
         </div>
       )}
       {testRun.prNumber && testRun.repository && (

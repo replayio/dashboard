@@ -43,6 +43,11 @@ export async function TestSuitesPage({
     })
   );
 
+  let durationMs = 0;
+  tests?.forEach((test) => {
+    durationMs += test.durationMs;
+  });
+
   const filteredTests = tests
     ? tests.filter((test) =>
         filterTest(test, {
@@ -104,7 +109,7 @@ export async function TestSuitesPage({
             <div className="text-center truncate whitespace-nowrap shrink-0">
               {getTestRunTitle(selectedTestRun)}
             </div>
-            <TestRunStats testRun={selectedTestRun} />
+            <TestRunStats durationMs={durationMs} testRun={selectedTestRun} />
             <div className="overflow-auto -mx-1">
               {selectedTestRun.numFailed > 0 && (
                 <>
