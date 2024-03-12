@@ -37,3 +37,39 @@ export type User = {
   name: string;
   picture: string;
 };
+
+export type TestRun = {
+  branchName: string | null;
+  commitId: string | null;
+  commitTitle: string | null;
+  date: Date;
+  groupLabel: string | null;
+  id: string;
+  isPrimaryBranch: boolean;
+  numFailed: number;
+  numFlaky: number;
+  numPassed: number;
+  prNumber: number | null;
+  prTitle: string | null;
+  repository: string | null;
+  triggerUrl: string | null;
+  user: string | null;
+};
+
+export type TestSuiteTestRunWithRecordings = {
+  durationMs: number;
+  errors: string[] | null;
+  recordings: TestSuiteTestRunRecording[];
+  scope: string[];
+  sourcePath: string;
+  testId: string;
+  title: string;
+};
+
+export type TestSuiteTestRunRecording = {
+  createdAt: Date;
+  duration: number;
+  id: string;
+  isProcessed: boolean;
+  numComments: number;
+};
