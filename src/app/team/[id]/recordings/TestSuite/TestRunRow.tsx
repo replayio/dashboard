@@ -50,7 +50,7 @@ export function TestRunRow({
         </div>
       )}
       <div className="grow truncate">{getTestRunTitle(testRun)}</div>
-      <div className="flex flex-row gap-1 items-center shrink-0 text-slate-500">
+      <div className="flex flex-row gap-1 items-center shrink-0 text-sm text-slate-300">
         <Icon className="w-4 h-4" type="clock" />
         {formatRelativeTime(testRun.date)}
       </div>
