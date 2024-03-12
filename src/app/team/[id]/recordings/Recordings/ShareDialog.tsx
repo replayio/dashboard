@@ -2,6 +2,7 @@
 
 import { Icon } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
+import { Input } from "@/components/Input";
 import { ModalDialog } from "@/components/ModalDialog";
 import { useAddRecordingCollaborator } from "@/graphql/queries/addRecordingCollaborator";
 import { useDeleteRecordingCollaborator } from "@/graphql/queries/deleteRecordingCollaborator";
@@ -42,10 +43,7 @@ export function ShareDialog({
     <ModalDialog onDismiss={onDismiss} title="Share">
       <div className="flex flex-col gap-2">
         <div className="font-bold">Add people</div>
-        <input
-          className={`bg-slate-950 text-white px-4 py-2 outline-none rounded grow ${
-            addingCollaborator ? "opacity-50" : ""
-          }`}
+        <Input
           disabled={addingCollaborator}
           name="email"
           onChange={onChange}

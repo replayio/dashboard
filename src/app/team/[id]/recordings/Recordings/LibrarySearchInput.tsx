@@ -4,6 +4,7 @@ import { useSearchParam } from "@/hooks/useSearchParam";
 import useDebouncedCallback from "@/hooks/useDebouncedCallback";
 import { formatNumber } from "@/utils/number";
 import { ChangeEvent } from "react";
+import { Input } from "@/components/Input";
 
 export function LibrarySearchInput({
   numRecordings,
@@ -19,8 +20,7 @@ export function LibrarySearchInput({
   );
 
   return (
-    <input
-      className="bg-slate-950 text-white px-4 py-2 outline-none rounded grow"
+    <Input
       defaultValue={value}
       onChange={onChange}
       placeholder={
