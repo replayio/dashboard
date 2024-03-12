@@ -1,5 +1,5 @@
 import assert from "assert";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
 export function useSearchParam(
@@ -7,7 +7,6 @@ export function useSearchParam(
 ): [string | null, (value: string) => void, isPending: boolean] {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
-  const pathname = usePathname();
 
   const [isPending, startTransition] = useTransition();
 
@@ -16,11 +15,11 @@ export function useSearchParam(
   const setValue = (value: string) => {
     assert(searchParams != null);
 
-    const params = new URLSearchParams(searchParams);
-    params.set(name, value);
+    const url = new URL(location.href);
+    url.searchParams.set(name, value);
 
     startTransition(() => {
-      replace(`${pathname}?${params.toString()}`);
+      replace(url.toString());
     });
   };
 
