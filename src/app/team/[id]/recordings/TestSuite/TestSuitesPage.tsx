@@ -6,10 +6,11 @@ import { TestRow } from "@/app/team/[id]/recordings/TestSuite/TestRow";
 import { TestRunRow } from "@/app/team/[id]/recordings/TestSuite/TestRunRow";
 import { getTestSuiteTests } from "@/graphql/queries/getTestSuiteTests";
 import { getTestSuiteTestRuns } from "@/graphql/queries/getTestSuiteTestRuns";
-import { filterTest, filterTestRun } from "@/utils/test-runs";
+import { filterTest, filterTestRun, getTestRunTitle } from "@/utils/test-runs";
 import { TestStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestStatusMenu";
 import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilterInput";
 import { getRelativeDate } from "@/utils/date";
+import { TestRunStats } from "@/app/team/[id]/recordings/TestSuite/TestRunStats";
 
 export async function TestSuitesPage({
   testFilter,
@@ -59,11 +60,15 @@ export async function TestSuitesPage({
     testRunFailureRate = failuresCount / filteredTestRuns.length;
   }
 
+  const selectedTestRun = filteredTestRuns.find(
+    (testRun) => testRun.id === testRunId
+  );
+
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2">
-      <div className="bg-slate-800 text-white p-1 rounded basis-4/12 overflow-auto flex flex-col gap-1">
-        <div className="flex flex-col gap-2 p-1">
-          <div className="flex flex-row gap-2 items-center p-1">
+      <div className="bg-slate-800 text-white p-1 pt-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+        <div className="flex flex-col gap-2 px-1">
+          <div className="flex flex-row gap-2 items-center">
             <div className="basis-4/12 shrink overflow-auto">
               <TestRunStatusMenu />
             </div>
@@ -89,16 +94,24 @@ export async function TestSuitesPage({
           ))}
         </div>
       </div>
-      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-1">
-        <div className="flex flex-col gap-2 p-1">
-          <TestStatusMenu />
-          <TestFilterInput key={testRunId} />
-        </div>
-        <div className="overflow-auto">
-          {filteredTests?.map((test, index) => (
-            <TestRow key={index} test={test} workspaceId={workspaceId} />
-          ))}
-        </div>
+      <div className="bg-slate-800 text-white p-1 pt-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+        {selectedTestRun && (
+          <>
+            <div className="flex flex-col gap-2 px-1">
+              <TestStatusMenu />
+              <TestFilterInput key={testRunId} />
+            </div>
+            <div className="text-center truncate whitespace-nowrap shrink-0">
+              {getTestRunTitle(selectedTestRun)}
+            </div>
+            <TestRunStats testRun={selectedTestRun} />
+            <div className="overflow-auto">
+              {filteredTests?.map((test, index) => (
+                <TestRow key={index} test={test} workspaceId={workspaceId} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-1"></div>
     </div>
