@@ -84,3 +84,10 @@ export type TestSuiteTestRecording = {
   isProcessed: boolean;
   numComments: number;
 };
+
+export type WorkspaceMember = {
+  isPending: boolean;
+  name: string;
+  picture: string | null;
+  roles: string[];
+};

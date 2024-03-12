@@ -4,7 +4,7 @@ import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { ModalDialog } from "@/components/ModalDialog";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
-import { KeyboardEvent, useState } from "react";
+import { useState } from "react";
 
 export function CreateTeamDialog({ onDismiss }: { onDismiss: () => void }) {
   const [name, setName] = useState("");
@@ -26,26 +26,13 @@ export function CreateTeamDialog({ onDismiss }: { onDismiss: () => void }) {
     }
   };
 
-  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    switch (event.key) {
-      case "Enter":
-        if (name.trim()) {
-          setIsPending(true);
-          createWorkspace(name);
-        }
-        break;
-      case "Escape":
-        onDismiss();
-        break;
-    }
-  };
-
   return (
     <ModalDialog onDismiss={onDismiss} title="Create new team">
       <Input
         disabled={isPending}
         onChange={(event) => setName(event.currentTarget.value)}
-        onKeyDown={onKeyDown}
+        onConfirm={onClick}
+        onDismiss={onDismiss}
         placeholder="Team name"
         value={name}
       />

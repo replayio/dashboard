@@ -12,8 +12,9 @@ export async function getNonPendingWorkspacesServer() {
             edges {
               node {
                 id
-                name
+                invitationCode
                 isTest
+                name
               }
             }
           }

@@ -15,9 +15,15 @@ export async function NavList() {
         <ReplayLogo />
       </div>
       <div className="flex flex-col overflow-auto">
-        <NavLink id="me" isTest={false} name="Your Library" />
-        {workspaces.map(({ id, isTest, name }) => (
-          <NavLink id={id} isTest={isTest} key={id} name={name} />
+        <NavLink id="me" isTest={false} invitationCode="" name="Your Library" />
+        {workspaces.map(({ id, invitationCode, isTest, name }) => (
+          <NavLink
+            id={id}
+            isTest={isTest}
+            invitationCode={invitationCode ?? ""}
+            key={id}
+            name={name}
+          />
         ))}
         <CreateTeamButton />
       </div>

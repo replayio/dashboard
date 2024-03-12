@@ -2,55 +2,10 @@
 
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
-import { SettingsDialog } from "@/components/SettingsDialog";
 import { useDeleteWorkspace } from "@/graphql/queries/deleteWorkspace";
 import { useState } from "react";
 
-export function WorkspaceSettings({
-  id,
-  name,
-  onDismiss,
-}: {
-  id: string;
-  name: string;
-  onDismiss: () => void;
-}) {
-  return (
-    <SettingsDialog
-      defaultPanel="team-members"
-      onDismiss={onDismiss}
-      panels={{
-        "team-members": {
-          children: <ComingSoon />,
-          icon: "team-members",
-          label: "Members",
-        },
-        billing: {
-          children: <ComingSoon />,
-          icon: "billing",
-          label: "Billing",
-        },
-        "api-keys": {
-          children: <ComingSoon />,
-          icon: "api-keys",
-          label: "API keys",
-        },
-        delete: {
-          children: <DeleteWorkspace id={id} />,
-          icon: "delete-team",
-          label: "Delete",
-        },
-      }}
-      title={`${name} settings`}
-    />
-  );
-}
-
-function ComingSoon() {
-  return <div>Not yet implemented...</div>;
-}
-
-function DeleteWorkspace({ id }: { id: string }) {
+export function DeleteWorkspace({ id }: { id: string }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const { deleteWorkspace } = useDeleteWorkspace();

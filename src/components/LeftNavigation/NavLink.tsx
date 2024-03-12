@@ -2,7 +2,7 @@
 
 import { Icon, IconType } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
-import { WorkspaceSettings } from "@/components/LeftNavigation/WorkspaceSettings";
+import { WorkspaceSettingsDialog } from "@/components/LeftNavigation/WorkspaceSettings/WorkspaceSettingsDialog";
 import { useNextLink } from "@/hooks/useNextLink";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -10,10 +10,12 @@ import { MouseEvent, useState } from "react";
 
 export function NavLink({
   id,
+  invitationCode,
   isTest,
   name,
 }: {
   id: string;
+  invitationCode: string;
   isTest: boolean;
   name: string;
 }) {
@@ -60,8 +62,9 @@ export function NavLink({
         <IconButton onClick={onSettingsClick} iconType="settings" />
       )}
       {showSettingsDialog && (
-        <WorkspaceSettings
+        <WorkspaceSettingsDialog
           id={id}
+          invitationCode={invitationCode}
           name={name}
           onDismiss={() => setShowSettingsDialog(false)}
         />

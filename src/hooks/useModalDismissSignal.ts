@@ -50,7 +50,6 @@ export default function useModalDismissSignal(
         ownerDocument.addEventListener("click", handleMouseEvent, true);
         ownerDocument.addEventListener("contextmenu", handleMouseEvent, true);
         ownerDocument.addEventListener("mousedown", handleMouseEvent, true);
-        ownerDocument.addEventListener("scroll", dismissCallback, true);
       }
     }, 0);
 
@@ -68,7 +67,6 @@ export default function useModalDismissSignal(
           true
         );
         ownerDocument.removeEventListener("mousedown", handleMouseEvent, true);
-        ownerDocument.removeEventListener("scroll", dismissCallback, true);
       }
     };
   }, [modalRef, dismissCallback, dismissOnClickOutside]);
