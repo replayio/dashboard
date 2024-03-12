@@ -3,9 +3,10 @@
 import { Icon } from "@/components/Icon";
 import { TestRun } from "@/graphql/types";
 import { useNextLink } from "@/hooks/useNextLink";
-import Link from "next/link";
+import { useSearchParamLink } from "@/hooks/useSearchParamLink";
 import { formatRelativeTime } from "@/utils/number";
 import { getTestRunTitle } from "@/utils/test-runs";
+import Link from "next/link";
 
 export function TestSuiteRunsRow({
   currentTestRunId,
@@ -20,15 +21,14 @@ export function TestSuiteRunsRow({
 
   const isActive = testRun.id === currentTestRunId;
 
-  const url = new URL(location?.href);
-  url.searchParams.set("testRunId", testRun.id);
+  const url = useSearchParamLink("testRunId", (value) => testRun.id);
 
   return (
     <Link
       className={`flex flex-row items-center gap-2 whitespace-nowrap text-white p-1 rounded ${
         isActive ? "bg-slate-700" : "hover:bg-slate-700"
       } ${isPending ? "opacity-50" : ""}`}
-      href={url}
+      href={url ?? ""}
       onClick={onClick}
     >
       {isPending ? (

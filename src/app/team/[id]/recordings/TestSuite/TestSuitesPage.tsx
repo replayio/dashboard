@@ -10,11 +10,13 @@ import { filterTestRun } from "@/utils/test-runs";
 
 export async function TestSuitesPage({
   branch,
+  filter,
   status,
   testRunId,
   workspaceId,
 }: {
   branch: string;
+  filter: string;
   status: string;
   testRunId: string | null;
   workspaceId: string;
@@ -28,7 +30,7 @@ export async function TestSuitesPage({
     filterTestRun(testRun, {
       branch,
       status,
-      text: "",
+      text: filter,
     })
   );
   console.log("filteredTestRuns by", { branch, status });

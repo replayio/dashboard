@@ -32,6 +32,7 @@ export default async function Page({
     return (
       <TestSuitesPage
         branch={searchParams.branch ?? ""}
+        filter={searchParams.filter ?? ""}
         status={searchParams.status ?? ""}
         testRunId={searchParams.testRunId ?? null}
         workspaceId={id}
