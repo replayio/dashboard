@@ -7,7 +7,7 @@ import Link from "next/link";
 import { formatRelativeTime } from "@/utils/number";
 import { getTestRunTitle } from "@/utils/test-runs";
 
-export function TestSuiteRuns({
+export function TestSuiteRunsRow({
   currentTestRunId,
   testRun,
   workspaceId,
@@ -20,7 +20,7 @@ export function TestSuiteRuns({
 
   const isActive = testRun.id === currentTestRunId;
 
-  const url = new URL(location.href);
+  const url = new URL(location?.href);
   url.searchParams.set("testRunId", testRun.id);
 
   return (

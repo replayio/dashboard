@@ -10,8 +10,10 @@ export default async function Page({
 }: {
   params: { id: string };
   searchParams: {
+    branch?: string;
     filter?: string;
     limit?: number;
+    status?: string;
     testRunId?: string;
   };
 }) {
@@ -29,6 +31,8 @@ export default async function Page({
   if (isTestWorkspace) {
     return (
       <TestSuitesPage
+        branch={searchParams.branch ?? ""}
+        status={searchParams.status ?? ""}
         testRunId={searchParams.testRunId ?? null}
         workspaceId={id}
       />

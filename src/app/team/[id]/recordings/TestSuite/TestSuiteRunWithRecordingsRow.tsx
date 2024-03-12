@@ -7,7 +7,7 @@ import Link from "next/link";
 import { formatRelativeTime } from "@/utils/number";
 import { getTestRunTitle } from "@/utils/test-runs";
 
-export function TestSuiteRun({
+export function TestSuiteRunWithRecordingsRow({
   test,
   workspaceId,
 }: {
@@ -18,7 +18,7 @@ export function TestSuiteRun({
 
   // TODO Convert to a tree (memoized)
 
-  // const url = new URL(location.href);
+  // const url = new URL(window.location.href);
   // url.searchParams.set("testRunId", test.id);
 
   return (

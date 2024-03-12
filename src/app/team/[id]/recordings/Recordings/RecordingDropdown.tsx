@@ -28,7 +28,7 @@ export function RecordingDropdown({
     setShowShareDialog(true);
   };
 
-  const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+  const { contextMenu, onContextMenu } = useContextMenu(
     <>
       <ContextMenuItem className="text-sm px-4 py-2" onSelect={onShare}>
         Share
