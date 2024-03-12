@@ -20,7 +20,7 @@ export function TestRow({
 
   return (
     <Link
-      className={`flex flex-row items-center gap-2 whitespace-nowrap text-white p-1 rounded ${
+      className={`flex flex-row items-center gap-2 whitespace-nowrap text-white  ${
         isPending ? "opacity-50" : ""
       }`}
       href=""

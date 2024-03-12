@@ -5,7 +5,7 @@ import { formatRelativeTime } from "@/utils/number";
 
 export function TestRunStats({ testRun }: { testRun: TestRun }) {
   return (
-    <div className="flex flex-row flex-wrap gap-x-4 mx-1 p-1 bg-slate-700 rounded">
+    <div className="flex flex-row flex-wrap gap-x-4 p-1 bg-slate-700 rounded">
       <div className="flex flex-row items-center gap-1">
         <Icon className="w-4 h-4" type="clock" />
         {formatRelativeTime(testRun.date)}

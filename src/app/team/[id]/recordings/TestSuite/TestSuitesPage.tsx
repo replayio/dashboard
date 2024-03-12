@@ -66,8 +66,8 @@ export async function TestSuitesPage({
 
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2">
-      <div className="bg-slate-800 text-white p-1 pt-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
-        <div className="flex flex-col gap-2 px-1">
+      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 items-center">
             <div className="basis-4/12 shrink overflow-auto">
               <TestRunStatusMenu />
@@ -81,10 +81,10 @@ export async function TestSuitesPage({
           </div>
           <TestRunsFilterInput />
         </div>
-        <div className="px-1 text-center">
+        <div className="text-center">
           Failure rate: {Math.round(testRunFailureRate * 100)}%
         </div>
-        <div className="overflow-auto">
+        <div className="overflow-auto -mx-1">
           {filteredTestRuns.map((testRun) => (
             <TestRunRow
               currentTestRunId={testRunId}
@@ -94,10 +94,10 @@ export async function TestSuitesPage({
           ))}
         </div>
       </div>
-      <div className="bg-slate-800 text-white p-1 pt-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
         {selectedTestRun && (
           <>
-            <div className="flex flex-col gap-2 px-1">
+            <div className="flex flex-col gap-2">
               <TestStatusMenu />
               <TestFilterInput key={testRunId} />
             </div>
