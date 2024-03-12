@@ -148,7 +148,7 @@ export async function TestSuitesPage({
         </div>
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
-        {selectedTestRun && (
+        {selectedTestRun ? (
           <>
             <div className="flex flex-col gap-2">
               <TestStatusMenu />
@@ -177,10 +177,14 @@ export async function TestSuitesPage({
               )}
             </div>
           </>
+        ) : (
+          <div className="flex items-center justify-center text-slate-300 h-full">
+            Select a run to see its details here
+          </div>
         )}
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
-        {selectedTest && (
+        {selectedTest ? (
           <>
             <div className="overflow-auto -mx-1">
               <div className="font-bold mb-2">Replays</div>
@@ -215,7 +219,11 @@ export async function TestSuitesPage({
             </div>
             <TestErrors test={selectedTest} />
           </>
-        )}
+        ) : selectedTestRun ? (
+          <div className="flex items-center justify-center text-slate-300 h-full">
+            Select a test to see its details here
+          </div>
+        ) : null}
       </div>
     </div>
   );
