@@ -1,24 +1,23 @@
+import { RecordingRow } from "@/app/team/[id]/recordings/TestSuite/RecordingRow";
+import { TestErrors } from "@/app/team/[id]/recordings/TestSuite/TestErrors";
+import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilterInput";
+import { TestRow } from "@/app/team/[id]/recordings/TestSuite/TestRow";
+import { TestRunRow } from "@/app/team/[id]/recordings/TestSuite/TestRunRow";
+import { TestRunStats } from "@/app/team/[id]/recordings/TestSuite/TestRunStats";
 import { TestRunStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunStatusMenu";
 import { TestRunBranchMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsBranchMenu";
 import { TestRunsDateRangeMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsDateRangeMenu";
 import { TestRunsFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestRunsFilterInput";
-import { TestRow } from "@/app/team/[id]/recordings/TestSuite/TestRow";
-import { TestRunRow } from "@/app/team/[id]/recordings/TestSuite/TestRunRow";
-import { getTestSuiteTests } from "@/graphql/queries/getTestSuiteTests";
+import { TestStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestStatusMenu";
 import { getTestSuiteTestRuns } from "@/graphql/queries/getTestSuiteTestRuns";
+import { getTestSuiteTests } from "@/graphql/queries/getTestSuiteTests";
+import { TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
+import { getRelativeDate } from "@/utils/date";
 import {
   filterTest,
   filterTestRun,
   getColorClassName,
-  getTestRunTitle,
 } from "@/utils/test-suites";
-import { TestStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestStatusMenu";
-import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilterInput";
-import { getRelativeDate } from "@/utils/date";
-import { TestRunStats } from "@/app/team/[id]/recordings/TestSuite/TestRunStats";
-import { TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
-import { RecordingRow } from "@/app/team/[id]/recordings/TestSuite/RecordingRow";
-import { TestErrors } from "@/app/team/[id]/recordings/TestSuite/TestErrors";
 
 export async function TestSuitesPage({
   testFilter,
@@ -154,9 +153,6 @@ export async function TestSuitesPage({
             <div className="flex flex-col gap-2">
               <TestStatusMenu />
               <TestFilterInput key={testRunId} />
-            </div>
-            <div className="text-center truncate whitespace-nowrap shrink-0">
-              {getTestRunTitle(selectedTestRun)}
             </div>
             <TestRunStats durationMs={durationMs} testRun={selectedTestRun} />
             <div className="overflow-auto -mx-1">
