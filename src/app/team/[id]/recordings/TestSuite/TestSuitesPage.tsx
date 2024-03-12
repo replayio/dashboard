@@ -71,7 +71,8 @@ export async function TestSuitesPage({
     const failuresCount = filteredTestRuns.filter(
       ({ numFailed }) => numFailed > 0
     ).length;
-    testRunFailureRate = failuresCount / filteredTestRuns.length;
+    testRunFailureRate =
+      filteredTestRuns.length > 0 ? failuresCount / filteredTestRuns.length : 0;
   }
 
   const selectedTestRun = filteredTestRuns.find(
@@ -118,7 +119,7 @@ export async function TestSuitesPage({
   });
 
   return (
-    <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2">
+    <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2 h-full">
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 items-center">
