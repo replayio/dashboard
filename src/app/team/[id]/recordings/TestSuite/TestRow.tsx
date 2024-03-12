@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/Icon";
 import { TestSuiteTest } from "@/graphql/types";
 import { useNextLink } from "@/hooks/useNextLink";
 import { useSearchParamLink } from "@/hooks/useSearchParamLink";
@@ -26,6 +27,14 @@ export function TestRow({
       href={url ?? ""}
       onClick={onClick}
     >
+      {isPending ? (
+        <Icon
+          className="w-6 h-6 shrink-0 animate-spin"
+          type="loading-spinner"
+        />
+      ) : (
+        <div className="w-6 h-6 shrink-0" />
+      )}
       <div className="truncate shrink">{test.title}</div>
     </Link>
   );
