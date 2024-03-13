@@ -17,7 +17,7 @@ export function ApiKeys({
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4 max-h-full">
+    <div className="flex flex-col gap-4 h-full overflow-auto">
       <div className="shrink-0">
         API Keys allow you to upload recordings programmatically.
       </div>

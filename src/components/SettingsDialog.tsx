@@ -35,7 +35,7 @@ export function SettingsDialog<
             </li>
           ))}
         </ul>
-        <div className="h-full w-96 h-[250px] overflow-auto">
+        <div className="w-96 h-[250px] max-h-[250px] overflow-auto">
           {panels[activePanel]?.children ?? null}
         </div>
       </div>
