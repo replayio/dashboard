@@ -1,8 +1,9 @@
 import { Button } from "@/components/Button";
+import Checkbox from "@/components/Checkbox";
 import { ClickToCopyString } from "@/components/ClickToCopyString";
 import { Input } from "@/components/Input";
 import { ApiKeyScope } from "@/graphql/types";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 
 export function CreateNewKey({
   createKey,
@@ -50,7 +51,6 @@ export function CreateNewKey({
       }
     };
 
-    // TODO What is wrong with the checkbox inputs below? Why do they require a key to update?
     return (
       <div className="flex flex-col gap-1">
         <div className="flex flex-row items-center gap-2">
@@ -69,33 +69,19 @@ export function CreateNewKey({
         {!keyValue && scopes.length > 1 && (
           <div className="flex flex-row items-center gap-4">
             {scopes.includes("admin:all") && (
-              <label
-                className="flex flex-row items-center gap-1"
-                onClick={() => setAdmin(!admin)}
-              >
-                <input
-                  defaultChecked={admin}
-                  key={`${admin}`}
-                  name="createRecordingsCheckbox"
-                  type="checkbox"
-                />
-                Create recordings
-              </label>
+              <Checkbox
+                checked={admin}
+                label="Create recordings"
+                onChange={(newChecked) => setAdmin(newChecked)}
+              />
             )}
 
             {scopes.includes("write:sourcemap") && (
-              <label
-                className="flex flex-row items-center gap-1"
-                onClick={() => setWriteSourcemaps(!writeSourcemaps)}
-              >
-                <input
-                  defaultChecked={writeSourcemaps}
-                  key={`${writeSourcemaps}`}
-                  name="uploadSourceMapsCheckbox"
-                  type="checkbox"
-                />
-                Upload source maps
-              </label>
+              <Checkbox
+                checked={writeSourcemaps}
+                label="Upload source maps"
+                onChange={(newChecked) => setWriteSourcemaps(newChecked)}
+              />
             )}
           </div>
         )}
