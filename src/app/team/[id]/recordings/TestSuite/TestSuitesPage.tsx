@@ -81,6 +81,7 @@ export async function TestSuitesPage({
 
   const selectedTest = filteredTests?.find((test) => test.id === testId);
 
+  // TODO Organize by file path
   const categorizedTests = {
     failed: {
       color: getColorClassName("failed"),
@@ -117,6 +118,8 @@ export async function TestSuitesPage({
       }
     }
   });
+
+  // TODO Add failure rate graph
 
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2 h-full">
