@@ -1,6 +1,7 @@
 import { ApiKeyRow } from "@/components/ApiKeysPanel/ApiKeyRow";
 import { CreateNewKey } from "@/components/ApiKeysPanel/CreateNewKey";
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
+import { useState } from "react";
 
 export function ApiKeys({
   apiKeys,
@@ -13,6 +14,8 @@ export function ApiKeys({
   deleteKey: (id: string) => void;
   scopes: ApiKeyScope[];
 }) {
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+
   return (
     <div className="flex flex-col gap-4 max-h-full">
       <div className="shrink-0">
