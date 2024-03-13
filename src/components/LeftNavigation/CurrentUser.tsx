@@ -16,6 +16,7 @@ export function CurrentUser({ user }: { user: User }) {
         <img
           alt={`${user.name} avatar`}
           className="rounded-full w-10 h-10"
+          referrerPolicy="no-referrer"
           src={user.picture}
         />
       )}

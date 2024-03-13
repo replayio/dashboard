@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/Icon";
 import { InvitationLink } from "@/components/LeftNavigation/WorkspaceSettings/InvitationLink";
 import { InviteTeamMember } from "@/components/LeftNavigation/WorkspaceSettings/InviteTeamMember";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
@@ -36,13 +37,18 @@ export function TeamMembers({
         )}
         {sortedMembers.map((member, index) => (
           <div className="flex flex-row items-center gap-2" key={index}>
-            {member.picture && (
-              <img
-                alt={`${member.name} avatar`}
-                className="rounded-full w-8 h-8 shrink-0"
-                src={member.picture}
-              />
-            )}
+            <div className="flex items-center justify-center rounded-full w-8 h-8 overflow-hidden shrink-0 bg-slate-500">
+              {member.isPending ? (
+                <Icon className="w-6 h-6 text-slate-300" type="email" />
+              ) : member.picture ? (
+                <img
+                  alt={`${member.name} avatar`}
+                  className="w-full h-full"
+                  referrerPolicy="no-referrer"
+                  src={member.picture}
+                />
+              ) : null}
+            </div>
             <div className="truncate grow">{member.name}</div>
             <div className="truncate shrink-0 text-sm text-slate-300">
               {getPrimaryRole(member.roles)}{" "}

@@ -99,7 +99,12 @@ function Collaborator({
     <div className="flex flex-row items-center gap-2">
       <div className="shrink-0 w-8 h-8 bg-slate-700 flex items-center justify-center rounded-full overflow-hidden">
         {picture ? (
-          <img className="w-full h-full" src={picture} alt={name} />
+          <img
+            alt={name}
+            className="w-full h-full"
+            referrerPolicy="no-referrer"
+            src={picture}
+          />
         ) : (
           <Icon className="w-6 h-6 fill-slate-300" type="email" />
         )}
