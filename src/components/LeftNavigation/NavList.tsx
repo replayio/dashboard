@@ -15,7 +15,13 @@ export async function NavList() {
         <ReplayLogo />
       </div>
       <div className="flex flex-col overflow-auto">
-        <NavLink id="me" isTest={false} invitationCode="" name="Your Library" />
+        <NavLink
+          currentUserId={user.id}
+          id="me"
+          isTest={false}
+          invitationCode=""
+          name="Your Library"
+        />
         {workspaces.map(({ id, invitationCode, isTest, name }) => (
           <NavLink
             currentUserId={user.id}

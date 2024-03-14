@@ -20,7 +20,7 @@ export function WorkspaceSettingsDialog({
   name: string;
   onDismiss: () => void;
 }) {
-  const { error, loading, members } = useGetWorkspaceMembers(id);
+  const { members } = useGetWorkspaceMembers(id);
   const currentMember = members.find((member) => member.id === currentUserId);
   const isAdmin = currentMember?.roles.includes("admin");
 

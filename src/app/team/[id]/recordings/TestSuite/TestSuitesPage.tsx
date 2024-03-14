@@ -59,12 +59,14 @@ export async function TestSuitesPage({
   });
 
   const filteredTests = tests
-    ? tests.filter((test) =>
-        filterTest(test, {
-          status: testStatus,
-          text: testFilter,
-        })
-      )
+    ? tests
+        .filter((test) =>
+          filterTest(test, {
+            status: testStatus,
+            text: testFilter,
+          })
+        )
+        .sort((a, b) => a.title.localeCompare(b.title))
     : null;
 
   const selectedTestRun = filteredTestRuns.find(
