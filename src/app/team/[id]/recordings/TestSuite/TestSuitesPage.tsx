@@ -4,6 +4,7 @@ import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilter
 import { TestRow } from "@/app/team/[id]/recordings/TestSuite/TestRow";
 import { TestRunRow } from "@/app/team/[id]/recordings/TestSuite/TestRunRow";
 import { TestRunStats } from "@/app/team/[id]/recordings/TestSuite/TestRunStats";
+import { TestRunStatsGraph } from "@/app/team/[id]/recordings/TestSuite/TestRunStatsGraph";
 import { TestRunStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunStatusMenu";
 import { TestRunBranchMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsBranchMenu";
 import { TestRunsDateRangeMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsDateRangeMenu";
@@ -45,7 +46,7 @@ export async function TestSuitesPage({
 
   const filteredTestRuns = testRuns.filter((testRun) =>
     filterTestRun(testRun, {
-      afterDate: getRelativeDate({ daysAgo: 7 }),
+      afterDate: getRelativeDate({ daysAgo: 6 }),
       branch: testRunBranch,
       status: testRunStatus,
       text: testRunFilter,
@@ -65,15 +66,6 @@ export async function TestSuitesPage({
         })
       )
     : null;
-
-  let testRunFailureRate = 0;
-  {
-    const failuresCount = filteredTestRuns.filter(
-      ({ numFailed }) => numFailed > 0
-    ).length;
-    testRunFailureRate =
-      filteredTestRuns.length > 0 ? failuresCount / filteredTestRuns.length : 0;
-  }
 
   const selectedTestRun = filteredTestRuns.find(
     (testRun) => testRun.id === testRunId
@@ -119,8 +111,6 @@ export async function TestSuitesPage({
     }
   });
 
-  // TODO Add failure rate graph
-
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2 h-full">
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
@@ -138,9 +128,7 @@ export async function TestSuitesPage({
           </div>
           <TestRunsFilterInput />
         </div>
-        <div className="text-center">
-          Failure rate: {Math.round(testRunFailureRate * 100)}%
-        </div>
+        <TestRunStatsGraph testRuns={filteredTestRuns} />
         <div className="overflow-y-auto -mx-1">
           {filteredTestRuns.map((testRun) => (
             <TestRunRow
