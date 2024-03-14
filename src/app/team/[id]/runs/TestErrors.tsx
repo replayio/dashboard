@@ -32,22 +32,24 @@ export function TestErrors({ test }: { test: TestSuiteTest }) {
   return (
     <div>
       <div className="font-bold mb-2">Errors</div>
-      {sortedErrors?.map((error, index) => (
-        <div
-          className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded overflow-hidden"
-          key={index}
-        >
-          <div className="flex flex-row gap-2 items-center overflow-hidden">
-            <div className="flex items-center justify-center bg-rose-600 text-white w-6 h-6 rounded shrink-0 text-xs">
-              {error.count}
+      <div className="flex flex-col gap-2">
+        {sortedErrors?.map((error, index) => (
+          <div
+            className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded overflow-hidden"
+            key={index}
+          >
+            <div className="flex flex-row gap-2 items-center overflow-hidden">
+              <div className="flex items-center justify-center bg-rose-600 text-white w-6 h-6 rounded shrink-0 text-xs">
+                {error.count}
+              </div>
+              <div className="truncate">{error.summary}</div>
             </div>
-            <div className="truncate">{error.summary}</div>
+            <pre className="whitespace-pre-wrap text-xs overflow-auto break-words">
+              {error.message}
+            </pre>
           </div>
-          <pre className="whitespace-pre-wrap text-xs overflow-auto break-words">
-            {error.message}
-          </pre>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
