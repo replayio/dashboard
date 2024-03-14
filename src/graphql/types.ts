@@ -107,3 +107,18 @@ export type ApiKey = {
 export type UserSettings = {
   apiKeys: ApiKey[];
 };
+
+export type TestSuiteTestSummary = {
+  id: string;
+  scope: string[];
+  stats: {
+    failed: number;
+    failureRate: number;
+    flaky: number;
+    flakyRate: number;
+    passed: number;
+    skipped: number;
+    unknown: number;
+  };
+  title: string;
+};
