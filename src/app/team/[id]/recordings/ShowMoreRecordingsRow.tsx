@@ -1,6 +1,6 @@
 "use client";
 
-import { PAGE_SIZE } from "@/app/team/[id]/recordings/Recordings/shared";
+import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
 import { Icon } from "@/components/Icon";
 import { useNextLink } from "@/hooks/useNextLink";
 import { useSearchParamLink } from "@/hooks/useSearchParamLink";

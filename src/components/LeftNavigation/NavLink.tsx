@@ -42,6 +42,8 @@ export function NavLink({
     iconType = isTest ? "test-suite" : "folder";
   }
 
+  const href = isTest ? `/team/${id}/runs` : `/team/${id}/recordings`;
+
   const onSettingsClick = (event: MouseEvent) => {
     event.preventDefault();
     setShowSettingsDialog(true);
@@ -52,7 +54,7 @@ export function NavLink({
       className={`flex flex-row gap-2 items-center text-white px-4 py-1 pr-2 transition  ${
         isActive ? "bg-sky-900 cursor-default" : "hover:bg-sky-900"
       } ${isPending ? "bg-sky-900 opacity-75" : ""}`}
-      href={`/team/${id}/recordings`}
+      href={href}
       onClick={onClick}
     >
       <Icon

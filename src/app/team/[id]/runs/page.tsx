@@ -1,15 +1,15 @@
-import { RecordingRow } from "@/app/team/[id]/recordings/TestSuite/RecordingRow";
-import { TestErrors } from "@/app/team/[id]/recordings/TestSuite/TestErrors";
-import { TestFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestFilterInput";
-import { TestRow } from "@/app/team/[id]/recordings/TestSuite/TestRow";
-import { TestRunRow } from "@/app/team/[id]/recordings/TestSuite/TestRunRow";
-import { TestRunStats } from "@/app/team/[id]/recordings/TestSuite/TestRunStats";
-import { TestRunStatsGraph } from "@/app/team/[id]/recordings/TestSuite/TestRunStatsGraph";
-import { TestRunStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunStatusMenu";
-import { TestRunBranchMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsBranchMenu";
-import { TestRunsDateRangeMenu } from "@/app/team/[id]/recordings/TestSuite/TestRunsDateRangeMenu";
-import { TestRunsFilterInput } from "@/app/team/[id]/recordings/TestSuite/TestRunsFilterInput";
-import { TestStatusMenu } from "@/app/team/[id]/recordings/TestSuite/TestStatusMenu";
+import { RecordingRow } from "@/app/team/[id]/runs/RecordingRow";
+import { TestErrors } from "@/app/team/[id]/runs/TestErrors";
+import { TestFilterInput } from "@/app/team/[id]/runs/TestFilterInput";
+import { TestRow } from "@/app/team/[id]/runs/TestRow";
+import { TestRunRow } from "@/app/team/[id]/runs/TestRunRow";
+import { TestRunStats } from "@/app/team/[id]/runs/TestRunStats";
+import { TestRunStatsGraph } from "@/app/team/[id]/runs/TestRunStatsGraph";
+import { TestRunStatusMenu } from "@/app/team/[id]/runs/TestRunStatusMenu";
+import { TestRunBranchMenu } from "@/app/team/[id]/runs/TestRunsBranchMenu";
+import { TestRunsDateRangeMenu } from "@/app/team/[id]/runs/TestRunsDateRangeMenu";
+import { TestRunsFilterInput } from "@/app/team/[id]/runs/TestRunsFilterInput";
+import { TestStatusMenu } from "@/app/team/[id]/runs/TestStatusMenu";
 import { getTestSuiteTestRuns } from "@/graphql/queries/getTestSuiteTestRuns";
 import { getTestSuiteTests } from "@/graphql/queries/getTestSuiteTests";
 import { TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
@@ -20,25 +20,33 @@ import {
   getColorClassName,
 } from "@/utils/test-suites";
 
-export async function TestSuitesPage({
-  testFilter,
-  testId,
-  testRunBranch,
-  testRunFilter,
-  testRunId,
-  testRunStatus,
-  testStatus,
-  workspaceId,
+export const dynamic = "force-dynamic";
+
+export default async function Page({
+  params,
+  searchParams,
 }: {
-  testFilter: string;
-  testId: string | null;
-  testRunBranch: string;
-  testRunFilter: string;
-  testRunId: string | null;
-  testRunStatus: string;
-  testStatus: string;
-  workspaceId: string;
+  params: { id: string };
+  searchParams: {
+    testFilter?: string;
+    testId?: string;
+    testRunBranch?: string;
+    testRunFilter?: string;
+    testRunId?: string;
+    testRunStatus?: string;
+    testStatus?: string;
+  };
 }) {
+  const workspaceId = decodeURIComponent(params.id);
+
+  const testFilter = searchParams.testFilter ?? "";
+  const testId = searchParams.testId ?? null;
+  const testRunBranch = searchParams.testRunBranch ?? "";
+  const testRunFilter = searchParams.testRunFilter ?? "";
+  const testRunId = searchParams.testRunId ?? null;
+  const testRunStatus = searchParams.testRunStatus ?? "";
+  const testStatus = searchParams.testStatus ?? "";
+
   const testRuns = await getTestSuiteTestRuns(workspaceId);
   const tests = testRunId
     ? await getTestSuiteTests(workspaceId, testRunId)

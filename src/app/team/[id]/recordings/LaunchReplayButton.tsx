@@ -1,6 +1,6 @@
 "use client";
 
-import { LaunchReplayModal } from "@/app/team/[id]/recordings/Recordings/LaunchReplayModal";
+import { LaunchReplayModal } from "@/app/team/[id]/recordings/LaunchReplayModal";
 import { Button } from "@/components/Button";
 import { useState } from "react";
 

@@ -1,5 +1,5 @@
-import { TestRunStatsData } from "@/app/team/[id]/recordings/TestSuite/TestRunStatsGraph";
-import { getTestRunStatsTooltip } from "@/app/team/[id]/recordings/TestSuite/getTestRunStatsTooltip";
+import { TestRunStatsData } from "@/app/team/[id]/runs/TestRunStatsGraph";
+import { getTestRunStatsTooltip } from "@/app/team/[id]/runs/getTestRunStatsTooltip";
 import { beforeEach, describe, expect, it } from "@jest/globals";
 import { ReactNode } from "react";
 import { createRoot } from "react-dom/client";

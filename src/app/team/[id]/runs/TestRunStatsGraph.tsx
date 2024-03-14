@@ -1,6 +1,6 @@
 "use client";
 
-import { getTestRunStatsTooltip } from "@/app/team/[id]/recordings/TestSuite/getTestRunStatsTooltip";
+import { getTestRunStatsTooltip } from "@/app/team/[id]/runs/getTestRunStatsTooltip";
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
 import { getNumDaysAgo } from "@/utils/date";

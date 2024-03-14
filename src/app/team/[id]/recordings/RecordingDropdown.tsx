@@ -1,7 +1,7 @@
 "use client";
 
-import { DeleteDialog } from "@/app/team/[id]/recordings/Recordings/DeleteDialog";
-import { ShareDialog } from "@/app/team/[id]/recordings/Recordings/ShareDialog";
+import { DeleteDialog } from "@/app/team/[id]/recordings/DeleteDialog";
+import { ShareDialog } from "@/app/team/[id]/recordings/ShareDialog";
 import { IconButton } from "@/components/IconButton";
 import { WorkspaceRecording } from "@/graphql/types";
 import { MouseEvent, useState } from "react";
