@@ -1,24 +1,20 @@
 "use client";
 
-import { Icon, IconType } from "@/components/Icon";
-import { IconButton } from "@/components/IconButton";
-import { WorkspaceSettingsDialog } from "@/components/LeftNavigation/WorkspaceSettings/WorkspaceSettingsDialog";
+import { Icon } from "@/components/Icon";
+import { SettingsButton } from "@/components/LeftNavigation/SettingsButton";
 import { useNextLink } from "@/hooks/useNextLink";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { MouseEvent, useState } from "react";
 
 export function NavLink({
   currentUserId,
   id,
   invitationCode,
-  isTest,
   name,
 }: {
   currentUserId: string;
   id: string;
   invitationCode: string;
-  isTest: boolean;
   name: string;
 }) {
   const params = useParams();
@@ -32,46 +28,27 @@ export function NavLink({
 
   const { isPending, onClick } = useNextLink();
 
-  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const showSettingsButton = id !== "me" && isActive;
-
-  let iconType: IconType;
-  if (isPending) {
-    iconType = "loading-spinner";
-  } else {
-    iconType = isTest ? "test-suite" : "folder";
-  }
-
-  const href = isTest ? `/team/${id}/runs` : `/team/${id}/recordings`;
-
-  const onSettingsClick = (event: MouseEvent) => {
-    event.preventDefault();
-    setShowSettingsDialog(true);
-  };
 
   return (
     <Link
       className={`flex flex-row gap-2 items-center text-white px-4 py-1 pr-2 transition  ${
         isActive ? "bg-sky-900 cursor-default" : "hover:bg-sky-900"
       } ${isPending ? "bg-sky-900 opacity-75" : ""}`}
-      href={href}
+      href={`/team/${id}/recordings`}
       onClick={onClick}
     >
       <Icon
         className={`w-4 h-4 ${isPending ? "animate-spin" : ""}`}
-        type={iconType}
+        type={isPending ? "loading-spinner" : "folder"}
       />
       <div className="grow truncate">{name}</div>
       {showSettingsButton && (
-        <IconButton onClick={onSettingsClick} iconType="settings" />
-      )}
-      {showSettingsDialog && (
-        <WorkspaceSettingsDialog
+        <SettingsButton
           currentUserId={currentUserId}
           id={id}
           invitationCode={invitationCode}
           name={name}
-          onDismiss={() => setShowSettingsDialog(false)}
         />
       )}
     </Link>

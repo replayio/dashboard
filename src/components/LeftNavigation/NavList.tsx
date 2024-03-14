@@ -1,6 +1,7 @@
 import { CreateTeamButton } from "@/components/LeftNavigation/CreateTeamButton";
 import { CurrentUser } from "@/components/LeftNavigation/CurrentUser";
 import { NavLink } from "@/components/LeftNavigation/NavLink";
+import { NavLinkTestWorkspace } from "@/components/LeftNavigation/NavLinkTestWorkspace";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { getCurrentUserServer } from "@/graphql/queries/getCurrentUser";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
@@ -18,20 +19,28 @@ export async function NavList() {
         <NavLink
           currentUserId={user.id}
           id="me"
-          isTest={false}
           invitationCode=""
           name="Your Library"
         />
-        {workspaces.map(({ id, invitationCode, isTest, name }) => (
-          <NavLink
-            currentUserId={user.id}
-            id={id}
-            isTest={isTest}
-            invitationCode={invitationCode ?? ""}
-            key={id}
-            name={name}
-          />
-        ))}
+        {workspaces.map(({ id, invitationCode, isTest, name }) =>
+          isTest ? (
+            <NavLinkTestWorkspace
+              currentUserId={user.id}
+              id={id}
+              invitationCode={invitationCode ?? ""}
+              key={id}
+              name={name}
+            />
+          ) : (
+            <NavLink
+              currentUserId={user.id}
+              id={id}
+              invitationCode={invitationCode ?? ""}
+              key={id}
+              name={name}
+            />
+          )
+        )}
         <CreateTeamButton />
       </div>
       <div className="grow" />
