@@ -9,8 +9,8 @@ import assert from "assert";
 
 export async function getWorkspaceTests(
   workspaceId: string,
-  startTime: string,
-  endTime: string
+  startTime: string = "",
+  endTime: string = ""
 ): Promise<TestSuiteTestSummary[]> {
   const graphQLClient = await getGraphQLClientServer();
   const response = await graphQLClient.query<

@@ -1,7 +1,9 @@
+import { ExecutionRow } from "@/app/team/[id]/tests/ExecutionRow";
 import { FilterInput } from "@/app/team/[id]/tests/FilterInput";
 import { RangeMenu } from "@/app/team/[id]/tests/RangeMenu";
 import { SortByMenu } from "@/app/team/[id]/tests/SortByMenu";
 import { TestSummaryRow } from "@/app/team/[id]/tests/TestSummaryRow";
+import { getWorkspaceTestExecutions } from "@/graphql/queries/getWorkspaceTestExecutions";
 import { getWorkspaceTests } from "@/graphql/queries/getWorkspaceTests";
 import { getRelativeDate } from "@/utils/date";
 
@@ -59,6 +61,11 @@ export default async function Page({
     (test) => test.id === testSummaryId
   );
 
+  const executions = testSummaryId
+    ? await getWorkspaceTestExecutions(workspaceId, testSummaryId)
+    : [];
+  executions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2 h-full">
       <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2">
@@ -86,7 +93,11 @@ export default async function Page({
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2">
         {selectedTestSummary ? (
-          <div className="overflow-auto -mx-1">TODO</div>
+          <div className="overflow-auto">
+            {executions.map((execution) => (
+              <ExecutionRow key={execution.id} testExecution={execution} />
+            ))}
+          </div>
         ) : (
           <div className="flex items-center justify-center text-slate-300 h-full">
             Select a test to see its details here

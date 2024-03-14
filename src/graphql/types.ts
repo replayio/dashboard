@@ -122,3 +122,23 @@ export type TestSuiteTestSummary = {
   };
   title: string;
 };
+
+export type TestSuiteTestExecutionRecording = {
+  buildId: string;
+  createdAt: Date;
+  duration: number;
+  id: string;
+  isProcessed: boolean;
+  title: string;
+  uuid: string;
+};
+
+export type TestSuiteTestExecution = {
+  commitAuthor: string;
+  commitTitle: string;
+  createdAt: Date;
+  errors: string[];
+  id: string;
+  recordings: TestSuiteTestExecutionRecording[];
+  result: TestSuiteTestStatus;
+};
