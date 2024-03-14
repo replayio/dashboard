@@ -9,11 +9,13 @@ import { useParams } from "next/navigation";
 import { MouseEvent, useState } from "react";
 
 export function NavLink({
+  currentUserId,
   id,
   invitationCode,
   isTest,
   name,
 }: {
+  currentUserId: string;
   id: string;
   invitationCode: string;
   isTest: boolean;
@@ -63,6 +65,7 @@ export function NavLink({
       )}
       {showSettingsDialog && (
         <WorkspaceSettingsDialog
+          currentUserId={currentUserId}
           id={id}
           invitationCode={invitationCode}
           name={name}

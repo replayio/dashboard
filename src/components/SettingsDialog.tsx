@@ -6,7 +6,7 @@ import { ReactNode, useState } from "react";
 
 export function SettingsDialog<
   Panels extends {
-    [id: string]: { children: ReactNode; icon: IconType; label: string };
+    [id: string]: { children: ReactNode; icon: IconType; label: string } | null;
   }
 >({
   defaultPanel,
@@ -24,16 +24,22 @@ export function SettingsDialog<
     <ModalDialog onDismiss={onDismiss} title={title}>
       <div className="flex flex-row gap-4">
         <ul className="flex flex-col gap-4 shrink-0">
-          {Object.entries(panels).map(([id, { icon, label }]) => (
-            <li key={id}>
-              <Tab
-                icon={icon}
-                isActive={activePanel === id}
-                label={label}
-                onClick={() => setActivePanel(id)}
-              />
-            </li>
-          ))}
+          {Object.entries(panels).map(([id, value]) => {
+            if (value == null) {
+              return null;
+            } else {
+              return (
+                <li key={id}>
+                  <Tab
+                    icon={value.icon}
+                    isActive={activePanel === id}
+                    label={value.label}
+                    onClick={() => setActivePanel(id)}
+                  />
+                </li>
+              );
+            }
+          })}
         </ul>
         <div className="w-96 h-[250px] max-h-[250px] overflow-auto">
           {panels[activePanel]?.children ?? null}

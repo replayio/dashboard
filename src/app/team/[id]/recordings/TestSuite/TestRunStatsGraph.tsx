@@ -3,7 +3,7 @@
 import { getTestRunStatsTooltip } from "@/app/team/[id]/recordings/TestSuite/getTestRunStatsTooltip";
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
-import { getNumDaysAgo, getRelativeDate } from "@/utils/date";
+import { getNumDaysAgo } from "@/utils/date";
 import assert from "assert";
 
 export type TestRunStatsData = {
@@ -22,7 +22,6 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   let currentDateIndex = -1;
   let currentData: TestRunStatsData | null = null;
 
-  // TODO Double check this logic
   testRuns.forEach((testRun) => {
     const index = getNumDaysAgo(testRun.date);
     if (index !== currentDateIndex) {

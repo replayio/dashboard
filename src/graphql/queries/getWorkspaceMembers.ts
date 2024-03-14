@@ -77,6 +77,7 @@ export function useGetWorkspaceMembers(workspaceId: string): {
     data.node.members.edges.forEach(({ node }) => {
       if ("user" in node) {
         members.push({
+          id: node.user.id,
           isPending: node.__typename === "WorkspacePendingUserMember",
           name: node.user.name ?? "User",
           picture: node.user.picture ?? null,
@@ -84,6 +85,7 @@ export function useGetWorkspaceMembers(workspaceId: string): {
         });
       } else {
         members.push({
+          id: node.id,
           isPending: true,
           name: node.email,
           picture: null,

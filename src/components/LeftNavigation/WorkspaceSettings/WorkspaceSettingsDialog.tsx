@@ -5,18 +5,25 @@ import { DeleteWorkspace } from "@/components/LeftNavigation/WorkspaceSettings/D
 import { TeamMembers } from "@/components/LeftNavigation/WorkspaceSettings/TeamMembers";
 import { WorkspaceApiKeys } from "@/components/LeftNavigation/WorkspaceSettings/WorkspaceApiKeys";
 import { SettingsDialog } from "@/components/SettingsDialog";
+import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 
 export function WorkspaceSettingsDialog({
+  currentUserId,
   id,
   invitationCode,
   name,
   onDismiss,
 }: {
+  currentUserId: string;
   id: string;
   invitationCode: string;
   name: string;
   onDismiss: () => void;
 }) {
+  const { error, loading, members } = useGetWorkspaceMembers(id);
+  const currentMember = members.find((member) => member.id === currentUserId);
+  const isAdmin = currentMember?.roles.includes("admin");
+
   return (
     <SettingsDialog
       defaultPanel="team-members"
@@ -27,11 +34,13 @@ export function WorkspaceSettingsDialog({
           icon: "team-members",
           label: "Members",
         },
-        billing: {
-          children: <Billing workspaceId={id} />,
-          icon: "billing",
-          label: "Billing",
-        },
+        billing: isAdmin
+          ? {
+              children: <Billing workspaceId={id} />,
+              icon: "billing",
+              label: "Billing",
+            }
+          : null,
         "api-keys": {
           children: <WorkspaceApiKeys workspaceId={id} />,
           icon: "api-keys",

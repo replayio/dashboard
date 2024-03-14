@@ -18,6 +18,7 @@ export async function NavList() {
         <NavLink id="me" isTest={false} invitationCode="" name="Your Library" />
         {workspaces.map(({ id, invitationCode, isTest, name }) => (
           <NavLink
+            currentUserId={user.id}
             id={id}
             isTest={isTest}
             invitationCode={invitationCode ?? ""}
