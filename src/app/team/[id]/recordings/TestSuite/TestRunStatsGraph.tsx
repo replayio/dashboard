@@ -3,7 +3,7 @@
 import { getTestRunStatsTooltip } from "@/app/team/[id]/recordings/TestSuite/getTestRunStatsTooltip";
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
-import { getRelativeDate } from "@/utils/date";
+import { getNumDaysAgo, getRelativeDate } from "@/utils/date";
 import assert from "assert";
 
 export type TestRunStatsData = {
@@ -24,7 +24,7 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
 
   // TODO Double check this logic
   testRuns.forEach((testRun) => {
-    const index = getDayIndex(testRun);
+    const index = getNumDaysAgo(testRun.date);
     if (index !== currentDateIndex) {
       // Account for days in between (e.g. weekend days)
       while (currentDateIndex < index) {
@@ -122,14 +122,4 @@ function ChartItem({
       {tooltip}
     </div>
   );
-}
-
-function getDayIndex(testRun: TestRun) {
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
-
-  const testDate = new Date(testRun.date);
-  testDate.setHours(0, 0, 0, 0);
-
-  return currentDate.getDate() - testDate.getDate();
 }
