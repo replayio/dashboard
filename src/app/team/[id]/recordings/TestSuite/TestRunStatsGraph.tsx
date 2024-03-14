@@ -26,8 +26,6 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   testRuns.forEach((testRun) => {
     const index = getDayIndex(testRun);
     if (index !== currentDateIndex) {
-      console.log("index", currentDateIndex, "->", index, testRun.date);
-
       // Account for days in between (e.g. weekend days)
       while (currentDateIndex < index) {
         currentData = {

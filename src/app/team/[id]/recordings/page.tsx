@@ -3,6 +3,8 @@ import { PAGE_SIZE } from "@/app/team/[id]/recordings/Recordings/shared";
 import { TestSuitesPage } from "@/app/team/[id]/recordings/TestSuite/TestSuitesPage";
 import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page({
   params,
   searchParams,
