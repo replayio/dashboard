@@ -83,7 +83,7 @@ export function filterTestRun(
 export function getColorClassName(status: TestSuiteTestStatus) {
   switch (status) {
     case "failed":
-      return "text-red-500";
+      return "text-rose-500";
     case "flaky":
       return "text-yellow-400";
     case "passed":

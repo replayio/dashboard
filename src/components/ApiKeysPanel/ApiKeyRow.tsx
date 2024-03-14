@@ -49,7 +49,7 @@ export function ApiKeyRow({
           confirmButtonLabel="Delete API key"
           message={
             <div className="flex flex-col gap-2">
-              <div className="text-red-500">This action is permanent.</div>
+              <div className="text-rose-500">This action is permanent.</div>
               <div>
                 Are you sure you want to delete &quot;
                 <strong>{apiKey.label}</strong>&quot;?

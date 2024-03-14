@@ -53,7 +53,7 @@ export function ShareDialog({
           value={email}
         />
         {errorAdding && (
-          <div className="bg-red-600 text-white px-2 py-1 rounded">
+          <div className="bg-rose-600 text-white px-2 py-1 rounded">
             {errorAdding.message ?? "Something went wrong"}
           </div>
         )}

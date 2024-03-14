@@ -38,7 +38,7 @@ export function CreateTeamDialog({ onDismiss }: { onDismiss: () => void }) {
       />
       {error && (
         <div
-          className="bg-red-400 text-red-900 px-2 py-1 rounded font-bold inline-block"
+          className="bg-rose-400 text-rose-900 px-2 py-1 rounded font-bold inline-block"
           role="alert"
         >
           {error.message}

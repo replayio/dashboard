@@ -114,7 +114,7 @@ function ChartItem({
         style={{ height: percentageTotal * 100 + "%" }}
       >
         <div
-          className="bg-red-500 grow-0 shrink-0"
+          className="bg-rose-500 grow-0 shrink-0"
           style={{ height: failurePercentage * 100 + "%" }}
         />
       </div>
