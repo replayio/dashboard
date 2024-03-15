@@ -6,7 +6,7 @@ import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { gql } from "@apollo/client";
 
 const QUERY = gql`
-  query getRecordingPhoto($recordingId: UUID!) {
+  query GetRecordingPhoto($recordingId: UUID!) {
     recording(uuid: $recordingId) {
       thumbnail
     }

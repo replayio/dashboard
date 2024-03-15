@@ -28,7 +28,6 @@ export function useDeleteRecording(onCompleted: () => void) {
     {
       client,
       onCompleted,
-      refetchQueries: ["GetMyRecordings", "GetWorkspaceRecordings"],
     }
   );
 
