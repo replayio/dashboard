@@ -25,7 +25,7 @@ export async function ExecutionRow({
   }
 
   return (
-    <>
+    <div className="flex flex-col">
       <div className="flex flex-row items-center gap-2">
         <Icon
           className={`w-6 h-6 ${getColorClassName(testExecution.result)}`}
@@ -47,14 +47,20 @@ export async function ExecutionRow({
         </div>
       </div>
       <div className="flex flex-col pl-4">
-        {testExecution.recordings.map((recording) => (
+        {testExecution.recordings.map((recording, index) => (
           <RecordingRow
             key={recording.id}
             recording={recording}
-            status={testExecution.result}
+            status={
+              testExecution.result === "flaky"
+                ? index === 0
+                  ? "passed"
+                  : "flaky"
+                : testExecution.result
+            }
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }

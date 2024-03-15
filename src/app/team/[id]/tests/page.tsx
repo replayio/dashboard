@@ -96,7 +96,7 @@ export default async function Page({
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2">
         {selectedTestSummary ? (
-          <div className="overflow-auto">
+          <div className="flex flex-col gap-2 overflow-auto">
             {executions.map((execution) => (
               <ExecutionRow key={execution.id} testExecution={execution} />
             ))}

@@ -85,15 +85,17 @@ export async function getWorkspaceTestExecutions(
         createdAt: new Date(execution.createdAt),
         errors: execution.errors ?? [],
         id: execution.testRunId,
-        recordings: execution.recordings.map((recording) => ({
-          buildId: recording.buildId ?? "",
-          createdAt: new Date(recording.createdAt),
-          duration: recording.duration ?? 0,
-          id: recording.id,
-          isProcessed: recording.isProcessed === true,
-          title: recording.title ?? "",
-          uuid: recording.uuid as string,
-        })),
+        recordings: execution.recordings
+          .map((recording) => ({
+            buildId: recording.buildId ?? "",
+            createdAt: new Date(recording.createdAt),
+            duration: recording.duration ?? 0,
+            id: recording.id,
+            isProcessed: recording.isProcessed === true,
+            title: recording.title ?? "",
+            uuid: recording.uuid as string,
+          }))
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
         result: execution.result as TestSuiteTestStatus,
       });
     });

@@ -80,6 +80,17 @@ export function filterTestRun(
   return true;
 }
 
+export function getBackgroundColorClassName(status: TestSuiteTestStatus) {
+  switch (status) {
+    case "failed":
+      return "bg-rose-500 text-white";
+    case "flaky":
+      return "bg-yellow-400 text-black";
+    case "passed":
+      return "bg-green-500 text-black";
+  }
+}
+
 export function getColorClassName(status: TestSuiteTestStatus) {
   switch (status) {
     case "failed":

@@ -27,15 +27,13 @@ export function TestRow({
       href={url ?? ""}
       onClick={onClick}
     >
-      {isPending ? (
+      <div className="truncate shrink grow">{test.title}</div>
+      {isPending && (
         <Icon
           className="w-6 h-6 shrink-0 animate-spin"
           type="loading-spinner"
         />
-      ) : (
-        <div className="w-6 h-6 shrink-0" />
       )}
-      <div className="truncate shrink">{test.title}</div>
     </Link>
   );
 }

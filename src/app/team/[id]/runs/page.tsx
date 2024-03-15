@@ -8,6 +8,7 @@ import { TestRow } from "@/app/team/[id]/runs/TestRow";
 import { TestRunRow } from "@/app/team/[id]/runs/TestRunRow";
 import { TestRunStats } from "@/app/team/[id]/runs/TestRunStats";
 import { TestRunStatsGraph } from "@/app/team/[id]/runs/TestRunStatsGraph";
+import { TestRunStatsSummary } from "@/app/team/[id]/runs/TestRunStatsSummary";
 import { TestRunStatusMenu } from "@/app/team/[id]/runs/TestRunStatusMenu";
 import { TestRunBranchMenu } from "@/app/team/[id]/runs/TestRunsBranchMenu";
 import { TestRunsDateRangeMenu } from "@/app/team/[id]/runs/TestRunsDateRangeMenu";
@@ -154,7 +155,12 @@ export default async function Page({
         {selectedTestRun ? (
           <>
             <div className="flex flex-col gap-2">
-              <TestStatusMenu />
+              <div className="flex flex-row gap-2 items-center">
+                <div className="grow">
+                  <TestStatusMenu />
+                </div>
+                <TestRunStatsSummary testRun={selectedTestRun} />
+              </div>
               <TestFilterInput key={testRunId} />
             </div>
             <TestRunStats durationMs={durationMs} testRun={selectedTestRun} />
