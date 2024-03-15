@@ -1,5 +1,6 @@
 "use server";
 
+import { UpdateDefaultWorkspaceOnMount } from "@/app/team/[id]/UpdateDefaultWorkspaceOnMount";
 import { ExecutionRow } from "@/app/team/[id]/tests/ExecutionRow";
 import { FilterInput } from "@/app/team/[id]/tests/FilterInput";
 import { RangeMenu } from "@/app/team/[id]/tests/RangeMenu";
@@ -106,6 +107,7 @@ export default async function Page({
           </div>
         )}
       </div>
+      <UpdateDefaultWorkspaceOnMount workspaceId={workspaceId} />
     </div>
   );
 }

@@ -1,13 +1,13 @@
 "use server";
 
-import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
+import { UpdateDefaultWorkspaceOnMount } from "@/app/team/[id]/UpdateDefaultWorkspaceOnMount";
 import { LaunchReplayButton } from "@/app/team/[id]/recordings/LaunchReplayButton";
 import { LibrarySearchInput } from "@/app/team/[id]/recordings/LibrarySearchInput";
 import { RecordingRow } from "@/app/team/[id]/recordings/RecordingRow";
 import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecordingsRow";
+import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
 import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
 import { getWorkspaceRecordingsServer } from "@/graphql/queries/getWorkspaceRecordings";
-import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
 
 export default async function Page({
   params,
@@ -50,7 +50,7 @@ export default async function Page({
           )}
         </div>
       </div>
-      <MountEffects workspaceId={id} />
+      <UpdateDefaultWorkspaceOnMount workspaceId={id} />
     </div>
   );
 }

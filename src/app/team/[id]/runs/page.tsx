@@ -1,5 +1,6 @@
 "use server";
 
+import { UpdateDefaultWorkspaceOnMount } from "@/app/team/[id]/UpdateDefaultWorkspaceOnMount";
 import { RecordingRow } from "@/app/team/[id]/runs/RecordingRow";
 import { TestErrors } from "@/app/team/[id]/runs/TestErrors";
 import { TestFilterInput } from "@/app/team/[id]/runs/TestFilterInput";
@@ -227,6 +228,7 @@ export default async function Page({
           </div>
         ) : null}
       </div>
+      <UpdateDefaultWorkspaceOnMount workspaceId={workspaceId} />
     </div>
   );
 }
