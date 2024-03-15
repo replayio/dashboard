@@ -1,3 +1,5 @@
+"use server";
+
 import { RecordingRow } from "@/app/team/[id]/runs/RecordingRow";
 import { TestErrors } from "@/app/team/[id]/runs/TestErrors";
 import { TestFilterInput } from "@/app/team/[id]/runs/TestFilterInput";
@@ -19,8 +21,6 @@ import {
   filterTestRun,
   getColorClassName,
 } from "@/utils/test-suites";
-
-export const dynamic = "force-dynamic";
 
 export default async function Page({
   params,

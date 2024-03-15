@@ -1,3 +1,5 @@
+"use server";
+
 import { MountEffects } from "@/app/team/[id]/recordings/MountEffects";
 import { LaunchReplayButton } from "@/app/team/[id]/recordings/LaunchReplayButton";
 import { LibrarySearchInput } from "@/app/team/[id]/recordings/LibrarySearchInput";
@@ -6,8 +8,6 @@ import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecord
 import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
 import { getWorkspaceRecordingsServer } from "@/graphql/queries/getWorkspaceRecordings";
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
-
-export const dynamic = "force-dynamic";
 
 export default async function Page({
   params,

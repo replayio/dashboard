@@ -1,10 +1,12 @@
+"use server";
+
 import { RecordingRow } from "@/app/team/[id]/tests/RecordingRow";
 import { Icon, IconType } from "@/components/Icon";
 import { TestSuiteTestExecution } from "@/graphql/types";
 import { formatRelativeTime } from "@/utils/number";
 import { getColorClassName } from "@/utils/test-suites";
 
-export function ExecutionRow({
+export async function ExecutionRow({
   testExecution,
 }: {
   testExecution: TestSuiteTestExecution;

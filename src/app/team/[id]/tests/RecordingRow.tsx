@@ -1,3 +1,5 @@
+"use server";
+
 import { Icon } from "@/components/Icon";
 import {
   TestSuiteTestExecutionRecording,
@@ -8,7 +10,7 @@ import { getURL } from "@/utils/recording";
 import { getColorClassName } from "@/utils/test-suites";
 import Link from "next/link";
 
-export function RecordingRow({
+export async function RecordingRow({
   recording,
   status,
 }: {

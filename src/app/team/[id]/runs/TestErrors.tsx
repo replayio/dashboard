@@ -1,3 +1,5 @@
+"use server";
+
 import { TestSuiteTest } from "@/graphql/types";
 import { useMemo } from "react";
 
@@ -7,25 +9,23 @@ interface ErrorCount {
   count: number;
 }
 
-export function TestErrors({ test }: { test: TestSuiteTest }) {
-  const sortedErrors = useMemo(() => {
-    const errors = test.errors ?? [];
-    const uniqueErrors = errors.reduce((acc, e) => {
-      const existingError = acc.find((a) => a.message === e);
+export async function TestErrors({ test }: { test: TestSuiteTest }) {
+  const errors = test.errors ?? [];
+  const uniqueErrors = errors.reduce((acc, e) => {
+    const existingError = acc.find((a) => a.message === e);
 
-      if (existingError) {
-        existingError.count += 1;
-      } else {
-        acc.push({ message: e, count: 1, summary: getSummary(e) });
-      }
+    if (existingError) {
+      existingError.count += 1;
+    } else {
+      acc.push({ message: e, count: 1, summary: getSummary(e) });
+    }
 
-      return acc;
-    }, [] as ErrorCount[]);
+    return acc;
+  }, [] as ErrorCount[]);
 
-    return uniqueErrors.sort((a, b) => b.count - a.count);
-  }, [test]);
+  uniqueErrors.sort((a, b) => b.count - a.count);
 
-  if (sortedErrors?.length === 0) {
+  if (uniqueErrors?.length === 0) {
     return null;
   }
 
@@ -33,7 +33,7 @@ export function TestErrors({ test }: { test: TestSuiteTest }) {
     <>
       <div className="font-bold mb-2">Errors</div>
       <div className="flex flex-col gap-2">
-        {sortedErrors?.map((error, index) => (
+        {uniqueErrors?.map((error, index) => (
           <div
             className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded shrink-0"
             key={index}

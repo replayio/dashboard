@@ -1,9 +1,11 @@
+"use server";
+
 import { ExternalLink } from "@/components/ExternalLink";
 import { Icon } from "@/components/Icon";
 import { TestRun } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
 
-export function TestRunStats({
+export async function TestRunStats({
   durationMs,
   testRun,
 }: {

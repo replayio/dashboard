@@ -1,8 +1,6 @@
 import { ExternalLink } from "@/components/ExternalLink";
-import { Icon } from "@/components/Icon";
 import { ModalDialog } from "@/components/ModalDialog";
 import { ReplayLogo } from "@/components/ReplayLogo";
-import Link from "next/link";
 import { useEffect } from "react";
 
 export function LaunchReplayModal({ onDismiss }: { onDismiss: () => void }) {

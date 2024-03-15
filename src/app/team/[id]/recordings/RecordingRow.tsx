@@ -1,3 +1,5 @@
+"use server";
+
 import { RecordingDropdown } from "@/app/team/[id]/recordings/RecordingDropdown";
 import { RecordingThumbnail } from "@/app/team/[id]/recordings/RecordingThumbnail";
 import { Icon } from "@/components/Icon";
@@ -6,7 +8,11 @@ import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { getURL } from "@/utils/recording";
 import Link from "next/link";
 
-export function RecordingRow({ recording }: { recording: WorkspaceRecording }) {
+export async function RecordingRow({
+  recording,
+}: {
+  recording: WorkspaceRecording;
+}) {
   const href = getURL(recording.uuid, recording.buildId);
 
   return (
