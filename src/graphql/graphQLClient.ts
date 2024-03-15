@@ -12,7 +12,9 @@ export function getGraphQLClientClient(accessToken: string) {
   if (graphQLClient == null) {
     graphQLClient = new ApolloClient({
       uri: "https://api.replay.io/v1/graphql",
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({
+        resultCaching: false,
+      }),
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",

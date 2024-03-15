@@ -6,10 +6,9 @@ import { PropsWithChildren, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { Icon } from "@/components/Icon";
-import assert from "assert";
+import { redirect } from "next/navigation";
 import "use-context-menu/styles.css";
 import "./global.css";
-import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Replay",

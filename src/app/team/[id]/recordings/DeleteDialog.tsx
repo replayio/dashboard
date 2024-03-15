@@ -23,10 +23,6 @@ export function DeleteDialog({
 
     router.refresh();
 
-    // Deleted recordings aren't immediately removed from the list;
-    // wait a second before dismissing the modal to give the server time to update
-    await new Promise((resolve) => setTimeout(resolve, 1_000));
-
     onDismiss();
   });
 
