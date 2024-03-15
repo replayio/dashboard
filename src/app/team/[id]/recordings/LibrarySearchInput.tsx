@@ -7,8 +7,10 @@ import { ChangeEvent } from "react";
 import { Input } from "@/components/Input";
 
 export function LibrarySearchInput({
+  disabled,
   numRecordings,
 }: {
+  disabled?: boolean;
   numRecordings: number;
 }) {
   const [value = "", setValue] = useSearchParam("recordingFilter");
@@ -22,6 +24,7 @@ export function LibrarySearchInput({
   return (
     <Input
       defaultValue={value}
+      disabled={disabled}
       onChange={onChange}
       placeholder={
         value
