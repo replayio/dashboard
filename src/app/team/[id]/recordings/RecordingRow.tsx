@@ -38,8 +38,16 @@ export async function RecordingRow({
             <div className="shrink truncate">{recording.url}</div>
           </div>
         </div>
-        <div className="w-20 shrink-0 truncate text-sm">
-          {recording.private ? "Private" : "Public"}
+        <div
+          className="w-5 shrink-0 truncate text-sm"
+          title={recording.private ? "Private recording" : "Public recording"}
+        >
+          <Icon
+            className={`w-5 h-5 ${recording.private ? "text-slate-500" : ""}`}
+            type={
+              recording.private ? "visibility-private" : "visibility-public"
+            }
+          />
         </div>
         <div className="w-36 shrink-0 truncate text-sm">
           {recording.owner?.name ?? ""}
