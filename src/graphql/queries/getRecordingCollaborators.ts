@@ -3,7 +3,7 @@ import {
   GetOwnerAndCollaboratorsQuery,
   GetOwnerAndCollaboratorsQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClientClient } from "@/graphql/graphQLClient";
+import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { WorkspaceRecordingCollaborator } from "@/graphql/types";
 import { gql, useQuery } from "@apollo/client";
 import assert from "assert";
@@ -60,7 +60,7 @@ export function useRecordingCollaborators(
   const accessToken = useContext(AuthContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClientClient(accessToken);
+  const client = getGraphQLClient(accessToken);
 
   const response = useQuery<
     GetOwnerAndCollaboratorsQuery,

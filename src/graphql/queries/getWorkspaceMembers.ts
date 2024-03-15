@@ -3,7 +3,7 @@ import {
   GetWorkspaceMembersQuery,
   GetWorkspaceMembersQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClientClient } from "@/graphql/graphQLClient";
+import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { WorkspaceMember } from "@/graphql/types";
 import { ApolloError, gql, useQuery } from "@apollo/client";
 import assert from "assert";
@@ -17,7 +17,7 @@ export function useGetWorkspaceMembers(workspaceId: string): {
   const accessToken = useContext(AuthContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClientClient(accessToken);
+  const client = getGraphQLClient(accessToken);
 
   const { data, error, loading } = useQuery<
     GetWorkspaceMembersQuery,

@@ -2,7 +2,7 @@ import {
   GetRecordingPhotoQuery,
   GetRecordingPhotoQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClientClient } from "@/graphql/graphQLClient";
+import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { gql } from "@apollo/client";
 
 const QUERY = gql`
@@ -17,7 +17,7 @@ export async function getRecordingThumbnailClient(
   accessToken: string,
   recordingId: string
 ): Promise<string | null> {
-  const graphQLClient = getGraphQLClientClient(accessToken);
+  const graphQLClient = getGraphQLClient(accessToken);
 
   const response = await graphQLClient.query<
     GetRecordingPhotoQuery,
