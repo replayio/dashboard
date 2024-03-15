@@ -1,5 +1,3 @@
-"use server";
-
 import { UpdateDefaultWorkspaceOnMount } from "@/app/team/[id]/UpdateDefaultWorkspaceOnMount";
 import { RecordingRow } from "@/app/team/[id]/runs/RecordingRow";
 import { TestErrors } from "@/app/team/[id]/runs/TestErrors";
@@ -23,6 +21,8 @@ import {
   filterTestRun,
   getColorClassName,
 } from "@/utils/test-suites";
+
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   params,
