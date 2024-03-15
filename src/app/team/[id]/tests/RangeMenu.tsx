@@ -24,12 +24,12 @@ export function RangeMenu() {
     case "day":
       label = "Last day";
       break;
-    case "week":
-      label = "Last 7 days";
-      break;
     case "hour":
-    default:
       label = "Last hour";
+      break;
+    case "week":
+    default:
+      label = "Last 7 days";
       break;
   }
 
