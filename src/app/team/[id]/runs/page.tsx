@@ -188,7 +188,7 @@ export default async function Page({
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
         {selectedTest ? (
           <>
-            <div className="overflow-auto -mx-1">
+            <div className="shrink-0 -mx-1">
               <div className="font-bold mb-2">Replays</div>
               {selectedTest.recordings.map((recording, index) => {
                 let status: TestSuiteTestStatus;

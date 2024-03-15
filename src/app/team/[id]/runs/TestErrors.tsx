@@ -30,12 +30,12 @@ export function TestErrors({ test }: { test: TestSuiteTest }) {
   }
 
   return (
-    <div>
+    <>
       <div className="font-bold mb-2">Errors</div>
       <div className="flex flex-col gap-2">
         {sortedErrors?.map((error, index) => (
           <div
-            className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded overflow-hidden"
+            className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded shrink-0"
             key={index}
           >
             <div className="flex flex-row gap-2 items-center overflow-hidden">
@@ -50,7 +50,7 @@ export function TestErrors({ test }: { test: TestSuiteTest }) {
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }
 
