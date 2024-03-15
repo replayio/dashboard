@@ -27,20 +27,13 @@ export async function ExecutionRow({
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-center gap-2">
-        <Icon
-          className={`w-6 h-6 ${getColorClassName(testExecution.result)}`}
-          type={iconType}
-        />
-        <div className="flex flex-col grow truncate">
-          <div>{testExecution.commitTitle}</div>
-
-          {testExecution.commitAuthor && (
-            <div className="flex flex-row items-center gap-1 text-sm">
-              <Icon className="w-4 h-4" type="account" />
-              {testExecution.commitAuthor}
-            </div>
-          )}
-        </div>
+        <div className="grow truncate">{testExecution.commitTitle}</div>
+        {testExecution.commitAuthor && (
+          <div className="flex flex-row items-center gap-1 text-sm text-center">
+            <Icon className="w-4 h-4" type="account" />
+            {testExecution.commitAuthor}
+          </div>
+        )}
         <div className="flex flex-row gap-1 items-center shrink-0 text-sm">
           <Icon className="w-3 h-3" type="clock" />
           {formatRelativeTime(testExecution.createdAt)} ago
