@@ -49,7 +49,7 @@ export async function RecordingRow({
             }
           />
         </div>
-        <div className="w-36 shrink-0 truncate text-sm">
+        <div className="w-36 shrink-0 truncate text-sm text-center">
           {recording.owner?.name ?? ""}
         </div>
         <div className="w-10 shrink-0 flex flex-row items-center gap-1">
