@@ -1,5 +1,3 @@
-"use server";
-
 import { UpdateDefaultWorkspaceOnMount } from "@/app/team/[id]/UpdateDefaultWorkspaceOnMount";
 import { LaunchReplayButton } from "@/app/team/[id]/recordings/LaunchReplayButton";
 import { LibrarySearchInput } from "@/app/team/[id]/recordings/LibrarySearchInput";
@@ -8,6 +6,8 @@ import { ShowMoreRecordingsRow } from "@/app/team/[id]/recordings/ShowMoreRecord
 import { PAGE_SIZE } from "@/app/team/[id]/recordings/shared";
 import { getPersonalRecordingsServer } from "@/graphql/queries/getPersonalRecordings";
 import { getWorkspaceRecordingsServer } from "@/graphql/queries/getWorkspaceRecordings";
+
+export const revalidate = 0;
 
 export default async function Page({
   params,

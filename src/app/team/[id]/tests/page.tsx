@@ -1,5 +1,3 @@
-"use server";
-
 import { UpdateDefaultWorkspaceOnMount } from "@/app/team/[id]/UpdateDefaultWorkspaceOnMount";
 import { ExecutionRow } from "@/app/team/[id]/tests/ExecutionRow";
 import { FilterInput } from "@/app/team/[id]/tests/FilterInput";
@@ -9,6 +7,8 @@ import { TestSummaryRow } from "@/app/team/[id]/tests/TestSummaryRow";
 import { getWorkspaceTestExecutions } from "@/graphql/queries/getWorkspaceTestExecutions";
 import { getWorkspaceTests } from "@/graphql/queries/getWorkspaceTests";
 import { getRelativeDate } from "@/utils/date";
+
+export const revalidate = 0;
 
 export default async function Page({
   params,

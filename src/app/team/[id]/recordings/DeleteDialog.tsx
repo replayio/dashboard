@@ -1,10 +1,10 @@
 "use client";
 
+import { revalidate } from "@/app/actions";
 import { Button } from "@/components/Button";
 import { ModalDialog } from "@/components/ModalDialog";
 import { useDeleteRecording } from "@/graphql/queries/deleteRecording";
 import { WorkspaceRecording } from "@/graphql/types";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DeleteDialog({
@@ -16,12 +16,12 @@ export function DeleteDialog({
 }) {
   const [confirmed, setConfirmed] = useState(false);
 
-  const router = useRouter();
-
   const { deleteRecording } = useDeleteRecording(async () => {
     setConfirmed(true);
 
-    router.refresh();
+    await revalidate();
+
+    window.location.reload();
 
     onDismiss();
   });

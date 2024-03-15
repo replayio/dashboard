@@ -14,6 +14,8 @@ export const metadata = {
   title: "Replay",
 };
 
+export const revalidate = 0;
+
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
