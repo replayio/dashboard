@@ -1,13 +1,22 @@
 "use client";
 
 import { Button } from "@/components/Button";
+import Checkbox from "@/components/Checkbox";
 import { Input } from "@/components/Input";
 import { ModalDialog } from "@/components/ModalDialog";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
 import { useState } from "react";
 
-export function CreateTeamDialog({ onDismiss }: { onDismiss: () => void }) {
+export function CreateTeamDialog({
+  isInternalUser,
+  onDismiss,
+}: {
+  isInternalUser: boolean;
+  onDismiss: () => void;
+}) {
+  const [bypassTrial, setBypassTrial] = useState(false);
   const [name, setName] = useState("");
+
   const [isPending, setIsPending] = useState(false);
 
   const { createWorkspace, error } = useCreateWorkspace(
@@ -22,7 +31,10 @@ export function CreateTeamDialog({ onDismiss }: { onDismiss: () => void }) {
   const onClick = () => {
     if (name.trim()) {
       setIsPending(true);
-      createWorkspace(name);
+      createWorkspace(
+        name,
+        isInternalUser && bypassTrial ? "team-internal-v1" : "team-v1"
+      );
     }
   };
 
@@ -36,6 +48,19 @@ export function CreateTeamDialog({ onDismiss }: { onDismiss: () => void }) {
         placeholder="Team name"
         value={name}
       />
+      {isInternalUser && (
+        <Checkbox
+          checked={bypassTrial}
+          disabled={isPending}
+          label={
+            <>
+              Bypass trial{" "}
+              <small className="text-yellow-300">(internal only)</small>
+            </>
+          }
+          onChange={(value) => setBypassTrial(value)}
+        />
+      )}
       {error && (
         <div
           className="bg-rose-400 text-rose-900 px-2 py-1 rounded font-bold inline-block"

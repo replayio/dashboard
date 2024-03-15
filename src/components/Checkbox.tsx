@@ -1,18 +1,20 @@
 "use client";
 
-import { MouseEvent, useState } from "react";
+import { MouseEvent, ReactNode, useState } from "react";
 
 // This component exists to work around bizarre React behavior
 // Something about the context of a dialog causes an <input type="checkbox"> to never change its checked value after initial render
 export default function Checkbox({
   checked,
   className = "",
+  disabled,
   label,
   onChange: onChangeProp,
 }: {
   className?: string;
   checked: boolean;
-  label: string;
+  disabled?: boolean;
+  label: ReactNode;
   onChange: (value: boolean) => void;
 }) {
   const [didChange, setDidChange] = useState(false);
@@ -34,6 +36,7 @@ export default function Checkbox({
       <input
         autoFocus={didChange}
         defaultChecked={checked}
+        disabled={disabled}
         key={"" + checked}
         onClick={onClick}
         type="checkbox"

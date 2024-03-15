@@ -44,11 +44,11 @@ export function useCreateWorkspace(
     console.error("Apollo error while creating a workspace", error);
   }
 
-  const createWorkspace = async (name: string) => {
+  const createWorkspace = async (name: string, planKey: string) => {
     // TODO Internal users can use a plan key of "team-internal-v1" to bypass the trial
     // See github.com/replayio/devtools/pull/10430
     const result = await createWorkspaceMutation({
-      variables: { name, planKey: "team-v1" },
+      variables: { name, planKey },
     });
 
     if (result.data?.createWorkspace?.workspace?.id) {

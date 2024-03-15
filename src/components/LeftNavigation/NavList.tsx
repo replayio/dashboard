@@ -41,7 +41,7 @@ export async function NavList() {
             />
           )
         )}
-        <CreateTeamButton />
+        <CreateTeamButton isInternalUser={user.isInternal} />
       </div>
       <div className="grow" />
       <CurrentUser user={user} />

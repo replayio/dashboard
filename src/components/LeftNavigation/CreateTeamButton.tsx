@@ -3,7 +3,11 @@
 import { CreateTeamDialog } from "@/components/LeftNavigation/CreateTeamDialog";
 import { useState } from "react";
 
-export function CreateTeamButton() {
+export function CreateTeamButton({
+  isInternalUser,
+}: {
+  isInternalUser: boolean;
+}) {
   const [showDialog, setShowDialog] = useState(false);
 
   const show = () => setShowDialog(true);
@@ -17,7 +21,9 @@ export function CreateTeamButton() {
       >
         Create new team
       </button>
-      {showDialog && <CreateTeamDialog onDismiss={hide} />}
+      {showDialog && (
+        <CreateTeamDialog isInternalUser={isInternalUser} onDismiss={hide} />
+      )}
     </>
   );
 }
