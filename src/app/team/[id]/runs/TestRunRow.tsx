@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@/components/Icon";
+import { TestStatusCapsule } from "@/components/TestStatusCapsule";
 import { TestRun } from "@/graphql/types";
 import { useNextLink } from "@/hooks/useNextLink";
 import { useSearchParamLink } from "@/hooks/useSearchParamLink";
@@ -34,11 +35,7 @@ export function TestRunRow({
   if (isPending) {
     icon = <Icon className="w-6 h-6 animate-spin" type="loading-spinner" />;
   } else if (testRun.numFailed > 0) {
-    icon = (
-      <div className="flex items-center justify-center bg-rose-600 text-white w-full h-6 rounded shrink-0 text-xs">
-        {testRun.numFailed}
-      </div>
-    );
+    icon = <TestStatusCapsule count={testRun.numFailed} status="failed" />;
   } else {
     icon = (
       <Icon
@@ -56,7 +53,7 @@ export function TestRunRow({
       href={url ?? ""}
       onClick={onClick}
     >
-      <div className="w-10 h-6 shrink-0 flex justify-center">{icon}</div>
+      <div className="w-6 h-6 shrink-0 flex justify-center">{icon}</div>
       <div className="grow truncate">{getTestRunTitle(testRun)}</div>
       <div className="flex flex-row gap-1 items-center shrink-0 text-sm text-slate-300">
         <Icon className="w-4 h-4" type="clock" />

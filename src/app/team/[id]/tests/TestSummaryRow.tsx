@@ -27,13 +27,13 @@ export function TestSummaryRow({
     icon = <Icon className="w-6 h-6 animate-spin" type="loading-spinner" />;
   } else if (showFlakyRate) {
     icon = (
-      <div className="flex items-center justify-center bg-yellow-500 text-black w-full h-6 rounded shrink-0 text-xs">
+      <div className="flex items-center justify-center bg-yellow-500 text-black w-full h-6 rounded-md shrink-0 text-xs">
         {Math.round(testSummary.stats.flakyRate * 100)}%
       </div>
     );
   } else if (testSummary.stats.failureRate > 0) {
     icon = (
-      <div className="flex items-center justify-center bg-rose-600 text-white w-full h-6 rounded shrink-0 text-xs">
+      <div className="flex items-center justify-center bg-rose-600 text-white w-full h-6 rounded-md shrink-0 text-xs">
         {Math.round(testSummary.stats.failureRate * 100)}%
       </div>
     );

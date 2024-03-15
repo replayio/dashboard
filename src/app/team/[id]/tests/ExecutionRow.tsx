@@ -39,7 +39,7 @@ export async function ExecutionRow({
           {formatRelativeTime(testExecution.createdAt)} ago
         </div>
       </div>
-      <div className="flex flex-col pl-4">
+      <div className="flex flex-col">
         {testExecution.recordings.map((recording, index) => (
           <RecordingRow
             key={recording.id}
