@@ -46,11 +46,13 @@ export function WorkspaceSettingsDialog({
           icon: "api-keys",
           label: "API keys",
         },
-        delete: {
-          children: <DeleteWorkspace id={id} />,
-          icon: "delete-team",
-          label: "Delete",
-        },
+        delete: isAdmin
+          ? {
+              children: <DeleteWorkspace id={id} />,
+              icon: "delete-team",
+              label: "Delete",
+            }
+          : null,
       }}
       title={`${name} settings`}
     />

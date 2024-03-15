@@ -13,6 +13,7 @@ export function getGraphQLClient(accessToken: string) {
     graphQLClient = new ApolloClient({
       cache: new InMemoryCache({
         resultCaching: false,
+        resultCacheMaxSize: 0,
       }),
       headers: {
         Authorization: `Bearer ${accessToken}`,

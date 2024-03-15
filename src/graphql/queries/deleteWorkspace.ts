@@ -45,7 +45,7 @@ export function useDeleteWorkspace() {
 
   const deleteWorkspace = (workspaceId: string) =>
     deleteWorkspaceMutation({
-      variables: { workspaceId, shouldDeleteRecordings: true },
+      variables: { shouldDeleteRecordings: true, workspaceId },
     });
 
   return { deleteWorkspace, error, loading };
