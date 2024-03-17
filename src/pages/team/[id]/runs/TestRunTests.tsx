@@ -4,70 +4,38 @@ import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
 import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
 import { TestStatusCapsule } from "@/components/TestStatusCapsule";
-import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
-import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestSuiteTest } from "@/graphql/types";
 import { TestRunTestRow } from "@/pages/team/[id]/runs/TestRunTestRow";
+import { RunsViewContext } from "@/pages/team/[id]/runs/TestRunsContext";
+import { TEST_STATUS } from "@/pages/team/[id]/runs/constants";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
-import { filterTest, getColorClassName } from "@/utils/test-suites";
+import { getColorClassName } from "@/utils/test-suites";
 import assert from "assert";
-import { Fragment, useCallback, useMemo, useState, useTransition } from "react";
-
-const STATUS = {
-  all: "All runs",
-  failed: "Failed and flaky",
-};
-type Status = keyof typeof STATUS;
+import { Fragment, useContext, useMemo } from "react";
 
 export function TestRunTests({
   selectedTestId,
   selectedTestRunId,
   selectTest,
-  workspaceId,
 }: {
-  selectedTestId: string | null;
+  selectedTestId: string | undefined;
   selectedTestRunId: string;
   selectTest: (id: string) => void;
-  workspaceId: string;
 }) {
-  const [isPending, startTransition] = useTransition();
+  const {
+    isLoadingTests,
+    isPending,
+    testsFilterText,
+    testsStatus,
+    testRuns,
+    tests,
+    updateFilters,
+  } = useContext(RunsViewContext);
 
-  const [filterText, setFilterText] = useState<string>("");
-  const setFilterTextTransition = useCallback((text: string) => {
-    startTransition(() => {
-      setFilterText(text);
-    });
-  }, []);
-
-  const [status, setStatus] = useState<Status>("all");
-  const setStatusTransition = useCallback((status: Status) => {
-    startTransition(() => {
-      setStatus(status);
-    });
-  }, []);
-
-  const { testRuns } = useTestSuiteTestRuns(workspaceId);
   const selectedTestRun = testRuns?.find(
     (testRun) => testRun.id === selectedTestRunId
   );
   assert(selectedTestRun, `No test run found for id "${selectedTestRunId}"`);
-
-  // TODO This is returning stale data when re-viewing the same test run
-  const { isLoading, tests } = useTestSuiteTests(
-    workspaceId,
-    selectedTestRunId
-  );
-  const filteredTests =
-    !isLoading && tests
-      ? tests
-          .filter((test) =>
-            filterTest(test, {
-              status,
-              text: filterText,
-            })
-          )
-          .sort((a, b) => a.title.localeCompare(b.title))
-      : null;
 
   const categorizedTests = useMemo(() => {
     const categorizedTests = {
@@ -91,7 +59,7 @@ export function TestRunTests({
       },
     };
 
-    filteredTests?.forEach((test) => {
+    tests?.forEach((test) => {
       switch (test.status) {
         case "failed": {
           categorizedTests.failed.tests.push(test);
@@ -108,7 +76,7 @@ export function TestRunTests({
     });
 
     return categorizedTests;
-  }, [filteredTests, selectedTestRun]);
+  }, [selectedTestRun, tests]);
 
   let durationMs = 0;
   tests?.forEach((test) => {
@@ -122,9 +90,9 @@ export function TestRunTests({
           <div className="grow">
             <DropDownMenu
               disabled={isPending}
-              onChange={setStatusTransition}
-              options={STATUS}
-              value={status}
+              onChange={(testsStatus) => updateFilters({ testsStatus })}
+              options={TEST_STATUS}
+              value={testsStatus}
             />
           </div>
           <TestStatusCapsule
@@ -138,8 +106,8 @@ export function TestRunTests({
           />
         </div>
         <Input
-          defaultValue={filterText}
-          onConfirm={(value) => setFilterTextTransition(value)}
+          defaultValue={testsFilterText}
+          onConfirm={(testsFilterText) => updateFilters({ testsFilterText })}
           placeholder="Filter tests"
           type="text"
         />
@@ -195,7 +163,7 @@ export function TestRunTests({
         )}
       </div>
 
-      {isLoading ? (
+      {isLoadingTests ? (
         <PageLoadingPlaceholder />
       ) : (
         <div className="overflow-auto -mx-1">

@@ -32,7 +32,7 @@ export function Input({
 
   return (
     <input
-      className={`bg-slate-950 text-white px-4 py-2 outline-none rounded grow ${className} ${
+      className={`bg-slate-950 text-white px-4 py-2 outline outline-2 outline-transparent focus:outline-sky-500 rounded grow ${className} ${
         disabled ? "opacity-50" : ""
       }`}
       disabled={disabled}

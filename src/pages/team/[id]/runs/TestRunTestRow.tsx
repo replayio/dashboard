@@ -7,7 +7,7 @@ export function TestRunTestRow({
   selectTest,
   test,
 }: {
-  currentTestId: string | null;
+  currentTestId: string | undefined;
   selectTest: (id: string) => void;
   test: TestSuiteTest;
 }) {

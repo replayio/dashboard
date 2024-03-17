@@ -8,7 +8,7 @@ export function TestSummaryRow({
   showFlakyRate,
   testSummary,
 }: {
-  currentTestSummaryId: string | null;
+  currentTestSummaryId: string | undefined;
   selectTestSummary: (id: string) => void;
   showFlakyRate: boolean;
   testSummary: TestSuiteTestSummary;

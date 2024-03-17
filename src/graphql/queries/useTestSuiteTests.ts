@@ -12,7 +12,10 @@ import { gql } from "@apollo/client";
 import assert from "assert";
 import { useMemo } from "react";
 
-export function useTestSuiteTests(workspaceId: string, testRunId: string) {
+export function useTestSuiteTests(
+  workspaceId: string,
+  testRunId: string | undefined
+) {
   const { data, error, isLoading } = useGraphQLQuery<
     GetTestsQuery,
     GetTestsQueryVariables
@@ -57,7 +60,10 @@ export function useTestSuiteTests(workspaceId: string, testRunId: string) {
         }
       }
     `,
-    { id: testRunId, workspaceId }
+    { id: testRunId ?? "", workspaceId },
+
+    // So this hook can be called conditionally
+    { skip: testRunId === undefined }
   );
 
   const tests = useMemo<TestSuiteTest[] | undefined>(() => {

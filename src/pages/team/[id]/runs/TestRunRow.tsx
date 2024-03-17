@@ -10,7 +10,7 @@ export function TestRunRow({
   selectTestRun,
   testRun,
 }: {
-  currentTestRunId: string | null;
+  currentTestRunId: string | undefined;
   selectTestRun: (id: string) => void;
   testRun: TestRun;
 }) {

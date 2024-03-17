@@ -1,17 +1,25 @@
 import { localStorageGetItem, localStorageSetItem } from "@/utils/localStorage";
-import { useLayoutEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 export default function useLocalStorage<Type>(
   key: string,
-  defaultValue?: Type
-): [value: Type | undefined, setValue: (newValue: Type) => void] {
-  const [value, setValue] = useState<Type | undefined>(() => {
+  defaultValue: Type
+): [value: Type, setValue: Dispatch<SetStateAction<Type>>] {
+  const [value, setValue] = useState<Type>(() => {
     const storedValue = localStorageGetItem(key);
     if (storedValue != null) {
-      return JSON.parse(storedValue) as Type;
-    } else {
-      return defaultValue;
+      try {
+        return JSON.parse(storedValue) as Type;
+      } catch (error) {}
     }
+
+    return defaultValue;
   });
 
   const committedValuesRef = useRef<{

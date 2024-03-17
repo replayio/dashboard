@@ -2,7 +2,7 @@ import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
 import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
 import { ExecutionRow } from "@/pages/team/[id]/tests/ExecutionRow";
 
-export function TestSummary({
+export function SelectedTestSummary({
   testSummaryId,
   workspaceId,
 }: {

@@ -16,8 +16,10 @@ export const SessionContext = createContext<SessionContextType>({
 });
 
 export function SessionContextProvider({ children }: PropsWithChildren) {
-  const [accessToken = null, setAccessToken] =
-    useLocalStorage<string>("accessToken");
+  const [accessToken, setAccessToken] = useLocalStorage<string | null>(
+    "accessToken",
+    null
+  );
 
   const {
     getAccessTokenSilently,

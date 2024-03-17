@@ -10,8 +10,8 @@ import { useMemo } from "react";
 
 export function useTestSuiteTestRuns(
   workspaceId: string,
-  startTime?: string | null,
-  endTime?: string | null
+  startDate: Date,
+  endDate?: Date
 ) {
   const { data, error, isLoading } = useGraphQLQuery<
     GetTestsRunsForWorkspaceQuery,
@@ -58,7 +58,11 @@ export function useTestSuiteTestRuns(
         }
       }
     `,
-    { endTime, startTime, workspaceId }
+    {
+      endTime: endDate?.toISOString().split("T")[0],
+      startTime: startDate.toISOString().split("T")[0],
+      workspaceId,
+    }
   );
 
   const testRuns = useMemo<TestRun[] | undefined>(() => {
