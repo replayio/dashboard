@@ -10,7 +10,7 @@ export function SettingsButton({
   invitationCode,
   name,
 }: {
-  currentUserId: string;
+  currentUserId: string | null;
   id: string;
   invitationCode: string;
   name: string;

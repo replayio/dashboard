@@ -14,14 +14,14 @@ export function WorkspaceSettingsDialog({
   name,
   onDismiss,
 }: {
-  currentUserId: string;
+  currentUserId: string | null;
   id: string;
   invitationCode: string;
   name: string;
   onDismiss: () => void;
 }) {
   const { members } = useGetWorkspaceMembers(id);
-  const currentMember = members.find((member) => member.id === currentUserId);
+  const currentMember = members?.find((member) => member.id === currentUserId);
   const isAdmin = currentMember?.roles.includes("admin");
 
   return (

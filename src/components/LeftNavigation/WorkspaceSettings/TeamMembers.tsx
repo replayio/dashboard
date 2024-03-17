@@ -16,7 +16,7 @@ export function TeamMembers({
   const { error, loading, members } = useGetWorkspaceMembers(id);
 
   const sortedMembers = members
-    .slice()
+    ?.slice()
     .sort((a, b) => Number(b.isPending) - Number(a.isPending));
 
   return (
@@ -35,7 +35,7 @@ export function TeamMembers({
             {error.message}
           </div>
         )}
-        {sortedMembers.map((member, index) => (
+        {sortedMembers?.map((member, index) => (
           <div className="flex flex-row items-center gap-2" key={index}>
             <div className="flex items-center justify-center rounded-full w-8 h-8 overflow-hidden shrink-0 bg-slate-500">
               {member.isPending ? (

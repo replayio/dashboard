@@ -12,8 +12,10 @@ export function DropDownTrigger({
 }) {
   return (
     <div
-      className={`flex flex-row items-center gap-2 bg-gray-700 px-2 py-1 rounded cursor-pointer hover:bg-gray-600 ${
-        disabled ? "opacity-50" : ""
+      className={`flex flex-row items-center gap-2 bg-gray-700 px-2 py-1 rounded ${
+        disabled
+          ? "opacity-50 cursor-default"
+          : "hover:bg-gray-600 cursor-pointer"
       }`}
       onClick={onClick}
     >

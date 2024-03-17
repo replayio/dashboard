@@ -12,13 +12,13 @@ export function NavLink({
   invitationCode,
   name,
 }: {
-  currentUserId: string;
+  currentUserId: string | null;
   id: string;
   invitationCode: string;
   name: string;
 }) {
   const params = useParams();
-  const currentId = params?.id ?? "";
+  const currentId = params?.id ?? "me";
 
   const isActive =
     id ===

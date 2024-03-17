@@ -142,3 +142,10 @@ export type TestSuiteTestExecution = {
   recordings: TestSuiteTestExecutionRecording[];
   result: TestSuiteTestStatus;
 };
+
+export type Workspace = {
+  id: string;
+  invitationCode: string | null;
+  isTest: boolean;
+  name: string;
+};
