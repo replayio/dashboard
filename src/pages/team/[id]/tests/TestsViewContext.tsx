@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE } from "@/constants";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestSummary } from "@/graphql/types";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -41,7 +42,7 @@ export function ContextRoot({
   workspaceId: string;
 }) {
   const [state, setState] = useLocalStorage<Filters>(
-    "replay:dashboard:tests-filters",
+    LOCAL_STORAGE.testFilters,
     {
       dateRange: DEFAULT_DATE_RANGE_FILTER,
       filterText: "",

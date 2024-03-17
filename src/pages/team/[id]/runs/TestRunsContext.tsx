@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE } from "@/constants";
 import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
@@ -53,7 +54,7 @@ export function ContextRoot({
   workspaceId: string;
 }) {
   const [state, setState] = useLocalStorage<Filters>(
-    "replay:dashboard:test-runs-filters",
+    LOCAL_STORAGE.testRunsFilters,
     {
       runsBranch: DEFAULT_BRANCH_FILTER,
       runsFilterText: "",
