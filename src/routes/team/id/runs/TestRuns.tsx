@@ -1,7 +1,7 @@
 import { DropDownMenu } from "@/components/DropDownMenu";
 import { DropDownTrigger } from "@/components/DropDownTrigger";
 import { Input } from "@/components/Input";
-import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
+import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestRunRow } from "@/routes/team/id/runs/TestRunRow";
 import { TestRunStatsGraph } from "@/routes/team/id/runs/TestRunStatsGraph";
 import { RunsViewContext } from "@/routes/team/id/runs/TestRunsContext";
@@ -30,6 +30,7 @@ export default function TestRuns({
 
   return (
     <>
+      {isLoadingTestRuns && <LoadingProgressBar />}
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2 items-center">
           <div className="basis-4/12 shrink overflow-auto">
@@ -60,7 +61,6 @@ export default function TestRuns({
           type="text"
         />
       </div>
-      {isLoadingTestRuns && <PageLoadingPlaceholder />}
       {testRuns != null ? <TestRunStatsGraph testRuns={testRuns} /> : null}
       <div className="overflow-y-auto -mx-1">
         {testRuns?.map((testRun) => (

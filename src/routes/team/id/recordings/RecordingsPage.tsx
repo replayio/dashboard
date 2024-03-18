@@ -1,13 +1,12 @@
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
-import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
+import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { WorkspaceRecording } from "@/graphql/types";
-import useDebouncedCallback from "@/hooks/useDebouncedCallback";
 import { LaunchReplayModal } from "@/routes/team/id/recordings/LaunchReplayModal";
 import { RecordingRow } from "@/routes/team/id/recordings/RecordingRow";
 import { formatNumber } from "@/utils/number";
-import { ChangeEvent, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 const PAGE_SIZE = 25;
 
@@ -53,7 +52,7 @@ export default function RecordingPage({
   };
 
   return (
-    <div className="flex flex-col gap-2 overflow-auto overflow-hidden p-2">
+    <div className="flex flex-col gap-2 overflow-auto overflow-hidden p-2 h-full">
       <div className="flex flex-row items-center gap-2 justify-between">
         <Input
           defaultValue={filter}
@@ -72,8 +71,9 @@ export default function RecordingPage({
           <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />
         )}
       </div>
-      <div className="overflow-auto flex flex-col gap-2">
-        <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px">
+      <div className="overflow-auto flex flex-col gap-2 grow">
+        <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px grow relative">
+          {isLoading && <LoadingProgressBar />}
           {filteredRecordings?.map((recording) => (
             <RecordingRow key={recording.uuid} recording={recording} />
           ))}
@@ -94,7 +94,6 @@ export default function RecordingPage({
           {!isLoading && numTotalRecords === 0 && (
             <div>No recordings have been uploaded yet.</div>
           )}
-          {isLoading && <PageLoadingPlaceholder />}
         </div>
       </div>
     </div>

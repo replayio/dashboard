@@ -2,7 +2,7 @@ import { DropDownMenu } from "@/components/DropDownMenu";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
-import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
+import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestStatusCapsule } from "@/components/TestStatusCapsule";
 import { TestSuiteTest } from "@/graphql/types";
 import { TestRunTestRow } from "@/routes/team/id/runs/TestRunTestRow";
@@ -85,6 +85,7 @@ export function TestRunTests({
 
   return (
     <>
+      {isLoadingTests && <LoadingProgressBar />}
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2 items-center">
           <div className="grow">
@@ -163,32 +164,25 @@ export function TestRunTests({
         )}
       </div>
 
-      {isLoadingTests ? (
-        <PageLoadingPlaceholder />
-      ) : (
-        <div className="overflow-auto -mx-1">
-          {Object.values(categorizedTests).map(
-            ({ color, count, label, tests }) =>
-              count > 0 ? (
-                <Fragment key={label}>
-                  <div className={`font-bold mx-1 ${color}`}>
-                    {count === 1
-                      ? `1 ${label} test`
-                      : `${count} ${label} tests`}
-                  </div>
-                  {tests.map((test, index) => (
-                    <TestRunTestRow
-                      currentTestId={selectedTestId}
-                      key={index}
-                      selectTest={selectTest}
-                      test={test}
-                    />
-                  ))}
-                </Fragment>
-              ) : null
-          )}
-        </div>
-      )}
+      <div className="overflow-auto -mx-1">
+        {Object.values(categorizedTests).map(({ color, count, label, tests }) =>
+          count > 0 ? (
+            <Fragment key={label}>
+              <div className={`font-bold mx-1 ${color}`}>
+                {count === 1 ? `1 ${label} test` : `${count} ${label} tests`}
+              </div>
+              {tests.map((test, index) => (
+                <TestRunTestRow
+                  currentTestId={selectedTestId}
+                  key={index}
+                  selectTest={selectTest}
+                  test={test}
+                />
+              ))}
+            </Fragment>
+          ) : null
+        )}
+      </div>
     </>
   );
 }

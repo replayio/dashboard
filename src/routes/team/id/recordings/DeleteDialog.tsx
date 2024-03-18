@@ -2,7 +2,6 @@ import { Button } from "@/components/Button";
 import { ModalDialog } from "@/components/ModalDialog";
 import { useDeleteRecording } from "@/graphql/queries/useDeleteRecording";
 import { WorkspaceRecording } from "@/graphql/types";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DeleteDialog({
@@ -14,17 +13,16 @@ export function DeleteDialog({
 }) {
   const [confirmed, setConfirmed] = useState(false);
 
-  const router = useRouter();
-
   const { deleteRecording } = useDeleteRecording(async () => {
-    setConfirmed(true);
-
-    router.refresh();
+    // The interaction feels better if you see the "delete" button update to its disabled state for a second before the dialog closes
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     onDismiss();
   });
 
   const onDeleteClick = () => {
+    setConfirmed(true);
+
     deleteRecording(recording.uuid);
   };
 

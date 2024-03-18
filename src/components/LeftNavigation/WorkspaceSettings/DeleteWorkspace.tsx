@@ -3,18 +3,24 @@
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { useDeleteWorkspace } from "@/graphql/queries/deleteWorkspace";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DeleteWorkspace({ id }: { id: string }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+
+  const router = useRouter();
 
   const { deleteWorkspace } = useDeleteWorkspace();
 
   if (showConfirmation) {
     const handleDelete = async () => {
+      setIsPending(true);
+
       await deleteWorkspace(id);
 
-      window.location.replace("/team/me/recordings");
+      router.replace("/team/me/recordings");
     };
 
     return (
@@ -27,10 +33,14 @@ export function DeleteWorkspace({ id }: { id: string }) {
           replays, api-keys, sourcemaps and remove all team member associations.
         </div>
         <div className="flex flex-row items-center gap-2 text-rose-400 font-bold">
-          <Button variant="outline" onClick={() => setShowConfirmation(false)}>
+          <Button
+            disabled={isPending}
+            variant="outline"
+            onClick={() => setShowConfirmation(false)}
+          >
             Cancel
           </Button>
-          <Button color="secondary" onClick={handleDelete}>
+          <Button disabled={isPending} color="secondary" onClick={handleDelete}>
             Delete team
           </Button>
         </div>

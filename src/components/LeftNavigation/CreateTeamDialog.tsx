@@ -5,6 +5,7 @@ import Checkbox from "@/components/Checkbox";
 import { Input } from "@/components/Input";
 import { ModalDialog } from "@/components/ModalDialog";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function CreateTeamDialog({
@@ -16,12 +17,15 @@ export function CreateTeamDialog({
 }) {
   const [bypassTrial, setBypassTrial] = useState(false);
   const [name, setName] = useState("");
-
   const [isPending, setIsPending] = useState(false);
+
+  const router = useRouter();
 
   const { createWorkspace, error } = useCreateWorkspace(
     (id) => {
-      window.location.replace(`/team/${id}/recordings`);
+      router.replace(`/team/${id}/recordings`);
+
+      onDismiss();
     },
     () => {
       setIsPending(false);

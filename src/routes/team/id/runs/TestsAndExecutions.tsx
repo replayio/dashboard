@@ -1,4 +1,4 @@
-import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
+import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestSuiteTestStatus } from "@/graphql/types";
 import { TestExecutionRow } from "@/routes/team/id/runs/TestExecutionRow";
 import { TestRunErrors } from "@/routes/team/id/runs/TestRunErrors";
@@ -15,7 +15,7 @@ export function TestsAndExecutions({
   const selectedTest = tests?.find((test) => test.id === selectedTestId);
 
   if (selectedTest == null) {
-    return <PageLoadingPlaceholder />;
+    return <LoadingProgressBar />;
   }
 
   return (

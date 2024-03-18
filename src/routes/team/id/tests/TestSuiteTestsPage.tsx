@@ -1,13 +1,13 @@
 import { DropDownMenu } from "@/components/DropDownMenu";
 import { Input } from "@/components/Input";
-import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
+import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { SelectedTestSummary } from "@/routes/team/id/tests/SelectedTestSummary";
 import { TestSummaryRow } from "@/routes/team/id/tests/TestSummaryRow";
+import { TestsViewContext } from "@/routes/team/id/tests/TestsViewContext";
 import {
   DATE_RANGE_FILTERS,
   SORT_BY_FILTERS,
 } from "@/routes/team/id/tests/constants";
-import { TestsViewContext } from "@/routes/team/id/tests/TestsViewContext";
 import { useContext } from "react";
 
 export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
@@ -25,7 +25,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
 
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2 h-full">
-      <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2">
+      <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2 relative">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 items-center">
             <div className="basis-2/4 shrink overflow-auto">
@@ -53,7 +53,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
           />
         </div>
         <div className="overflow-y-auto -mx-1">
-          {isLoading && <PageLoadingPlaceholder />}
+          {isLoading && <LoadingProgressBar />}
           {testSummaries?.map((test) => (
             <TestSummaryRow
               currentTestSummaryId={selectedTestSummaryId}
@@ -65,7 +65,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
           ))}
         </div>
       </div>
-      <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2">
+      <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2 relative">
         {selectedTestSummaryId ? (
           <SelectedTestSummary
             testSummaryId={selectedTestSummaryId}

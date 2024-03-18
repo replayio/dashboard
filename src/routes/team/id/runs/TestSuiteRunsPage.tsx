@@ -15,13 +15,13 @@ export function TestSuiteRunsPage() {
 
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2 h-full">
-      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2 relative">
         <TestRuns
           selectedTestRunId={selectedTestRunId}
           selectTestRun={selectTestRun}
         />
       </div>
-      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2 relative">
         {selectedTestRunId != null ? (
           <TestRunTests
             selectedTestId={selectedTestId}
@@ -34,7 +34,7 @@ export function TestSuiteRunsPage() {
           </div>
         ) : null}
       </div>
-      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2">
+      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2 relative">
         {selectedTestId != null && selectedTestRunId != null ? (
           <TestsAndExecutions selectedTestId={selectedTestId} />
         ) : selectedTestRunId ? (

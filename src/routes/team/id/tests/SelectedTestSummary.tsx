@@ -1,4 +1,4 @@
-import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
+import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
 import { ExecutionRow } from "@/routes/team/id/tests/ExecutionRow";
 
@@ -15,7 +15,7 @@ export function SelectedTestSummary({
   );
 
   return isLoading ? (
-    <PageLoadingPlaceholder />
+    <LoadingProgressBar />
   ) : (
     <div className="flex flex-col gap-2 overflow-auto">
       {executions.map((execution) => (
