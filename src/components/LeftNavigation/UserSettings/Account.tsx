@@ -1,28 +1,14 @@
-"use client";
-
 import { Button } from "@/components/Button";
-import { LOCAL_STORAGE } from "@/constants";
 import { User } from "@/graphql/types";
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 
 export function Account({ user }: { user: User }) {
   const [isPending, setIsPending] = useState(false);
 
-  const [accessToken, setAccessToken] = useLocalStorage<string | null>(
-    LOCAL_STORAGE.accessToken,
-    null
-  );
-
-  const { loginWithRedirect, logout } = useAuth0();
-
   const onClick = async () => {
     setIsPending(true);
 
-    setAccessToken(null);
-
-    await logout();
+    window.location.replace("/api/auth/logout");
   };
 
   return (
