@@ -1,3 +1,4 @@
+import { AUTH_REDIRECT_URI, LOCAL_STORAGE } from "@/constants";
 import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { User, useAuth0 } from "@auth0/auth0-react";
@@ -17,7 +18,7 @@ export const SessionContext = createContext<SessionContextType>({
 
 export function SessionContextProvider({ children }: PropsWithChildren) {
   const [accessToken, setAccessToken] = useLocalStorage<string | null>(
-    "accessToken",
+    LOCAL_STORAGE.accessToken,
     null
   );
 
@@ -30,16 +31,20 @@ export function SessionContextProvider({ children }: PropsWithChildren) {
   } = useAuth0();
 
   useIsomorphicLayoutEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     if (isAuthenticated) {
       getAccessTokenSilently().then((accessToken) => {
         setAccessToken(accessToken);
       });
-    } else if (!isLoading) {
+    } else {
       loginWithRedirect({
         authorizationParams: {
           audience: "https://api.replay.io",
           code_challenge_method: "S256",
-          redirect_uri: "http://localhost:8080/",
+          redirect_uri: AUTH_REDIRECT_URI,
           response_type: "code",
           scope: "openid profile offline_access",
         },

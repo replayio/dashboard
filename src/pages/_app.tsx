@@ -2,13 +2,14 @@ import { ClientOnly } from "@/components/ClientOnly";
 import { NavList } from "@/components/LeftNavigation/NavList";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { authClientId, authDomain } from "@/config";
+import { AUTH_REDIRECT_URI } from "@/constants";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { AppProps } from "next/app";
 import { ErrorBoundary } from "react-error-boundary";
-
 import "use-context-menu/styles.css";
 import "../global.css";
 
-export default function App({ Component, pageProps }: any) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="flex h-screen w-screen flex-row bg-slate-900">
       <Auth0Provider
@@ -17,7 +18,7 @@ export default function App({ Component, pageProps }: any) {
         authorizationParams={{
           audience: "https://api.replay.io",
           code_challenge_method: "S256",
-          redirect_uri: "http://localhost:8080/",
+          redirect_uri: AUTH_REDIRECT_URI,
           response_type: "code",
           scope: "openid profile offline_access",
         }}
