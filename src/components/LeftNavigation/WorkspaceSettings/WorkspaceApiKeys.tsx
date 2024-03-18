@@ -1,5 +1,5 @@
 import { ApiKeys } from "@/components/ApiKeysPanel/ApiKeys";
-import { useGetWorkspaceApiKeys } from "@/graphql/queries/GetWorkspaceApiKeys";
+import { useGetWorkspaceApiKeys } from "@/graphql/queries/getWorkspaceApiKeys";
 import { useCreateWorkspaceAPIKey } from "@/graphql/queries/createWorkspaceAPIKey";
 import { useDeleteWorkspaceAPIKey } from "@/graphql/queries/deleteWorkspaceAPIKey";
 import { ApiKeyScope } from "@/graphql/types";

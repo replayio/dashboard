@@ -1,20 +1,16 @@
-import { AuthContext } from "@/components/AuthContext";
+import { SessionContext } from "@/components/SessionContext";
 import {
   GetUserSettingsQuery,
   GetUserSettingsQueryVariables,
 } from "@/graphql/generated/graphql";
 import { getGraphQLClient } from "@/graphql/graphQLClient";
-import { ApiKey, ApiKeyScope, UserSettings } from "@/graphql/types";
-import { ApolloError, gql, useQuery } from "@apollo/client";
+import { ApiKey, ApiKeyScope } from "@/graphql/types";
+import { gql, useQuery } from "@apollo/client";
 import assert from "assert";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 
-export function useGetUserSettings(): {
-  error: ApolloError | undefined;
-  loading: boolean;
-  settings: UserSettings;
-} {
-  const accessToken = useContext(AuthContext);
+export function useGetUserSettings() {
+  const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
   const client = getGraphQLClient(accessToken);
@@ -42,18 +38,24 @@ export function useGetUserSettings(): {
     }
   );
 
-  const apiKeys: ApiKey[] = [];
+  const apiKeys = useMemo<ApiKey[] | undefined>(() => {
+    if (data) {
+      const apiKeys: ApiKey[] = [];
 
-  data?.viewer?.apiKeys?.forEach((key) => {
-    apiKeys.push({
-      id: key.id,
-      createdAt: new Date(key.createdAt),
-      label: key.label,
-      scopes: key.scopes as ApiKeyScope[],
-      recordingCount: key.recordingCount,
-      maxRecordings: key.maxRecordings ?? 0,
-    });
-  });
+      data?.viewer?.apiKeys?.forEach((key) => {
+        apiKeys.push({
+          id: key.id,
+          createdAt: new Date(key.createdAt),
+          label: key.label,
+          scopes: key.scopes as ApiKeyScope[],
+          recordingCount: key.recordingCount,
+          maxRecordings: key.maxRecordings ?? 0,
+        });
+      });
+
+      return apiKeys;
+    }
+  }, [data]);
 
   return { error, loading, settings: { apiKeys } };
 }

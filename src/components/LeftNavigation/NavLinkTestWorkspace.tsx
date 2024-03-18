@@ -12,7 +12,7 @@ export function NavLinkTestWorkspace({
   invitationCode,
   name,
 }: {
-  currentUserId: string;
+  currentUserId: string | null;
   id: string;
   invitationCode: string;
   name: string;

@@ -1,4 +1,4 @@
-import { AuthContext } from "@/components/AuthContext";
+import { SessionContext } from "@/components/SessionContext";
 import {
   DeleteWorkspaceApiKeyMutation,
   DeleteWorkspaceApiKeyMutationVariables,
@@ -9,7 +9,7 @@ import assert from "assert";
 import { useContext } from "react";
 
 export function useDeleteWorkspaceAPIKey() {
-  const accessToken = useContext(AuthContext);
+  const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
   const client = getGraphQLClient(accessToken);

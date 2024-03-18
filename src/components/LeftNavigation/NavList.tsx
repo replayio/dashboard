@@ -3,12 +3,12 @@ import { CurrentUser } from "@/components/LeftNavigation/CurrentUser";
 import { NavLink } from "@/components/LeftNavigation/NavLink";
 import { NavLinkTestWorkspace } from "@/components/LeftNavigation/NavLinkTestWorkspace";
 import { ReplayLogo } from "@/components/ReplayLogo";
-import { getCurrentUserServer } from "@/graphql/queries/getCurrentUser";
-import { getNonPendingWorkspacesServer } from "@/graphql/queries/getNonPendingWorkspaces";
+import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
+import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 
-export async function NavList() {
-  const workspaces = await getNonPendingWorkspacesServer();
-  const user = await getCurrentUserServer();
+export function NavList() {
+  const { workspaces } = useNonPendingWorkspaces();
+  const { user } = useCurrentUser();
 
   return (
     <nav className="flex flex-col h-full bg-slate-800 text-white overflow-auto shrink-0">
@@ -17,15 +17,15 @@ export async function NavList() {
       </div>
       <div className="flex flex-col overflow-auto">
         <NavLink
-          currentUserId={user.id}
+          currentUserId={user?.id ?? null}
           id="me"
           invitationCode=""
           name="Your Library"
         />
-        {workspaces.map(({ id, invitationCode, isTest, name }) =>
+        {workspaces?.map(({ id, invitationCode, isTest, name }) =>
           isTest ? (
             <NavLinkTestWorkspace
-              currentUserId={user.id}
+              currentUserId={user?.id ?? null}
               id={id}
               invitationCode={invitationCode ?? ""}
               key={id}
@@ -33,7 +33,7 @@ export async function NavList() {
             />
           ) : (
             <NavLink
-              currentUserId={user.id}
+              currentUserId={user?.id ?? null}
               id={id}
               invitationCode={invitationCode ?? ""}
               key={id}
@@ -41,10 +41,10 @@ export async function NavList() {
             />
           )
         )}
-        <CreateTeamButton isInternalUser={user.isInternal} />
+        <CreateTeamButton isInternalUser={user?.isInternal == true} />
       </div>
       <div className="grow" />
-      <CurrentUser user={user} />
+      <CurrentUser />
     </nav>
   );
 }

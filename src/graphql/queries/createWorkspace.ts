@@ -1,4 +1,4 @@
-import { AuthContext } from "@/components/AuthContext";
+import { SessionContext } from "@/components/SessionContext";
 import {
   CreateNewWorkspaceMutation,
   CreateNewWorkspaceMutationVariables,
@@ -12,7 +12,7 @@ export function useCreateWorkspace(
   onCompleted: (id: string) => void,
   onFailed: () => void
 ) {
-  const accessToken = useContext(AuthContext);
+  const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
   const client = getGraphQLClient(accessToken);
