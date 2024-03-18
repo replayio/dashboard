@@ -42,27 +42,29 @@ export function CreateTeamDialog({
 
   return (
     <ModalDialog onDismiss={onDismiss} title="Create new team">
-      <Input
-        disabled={isPending}
-        onChange={(event) => setName(event.currentTarget.value)}
-        onConfirm={onClick}
-        onDismiss={onDismiss}
-        placeholder="Team name"
-        value={name}
-      />
-      {isInternalUser && (
-        <Checkbox
-          checked={bypassTrial}
+      <div className="flex flex-col gap-2">
+        <Input
           disabled={isPending}
-          label={
-            <>
-              Bypass trial{" "}
-              <small className="text-yellow-300">(internal only)</small>
-            </>
-          }
-          onChange={(value) => setBypassTrial(value)}
+          onChange={(event) => setName(event.currentTarget.value)}
+          onConfirm={onClick}
+          onDismiss={onDismiss}
+          placeholder="Team name"
+          value={name}
         />
-      )}
+        {isInternalUser && (
+          <Checkbox
+            checked={bypassTrial}
+            disabled={isPending}
+            label={
+              <>
+                Bypass trial{" "}
+                <small className="text-yellow-300">(internal only)</small>
+              </>
+            }
+            onChange={(value) => setBypassTrial(value)}
+          />
+        )}
+      </div>
       {error && (
         <div
           className="bg-rose-400 text-rose-900 px-2 py-1 rounded font-bold inline-block"

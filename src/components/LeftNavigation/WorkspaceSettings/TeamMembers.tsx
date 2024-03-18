@@ -18,12 +18,12 @@ export function TeamMembers({
     .sort((a, b) => Number(b.isPending) - Number(a.isPending));
 
   return (
-    <div className="flex flex-col gap-4 max-h-full">
+    <div className="flex flex-col gap-4 h-full">
       <div className="shrink-0">
         <InviteTeamMember workspaceId={id} />
       </div>
 
-      <div className="flex flex-col gap-1 overflow-auto shrink">
+      <div className="flex flex-col gap-1 overflow-auto shrink grow">
         {loading && <div className="text-slate-500">Loading...</div>}{" "}
         {error && (
           <div
