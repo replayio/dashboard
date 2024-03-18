@@ -71,7 +71,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
             testSummaryId={selectedTestSummaryId}
             workspaceId={workspaceId}
           />
-        ) : !isLoading ? (
+        ) : testSummaries && testSummaries.length > 0 ? (
           <div className="flex items-center justify-center text-slate-300 h-full">
             Select a test to see its details here
           </div>
