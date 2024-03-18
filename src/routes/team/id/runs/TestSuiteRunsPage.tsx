@@ -34,7 +34,7 @@ export function TestSuiteRunsPage() {
           </div>
         ) : null}
       </div>
-      <div className="basis-4/12 overflow-auto flex flex-col gap-2 relative">
+      <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2 relative">
         {selectedTestId != null && selectedTestRunId != null ? (
           <TestsAndExecutions selectedTestId={selectedTestId} />
         ) : selectedTestRunId ? (
