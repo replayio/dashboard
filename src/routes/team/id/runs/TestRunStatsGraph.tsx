@@ -1,4 +1,4 @@
-import { getTestRunStatsTooltip } from "@/pages/team/[id]/runs/getTestRunStatsTooltip";
+import { getTestRunStatsTooltip } from "@/routes/team/id/runs/getTestRunStatsTooltip";
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
 import { getNumDaysAgo } from "@/utils/date";

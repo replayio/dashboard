@@ -7,7 +7,7 @@ import {
   DEFAULT_SORT_BY_FILTER,
   DateRange,
   SortBy,
-} from "@/pages/team/[id]/tests/constants";
+} from "@/routes/team/id/tests/constants";
 import { getRelativeDate } from "@/utils/date";
 import {
   PropsWithChildren,

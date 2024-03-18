@@ -1,7 +1,7 @@
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { useWorkspaceIdFromUrl } from "@/hooks/useWorkspaceIdFromUrl";
-import { TestSuiteTestsPage } from "@/pages/team/[id]/tests/TestSuiteTestsPage";
-import { ContextRoot } from "@/pages/team/[id]/tests/TestsViewContext";
+import { TestSuiteTestsPage } from "@/routes/team/id/tests/TestSuiteTestsPage";
+import { ContextRoot } from "@/routes/team/id/tests/TestsViewContext";
 
 export default function Page() {
   const workspaceId = useWorkspaceIdFromUrl();

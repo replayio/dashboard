@@ -9,6 +9,7 @@ const createJestConfig = nextJest({
 // Add any custom config to be passed to Jest
 const config: Config = {
   coverageProvider: "v8",
+  injectGlobals: true,
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },

@@ -1,8 +1,8 @@
 import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
 import { TestSuiteTestStatus } from "@/graphql/types";
-import { TestExecutionRow } from "@/pages/team/[id]/runs/TestExecutionRow";
-import { TestRunErrors } from "@/pages/team/[id]/runs/TestRunErrors";
-import { RunsViewContext } from "@/pages/team/[id]/runs/TestRunsContext";
+import { TestExecutionRow } from "@/routes/team/id/runs/TestExecutionRow";
+import { TestRunErrors } from "@/routes/team/id/runs/TestRunErrors";
+import { RunsViewContext } from "@/routes/team/id/runs/TestRunsContext";
 import { useContext } from "react";
 
 export function TestsAndExecutions({

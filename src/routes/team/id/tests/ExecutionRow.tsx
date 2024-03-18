@@ -1,6 +1,6 @@
 import { Icon, IconType } from "@/components/Icon";
 import { TestSuiteTestExecution } from "@/graphql/types";
-import { RecordingRow } from "@/pages/team/[id]/tests/RecordingRow";
+import { RecordingRow } from "@/routes/team/id/tests/RecordingRow";
 import { formatRelativeTime } from "@/utils/number";
 
 export function ExecutionRow({

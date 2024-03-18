@@ -1,4 +1,4 @@
-import { TestRunStatsData } from "@/pages/team/[id]/runs/TestRunStatsGraph";
+import { TestRunStatsData } from "@/routes/team/id/runs/TestRunStatsGraph";
 import { ReactNode } from "react";
 
 export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {

@@ -4,8 +4,8 @@ import { Input } from "@/components/Input";
 import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
 import { WorkspaceRecording } from "@/graphql/types";
 import useDebouncedCallback from "@/hooks/useDebouncedCallback";
-import { LaunchReplayModal } from "@/pages/team/[id]/recordings/LaunchReplayModal";
-import { RecordingRow } from "@/pages/team/[id]/recordings/RecordingRow";
+import { LaunchReplayModal } from "@/routes/team/id/recordings/LaunchReplayModal";
+import { RecordingRow } from "@/routes/team/id/recordings/RecordingRow";
 import { formatNumber } from "@/utils/number";
 import { ChangeEvent, useMemo, useState, useTransition } from "react";
 

@@ -1,7 +1,7 @@
-import { TestRunTests } from "@/pages/team/[id]/runs/TestRunTests";
-import TestRuns from "@/pages/team/[id]/runs/TestRuns";
-import { RunsViewContext } from "@/pages/team/[id]/runs/TestRunsContext";
-import { TestsAndExecutions } from "@/pages/team/[id]/runs/TestsAndExecutions";
+import { TestRunTests } from "@/routes/team/id/runs/TestRunTests";
+import TestRuns from "@/routes/team/id/runs/TestRuns";
+import { RunsViewContext } from "@/routes/team/id/runs/TestRunsContext";
+import { TestsAndExecutions } from "@/routes/team/id/runs/TestsAndExecutions";
 import { useContext } from "react";
 
 export function TestSuiteRunsPage() {

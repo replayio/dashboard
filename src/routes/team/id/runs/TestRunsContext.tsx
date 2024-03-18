@@ -10,7 +10,7 @@ import {
   DEFAULT_TEST_STATUS_FILTER,
   RunStatus,
   TestStatus,
-} from "@/pages/team/[id]/runs/constants";
+} from "@/routes/team/id/runs/constants";
 import { getRelativeDate } from "@/utils/date";
 import { filterTest, filterTestRun } from "@/utils/test-suites";
 import {

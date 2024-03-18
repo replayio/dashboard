@@ -1,13 +1,13 @@
 import { DropDownMenu } from "@/components/DropDownMenu";
 import { Input } from "@/components/Input";
 import { PageLoadingPlaceholder } from "@/components/PageLoadingPlaceholder";
-import { SelectedTestSummary } from "@/pages/team/[id]/tests/SelectedTestSummary";
-import { TestSummaryRow } from "@/pages/team/[id]/tests/TestSummaryRow";
+import { SelectedTestSummary } from "@/routes/team/id/tests/SelectedTestSummary";
+import { TestSummaryRow } from "@/routes/team/id/tests/TestSummaryRow";
 import {
   DATE_RANGE_FILTERS,
   SORT_BY_FILTERS,
-} from "@/pages/team/[id]/tests/constants";
-import { TestsViewContext } from "@/pages/team/[id]/tests/TestsViewContext";
+} from "@/routes/team/id/tests/constants";
+import { TestsViewContext } from "@/routes/team/id/tests/TestsViewContext";
 import { useContext } from "react";
 
 export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {

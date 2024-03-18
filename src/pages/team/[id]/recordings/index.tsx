@@ -1,7 +1,7 @@
 import { useWorkspaceRecordings } from "@/graphql/queries/useWorkspaceRecordings";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { useWorkspaceIdFromUrl } from "@/hooks/useWorkspaceIdFromUrl";
-import RecordingPage from "@/pages/team/[id]/recordings/RecordingsPage";
+import RecordingPage from "@/routes/team/id/recordings/RecordingsPage";
 
 export default function Page() {
   const workspaceId = useWorkspaceIdFromUrl();

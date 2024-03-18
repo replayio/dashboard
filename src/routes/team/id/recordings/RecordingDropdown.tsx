@@ -1,7 +1,7 @@
 import { IconButton } from "@/components/IconButton";
 import { WorkspaceRecording } from "@/graphql/types";
-import { DeleteDialog } from "@/pages/team/[id]/recordings/DeleteDialog";
-import { ShareDialog } from "@/pages/team/[id]/recordings/ShareDialog";
+import { DeleteDialog } from "@/routes/team/id/recordings/DeleteDialog";
+import { ShareDialog } from "@/routes/team/id/recordings/ShareDialog";
 import { MouseEvent, useState } from "react";
 import { ContextMenuItem, useContextMenu } from "use-context-menu";
 
