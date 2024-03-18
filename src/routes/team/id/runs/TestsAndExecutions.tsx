@@ -20,8 +20,8 @@ export function TestsAndExecutions({
 
   return (
     <>
-      <div className="shrink-0 -mx-1">
-        <div className="font-bold mb-2">Replays</div>
+      <div className="shrink-0 -mx-2">
+        <div className="font-bold mx-2 mb-2">Replays</div>
         {selectedTest.recordings.map((recording, index) => {
           let status: TestSuiteTestStatus;
           switch (selectedTest.status) {

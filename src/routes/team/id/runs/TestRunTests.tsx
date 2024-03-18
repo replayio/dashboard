@@ -164,11 +164,11 @@ export function TestRunTests({
         )}
       </div>
 
-      <div className="overflow-auto -mx-1">
+      <div className="overflow-auto -mx-2">
         {Object.values(categorizedTests).map(({ color, count, label, tests }) =>
           count > 0 ? (
             <Fragment key={label}>
-              <div className={`font-bold mx-1 ${color}`}>
+              <div className={`font-bold mx-2 ${color}`}>
                 {count === 1 ? `1 ${label} test` : `${count} ${label} tests`}
               </div>
               {tests.map((test, index) => (

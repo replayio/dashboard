@@ -17,7 +17,7 @@ export function SelectedTestSummary({
   return isLoading ? (
     <LoadingProgressBar />
   ) : (
-    <div className="flex flex-col gap-2 overflow-auto">
+    <div className="flex flex-col gap-2 overflow-auto -mx-2">
       {executions.map((execution) => (
         <ExecutionRow key={execution.id} testExecution={execution} />
       ))}

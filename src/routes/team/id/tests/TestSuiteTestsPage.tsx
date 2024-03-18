@@ -52,7 +52,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
             type="text"
           />
         </div>
-        <div className="overflow-y-auto -mx-1">
+        <div className="overflow-y-auto -mx-2">
           {isLoading && <LoadingProgressBar />}
           {testSummaries?.map((test) => (
             <TestSummaryRow

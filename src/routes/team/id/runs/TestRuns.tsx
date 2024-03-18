@@ -62,7 +62,7 @@ export default function TestRuns({
         />
       </div>
       {testRuns != null ? <TestRunStatsGraph testRuns={testRuns} /> : null}
-      <div className="overflow-y-auto -mx-1">
+      <div className="overflow-y-auto -mx-2">
         {testRuns?.map((testRun) => (
           <TestRunRow
             currentTestRunId={selectedTestRunId}

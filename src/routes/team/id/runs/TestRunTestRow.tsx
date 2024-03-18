@@ -13,7 +13,7 @@ export function TestRunTestRow({
 
   return (
     <div
-      className={`flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 rounded ${
+      className={`flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 ${
         isActive
           ? "bg-slate-700 cursor-default"
           : "hover:bg-slate-700 cursor-pointer"
