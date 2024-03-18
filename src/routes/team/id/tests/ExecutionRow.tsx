@@ -24,7 +24,9 @@ export function ExecutionRow({
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-center gap-2">
-        <div className="grow truncate">{testExecution.commitTitle}</div>
+        <div className="grow truncate">
+          {testExecution.commitTitle || "Test"}
+        </div>
         {testExecution.commitAuthor && (
           <div className="flex flex-row items-center gap-1 text-sm text-center">
             <Icon className="w-4 h-4" type="account" />
