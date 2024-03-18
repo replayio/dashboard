@@ -1,5 +1,3 @@
-"use client";
-
 import { ExternalLink } from "@/components/ExternalLink";
 
 export function Legal() {

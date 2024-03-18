@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon } from "@/components/Icon";
 import { SettingsButton } from "@/components/LeftNavigation/SettingsButton";
 import { useNextLink } from "@/hooks/useNextLink";

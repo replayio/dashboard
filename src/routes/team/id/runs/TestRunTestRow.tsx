@@ -1,5 +1,3 @@
-"use client";
-
 import { TestSuiteTest } from "@/graphql/types";
 
 export function TestRunTestRow({

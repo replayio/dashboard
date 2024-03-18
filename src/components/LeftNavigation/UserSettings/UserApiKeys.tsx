@@ -1,4 +1,3 @@
-"use client";
 import { ApiKeys } from "@/components/ApiKeysPanel/ApiKeys";
 
 import { useCreateUserAPIKey } from "@/graphql/queries/createUserApiKey";

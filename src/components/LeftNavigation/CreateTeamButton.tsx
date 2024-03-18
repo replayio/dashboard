@@ -1,5 +1,3 @@
-"use client";
-
 import { CreateTeamDialog } from "@/components/LeftNavigation/CreateTeamDialog";
 import { useState } from "react";
 

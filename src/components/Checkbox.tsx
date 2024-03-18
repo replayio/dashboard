@@ -1,5 +1,3 @@
-"use client";
-
 import { MouseEvent, ReactNode, useState } from "react";
 
 // This component exists to work around bizarre React behavior

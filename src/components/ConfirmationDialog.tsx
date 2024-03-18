@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/Button";
 import { ModalDialog } from "@/components/ModalDialog";
 import { ReactNode } from "react";

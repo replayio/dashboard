@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon } from "@/components/Icon";
 import { InvitationLink } from "@/components/LeftNavigation/WorkspaceSettings/InvitationLink";
 import { InviteTeamMember } from "@/components/LeftNavigation/WorkspaceSettings/InviteTeamMember";

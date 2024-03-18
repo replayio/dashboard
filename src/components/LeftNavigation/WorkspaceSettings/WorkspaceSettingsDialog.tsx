@@ -1,5 +1,3 @@
-"use client";
-
 import { Billing } from "@/components/LeftNavigation/WorkspaceSettings/Billing";
 import { DeleteWorkspace } from "@/components/LeftNavigation/WorkspaceSettings/DeleteWorkspace";
 import { TeamMembers } from "@/components/LeftNavigation/WorkspaceSettings/TeamMembers";

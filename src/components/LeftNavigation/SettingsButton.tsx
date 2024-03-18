@@ -1,5 +1,3 @@
-"use client";
-
 import { IconButton } from "@/components/IconButton";
 import { WorkspaceSettingsDialog } from "@/components/LeftNavigation/WorkspaceSettings/WorkspaceSettingsDialog";
 import { MouseEvent, useState } from "react";

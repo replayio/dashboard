@@ -1,5 +1,3 @@
-"use client";
-
 import { Account } from "@/components/LeftNavigation/UserSettings/Account";
 import { Legal } from "@/components/LeftNavigation/UserSettings/Legal";
 import { Support } from "@/components/LeftNavigation/UserSettings/Support";

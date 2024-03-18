@@ -1,5 +1,3 @@
-"use client";
-
 import { UserSettingsDialog } from "@/components/LeftNavigation/UserSettings/UserSettingsDialog";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { useState } from "react";

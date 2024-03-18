@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/Button";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { ApiKey } from "@/graphql/types";

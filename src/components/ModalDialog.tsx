@@ -1,5 +1,3 @@
-"use client";
-
 import { IconButton } from "@/components/IconButton";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
 import { MouseEvent, PropsWithChildren, ReactNode, useRef } from "react";

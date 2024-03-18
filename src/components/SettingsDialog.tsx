@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon, IconType } from "@/components/Icon";
 import { ModalDialog } from "@/components/ModalDialog";
 import { ReactNode, useState } from "react";

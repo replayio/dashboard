@@ -1,5 +1,3 @@
-"use client";
-
 import { setCookieValue } from "@/utils/cookie";
 import { PanelGroup, PanelGroupProps } from "react-resizable-panels";
 
