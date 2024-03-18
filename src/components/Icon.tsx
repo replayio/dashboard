@@ -11,6 +11,7 @@ export type IconType =
   | "delete"
   | "delete-team"
   | "drop-down-caret"
+  | "drop-down-caret-left"
   | "email"
   | "external-link"
   | "failed-test"
@@ -83,6 +84,9 @@ export function Icon({
       break;
     case "drop-down-caret":
       path = "M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z";
+      break;
+    case "drop-down-caret-left":
+      path = "M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z";
       break;
     case "email":
       path =

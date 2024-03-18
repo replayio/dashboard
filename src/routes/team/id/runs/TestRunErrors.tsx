@@ -1,4 +1,5 @@
 import { TestSuiteTest } from "@/graphql/types";
+import { ExpandableSection } from "@/routes/team/id/runs/ExpandableSection";
 import { useMemo } from "react";
 
 interface ErrorCount {
@@ -31,27 +32,28 @@ export function TestRunErrors({ test }: { test: TestSuiteTest }) {
   }
 
   return (
-    <>
-      <div className="font-bold mb-2">Errors</div>
-      <div className="flex flex-col gap-2">
-        {uniqueErrors?.map((error, index) => (
-          <div
-            className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded shrink-0"
-            key={index}
-          >
-            <div className="flex flex-row gap-2 items-center overflow-hidden">
-              <div className="flex items-center justify-center bg-rose-600 text-white w-6 h-6 rounded shrink-0 text-xs">
-                {error.count}
+    <div className="bg-slate-800 text-white p-2 rounded">
+      <ExpandableSection label="Errors">
+        <div className="flex flex-col gap-2">
+          {uniqueErrors?.map((error, index) => (
+            <div
+              className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded shrink-0"
+              key={index}
+            >
+              <div className="flex flex-row gap-2 items-center overflow-hidden">
+                <div className="flex items-center justify-center bg-rose-600 text-white w-6 h-6 rounded shrink-0 text-xs">
+                  {error.count}
+                </div>
+                <div className="truncate">{error.summary}</div>
               </div>
-              <div className="truncate">{error.summary}</div>
+              <pre className="whitespace-pre-wrap text-xs overflow-auto break-words">
+                {error.message}
+              </pre>
             </div>
-            <pre className="whitespace-pre-wrap text-xs overflow-auto break-words">
-              {error.message}
-            </pre>
-          </div>
-        ))}
-      </div>
-    </>
+          ))}
+        </div>
+      </ExpandableSection>
+    </div>
   );
 }
 
