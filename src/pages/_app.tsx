@@ -34,6 +34,21 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
         ? (Component.Layout as ComponentType<PropsWithChildren>)
         : DefaultLayout;
 
+    let children = (
+      <SessionContextProvider accessToken={accessToken}>
+        <ClientOnly>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ClientOnly>
+      </SessionContextProvider>
+    );
+
+    const isAuthenticated = !!accessToken;
+    if (isAuthenticated) {
+      children = <UserProvider>{children}</UserProvider>;
+    }
+
     return (
       <ErrorBoundary
         fallback={
@@ -45,15 +60,7 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
           </div>
         }
       >
-        <UserProvider>
-          <ClientOnly>
-            <SessionContextProvider accessToken={accessToken}>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </SessionContextProvider>
-          </ClientOnly>
-        </UserProvider>
+        {children}
       </ErrorBoundary>
     );
   }

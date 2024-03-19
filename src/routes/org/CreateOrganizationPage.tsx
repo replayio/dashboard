@@ -33,7 +33,7 @@ export function CreateOrganizationPage() {
         <ReplayLogo />
         <div className="font-bold text-xl">Welcome to Replay!</div>
       </div>
-      <div>What should we call you?</div>
+      <div>What would you like your team name to be?</div>
       <Input
         className="w-full"
         disabled={isPending}

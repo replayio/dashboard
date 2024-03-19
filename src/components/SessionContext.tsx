@@ -15,8 +15,6 @@ export function SessionContextProvider({
   const value = useMemo(() => ({ accessToken }), [accessToken]);
 
   return (
-    <SessionContext.Provider value={value}>
-      {accessToken == null ? null : children}
-    </SessionContext.Provider>
+    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
   );
 }

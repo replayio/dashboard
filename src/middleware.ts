@@ -11,14 +11,19 @@ export async function middleware(request: NextRequest) {
   const { pathname } = nextUrl;
 
   const response = NextResponse.next();
-  const session = await getSession(request, response);
 
-  const isProtectedRoute = pathname === "/" || pathname.startsWith("/team");
-  if (!session && isProtectedRoute) {
-    const loginUrl = new URL("/api/auth/login", request.url);
-    loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
+  const isProtectedRoute =
+    pathname === "/" ||
+    pathname.startsWith("/org") ||
+    pathname.startsWith("/team");
+  if (isProtectedRoute) {
+    const session = await getSession(request, response);
+    if (!session) {
+      const loginUrl = new URL("/api/auth/login", request.url);
+      loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
 
-    return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   try {
