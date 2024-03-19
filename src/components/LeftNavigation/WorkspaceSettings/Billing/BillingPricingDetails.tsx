@@ -1,23 +1,31 @@
 import { Button } from "@/components/Button";
 import { ExternalLink } from "@/components/ExternalLink";
+import { BillingContext } from "@/components/LeftNavigation/WorkspaceSettings/Billing/BillingContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { WorkspaceSubscription } from "@/graphql/types";
 import { formatCurrency } from "@/utils/number";
-import { pricingDetailsForSubscription } from "@/utils/subscription";
+import {
+  calculateMonthlyCost,
+  pricingDetailsForSubscription,
+} from "@/utils/subscription";
+import assert from "assert";
 import { format } from "date-fns/format";
+import { useContext } from "react";
 
-export function PricingDetails({
-  subscription,
-}: {
-  subscription: WorkspaceSubscription;
-}) {
+export function BillingPriceDetails() {
+  const { setView, subscription } = useContext(BillingContext);
+  assert(subscription != null, "Subscription not found");
+
   const pricingDetails = subscription
     ? pricingDetailsForSubscription(subscription)
     : null;
 
+  const onClick = () => {
+    setView("add-payment-method");
+  };
+
   return (
-    <div className="flex flex-col gap-2">
-      <div>
+    <div className="flex flex-col gap-2 h-full">
+      <div className="grow">
         Replay&apos;s team Plan can expand your debugging superpowers with
         collaboration features that make it easy to work together to fix bugs
         and understand your software better.{" "}
@@ -37,11 +45,13 @@ export function PricingDetails({
           </div>
           <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
             <div className="grow">Renewal schedule</div>
-            <div>{pricingDetails?.billingSchedule ?? "monthly"}</div>
+            <div className="capitalize">
+              {pricingDetails?.billingSchedule ?? "monthly"}
+            </div>
           </div>
           <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
             <div className="grow">Number of seats</div>
-            <div></div>
+            <div>{subscription.seatCount}</div>
           </div>
           <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
             <div className="grow">Cost per seat</div>
@@ -53,7 +63,11 @@ export function PricingDetails({
           </div>
           <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
             <div className="grow">Monthly charge</div>
-            <div></div>
+            <div>
+              {formatCurrency(
+                calculateMonthlyCost(subscription, pricingDetails)
+              )}
+            </div>
           </div>
         </div>
       ) : (
@@ -62,9 +76,9 @@ export function PricingDetails({
         </div>
       )}
       <div>
-        <Button>Add payment method</Button>
+        <Button onClick={onClick}>Add payment method</Button>
       </div>
-      <div>
+      <div className="grow flex flex-col justify-end">
         <ExternalLink
           className="text-sm"
           href="https://www.replay.io/terms-of-use"

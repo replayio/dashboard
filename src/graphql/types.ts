@@ -144,6 +144,7 @@ export type TestSuiteTestExecution = {
 };
 
 export type Workspace = {
+  hasPaymentMethod: boolean;
   id: string;
   invitationCode: string | null;
   isTest: boolean;

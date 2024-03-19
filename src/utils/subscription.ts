@@ -1,5 +1,19 @@
-import { PlanPricing, WorkspaceSubscription } from "@/graphql/types";
+import { PlanPricing, Workspace, WorkspaceSubscription } from "@/graphql/types";
 import assert from "assert";
+
+export function calculateMonthlyCost(
+  subscription: WorkspaceSubscription,
+  planPricing: PlanPricing
+) {
+  let subTotal = 0;
+  if (planPricing.billingSchedule && subscription.seatCount) {
+    const monthsPerCycle = planPricing.billingSchedule === "annual" ? 12 : 1;
+
+    subTotal = planPricing.seatPrice * subscription.seatCount * monthsPerCycle;
+  }
+
+  return subTotal * (1 - planPricing.discount);
+}
 
 export function cardToDisplayName(type: string) {
   switch (type) {
@@ -24,6 +38,17 @@ export function isTrialSubscription(subscription: WorkspaceSubscription) {
     subscription.paymentMethods != null &&
     subscription.paymentMethods.length === 0
   );
+}
+
+export function inUnpaidFreeTrial(
+  workspace: Workspace,
+  subscription: WorkspaceSubscription
+) {
+  if (subscription && subscription.status === "trialing") {
+    return !workspace.hasPaymentMethod;
+  }
+
+  return false;
 }
 
 export function pricingDetailsForSubscription(

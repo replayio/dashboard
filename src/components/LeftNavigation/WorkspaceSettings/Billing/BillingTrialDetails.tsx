@@ -1,17 +1,20 @@
 import { Button } from "@/components/Button";
-import { WorkspaceSubscription } from "@/graphql/types";
+import { BillingContext } from "@/components/LeftNavigation/WorkspaceSettings/Billing/BillingContext";
+import assert from "assert";
 import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
+import { useContext } from "react";
 
-export function TrialDetails({
-  showTeamPlanPricing,
-  subscription,
-}: {
-  showTeamPlanPricing: () => void;
-  subscription: WorkspaceSubscription;
-}) {
+export function BillingTrialDetails() {
+  const { setView, subscription } = useContext(BillingContext);
+  assert(subscription != null, "Subscription not found");
+
   const days = subscription
     ? differenceInCalendarDays(subscription.trialEnds, new Date())
     : 0;
+
+  const onClick = () => {
+    setView("price-details");
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -25,7 +28,7 @@ export function TrialDetails({
         questions.
       </div>
       <div>
-        <Button onClick={showTeamPlanPricing}>Team plan pricing</Button>
+        <Button onClick={onClick}>Team plan pricing</Button>
       </div>
     </div>
   );

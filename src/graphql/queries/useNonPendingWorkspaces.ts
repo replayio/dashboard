@@ -13,6 +13,7 @@ export function useNonPendingWorkspaces() {
             workspaces {
               edges {
                 node {
+                  hasPaymentMethod
                   id
                   invitationCode
                   isTest
@@ -30,6 +31,7 @@ export function useNonPendingWorkspaces() {
       return (
         data.viewer?.workspaces.edges.map(({ node }) => {
           return {
+            hasPaymentMethod: node.hasPaymentMethod,
             id: node.id,
             invitationCode: node.invitationCode ?? null,
             isTest: node.isTest,
