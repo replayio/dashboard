@@ -1,11 +1,9 @@
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
-import { useWorkspaceIdFromUrl } from "@/hooks/useWorkspaceIdFromUrl";
+import { getServerSideProps } from "@/routes/team/id/getServerSideProps";
 import { TestSuiteTestsPage } from "@/routes/team/id/tests/TestSuiteTestsPage";
 import { ContextRoot } from "@/routes/team/id/tests/TestsViewContext";
 
-export default function Page() {
-  const workspaceId = useWorkspaceIdFromUrl();
-
+export default function Page({ workspaceId }: { workspaceId: string }) {
   useSyncDefaultWorkspace(workspaceId);
 
   return (
@@ -14,3 +12,5 @@ export default function Page() {
     </ContextRoot>
   );
 }
+
+export { getServerSideProps };

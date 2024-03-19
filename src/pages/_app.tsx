@@ -1,4 +1,3 @@
-import { ClientOnly } from "@/components/ClientOnly";
 import { DefaultLayout } from "@/components/DefaultLayout/DefaultLayout";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { HEADERS } from "@/constants";
@@ -36,11 +35,9 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
 
     let children = (
       <SessionContextProvider accessToken={accessToken}>
-        <ClientOnly>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ClientOnly>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </SessionContextProvider>
     );
 
