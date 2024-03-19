@@ -1,10 +1,10 @@
-import App from "next/app";
 import { ClientOnly } from "@/components/ClientOnly";
-import { NavList } from "@/components/LeftNavigation/NavList";
+import { DefaultLayout } from "@/components/DefaultLayout/DefaultLayout";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { HEADERS } from "@/constants";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import { AppContext, AppProps } from "next/app";
+import App, { AppContext, AppProps } from "next/app";
+import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
@@ -29,30 +29,32 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
 
     const accessToken = this.accessToken;
 
+    const Layout =
+      "Layout" in Component
+        ? (Component.Layout as ComponentType<PropsWithChildren>)
+        : DefaultLayout;
+
     return (
-      <div className="flex h-screen w-screen flex-row bg-slate-900">
+      <ErrorBoundary
+        fallback={
+          <div
+            className="bg-rose-400 text-rose-900 px-2 py-1 rounded m-2 font-bold inline-block"
+            role="alert"
+          >
+            Something went wrong =(
+          </div>
+        }
+      >
         <UserProvider>
           <ClientOnly>
             <SessionContextProvider accessToken={accessToken}>
-              <NavList />
-              <main className="flex flex-col grow overflow-auto">
-                <ErrorBoundary
-                  fallback={
-                    <div
-                      className="bg-rose-400 text-rose-900 px-2 py-1 rounded m-2 font-bold inline-block"
-                      role="alert"
-                    >
-                      Something went wrong =(
-                    </div>
-                  }
-                >
-                  <Component {...pageProps} />
-                </ErrorBoundary>
-              </main>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
             </SessionContextProvider>
           </ClientOnly>
         </UserProvider>
-      </div>
+      </ErrorBoundary>
     );
   }
 }

@@ -1,5 +1,5 @@
 import { Button } from "@/components/Button";
-import { BillingContext } from "@/components/LeftNavigation/WorkspaceSettings/Billing/BillingContext";
+import { BillingContext } from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingContext";
 import assert from "assert";
 import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
 import { useContext } from "react";

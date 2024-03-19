@@ -1,5 +1,5 @@
 import { IconButton } from "@/components/IconButton";
-import { WorkspaceSettingsDialog } from "@/components/LeftNavigation/WorkspaceSettings/WorkspaceSettingsDialog";
+import { WorkspaceSettingsDialog } from "@/components/DefaultLayout/WorkspaceSettings/WorkspaceSettingsDialog";
 import { MouseEvent, useState } from "react";
 
 export function SettingsButton({

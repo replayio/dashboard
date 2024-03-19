@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button";
 import { ExternalLink } from "@/components/ExternalLink";
-import { BillingContext } from "@/components/LeftNavigation/WorkspaceSettings/Billing/BillingContext";
+import { BillingContext } from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { formatCurrency } from "@/utils/number";
 import {

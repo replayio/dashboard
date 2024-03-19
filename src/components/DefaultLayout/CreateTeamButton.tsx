@@ -1,4 +1,4 @@
-import { CreateTeamDialog } from "@/components/LeftNavigation/CreateTeamDialog";
+import { CreateTeamDialog } from "@/components/DefaultLayout/CreateTeamDialog";
 import { useState } from "react";
 
 export function CreateTeamButton({

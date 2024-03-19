@@ -1,7 +1,7 @@
-import { Billing } from "@/components/LeftNavigation/WorkspaceSettings/Billing";
-import { DeleteWorkspace } from "@/components/LeftNavigation/WorkspaceSettings/DeleteWorkspace";
-import { TeamMembers } from "@/components/LeftNavigation/WorkspaceSettings/TeamMembers";
-import { WorkspaceApiKeys } from "@/components/LeftNavigation/WorkspaceSettings/WorkspaceApiKeys";
+import { Billing } from "@/components/DefaultLayout/WorkspaceSettings/Billing";
+import { DeleteWorkspace } from "@/components/DefaultLayout/WorkspaceSettings/DeleteWorkspace";
+import { TeamMembers } from "@/components/DefaultLayout/WorkspaceSettings/TeamMembers";
+import { WorkspaceApiKeys } from "@/components/DefaultLayout/WorkspaceSettings/WorkspaceApiKeys";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 

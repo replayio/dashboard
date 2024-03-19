@@ -1,5 +1,5 @@
 import { Icon } from "@/components/Icon";
-import { SettingsButton } from "@/components/LeftNavigation/SettingsButton";
+import { SettingsButton } from "@/components/DefaultLayout/SettingsButton";
 import { useNextLink } from "@/hooks/useNextLink";
 import Link from "next/link";
 import { useParams } from "next/navigation";

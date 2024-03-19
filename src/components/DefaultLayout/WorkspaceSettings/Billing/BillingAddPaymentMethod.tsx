@@ -1,4 +1,4 @@
-import { BillingContext } from "@/components/LeftNavigation/WorkspaceSettings/Billing/BillingContext";
+import { BillingContext } from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingContext";
 import assert from "assert";
 import { useContext } from "react";
 

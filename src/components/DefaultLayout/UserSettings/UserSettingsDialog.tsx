@@ -1,7 +1,7 @@
-import { Account } from "@/components/LeftNavigation/UserSettings/Account";
-import { Legal } from "@/components/LeftNavigation/UserSettings/Legal";
-import { Support } from "@/components/LeftNavigation/UserSettings/Support";
-import { UserApiKeys } from "@/components/LeftNavigation/UserSettings/UserApiKeys";
+import { Account } from "@/components/DefaultLayout/UserSettings/Account";
+import { Legal } from "@/components/DefaultLayout/UserSettings/Legal";
+import { Support } from "@/components/DefaultLayout/UserSettings/Support";
+import { UserApiKeys } from "@/components/DefaultLayout/UserSettings/UserApiKeys";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { User } from "@/graphql/types";
 

@@ -1,7 +1,7 @@
-import { CreateTeamButton } from "@/components/LeftNavigation/CreateTeamButton";
-import { CurrentUser } from "@/components/LeftNavigation/CurrentUser";
-import { NavLink } from "@/components/LeftNavigation/NavLink";
-import { NavLinkTestWorkspace } from "@/components/LeftNavigation/NavLinkTestWorkspace";
+import { CreateTeamButton } from "@/components/DefaultLayout/CreateTeamButton";
+import { CurrentUser } from "@/components/DefaultLayout/CurrentUser";
+import { NavLink } from "@/components/DefaultLayout/NavLink";
+import { NavLinkTestWorkspace } from "@/components/DefaultLayout/NavLinkTestWorkspace";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";

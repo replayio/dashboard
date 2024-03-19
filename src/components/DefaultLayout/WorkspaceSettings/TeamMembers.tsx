@@ -1,6 +1,6 @@
 import { Icon } from "@/components/Icon";
-import { InvitationLink } from "@/components/LeftNavigation/WorkspaceSettings/InvitationLink";
-import { InviteTeamMember } from "@/components/LeftNavigation/WorkspaceSettings/InviteTeamMember";
+import { InvitationLink } from "@/components/DefaultLayout/WorkspaceSettings/InvitationLink";
+import { InviteTeamMember } from "@/components/DefaultLayout/WorkspaceSettings/InviteTeamMember";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 import { getPrimaryRole } from "@/utils/user";
 
