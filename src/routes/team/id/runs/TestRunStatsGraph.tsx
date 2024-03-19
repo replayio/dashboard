@@ -1,7 +1,7 @@
 import { getTestRunStatsTooltip } from "@/routes/team/id/runs/getTestRunStatsTooltip";
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
-import { getNumDaysAgo } from "@/utils/date";
+import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
 import assert from "assert";
 
 export type TestRunStatsData = {
@@ -25,7 +25,7 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   let currentData: TestRunStatsData | null = null;
 
   testRuns.forEach((testRun) => {
-    const index = getNumDaysAgo(testRun.date);
+    const index = differenceInCalendarDays(new Date(), testRun.date);
     if (index !== currentDateIndex) {
       // Account for days in between (e.g. weekend days)
       while (currentDateIndex < index) {

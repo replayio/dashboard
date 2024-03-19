@@ -149,3 +149,62 @@ export type Workspace = {
   isTest: boolean;
   name: string;
 };
+
+export enum WorkspaceSubscriptionStatus {
+  Active = "active",
+  Canceled = "canceled",
+  Incomplete = "incomplete",
+  Trial = "trialing",
+}
+
+export type PlanKey =
+  | "org-v1"
+  | "team-v1"
+  | "test-team-v1"
+  | "beta-v1"
+  | "test-beta-v1"
+  | "ent-v1"
+  | "team-annual-v1"
+  | "org-annual-v1"
+  | "org-annual-contract-v1"
+  | "team-oss-v1"
+  | "team-internal-v1";
+
+export type Plan = {
+  id: string;
+  key: PlanKey;
+  name: string;
+};
+
+export type SubscriptionStatus = `${WorkspaceSubscriptionStatus}`;
+
+export type PaymentMethod = {
+  default: boolean;
+  card: {
+    brand: string;
+    last4: string;
+  };
+  id: string;
+  type: "card";
+};
+
+export type WorkspaceSubscription = {
+  effectiveFrom: Date;
+  effectiveUntil: Date;
+  id: string;
+  paymentMethods: PaymentMethod[];
+  plan: Plan | undefined;
+  seatCount: number;
+  status: SubscriptionStatus;
+  trialEnds: Date;
+};
+
+export type BillingSchedule = "annual" | "monthly" | "contract";
+
+export type PlanPricing = {
+  billingSchedule: BillingSchedule | null;
+  displayName: string;
+  seatPrice: number;
+  trial: boolean;
+  discount: number;
+};

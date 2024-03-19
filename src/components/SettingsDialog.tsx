@@ -18,6 +18,7 @@ export function SettingsDialog<
   title: string;
 }) {
   const [activePanel, setActivePanel] = useState<keyof Panels>(defaultPanel);
+
   return (
     <ModalDialog onDismiss={onDismiss} title={title}>
       <div className="flex flex-row gap-4">
@@ -39,7 +40,7 @@ export function SettingsDialog<
             }
           })}
         </ul>
-        <div className="w-96 h-[250px] max-h-[250px] overflow-auto">
+        <div className="w-96 h-[300px] max-h-[300px] overflow-auto">
           {panels[activePanel]?.children ?? null}
         </div>
       </div>

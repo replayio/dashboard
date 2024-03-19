@@ -6,12 +6,25 @@ import { differenceInYears } from "date-fns/differenceInYears";
 import padStart from "lodash/padStart";
 import prettyMilliseconds from "pretty-ms";
 
+export function formatCurrency(amount: number) {
+  const formatter = new Intl.NumberFormat("en-us", {
+    style: "currency",
+    currency: "USD",
+  });
+  return formatter.format(amount);
+}
+
 export function formatDuration(ms: number) {
   return prettyMilliseconds(ms, { millisecondsDecimalDigits: 1 });
 }
 
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat().format(value);
+}
+
+export function formatPercentage(amount: number) {
+  const formatter = new Intl.NumberFormat("en-us", { style: "percent" });
+  return formatter.format(amount);
 }
 
 export function formatRelativeTime(date: Date): string {

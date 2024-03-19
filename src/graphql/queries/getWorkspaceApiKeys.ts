@@ -23,6 +23,7 @@ export function useGetWorkspaceApiKeys(workspaceId: string) {
       query GetWorkspaceApiKeys($workspaceId: ID!) {
         node(id: $workspaceId) {
           ... on Workspace {
+            id
             apiKeys {
               id
               createdAt

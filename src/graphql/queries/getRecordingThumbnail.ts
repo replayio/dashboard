@@ -9,6 +9,7 @@ const QUERY = gql`
   query GetRecordingPhoto($recordingId: UUID!) {
     recording(uuid: $recordingId) {
       thumbnail
+      uuid
     }
   }
 `;

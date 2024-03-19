@@ -1,6 +1,7 @@
 import { IconButton } from "@/components/IconButton";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
 import { MouseEvent, PropsWithChildren, ReactNode, useRef } from "react";
+import { createPortal } from "react-dom";
 
 export function ModalDialog({
   children,
@@ -14,7 +15,7 @@ export function ModalDialog({
 
   useModalDismissSignal(modalRef, onDismiss);
 
-  return (
+  return createPortal(
     <div className="backdrop-blur overflow-y-auto cursor-default fixed top-0 left-0 w-full h-full z-40 flex justify-center items-center bg-black/50">
       <div
         className="min-w-96 max-h-full rounded-lg shadow bg-slate-800 text-white flex flex-col gap-4 p-4 pt-2 relative"
@@ -29,7 +30,8 @@ export function ModalDialog({
         />
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
