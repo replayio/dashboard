@@ -4,11 +4,11 @@ import { getServerSideProps } from "@/routes/team/id/getServerSideProps";
 import RecordingPage from "@/routes/team/id/recordings/RecordingsPage";
 
 export default function Page({ workspaceId }: { workspaceId: string }) {
+  useSyncDefaultWorkspace();
+
   // TODO GraphQL queries should be pulling down only the data we need
   const { isLoading, recordings: allRecordings } =
     useWorkspaceRecordings(workspaceId);
-
-  useSyncDefaultWorkspace(workspaceId);
 
   return <RecordingPage isLoading={isLoading} recordings={allRecordings} />;
 }

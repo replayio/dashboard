@@ -4,7 +4,7 @@ import { ContextRoot } from "@/routes/team/id/runs/TestRunsContext";
 import { TestSuiteRunsPage } from "@/routes/team/id/runs/TestSuiteRunsPage";
 
 export default function Page({ workspaceId }: { workspaceId: string }) {
-  useSyncDefaultWorkspace(workspaceId);
+  useSyncDefaultWorkspace();
 
   return (
     <ContextRoot key={workspaceId} workspaceId={workspaceId}>
