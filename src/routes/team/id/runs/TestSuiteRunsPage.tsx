@@ -13,6 +13,10 @@ export function TestSuiteRunsPage() {
     testRuns,
   } = useContext(RunsViewContext);
 
+  const selectedTestRun = testRuns?.find(
+    (testRun) => testRun.id === selectedTestRunId
+  );
+
   return (
     <div className="flex flex-row gap-2 overflow-auto overflow-hidden p-2 h-full">
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2 relative">
@@ -22,10 +26,10 @@ export function TestSuiteRunsPage() {
         />
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2 relative">
-        {selectedTestRunId != null ? (
+        {selectedTestRun != null ? (
           <TestRunTests
             selectedTestId={selectedTestId}
-            selectedTestRunId={selectedTestRunId}
+            selectedTestRun={selectedTestRun}
             selectTest={selectTest}
           />
         ) : testRuns && testRuns.length > 0 ? (
@@ -35,9 +39,9 @@ export function TestSuiteRunsPage() {
         ) : null}
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-4/12 overflow-auto flex flex-col gap-2 relative">
-        {selectedTestId != null && selectedTestRunId != null ? (
+        {selectedTestId != null && selectedTestRun != null ? (
           <TestsAndExecutions selectedTestId={selectedTestId} />
-        ) : selectedTestRunId ? (
+        ) : selectedTestRun ? (
           <div className="flex items-center justify-center text-slate-300 h-full">
             Select a test to see its details here
           </div>

@@ -4,22 +4,21 @@ import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestStatusCapsule } from "@/components/TestStatusCapsule";
-import { TestSuiteTest } from "@/graphql/types";
+import { TestRun, TestSuiteTest } from "@/graphql/types";
 import { TestRunTestRow } from "@/routes/team/id/runs/TestRunTestRow";
 import { RunsViewContext } from "@/routes/team/id/runs/TestRunsContext";
 import { TEST_STATUS } from "@/routes/team/id/runs/constants";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { getColorClassName } from "@/utils/test-suites";
-import assert from "assert";
 import { Fragment, useContext, useMemo } from "react";
 
 export function TestRunTests({
   selectedTestId,
-  selectedTestRunId,
+  selectedTestRun,
   selectTest,
 }: {
   selectedTestId: string | undefined;
-  selectedTestRunId: string;
+  selectedTestRun: TestRun;
   selectTest: (id: string) => void;
 }) {
   const {
@@ -27,33 +26,27 @@ export function TestRunTests({
     isPending,
     testsFilterText,
     testsStatus,
-    testRuns,
     tests,
     updateFilters,
   } = useContext(RunsViewContext);
-
-  const selectedTestRun = testRuns?.find(
-    (testRun) => testRun.id === selectedTestRunId
-  );
-  assert(selectedTestRun, `No test run found for id "${selectedTestRunId}"`);
 
   const categorizedTests = useMemo(() => {
     const categorizedTests = {
       failed: {
         color: getColorClassName("failed"),
-        count: selectedTestRun?.numFailed ?? 0,
+        count: selectedTestRun.numFailed ?? 0,
         label: "Failed",
         tests: [] as TestSuiteTest[],
       },
       flaky: {
         color: getColorClassName("flaky"),
-        count: selectedTestRun?.numFlaky ?? 0,
+        count: selectedTestRun.numFlaky ?? 0,
         label: "Flaky",
         tests: [] as TestSuiteTest[],
       },
       passed: {
         color: getColorClassName("passed"),
-        count: selectedTestRun?.numPassed ?? 0,
+        count: selectedTestRun.numPassed ?? 0,
         label: "Passed",
         tests: [] as TestSuiteTest[],
       },
