@@ -113,7 +113,7 @@ function ChartItem({
       onMouseLeave={onMouseLeave}
     >
       <div
-        className={`flex flex-col justify-end absolute bottom-0 w-full ${
+        className={`flex flex-col justify-end absolute bottom-0 w-full rounded-sm overflow-hidden ${
           numTestRuns > 0 && data.numFailedTestRuns === 0
             ? getBackgroundColorClassName("passed")
             : "bg-gray-700"
