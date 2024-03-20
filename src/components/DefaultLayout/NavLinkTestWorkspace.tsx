@@ -30,7 +30,7 @@ export function NavLinkTestWorkspace({
   if (!isActive) {
     return (
       <Link
-        className={`flex flex-row gap-2 items-center text-white px-4 py-1 pr-2 transition hover:bg-sky-900 ${
+        className={`flex flex-row gap-2 items-center text-white px-2 py-1 transition hover:bg-sky-900 ${
           isPending ? "bg-sky-900 opacity-75" : ""
         }`}
         href={`/team/${id}/runs`}
