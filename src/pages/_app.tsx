@@ -8,6 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
 import Head from "next/head";
+import { ReplayLogo } from "@/components/ReplayLogo";
 
 export default class MyApp extends App<AppProps<{ accessToken: string }>> {
   accessToken: string;
@@ -46,18 +47,8 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
     if (isAuthenticated) {
       children = <UserProvider>{children}</UserProvider>;
     }
-
     return (
-      <ErrorBoundary
-        fallback={
-          <div
-            className="bg-rose-400 text-rose-900 px-2 py-1 rounded m-2 font-bold inline-block"
-            role="alert"
-          >
-            Something went wrong =(
-          </div>
-        }
-      >
+      <ErrorBoundary fallback={<ErrorFallback />}>
         <Head>
           <link rel="icon" href="/favicon.svg" />
         </Head>
@@ -65,4 +56,18 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
       </ErrorBoundary>
     );
   }
+}
+
+function ErrorFallback() {
+  return (
+    <section role="alert">
+      <div className="flex flex-col gap-4 items-center">
+        <h1 className="text-9xl font-bold text-red-500">500</h1>
+        <p className="font-bold text-4xl text-white">Something went wrong.</p>
+        <p className="text-lg font-light text-slate-400">
+          While we look into it, try reloading the page.
+        </p>
+      </div>
+    </section>
+  );
 }
