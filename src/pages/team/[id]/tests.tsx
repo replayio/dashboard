@@ -7,7 +7,7 @@ export default function Page({ workspaceId }: { workspaceId: string }) {
   useSyncDefaultWorkspace(workspaceId);
 
   return (
-    <ContextRoot key={workspaceId} workspaceId={workspaceId}>
+    <ContextRoot workspaceId={workspaceId}>
       <TestSuiteTestsPage workspaceId={workspaceId} />
     </ContextRoot>
   );

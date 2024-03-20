@@ -17,6 +17,16 @@ export function getGraphQLClient(accessToken: string) {
     graphQLClient = new ApolloClient({
       cache: new InMemoryCache({
         typePolicies: {
+          AuthenticatedUser: {
+            merge: true,
+          },
+          Comment: {
+            fields: {
+              replies: {
+                merge: false,
+              },
+            },
+          },
           Query: {
             fields: {
               viewer: {
@@ -24,20 +34,10 @@ export function getGraphQLClient(accessToken: string) {
               },
             },
           },
-          AuthenticatedUser: {
-            merge: true,
-          },
           Recording: {
             keyFields: ["uuid"],
             fields: {
               comments: {
-                merge: false,
-              },
-            },
-          },
-          Comment: {
-            fields: {
-              replies: {
                 merge: false,
               },
             },

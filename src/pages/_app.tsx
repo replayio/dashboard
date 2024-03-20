@@ -7,6 +7,7 @@ import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
+import Head from "next/head";
 
 export default class MyApp extends App<AppProps<{ accessToken: string }>> {
   accessToken: string;
@@ -57,6 +58,9 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
           </div>
         }
       >
+        <Head>
+          <link rel="icon" href="/favicon.svg" />
+        </Head>
         {children}
       </ErrorBoundary>
     );
