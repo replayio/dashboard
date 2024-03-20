@@ -1,3 +1,4 @@
+import { COOKIES } from "@/constants";
 import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
@@ -11,6 +12,7 @@ import {
   RunStatus,
   TestStatus,
 } from "@/routes/team/id/runs/constants";
+import { setCookieValueClient } from "@/utils/cookie";
 import { getRelativeDate } from "@/utils/date";
 import { filterTest, filterTestRun } from "@/utils/test-suites";
 import {
@@ -19,12 +21,13 @@ import {
   SetStateAction,
   createContext,
   useCallback,
+  useEffect,
   useMemo,
   useState,
   useTransition,
 } from "react";
 
-type Filters = {
+export type Filters = {
   runsBranch: Branch;
   runsDateRange: DateRange;
   runsFilterText: string;
@@ -50,8 +53,10 @@ export const RunsViewContext = createContext<
 
 export function ContextRoot({
   children,
+  filters,
   workspaceId,
 }: PropsWithChildren & {
+  filters: Partial<Filters> | null;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
@@ -61,6 +66,7 @@ export function ContextRoot({
     runsStatus: DEFAULT_RUN_STATUS_FILTER,
     testsFilterText: "",
     testsStatus: DEFAULT_TEST_STATUS_FILTER,
+    ...filters,
   });
 
   const {
@@ -71,6 +77,15 @@ export function ContextRoot({
     testsFilterText,
     testsStatus,
   } = state;
+
+  useEffect(() => {
+    setCookieValueClient(COOKIES.testRunsFilters, {
+      runsBranch,
+      runsDateRange,
+      runsStatus,
+      testsStatus,
+    });
+  }, [runsBranch, runsDateRange, runsStatus, testsStatus]);
 
   const [isPending, startTransition] = useTransition();
 

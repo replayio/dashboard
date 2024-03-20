@@ -1,4 +1,4 @@
-import { setCookieValue } from "@/utils/cookie";
+import { setCookieValueClient } from "@/utils/cookie";
 import { PanelGroup, PanelGroupProps } from "react-resizable-panels";
 
 export function PanelGroupClient({
@@ -9,7 +9,7 @@ export function PanelGroupClient({
 }: PanelGroupProps & {}) {
   const onLayout = (sizes: number[]) => {
     if (autoSaveId) {
-      setCookieValue(autoSaveId, sizes);
+      setCookieValueClient(autoSaveId, sizes);
     }
 
     if (onLayoutProp) {

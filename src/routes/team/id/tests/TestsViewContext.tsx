@@ -1,3 +1,4 @@
+import { COOKIES } from "@/constants";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestSummary } from "@/graphql/types";
 import {
@@ -6,17 +7,19 @@ import {
   DateRange,
   SortBy,
 } from "@/routes/team/id/tests/constants";
+import { setCookieValueClient } from "@/utils/cookie";
 import { getRelativeDate } from "@/utils/date";
 import {
   PropsWithChildren,
   createContext,
   useCallback,
+  useEffect,
   useMemo,
   useState,
   useTransition,
 } from "react";
 
-type Filters = {
+export type Filters = {
   dateRange: DateRange;
   filterText: string;
   sortBy: SortBy;
@@ -35,17 +38,27 @@ export const TestsViewContext = createContext<
 
 export function ContextRoot({
   children,
+  filters,
   workspaceId,
 }: PropsWithChildren & {
+  filters: Partial<Filters> | null;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
     dateRange: DEFAULT_DATE_RANGE_FILTER,
     filterText: "",
     sortBy: DEFAULT_SORT_BY_FILTER,
+    ...filters,
   });
 
   const { dateRange, filterText, sortBy } = state;
+
+  useEffect(() => {
+    setCookieValueClient(COOKIES.testsFilters, {
+      dateRange,
+      sortBy,
+    });
+  }, [dateRange, sortBy]);
 
   const [isPending, startTransition] = useTransition();
 

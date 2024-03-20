@@ -1,16 +1,39 @@
+import { COOKIES } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
-import { getServerSideProps } from "@/routes/team/id/getServerSideProps";
-import { ContextRoot } from "@/routes/team/id/runs/TestRunsContext";
+import { getServerSideProps as getServerSidePropsShared } from "@/routes/team/id/getServerSideProps";
+import { ContextRoot, Filters } from "@/routes/team/id/runs/TestRunsContext";
 import { TestSuiteRunsPage } from "@/routes/team/id/runs/TestSuiteRunsPage";
+import { GetServerSidePropsContext } from "next";
 
-export default function Page({ workspaceId }: { workspaceId: string }) {
+export default function Page({
+  filters,
+  workspaceId,
+}: {
+  filters: Partial<Filters> | null;
+  workspaceId: string;
+}) {
   useSyncDefaultWorkspace();
 
   return (
-    <ContextRoot key={workspaceId} workspaceId={workspaceId}>
+    <ContextRoot filters={filters} workspaceId={workspaceId}>
       <TestSuiteRunsPage />
     </ContextRoot>
   );
 }
 
-export { getServerSideProps };
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<any>
+) {
+  const { req } = context;
+  const { props } = await getServerSidePropsShared(context);
+
+  const stringValue = req.cookies[COOKIES.testRunsFilters];
+  const filters = stringValue ? JSON.parse(stringValue) : null;
+
+  return {
+    props: {
+      ...props,
+      filters,
+    },
+  };
+}
