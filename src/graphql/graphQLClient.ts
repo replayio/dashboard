@@ -63,23 +63,6 @@ export function getGraphQLClient(accessToken: string) {
               },
             },
           },
-          // Apollo's default merge behavior incorrectly normalizes TestRunTest objects instead of scoping them to the parent TestRun
-          // The result is that executions data gets overridden when a new TestRun is added to the cache
-          // The custom merge function below prevents this from happening but at the cost of breaking in-memory caching TestRun data
-          // See FE-2367
-          TestRunTest: {
-            fields: {
-              executions: {
-                merge(
-                  existing: any[],
-                  incoming: any[],
-                  { readField, mergeObjects }
-                ) {
-                  // No-op
-                },
-              },
-            },
-          },
         },
       }),
       defaultOptions: {

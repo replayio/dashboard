@@ -29,7 +29,6 @@ export function useTestSuiteTests(
               edges {
                 node {
                   tests(includeNonRecorded: true) {
-                    id
                     testId
                     title
                     scope
