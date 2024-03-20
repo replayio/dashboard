@@ -6,11 +6,13 @@ type ValueToLabelMap = {
 };
 
 export function DropDownMenu<Options extends ValueToLabelMap>({
+  className,
   disabled,
   onChange,
   options,
   value,
 }: {
+  className?: string;
   disabled: boolean;
   onChange: (value: keyof Options) => void;
   options: Options;
@@ -35,7 +37,12 @@ export function DropDownMenu<Options extends ValueToLabelMap>({
 
   return (
     <>
-      <DropDownTrigger disabled={disabled} label={label} onClick={onClick} />
+      <DropDownTrigger
+        className={className}
+        disabled={disabled}
+        label={label}
+        onClick={onClick}
+      />
       {contextMenu}
     </>
   );

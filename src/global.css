@@ -21,9 +21,14 @@
 
 :root {
   font-size: 14px;
+  color-scheme: dark;
 
   --context-menu-item-font-size: 14px;
   --context-menu-item-padding: 0.5rem 1rem;
+}
+
+html {
+  background-color: transparent;
 }
 
 * {
@@ -31,6 +36,8 @@
   padding: 0;
   margin: 0;
 }
+
+/* Powers the animated indeterminate progress bar */
 
 .indeterminate {
   animation: indeterminate 1s infinite linear;
