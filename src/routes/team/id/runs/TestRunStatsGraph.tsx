@@ -1,8 +1,9 @@
-import { getTestRunStatsTooltip } from "@/routes/team/id/runs/getTestRunStatsTooltip";
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
-import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
+import { getTestRunStatsTooltip } from "@/routes/team/id/runs/getTestRunStatsTooltip";
+import { getBackgroundColorClassName } from "@/utils/test-suites";
 import assert from "assert";
+import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
 
 export type TestRunStatsData = {
   date: Date;
@@ -112,8 +113,14 @@ function ChartItem({
       onMouseLeave={onMouseLeave}
     >
       <div
-        className="flex flex-col justify-end absolute bottom-0 w-full rounded-sm overflow-hidden bg-gray-700"
-        style={{ height: percentageTotal * 100 + "%" }}
+        className={`flex flex-col justify-end absolute bottom-0 w-full rounded-sm overflow-hidden ${
+          numTestRuns > 0 && data.numFailedTestRuns === 0
+            ? getBackgroundColorClassName("passed")
+            : "bg-gray-700"
+        }`}
+        style={{
+          height: percentageTotal * 100 + "%",
+        }}
       >
         <div
           className="bg-rose-500 grow-0 shrink-0"
