@@ -7,7 +7,6 @@ import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
-// TODO limit the number of recordings returned
 export function usePersonalRecordings(filter: string = "") {
   const { data, error, isLoading } = useGraphQLQuery<
     GetPersonalRecordingsQuery,

@@ -45,8 +45,6 @@ export function useCreateWorkspace(
   }
 
   const createWorkspace = async (name: string, planKey: string) => {
-    // TODO Internal users can use a plan key of "team-internal-v1" to bypass the trial
-    // See github.com/replayio/devtools/pull/10430
     const result = await createWorkspaceMutation({
       variables: { name, planKey },
     });

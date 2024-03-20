@@ -56,7 +56,6 @@ export function filterTestRun(
   const branchName = testRun.branchName ?? "";
 
   if (branch === "primary") {
-    // TODO This should be configurable by Workspace
     if (branchName !== "main" && branchName !== "master") {
       return false;
     }

@@ -12,7 +12,6 @@ import { gql } from "@apollo/client";
 import assert from "assert";
 import { useMemo } from "react";
 
-// TODO limit the number of recordings returned
 export function useWorkspaceSubscription(workspaceId: string) {
   const {
     data,
