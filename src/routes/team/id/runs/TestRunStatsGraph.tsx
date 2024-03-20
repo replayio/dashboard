@@ -72,7 +72,7 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
 
   return (
     <div className="flex flex-col gap-2 px-2 pt-2 py-1 bg-slate-900 rounded">
-      <div className="flex flex-row justify-items-stretch gap-2 h-10">
+      <div className="flex flex-row justify-center gap-2 h-10">
         {dataByDay.map((data, index) => (
           <ChartItem
             data={data}
@@ -106,13 +106,13 @@ function ChartItem({
 
   return (
     <div
-      className="relative h-full grow hover:bg-gray-800 transition"
+      className="relative h-full grow max-w-10 hover:bg-gray-800 transition"
       onMouseEnter={onMouseEnter}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
       <div
-        className="flex flex-col justify-end absolute bottom-0 w-full rounded-tr-sm overflow-hidden bg-gray-700"
+        className="flex flex-col justify-end absolute bottom-0 w-full rounded-sm overflow-hidden bg-gray-700"
         style={{ height: percentageTotal * 100 + "%" }}
       >
         <div
