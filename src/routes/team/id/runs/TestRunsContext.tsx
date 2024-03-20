@@ -1,13 +1,13 @@
-import { LOCAL_STORAGE } from "@/constants";
 import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
-import useLocalStorage from "@/hooks/useLocalStorage";
 import {
   Branch,
   DEFAULT_BRANCH_FILTER,
+  DEFAULT_DATE_RANGE_FILTER,
   DEFAULT_RUN_STATUS_FILTER,
   DEFAULT_TEST_STATUS_FILTER,
+  DateRange,
   RunStatus,
   TestStatus,
 } from "@/routes/team/id/runs/constants";
@@ -26,6 +26,7 @@ import {
 
 type Filters = {
   runsBranch: Branch;
+  runsDateRange: DateRange;
   runsFilterText: string;
   runsStatus: RunStatus;
   testsFilterText: string;
@@ -53,19 +54,18 @@ export function ContextRoot({
 }: PropsWithChildren & {
   workspaceId: string;
 }) {
-  const [state, setState] = useLocalStorage<Filters>(
-    LOCAL_STORAGE.testRunsFilters,
-    {
-      runsBranch: DEFAULT_BRANCH_FILTER,
-      runsFilterText: "",
-      runsStatus: DEFAULT_RUN_STATUS_FILTER,
-      testsFilterText: "",
-      testsStatus: DEFAULT_TEST_STATUS_FILTER,
-    }
-  );
+  const [state, setState] = useState<Filters>({
+    runsBranch: DEFAULT_BRANCH_FILTER,
+    runsDateRange: DEFAULT_DATE_RANGE_FILTER,
+    runsFilterText: "",
+    runsStatus: DEFAULT_RUN_STATUS_FILTER,
+    testsFilterText: "",
+    testsStatus: DEFAULT_TEST_STATUS_FILTER,
+  });
 
   const {
     runsBranch,
+    runsDateRange,
     runsFilterText,
     runsStatus,
     testsFilterText,
@@ -110,9 +110,23 @@ export function ContextRoot({
     [setState]
   );
 
+  let startDate: Date;
+  switch (state.runsDateRange) {
+    case "day":
+      startDate = getRelativeDate({ daysAgo: 1 });
+      break;
+    case "hour":
+      startDate = getRelativeDate({ hoursAgo: 1 });
+      break;
+    case "week":
+    default:
+      startDate = getRelativeDate({ daysAgo: 7 });
+      break;
+  }
+
   const { isLoading: isLoadingTestRuns, testRuns } = useTestSuiteTestRuns(
     workspaceId,
-    getRelativeDate({ daysAgo: 7 })
+    startDate
   );
   const filteredTestRuns = useMemo(() => {
     return testRuns?.filter((testRun) =>
@@ -147,6 +161,7 @@ export function ContextRoot({
       isLoadingTests,
       isPending,
       runsBranch,
+      runsDateRange,
       runsFilterText,
       runsStatus,
       selectedTestRunId,
@@ -165,6 +180,7 @@ export function ContextRoot({
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
+      runsDateRange,
       runsBranch,
       runsFilterText,
       runsStatus,

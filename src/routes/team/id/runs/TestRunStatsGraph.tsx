@@ -107,13 +107,13 @@ function ChartItem({
 
   return (
     <div
-      className="relative h-full grow max-w-10 hover:bg-gray-800 transition"
+      className="relative h-full grow max-w-10 hover:bg-gray-800 transition rounded-sm overflow-hidden"
       onMouseEnter={onMouseEnter}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
       <div
-        className={`flex flex-col justify-end absolute bottom-0 w-full rounded-sm overflow-hidden ${
+        className={`flex flex-col justify-end absolute bottom-0 w-full ${
           numTestRuns > 0 && data.numFailedTestRuns === 0
             ? getBackgroundColorClassName("passed")
             : "bg-gray-700"

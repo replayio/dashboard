@@ -7,9 +7,9 @@ export const DEFAULT_SORT_BY_FILTER = "failure-rate";
 export type SortBy = keyof typeof SORT_BY_FILTERS;
 
 export const DATE_RANGE_FILTERS = {
+  week: "Last 7 days",
   day: "Last day",
   hour: "Last hour",
-  week: "Last 7 days",
 };
 export const DEFAULT_DATE_RANGE_FILTER = "week";
 export type DateRange = keyof typeof DATE_RANGE_FILTERS;

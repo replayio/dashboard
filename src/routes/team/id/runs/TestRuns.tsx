@@ -1,5 +1,4 @@
 import { DropDownMenu } from "@/components/DropDownMenu";
-import { DropDownTrigger } from "@/components/DropDownTrigger";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestRunRow } from "@/routes/team/id/runs/TestRunRow";
@@ -7,6 +6,7 @@ import { TestRunStatsGraph } from "@/routes/team/id/runs/TestRunStatsGraph";
 import { RunsViewContext } from "@/routes/team/id/runs/TestRunsContext";
 import {
   BRANCH_FILTERS,
+  DATE_RANGE_FILTERS,
   RUN_STATUS_FILTERS,
 } from "@/routes/team/id/runs/constants";
 import { useContext } from "react";
@@ -22,6 +22,7 @@ export default function TestRuns({
     isLoadingTestRuns,
     isPending,
     runsBranch,
+    runsDateRange,
     runsFilterText,
     runsStatus,
     testRuns,
@@ -42,7 +43,12 @@ export default function TestRuns({
             />
           </div>
           <div className="basis-4/12 shrink overflow-auto">
-            <DropDownTrigger disabled label="Last 7 days" onClick={noop} />
+            <DropDownMenu
+              disabled={isPending}
+              onChange={(runsDateRange) => updateFilters({ runsDateRange })}
+              options={DATE_RANGE_FILTERS}
+              value={runsDateRange}
+            />
           </div>
           <div className="basis-4/12 shrink overflow-auto">
             <DropDownMenu

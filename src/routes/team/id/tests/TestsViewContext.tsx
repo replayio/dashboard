@@ -1,7 +1,5 @@
-import { LOCAL_STORAGE } from "@/constants";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestSummary } from "@/graphql/types";
-import useLocalStorage from "@/hooks/useLocalStorage";
 import {
   DEFAULT_DATE_RANGE_FILTER,
   DEFAULT_SORT_BY_FILTER,
@@ -41,14 +39,11 @@ export function ContextRoot({
 }: PropsWithChildren & {
   workspaceId: string;
 }) {
-  const [state, setState] = useLocalStorage<Filters>(
-    LOCAL_STORAGE.testFilters,
-    {
-      dateRange: DEFAULT_DATE_RANGE_FILTER,
-      filterText: "",
-      sortBy: DEFAULT_SORT_BY_FILTER,
-    }
-  );
+  const [state, setState] = useState<Filters>({
+    dateRange: DEFAULT_DATE_RANGE_FILTER,
+    filterText: "",
+    sortBy: DEFAULT_SORT_BY_FILTER,
+  });
 
   const { dateRange, filterText, sortBy } = state;
 
@@ -81,11 +76,12 @@ export function ContextRoot({
     case "day":
       startDate = getRelativeDate({ daysAgo: 1 });
       break;
-    case "week":
-      startDate = getRelativeDate({ daysAgo: 7 });
-      break;
     case "hour":
       startDate = getRelativeDate({ hoursAgo: 1 });
+      break;
+    case "week":
+    default:
+      startDate = getRelativeDate({ daysAgo: 7 });
       break;
   }
 
