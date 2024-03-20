@@ -1,9 +1,10 @@
-import { HEADERS } from "@/constants";
+import { COOKIES, HEADERS } from "@/constants";
 import {
   AccessTokenError,
   getAccessToken,
   getSession,
 } from "@auth0/nextjs-auth0/edge";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
@@ -12,11 +13,17 @@ export async function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
 
-  const isProtectedRoute =
-    pathname === "/" ||
-    pathname.startsWith("/org") ||
-    pathname.startsWith("/team");
-  if (isProtectedRoute) {
+  // Redirect root requests to the most recently viewed path
+  if (pathname === "/") {
+    const cookieStore = cookies();
+    const cookie = cookieStore.get(COOKIES.defaultPathname);
+    const pathname = cookie ? JSON.parse(cookie.value) : "/team/me/recordings";
+
+    return NextResponse.redirect(new URL(pathname, request.url));
+  }
+
+  // Require authentication for protected routes
+  if (pathname.startsWith("/org") || pathname.startsWith("/team")) {
     const session = await getSession(request, response);
     if (!session) {
       const loginUrl = new URL("/api/auth/login", request.url);
