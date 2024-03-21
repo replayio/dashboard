@@ -36,6 +36,9 @@ export async function middleware(request: NextRequest) {
 
       return NextResponse.redirect(new URL(pathname, request.url));
     }
+    case "/org/new": {
+      return NextResponse.redirect(new URL("/team/new?type=org", request.url));
+    }
   }
 
   // Require authentication for protected routes
