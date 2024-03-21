@@ -1,7 +1,6 @@
-import { COOKIES, HEADERS } from "@/constants";
-import { getWorkspace } from "@/graphql/queries/getWorkspaceType";
+import { COOKIES } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
-import { getServerSideProps as getServerSidePropsShared } from "@/routes/team/id/getServerSideProps";
+import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/routes/team/id/getServerSidePropsHelpers";
 import { TestSuiteTestsPage } from "@/routes/team/id/tests/TestSuiteTestsPage";
 import { ContextRoot, Filters } from "@/routes/team/id/tests/TestsViewContext";
 import { GetServerSidePropsContext } from "next";
@@ -25,12 +24,7 @@ export default function Page({
 export async function getServerSideProps(
   context: GetServerSidePropsContext<any>
 ) {
-  const { req } = context;
-  const { props } = await getServerSidePropsShared(context);
-  const { workspaceId } = props;
-
-  const accessToken = context.req?.headers?.[HEADERS.accessToken] as string;
-  const { isTest } = await getWorkspace(accessToken, workspaceId);
+  const { isTest, workspaceId } = await getServerSidePropsShared(context);
   if (!isTest) {
     return {
       redirect: {
@@ -41,7 +35,7 @@ export async function getServerSideProps(
     };
   }
 
-  const stringValue = req.cookies[COOKIES.testsFilters];
+  const stringValue = context.req.cookies[COOKIES.testsFilters];
   const filters = stringValue ? JSON.parse(stringValue) : null;
 
   return {

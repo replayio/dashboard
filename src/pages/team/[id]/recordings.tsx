@@ -1,8 +1,6 @@
-import { HEADERS } from "@/constants";
-import { getWorkspace } from "@/graphql/queries/getWorkspaceType";
 import { useWorkspaceRecordings } from "@/graphql/queries/useWorkspaceRecordings";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
-import { getServerSideProps as getServerSidePropsShared } from "@/routes/team/id/getServerSideProps";
+import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/routes/team/id/getServerSidePropsHelpers";
 import RecordingPage from "@/routes/team/id/recordings/RecordingsPage";
 import { GetServerSidePropsContext } from "next";
 
@@ -16,13 +14,9 @@ export default function Page({ workspaceId }: { workspaceId: string }) {
 }
 
 export async function getServerSideProps(
-  context: GetServerSidePropsContext<any>
+  context: GetServerSidePropsContext<{ id: string }>
 ) {
-  const { props } = await getServerSidePropsShared(context);
-  const { workspaceId } = props;
-
-  const accessToken = context.req?.headers?.[HEADERS.accessToken] as string;
-  const { isTest } = await getWorkspace(accessToken, workspaceId);
+  const { isTest, workspaceId } = await getServerSidePropsShared(context);
   if (isTest) {
     return {
       redirect: {
