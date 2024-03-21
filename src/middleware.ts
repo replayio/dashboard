@@ -5,7 +5,7 @@ import {
   getSession,
 } from "@auth0/nextjs-auth0/edge";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, userAgent } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
@@ -15,6 +15,18 @@ export async function middleware(request: NextRequest) {
 
   switch (pathname) {
     case "/": {
+      const { ua } = userAgent(request);
+      if (isMobile(ua)) {
+        // If the user is attempting to visit Replay on a mobile device for the first time,
+        // show them a message that it has not been optimized for mobile
+        // If they have already confirmed this message (detectable via a cookie) then let them through
+        const cookieStore = cookies();
+        const cookie = cookieStore.get(COOKIES.mobileWarningDismissed);
+        if (cookie == null && request.nextUrl.pathname !== "/mobile-warning") {
+          return NextResponse.redirect(new URL("/mobile-warning", request.url));
+        }
+      }
+
       // Redirect root requests to the most recently viewed path
       const cookieStore = cookies();
       const cookie = cookieStore.get(COOKIES.defaultPathname);
@@ -53,4 +65,8 @@ export async function middleware(request: NextRequest) {
   }
 
   return response;
+}
+
+function isMobile(ua: string) {
+  return /iP(hone|ad|od)/.test(ua) || /Android/.test(ua);
 }

@@ -1,5 +1,6 @@
 export const COOKIES = {
   defaultPathname: "replay:dashboard:default-pathname",
+  mobileWarningDismissed: "replay:dashboard:mobile-warning-dismissed",
   testRunsFilters: "replay:dashboard:test-runs-filters",
   testsFilters: "replay:dashboard:tests-filters",
 };

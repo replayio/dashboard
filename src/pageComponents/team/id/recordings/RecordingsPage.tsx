@@ -66,7 +66,12 @@ export default function RecordingPage({
           type="text"
         />
 
-        <Button onClick={() => setShowLaunchModal(true)}>Launch Replay</Button>
+        {globalThis.__IS_RECORD_REPLAY_RUNTIME__ || (
+          <Button onClick={() => setShowLaunchModal(true)}>
+            Launch Replay
+          </Button>
+        )}
+
         {showLaunchModal && (
           <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />
         )}

@@ -1,5 +1,6 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { ExternalLink } from "@/components/ExternalLink";
+import { Message } from "@/components/Message";
 import { Release, fetchReleases } from "@/pages/api/releases";
 import { format } from "date-fns/format";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
@@ -23,13 +24,13 @@ export default function Page({
   return (
     <div className="h-screen flex flex-col gap-2 p-2">
       <div className="text-xl">Latest releases</div>
-      <div className="bg-slate-800 px-4 py-2 rounded-md">
+      <Message>
         <ReleasesTable releases={latestReleases} />
-      </div>
+      </Message>
       <div className="text-xl">All releases</div>
-      <div className="bg-slate-800 px-4 py-2 rounded-md shrink overflow-auto">
+      <Message className="shrink overflow-auto">
         <ReleasesTable releases={releases} />
-      </div>
+      </Message>
     </div>
   );
 }

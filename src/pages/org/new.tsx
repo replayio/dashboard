@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { Input } from "@/components/Input";
+import { Message } from "@/components/Message";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
 import { useRouter } from "next/navigation";
@@ -29,7 +30,7 @@ export default function Page() {
   };
 
   return (
-    <div className="bg-slate-800 text-white flex flex-col gap-4 p-4 rounded-md min-w-96">
+    <Message>
       <div className="flex flex-row items-center gap-2">
         <ReplayLogo />
         <div className="font-bold text-xl">Welcome to Replay!</div>
@@ -59,7 +60,7 @@ export default function Page() {
           Create an organization
         </Button>
       </div>
-    </div>
+    </Message>
   );
 }
 

@@ -46,6 +46,7 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
     if (isAuthenticated) {
       children = <UserProvider>{children}</UserProvider>;
     }
+
     return (
       <ErrorBoundary fallback={<ErrorFallback />}>
         <Head>

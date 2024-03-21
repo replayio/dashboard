@@ -1,5 +1,6 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { Message } from "@/components/Message";
 import { SessionContext } from "@/components/SessionContext";
 import { getWorkspace } from "@/graphql/queries/getWorkspaceType";
 import { useClaimTeamInvitationCode } from "@/graphql/queries/useClaimTeamInvitationCode";
@@ -40,9 +41,9 @@ export default function Page({
   }
 
   return (
-    <div className="bg-slate-800 text-white flex flex-col p-2 rounded-md">
+    <Message>
       <LoadingSpinner label="Processing..." />
-    </div>
+    </Message>
   );
 }
 
