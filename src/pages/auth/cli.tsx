@@ -1,16 +1,18 @@
-import { CliAuthenticationPage } from "@/routes/auth/CliAuthenticationPage";
-import { PropsWithChildren } from "react";
+import { EmptyLayout } from "@/components/EmptyLayout";
+import { SessionContext } from "@/components/SessionContext";
+import { useContext } from "react";
 
 export default function Page() {
-  return <CliAuthenticationPage />;
+  const { accessToken } = useContext(SessionContext);
+
+  // TODO: Implement the CLI authentication page
+  if (accessToken) {
+    return (
+      <div className="text-white">Would you like to authorize the CLI?</div>
+    );
+  } else {
+    return <div className="text-white">You need to sign in</div>;
+  }
 }
 
-Page.Layout = function Layout({ children }: PropsWithChildren) {
-  return (
-    <div className="flex h-screen w-screen flex-row bg-slate-900">
-      <main className="flex items-center justify-center grow overflow-auto">
-        {children}
-      </main>
-    </div>
-  );
-};
+Page.Layout = EmptyLayout;

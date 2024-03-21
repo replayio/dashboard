@@ -1,13 +1,13 @@
 import { DropDownMenu } from "@/components/DropDownMenu";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
-import { SelectedTestSummary } from "@/routes/team/id/tests/SelectedTestSummary";
-import { TestSummaryRow } from "@/routes/team/id/tests/TestSummaryRow";
-import { TestsViewContext } from "@/routes/team/id/tests/TestsViewContext";
+import { SelectedTestSummary } from "@/pageComponents/team/id/tests/SelectedTestSummary";
+import { TestSummaryRow } from "@/pageComponents/team/id/tests/TestSummaryRow";
+import { TestsViewContext } from "@/pageComponents/team/id/tests/TestsViewContext";
 import {
   DATE_RANGE_FILTERS,
   SORT_BY_FILTERS,
-} from "@/routes/team/id/tests/constants";
+} from "@/pageComponents/team/id/tests/constants";
 import { useContext } from "react";
 
 export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {

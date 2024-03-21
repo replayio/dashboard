@@ -1,9 +1,9 @@
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestSuiteTestStatus } from "@/graphql/types";
-import { ExpandableSection } from "@/routes/team/id/runs/ExpandableSection";
-import { TestExecutionRow } from "@/routes/team/id/runs/TestExecutionRow";
-import { TestRunErrors } from "@/routes/team/id/runs/TestRunErrors";
-import { RunsViewContext } from "@/routes/team/id/runs/TestRunsContext";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
+import { TestExecutionRow } from "@/pageComponents/team/id/runs/TestExecutionRow";
+import { TestRunErrors } from "@/pageComponents/team/id/runs/TestRunErrors";
+import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { useContext } from "react";
 
 export function TestsAndExecutions({

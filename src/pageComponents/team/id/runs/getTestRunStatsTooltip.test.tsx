@@ -1,5 +1,5 @@
-import { TestRunStatsData } from "@/routes/team/id/runs/TestRunStatsGraph";
-import { getTestRunStatsTooltip } from "@/routes/team/id/runs/getTestRunStatsTooltip";
+import { TestRunStatsData } from "@/pageComponents/team/id/runs/TestRunStatsGraph";
+import { getTestRunStatsTooltip } from "@/pageComponents/team/id/runs/getTestRunStatsTooltip";
 import { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { act } from "react-dom/test-utils";

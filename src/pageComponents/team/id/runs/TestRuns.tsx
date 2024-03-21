@@ -1,14 +1,14 @@
 import { DropDownMenu } from "@/components/DropDownMenu";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
-import { TestRunRow } from "@/routes/team/id/runs/TestRunRow";
-import { TestRunStatsGraph } from "@/routes/team/id/runs/TestRunStatsGraph";
-import { RunsViewContext } from "@/routes/team/id/runs/TestRunsContext";
+import { TestRunRow } from "@/pageComponents/team/id/runs/TestRunRow";
+import { TestRunStatsGraph } from "@/pageComponents/team/id/runs/TestRunStatsGraph";
+import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import {
   BRANCH_FILTERS,
   DATE_RANGE_FILTERS,
   RUN_STATUS_FILTERS,
-} from "@/routes/team/id/runs/constants";
+} from "@/pageComponents/team/id/runs/constants";
 import { useContext } from "react";
 
 export default function TestRuns({

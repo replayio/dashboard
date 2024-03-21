@@ -1,7 +1,7 @@
 import { useWorkspaceRecordings } from "@/graphql/queries/useWorkspaceRecordings";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
-import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/routes/team/id/getServerSidePropsHelpers";
-import RecordingPage from "@/routes/team/id/recordings/RecordingsPage";
+import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/pageComponents/team/id/getServerSidePropsHelpers";
+import RecordingPage from "@/pageComponents/team/id/recordings/RecordingsPage";
 import { GetServerSidePropsContext } from "next";
 
 export default function Page({ workspaceId }: { workspaceId: string }) {

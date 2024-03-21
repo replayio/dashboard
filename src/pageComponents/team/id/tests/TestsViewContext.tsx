@@ -6,7 +6,7 @@ import {
   DEFAULT_SORT_BY_FILTER,
   DateRange,
   SortBy,
-} from "@/routes/team/id/tests/constants";
+} from "@/pageComponents/team/id/tests/constants";
 import { setCookieValueClient } from "@/utils/cookie";
 import { getRelativeDate } from "@/utils/date";
 import {

@@ -1,6 +1,6 @@
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
-import { ExecutionRow } from "@/routes/team/id/tests/ExecutionRow";
+import { ExecutionRow } from "@/pageComponents/team/id/tests/ExecutionRow";
 
 export function SelectedTestSummary({
   testSummaryId,

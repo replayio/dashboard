@@ -1,5 +1,5 @@
-import { RecordingDropdown } from "@/routes/team/id/recordings/RecordingDropdown";
-import { RecordingThumbnail } from "@/routes/team/id/recordings/RecordingThumbnail";
+import { RecordingDropdown } from "@/pageComponents/team/id/recordings/RecordingDropdown";
+import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
 import { Icon } from "@/components/Icon";
 import { WorkspaceRecording } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";

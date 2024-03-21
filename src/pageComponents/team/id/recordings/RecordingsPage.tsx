@@ -3,8 +3,8 @@ import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { WorkspaceRecording } from "@/graphql/types";
-import { LaunchReplayModal } from "@/routes/team/id/recordings/LaunchReplayModal";
-import { RecordingRow } from "@/routes/team/id/recordings/RecordingRow";
+import { LaunchReplayModal } from "@/pageComponents/team/id/recordings/LaunchReplayModal";
+import { RecordingRow } from "@/pageComponents/team/id/recordings/RecordingRow";
 import { formatNumber } from "@/utils/number";
 import { useMemo, useState, useTransition } from "react";
 

@@ -1,5 +1,5 @@
 import { TestSuiteTest } from "@/graphql/types";
-import { ExpandableSection } from "@/routes/team/id/runs/ExpandableSection";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import { useMemo } from "react";
 
 interface ErrorCount {

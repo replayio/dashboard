@@ -1,6 +1,6 @@
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
-import { getTestRunStatsTooltip } from "@/routes/team/id/runs/getTestRunStatsTooltip";
+import { getTestRunStatsTooltip } from "@/pageComponents/team/id/runs/getTestRunStatsTooltip";
 import { getBackgroundColorClassName } from "@/utils/test-suites";
 import assert from "assert";
 import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";

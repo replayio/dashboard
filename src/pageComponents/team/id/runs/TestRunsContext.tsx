@@ -11,7 +11,7 @@ import {
   DateRange,
   RunStatus,
   TestStatus,
-} from "@/routes/team/id/runs/constants";
+} from "@/pageComponents/team/id/runs/constants";
 import { setCookieValueClient } from "@/utils/cookie";
 import { getRelativeDate } from "@/utils/date";
 import { filterTest, filterTestRun } from "@/utils/test-suites";

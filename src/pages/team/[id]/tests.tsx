@@ -1,8 +1,11 @@
 import { COOKIES } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
-import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/routes/team/id/getServerSidePropsHelpers";
-import { TestSuiteTestsPage } from "@/routes/team/id/tests/TestSuiteTestsPage";
-import { ContextRoot, Filters } from "@/routes/team/id/tests/TestsViewContext";
+import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/pageComponents/team/id/getServerSidePropsHelpers";
+import { TestSuiteTestsPage } from "@/pageComponents/team/id/tests/TestSuiteTestsPage";
+import {
+  ContextRoot,
+  Filters,
+} from "@/pageComponents/team/id/tests/TestsViewContext";
 import { GetServerSidePropsContext } from "next";
 
 export default function Page({
