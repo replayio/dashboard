@@ -16,6 +16,7 @@ export function useNonPendingWorkspaces() {
                   hasPaymentMethod
                   id
                   invitationCode
+                  isOrganization
                   isTest
                   name
                 }
@@ -34,6 +35,7 @@ export function useNonPendingWorkspaces() {
             hasPaymentMethod: node.hasPaymentMethod,
             id: node.id,
             invitationCode: node.invitationCode ?? null,
+            isOrganization: node.isOrganization,
             isTest: node.isTest,
             name: node.name,
           };

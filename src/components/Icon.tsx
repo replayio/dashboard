@@ -22,6 +22,7 @@ export type IconType =
   | "legal"
   | "loading-spinner"
   | "logout"
+  | "organization"
   | "passing-test"
   | "passing-test-run"
   | "primary-branch"
@@ -125,6 +126,10 @@ export function Icon({
     case "logout":
       path =
         "M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z";
+      break;
+    case "organization":
+      path =
+        "M12,7V3H2v18h20V7H12z M10,19H4v-2h6V19z M10,15H4v-2h6V15z M10,11H4V9h6V11z M10,7H4V5h6V7z M20,19h-8V9h8V19z M18,11h-4v2 h4V11z M18,15h-4v2h4V15z";
       break;
     case "passing-test":
     case "passing-test-run":

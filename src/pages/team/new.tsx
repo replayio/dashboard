@@ -4,10 +4,16 @@ import { Input } from "@/components/Input";
 import { Message } from "@/components/Message";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
+import assert from "assert";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function Page() {
+export default function Page({
+  type,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const isOrg = type === "org";
+
   const [isPending, setIsPending] = useState(false);
   const [name, setName] = useState("");
 
@@ -25,7 +31,7 @@ export default function Page() {
   const createTeam = async () => {
     if (name.trim()) {
       setIsPending(true);
-      createWorkspace(name, "team-v1");
+      createWorkspace(name, isOrg ? "org-v1" : "team-v1");
     }
   };
 
@@ -35,7 +41,9 @@ export default function Page() {
         <ReplayLogo />
         <div className="font-bold text-xl">Welcome to Replay!</div>
       </div>
-      <div>What would you like your team name to be?</div>
+      <div>
+        What would you like your {isOrg ? "organization" : "team"} name to be?
+      </div>
       <Input
         className="w-full"
         disabled={isPending}
@@ -57,7 +65,7 @@ export default function Page() {
           disabled={isPending}
           onClick={createTeam}
         >
-          Create an organization
+          Create {isOrg ? "an organization" : "a team"}
         </Button>
       </div>
     </Message>
@@ -65,3 +73,19 @@ export default function Page() {
 }
 
 Page.Layout = EmptyLayout;
+
+export async function getServerSideProps({
+  query,
+}: GetServerSidePropsContext<{
+  type?: string;
+}>) {
+  const { type } = query;
+
+  assert(!Array.isArray(type));
+
+  return {
+    props: {
+      type: type ?? null,
+    },
+  };
+}

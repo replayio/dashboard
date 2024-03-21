@@ -1,6 +1,7 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { Hoverboard } from "@replayio/overboard";
 
+// TODO Support organization welcome message (if set)
 export default function Page() {
   return (
     <div className="flex flex-col gap-4 items-center text-center">

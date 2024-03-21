@@ -31,10 +31,8 @@ export function ShareDialog({
     setEmail(event.target.value);
   };
 
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Enter") {
-      addCollaborator(recording.uuid, email);
-    }
+  const onConfirm = () => {
+    addCollaborator(recording.uuid, email);
   };
 
   return (
@@ -45,7 +43,7 @@ export function ShareDialog({
           disabled={addingCollaborator}
           name="email"
           onChange={onChange}
-          onKeyDown={onKeyDown}
+          onConfirm={onConfirm}
           placeholder="Email address"
           type="text"
           value={email}

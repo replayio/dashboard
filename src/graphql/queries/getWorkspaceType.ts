@@ -11,6 +11,7 @@ const QUERY = gql`
     node(id: $workspaceId) {
       ... on Workspace {
         id
+        isOrganization
         isTest
       }
     }
@@ -20,7 +21,7 @@ const QUERY = gql`
 export async function getWorkspace(
   accessToken: string,
   workspaceId: string
-): Promise<{ id: string; isTest: boolean }> {
+): Promise<{ id: string; isOrganization: boolean; isTest: boolean }> {
   const graphQLClient = getGraphQLClient(accessToken);
 
   const response = await graphQLClient.query<
@@ -37,6 +38,7 @@ export async function getWorkspace(
 
   return {
     id: response.data?.node.id,
+    isOrganization: response.data?.node.isOrganization,
     isTest: response.data?.node.isTest,
   };
 }

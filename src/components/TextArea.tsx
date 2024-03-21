@@ -1,17 +1,16 @@
 import { InputHTMLAttributes, KeyboardEvent } from "react";
 
-export function Input({
+export function TextArea({
   className = "",
   disabled,
   onConfirm,
   onDismiss,
-  onKeyDown,
   ...rest
-}: InputHTMLAttributes<HTMLInputElement> & {
+}: InputHTMLAttributes<HTMLTextAreaElement> & {
   onConfirm?: (value: string) => void;
   onDismiss?: () => void;
 }) {
-  const onKeyDownWrapper = (event: KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     switch (event.key) {
       case "Enter":
         if (onConfirm) {
@@ -27,12 +26,12 @@ export function Input({
   };
 
   return (
-    <input
-      className={`bg-slate-950 text-white px-4 py-2 outline outline-2 outline-transparent focus:outline-sky-500 rounded grow ${className} ${
+    <textarea
+      className={`resize-none bg-slate-950 text-white px-4 py-2 outline outline-2 outline-transparent focus:outline-sky-500 rounded grow ${className} ${
         disabled ? "opacity-50" : ""
       }`}
       disabled={disabled}
-      onKeyDown={onKeyDownWrapper}
+      onKeyDown={onKeyDown}
       {...rest}
     />
   );

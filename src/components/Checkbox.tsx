@@ -33,6 +33,7 @@ export default function Checkbox({
     >
       <input
         autoFocus={didChange}
+        className="focus:outline-sky-500"
         defaultChecked={checked}
         disabled={disabled}
         key={"" + checked}

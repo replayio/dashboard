@@ -147,6 +147,7 @@ export type Workspace = {
   hasPaymentMethod: boolean;
   id: string;
   invitationCode: string | null;
+  isOrganization: boolean;
   isTest: boolean;
   name: string;
 };
