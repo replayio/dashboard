@@ -34,7 +34,6 @@ export async function getWorkspace(
     response.data?.node != null && "id" in response.data?.node,
     `Workspace not found for id "${workspaceId}"`
   );
-  console.log("getWorkspace()", response.data?.node);
 
   return {
     id: response.data?.node.id,

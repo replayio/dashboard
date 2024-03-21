@@ -5,7 +5,6 @@ import {
 import { TestSuiteTestSummary } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
-import assert from "assert";
 import { useMemo } from "react";
 
 export function useWorkspaceTests(
@@ -56,9 +55,7 @@ export function useWorkspaceTests(
   );
 
   const testSummaries = useMemo<TestSuiteTestSummary[] | undefined>(() => {
-    if (data) {
-      assert(data?.node && "tests" in data.node && data.node.tests?.edges);
-
+    if (data?.node && "tests" in data.node && data.node.tests?.edges) {
       return data.node.tests.edges.map(({ node }) => ({
         id: node.testId,
         scope: node.scope,

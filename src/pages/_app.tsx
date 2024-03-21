@@ -3,12 +3,11 @@ import { SessionContextProvider } from "@/components/SessionContext";
 import { HEADERS } from "@/constants";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import App, { AppContext, AppProps } from "next/app";
+import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
-import Head from "next/head";
-import { ReplayLogo } from "@/components/ReplayLogo";
 
 export default class MyApp extends App<AppProps<{ accessToken: string }>> {
   accessToken: string;
@@ -61,9 +60,9 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
 function ErrorFallback() {
   return (
     <section role="alert">
-      <div className="flex flex-col gap-4 items-center">
-        <h1 className="text-9xl font-bold text-red-500">500</h1>
-        <p className="font-bold text-4xl text-white">Something went wrong.</p>
+      <div className="flex flex-col gap-2 p-4 items-center">
+        <h1 className="text-6xl font-bold text-red-500">We&apos;re sorry</h1>
+        <p className="font-bold text-3xl text-white">Something went wrong.</p>
         <p className="text-lg font-light text-slate-400">
           While we look into it, try reloading the page.
         </p>

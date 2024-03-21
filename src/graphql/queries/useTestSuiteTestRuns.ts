@@ -5,7 +5,6 @@ import {
 import { TestRun } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
-import assert from "assert";
 import { useMemo } from "react";
 
 export function useTestSuiteTestRuns(
@@ -66,12 +65,7 @@ export function useTestSuiteTestRuns(
   );
 
   const testRuns = useMemo<TestRun[] | undefined>(() => {
-    if (data) {
-      assert(
-        data.node && "testRuns" in data.node,
-        "Test runs could not be loaded"
-      );
-
+    if (data?.node && "testRuns" in data.node) {
       return (
         data.node.testRuns?.edges.map(({ node }) => {
           return {
