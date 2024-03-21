@@ -13,13 +13,17 @@ export async function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
 
-  // Redirect root requests to the most recently viewed path
-  if (pathname === "/") {
-    const cookieStore = cookies();
-    const cookie = cookieStore.get(COOKIES.defaultPathname);
-    const pathname = cookie ? JSON.parse(cookie.value) : "/team/me/recordings";
+  switch (pathname) {
+    case "/": {
+      // Redirect root requests to the most recently viewed path
+      const cookieStore = cookies();
+      const cookie = cookieStore.get(COOKIES.defaultPathname);
+      const pathname = cookie
+        ? JSON.parse(cookie.value)
+        : "/team/me/recordings";
 
-    return NextResponse.redirect(new URL(pathname, request.url));
+      return NextResponse.redirect(new URL(pathname, request.url));
+    }
   }
 
   // Require authentication for protected routes
