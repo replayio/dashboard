@@ -6,20 +6,17 @@ import {
   ContextRoot,
   Filters,
 } from "@/pageComponents/team/id/tests/TestsViewContext";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
   filters,
   workspaceId,
-}: {
-  filters: Partial<Filters> | null;
-  workspaceId: string;
-}) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
 
   return (
     <ContextRoot filters={filters} workspaceId={workspaceId}>
-      <TestSuiteTestsPage workspaceId={workspaceId} />
+      <TestSuiteTestsPage workspaceId={workspaceId!} />
     </ContextRoot>
   );
 }
@@ -27,6 +24,11 @@ export default function Page({
 export async function getServerSideProps(
   context: GetServerSidePropsContext<any>
 ) {
+  const stringValue = context.req.cookies[COOKIES.testsFilters];
+  const filters = stringValue
+    ? (JSON.parse(stringValue) as Partial<Filters>)
+    : null;
+
   const { isTest, workspaceId } = await getServerSidePropsShared(context);
   if (!isTest) {
     return {
@@ -34,12 +36,12 @@ export async function getServerSideProps(
         permanent: false,
         destination: `/team/${workspaceId}/recordings`,
       },
-      props: {},
+      props: {
+        filters,
+        workspaceId,
+      },
     };
   }
-
-  const stringValue = context.req.cookies[COOKIES.testsFilters];
-  const filters = stringValue ? JSON.parse(stringValue) : null;
 
   return {
     props: {

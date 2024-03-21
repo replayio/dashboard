@@ -3,11 +3,13 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { SessionContext } from "@/components/SessionContext";
 import { getWorkspace } from "@/graphql/queries/getWorkspaceType";
 import { useClaimTeamInvitationCode } from "@/graphql/queries/useClaimTeamInvitationCode";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
-export default function Page({ code }: { code: string | null }) {
+export default function Page({
+  code,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { accessToken } = useContext(SessionContext);
   const router = useRouter();
 
@@ -49,9 +51,11 @@ Page.Layout = EmptyLayout;
 export async function getServerSideProps({
   query,
 }: GetServerSidePropsContext<{ code: string }>) {
+  const { code } = query;
+
   return {
     props: {
-      code: query?.code || null,
+      code: (Array.isArray(code) ? code[0] : code) ?? null,
     },
   };
 }

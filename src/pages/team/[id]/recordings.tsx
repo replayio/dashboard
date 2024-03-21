@@ -2,9 +2,11 @@ import { useWorkspaceRecordings } from "@/graphql/queries/useWorkspaceRecordings
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/pageComponents/team/id/getServerSidePropsHelpers";
 import RecordingPage from "@/pageComponents/team/id/recordings/RecordingsPage";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
-export default function Page({ workspaceId }: { workspaceId: string }) {
+export default function Page({
+  workspaceId,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
 
   const { isLoading, recordings: allRecordings } =
@@ -23,7 +25,7 @@ export async function getServerSideProps(
         permanent: false,
         destination: `/team/${workspaceId}/runs`,
       },
-      props: {},
+      props: { workspaceId },
     };
   }
 
