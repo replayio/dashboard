@@ -17,6 +17,7 @@
   "dependencies": {
     "@apollo/client": "^3.9.6",
     "@auth0/nextjs-auth0": "^3.5.0",
+    "@replayio/overboard": "^0.4.1",
     "date-fns": "^3.3.1",
     "graphql": "^16.8.1",
     "lodash": "^4.17.21",
