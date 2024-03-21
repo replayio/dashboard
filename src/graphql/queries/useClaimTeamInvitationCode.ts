@@ -4,7 +4,6 @@ import {
 } from "@/graphql/generated/graphql";
 import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
 import { gql } from "@apollo/client";
-import assert from "assert";
 import { useCallback } from "react";
 
 export function useClaimTeamInvitationCode(

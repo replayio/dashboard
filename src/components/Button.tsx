@@ -21,16 +21,18 @@ export function Button({
     switch (color) {
       case "primary":
         if (variant === "solid") {
-          defaultColorsClassName = "bg-sky-500 text-white";
+          defaultColorsClassName = "bg-sky-500 hover:bg-sky-600 text-white";
         } else {
-          defaultColorsClassName = "border border-sky-500 text-white";
+          defaultColorsClassName =
+            "border border-sky-500 hover:border-sky-600 text-white";
         }
         break;
       case "secondary":
         if (variant === "solid") {
-          defaultColorsClassName = "bg-rose-600 text-white";
+          defaultColorsClassName = "bg-rose-600 hover:bg-rose-700 text-white";
         } else {
-          defaultColorsClassName = "border border-rose-600 text-white";
+          defaultColorsClassName =
+            "border border-rose-600 hover:border-rose-700 text-white";
         }
         break;
     }
