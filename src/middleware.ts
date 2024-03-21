@@ -13,9 +13,12 @@ export async function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
 
+  const { ua } = userAgent(request);
+
+  response.headers.set(HEADERS.userAgent, ua);
+
   switch (pathname) {
     case "/": {
-      const { ua } = userAgent(request);
       if (isMobile(ua)) {
         // If the user is attempting to visit Replay on a mobile device for the first time,
         // show them a message that it has not been optimized for mobile

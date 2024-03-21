@@ -11,6 +11,7 @@ export function useCurrentUser() {
         viewer {
           email
           internal
+          motd
           nags
           user {
             name
@@ -33,6 +34,7 @@ export function useCurrentUser() {
       email: data.viewer.email,
       id: data.viewer.user.id,
       isInternal: data.viewer.internal,
+      motd: data.viewer.motd,
       nags: data.viewer.nags,
       name: data.viewer.user.name ?? "",
       picture: data.viewer.user.picture ?? "",

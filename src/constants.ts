@@ -7,6 +7,7 @@ export const COOKIES = {
 
 export const HEADERS = {
   accessToken: "x-access-token",
+  userAgent: "x-user-agent",
 };
 
 export const LOCAL_STORAGE = {};

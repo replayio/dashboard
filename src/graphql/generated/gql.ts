@@ -27,7 +27,7 @@ const documents = {
     "\n      mutation InviteWorkspaceMember(\n        $email: String!\n        $workspaceId: ID!\n        $roles: [String!]\n      ) {\n        addWorkspaceMember(\n          input: { email: $email, workspaceId: $workspaceId, roles: $roles }\n        ) {\n          success\n        }\n      }\n    ": types.InviteWorkspaceMemberDocument,
     "\n      mutation AddCollaborator($email: String!, $recordingId: ID!) {\n        addRecordingCollaborator(\n          input: { email: $email, recordingId: $recordingId }\n        ) {\n          success\n        }\n      }\n    ": types.AddCollaboratorDocument,
     "\n      mutation ClaimTeamInvitationCode($code: ID!) {\n        claimTeamInvitationCode(input: { code: $code }) {\n          success\n          workspaceId\n        }\n      }\n    ": types.ClaimTeamInvitationCodeDocument,
-    "\n      query GetUser {\n        viewer {\n          email\n          internal\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    ": types.GetUserDocument,
+    "\n      query GetUser {\n        viewer {\n          email\n          internal\n          motd\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    ": types.GetUserDocument,
     "\n      mutation DeleteRecording($recordingId: ID!) {\n        deleteRecording(input: { id: $recordingId }) {\n          success\n        }\n      }\n    ": types.DeleteRecordingDocument,
     "\n      mutation DeleteCollaborator($collaborationId: ID!) {\n        removeRecordingCollaborator(input: { id: $collaborationId }) {\n          success\n        }\n      }\n    ": types.DeleteCollaboratorDocument,
     "\n        query GetNonPendingWorkspaces {\n          viewer {\n            workspaces {\n              edges {\n                node {\n                  hasPaymentMethod\n                  id\n                  invitationCode\n                  isOrganization\n                  isTest\n                  name\n                }\n              }\n            }\n          }\n        }\n      ": types.GetNonPendingWorkspacesDocument,
@@ -115,7 +115,7 @@ export function graphql(source: "\n      mutation ClaimTeamInvitationCode($code:
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n      query GetUser {\n        viewer {\n          email\n          internal\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    "): (typeof documents)["\n      query GetUser {\n        viewer {\n          email\n          internal\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    "];
+export function graphql(source: "\n      query GetUser {\n        viewer {\n          email\n          internal\n          motd\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    "): (typeof documents)["\n      query GetUser {\n        viewer {\n          email\n          internal\n          motd\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

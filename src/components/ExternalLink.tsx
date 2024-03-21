@@ -7,5 +7,17 @@ export function ExternalLink(props: {
   href: string;
   title?: string;
 }) {
-  return <Link rel="noopener noreferrer" target="_blank" {...props} />;
+  const onClick = () => {
+    // For some reason, links inside of createPortal do not work
+    window.open(props.href);
+  };
+
+  return (
+    <Link
+      onClick={onClick}
+      rel="noopener noreferrer"
+      target="_blank"
+      {...props}
+    />
+  );
 }
