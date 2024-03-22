@@ -1,11 +1,6 @@
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import { localStorageGetItem, localStorageSetItem } from "@/utils/localStorage";
-import {
-  Dispatch,
-  SetStateAction,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 export default function useLocalStorage<Type>(
   key: string,
@@ -29,13 +24,13 @@ export default function useLocalStorage<Type>(
     prevValue: null,
     value: JSON.stringify(value),
   });
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     committedValuesRef.current.prevValue = committedValuesRef.current.value;
     committedValuesRef.current.value = JSON.stringify(value);
   });
 
   // Sync changes from local storage
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const onStorage = (event: StorageEvent) => {
       if (
         key === event.key &&
@@ -54,7 +49,7 @@ export default function useLocalStorage<Type>(
   }, [key, value]);
 
   // Sync changes to local storage
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     window.dispatchEvent(
       new StorageEvent("storage", {
         key,

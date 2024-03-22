@@ -1,13 +1,7 @@
 import Tooltip from "@/components/Tooltip";
 import useDebouncedCallback from "@/hooks/useDebouncedCallback";
-import {
-  MouseEvent,
-  ReactNode,
-  RefObject,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
+import { MouseEvent, ReactNode, RefObject, useRef, useState } from "react";
 
 export type TooltipPosition = "above" | "below" | "left-of" | "right-of";
 
@@ -47,7 +41,7 @@ export default function useTooltip({
     setShowTooltip(value);
   }, delay);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (
       mouseCoordinates === null ||
       mouseTarget === null ||

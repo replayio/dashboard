@@ -1,8 +1,8 @@
 import { SettingsButton } from "@/components/DefaultLayout/SettingsButton";
 import { Icon } from "@/components/Icon";
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useLayoutEffect } from "react";
 
 export function NavLink({ id, name }: { id: string; name: string }) {
   const params = useParams();
@@ -14,7 +14,7 @@ export function NavLink({ id, name }: { id: string; name: string }) {
       Array.isArray(currentId) ? currentId[0] ?? "" : currentId
     );
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (isActive) {
       const element = document.querySelector(`[data-test-id="NavLink-${id}"]`);
       if (element) {

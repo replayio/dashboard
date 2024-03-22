@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
+import { useCallback, useRef, useState } from "react";
 
 export default function useDebouncedState<Type>(
   defaultValue: Type,
@@ -17,7 +18,7 @@ export default function useDebouncedState<Type>(
     timeout: undefined,
   });
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     mutableValuesRef.current.callback = callback;
     mutableValuesRef.current.delay = delay;
   });
