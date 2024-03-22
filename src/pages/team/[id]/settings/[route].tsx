@@ -10,6 +10,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
   route,
+  stripeKey,
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { user } = useCurrentUser();
@@ -30,7 +31,11 @@ export default function Page({
         workspaceIsOrganization={workspace.isOrganization}
         workspaceId={workspaceId}
       />
-      <WorkspaceSettings route={route} workspace={workspace} />
+      <WorkspaceSettings
+        route={route}
+        stripeKey={stripeKey}
+        workspace={workspace}
+      />
     </div>
   );
 }
@@ -43,5 +48,10 @@ export async function getServerSideProps({
 }: GetServerSidePropsContext<{ id: string }>) {
   assert(params?.id != null, '"id" parameter is required');
 
-  return { props: { route: query.route as string, workspaceId: params.id } };
+  const stripeKey = process.env.STRIPE_KEY;
+  assert(stripeKey != null, "STRIPE_KEY is required");
+
+  return {
+    props: { route: query.route as string, stripeKey, workspaceId: params.id },
+  };
 }

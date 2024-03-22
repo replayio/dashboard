@@ -5,7 +5,7 @@ Standalone Replay dashboard
 ### Getting started
 ```sh
 # Setup environment variables
-cp .env.sample .env
+cp .env.sample .env.local
 
 # Install dependencies
 pnpm install

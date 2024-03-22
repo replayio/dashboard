@@ -22,6 +22,13 @@ export function useNonPendingWorkspaces() {
                   settings {
                     features
                   }
+                  subscription {
+                    id
+                    plan {
+                      id
+                      key
+                    }
+                  }
                 }
               }
             }
@@ -58,6 +65,7 @@ export function useNonPendingWorkspaces() {
                   },
                 }
               : null,
+            subscriptionPlanKey: node.subscription?.plan?.key ?? null,
           };
         }) ?? []
       );

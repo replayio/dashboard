@@ -3,7 +3,7 @@ import Checkbox from "@/components/Checkbox";
 import { ClickToCopyString } from "@/components/ClickToCopyString";
 import { Input } from "@/components/Input";
 import { ApiKeyScope } from "@/graphql/types";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 
 export function CreateNewKey({
   createKey,
@@ -56,7 +56,7 @@ export function CreateNewKey({
         <div className="flex flex-row items-center gap-2">
           <Input
             disabled={isPending}
-            onChange={(event) => setLabel(event.currentTarget.value)}
+            onChange={(label) => setLabel(label)}
             onConfirm={onConfirm}
             name="apiKeyLabel"
             placeholder="API key label"

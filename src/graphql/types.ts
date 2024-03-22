@@ -167,6 +167,7 @@ export type Workspace = {
   isTest: boolean;
   name: string;
   settings: WorkspaceSettings | null;
+  subscriptionPlanKey: string | null;
 };
 
 export enum WorkspaceSubscriptionStatus {

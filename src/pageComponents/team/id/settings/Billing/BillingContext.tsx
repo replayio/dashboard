@@ -1,10 +1,9 @@
-import { STRIPE_KEYS } from "@/constants";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { useWorkspaceSubscription } from "@/graphql/queries/useWorkspaceSubscription";
 import { Workspace, WorkspaceSubscription } from "@/graphql/types";
 import { inUnpaidFreeTrial } from "@/utils/subscription";
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { Stripe, loadStripe } from "@stripe/stripe-js";
 import {
   Dispatch,
   ReactNode,
@@ -23,31 +22,30 @@ type View =
   | "price-details"
   | "trial-details";
 
-export const stripePromise = loadStripe(
-  process.env.NODE_ENV === "development"
-    ? STRIPE_KEYS.DEVELOPMENT
-    : STRIPE_KEYS.PRODUCTION
-);
-
 type ContextType = {
   setView: Dispatch<SetStateAction<View | undefined>>;
   subscription: WorkspaceSubscription | undefined;
   view: View | undefined;
   workspace: Workspace | undefined;
+  workspaceId: string;
 };
 
 export const BillingContext = createContext<ContextType>(null as any);
 
 export function BillingContextRoot({
   children,
+  stripeKey,
   workspaceId,
 }: {
   children: ReactNode;
+  stripeKey: string;
   workspaceId: string;
 }) {
   const { subscription } = useWorkspaceSubscription(workspaceId);
   const { workspaces } = useNonPendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
+
+  const stripePromise = useMemo(() => loadStripe(stripeKey), []);
 
   useEffect(() => {
     if (subscription && workspace) {
@@ -67,8 +65,9 @@ export function BillingContextRoot({
       subscription,
       view,
       workspace,
+      workspaceId,
     }),
-    [subscription, view, workspace]
+    [subscription, view, workspace, workspaceId]
   );
 
   return (

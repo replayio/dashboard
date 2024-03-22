@@ -47,7 +47,7 @@ export default function Page({
       <Input
         className="w-full"
         disabled={isPending}
-        onChange={(event) => setName(event.currentTarget.value)}
+        onChange={(name) => setName(name)}
         onConfirm={createTeam}
         placeholder="Your company name"
       />

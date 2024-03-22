@@ -45,7 +45,7 @@ export function CreateTeamDialog({
       <div className="flex flex-col gap-2">
         <Input
           disabled={isPending}
-          onChange={(event) => setName(event.currentTarget.value)}
+          onChange={(name) => setName(name)}
           onConfirm={onClick}
           onDismiss={onDismiss}
           placeholder="Team name"

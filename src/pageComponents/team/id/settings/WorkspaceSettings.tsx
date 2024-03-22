@@ -8,9 +8,11 @@ import { ReactNode } from "react";
 
 export function WorkspaceSettings({
   route,
+  stripeKey,
   workspace,
 }: {
   route: string;
+  stripeKey: string;
   workspace: Workspace;
 }) {
   let content: ReactNode = null;
@@ -20,7 +22,7 @@ export function WorkspaceSettings({
       break;
     }
     case "billing": {
-      content = <Billing workspaceId={workspace.id} />;
+      content = <Billing stripeKey={stripeKey} workspaceId={workspace.id} />;
       break;
     }
     case "delete": {

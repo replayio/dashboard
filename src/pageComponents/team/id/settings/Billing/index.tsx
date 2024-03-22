@@ -8,9 +8,15 @@ import { BillingTrialDetails } from "@/pageComponents/team/id/settings/Billing/B
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useContext } from "react";
 
-export function Billing({ workspaceId }: { workspaceId: string }) {
+export function Billing({
+  stripeKey,
+  workspaceId,
+}: {
+  stripeKey: string;
+  workspaceId: string;
+}) {
   return (
-    <BillingContextRoot workspaceId={workspaceId}>
+    <BillingContextRoot stripeKey={stripeKey} workspaceId={workspaceId}>
       <BillingWithData />
     </BillingContextRoot>
   );

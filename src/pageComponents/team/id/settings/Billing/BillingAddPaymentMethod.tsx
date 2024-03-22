@@ -1,59 +1,157 @@
+import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
+import { useActivateWorkspaceSubscription } from "@/graphql/queries/useActivateWorkspaceSubscription";
+import { usePrepareWorkspacePaymentMethod } from "@/graphql/queries/usePrepareWorkspacePaymentMethod";
 import { BillingContext } from "@/pageComponents/team/id/settings/Billing/BillingContext";
-import { CardElement, useElements } from "@stripe/react-stripe-js";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { StripeError } from "@stripe/stripe-js";
 import assert from "assert";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 export function BillingAddPaymentMethod() {
-  const { setView, subscription } = useContext(BillingContext);
+  const { setView, subscription, workspace, workspaceId } =
+    useContext(BillingContext);
   assert(subscription != null, "Subscription not found");
 
+  const { prepareWorkspacePaymentMethod } = usePrepareWorkspacePaymentMethod();
+  const { activateWorkspaceSubscription } = useActivateWorkspaceSubscription();
+
+  const [country, setCountry] = useState<Country | undefined>(undefined);
+  const [name, setName] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<StripeError | undefined>(undefined);
+
   const elements = useElements();
+  const stripe = useStripe();
+
+  const submit = async () => {
+    if (
+      !country ||
+      !elements ||
+      isPending ||
+      !stripe ||
+      !workspace?.subscriptionPlanKey
+    ) {
+      return;
+    }
+
+    setIsPending(true);
+
+    const cardElement = elements.getElement(CardElement);
+    assert(cardElement != null, "Card element not found");
+
+    const { paymentSecret } = await prepareWorkspacePaymentMethod(workspaceId);
+    assert(paymentSecret, "Failed to create payment secret");
+
+    const { error, setupIntent } = await stripe.confirmCardSetup(
+      paymentSecret,
+      {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name,
+            address: {
+              country: country.value,
+              postal_code: postalCode,
+            },
+          },
+        },
+      }
+    );
+
+    if (error) {
+      setError(error);
+      setIsPending(false);
+      return;
+    }
+
+    assert(setupIntent, "Failed to confirm card setup");
+
+    await activateWorkspaceSubscription(
+      workspaceId,
+      workspace.subscriptionPlanKey,
+      setupIntent.payment_method as any
+    );
+
+    setView("price-details");
+    setIsPending(false);
+  };
 
   return (
     <div className="flex flex-col gap-2">
+      {error && (
+        <div className="bg-red-900 text-red-100 px-2 py-1 rounded">
+          {error.message}
+        </div>
+      )}
       <div className="text-lg">Add payment method</div>
       <div className="text-sm">Card information</div>
-      <CardElement
-        className="col-span-3 p-1"
-        options={{
-          hidePostalCode: true,
-          classes: {
-            base: "bg-slate-950 text-white px-2 py-1 rounded placeholder:text-slate-500",
-            invalid: "text-red-500",
-            focus: "outline outline-2 outline-sky-500",
-            empty: "text-slate-500 placeholder:text-slate-500",
-          },
-          style: {
-            base: {
-              // HACK Work around react-stripe-js bugs
-              color: "#fff",
-              "::placeholder": {
-                color: "#64748b",
+      <div className={isPending ? "opacity-50" : ""}>
+        <CardElement
+          options={{
+            hidePostalCode: true,
+            classes: {
+              base: "bg-slate-950 text-white px-2 py-1 rounded placeholder:text-slate-500",
+              empty: "text-slate-500 placeholder:text-slate-500",
+              focus: "outline outline-2 outline-sky-500",
+              invalid: "text-red-500",
+            },
+            style: {
+              base: {
+                // HACK Work around react-stripe-js bugs
+                color: "#fff",
+                "::placeholder": {
+                  color: "#64748b",
+                },
               },
             },
-          },
-        }}
-        id="stripe-card-element"
-      />
+          }}
+          id="stripe-card-element"
+        />
+      </div>
       <div className="text-sm">Name on card</div>
-      <Input />
+      <Input
+        disabled={isPending}
+        onChange={(name) => setName(name)}
+        value={name}
+      />
       <div className="text-sm">Country or region</div>
       <Select
         className="h-14"
-        onChange={(option) => {
-          //
-        }}
+        disabled={isPending}
+        onChange={(country) => setCountry(country)}
         options={COUNTRIES}
         placeholder="Country or region"
+        value={country}
       />
-      <Input placeholder="Postal code" />
+      <Input
+        disabled={isPending}
+        onChange={(postalCode) => setPostalCode(postalCode)}
+        placeholder="Postal code"
+        value={postalCode}
+      />
+      <div className="flex flex-row items-center gap-2">
+        <Button
+          disabled={isPending}
+          onClick={() => setView("price-details")}
+          variant="outline"
+        >
+          Cancel
+        </Button>
+        <Button disabled={isPending} onClick={submit}>
+          Save
+        </Button>
+      </div>
     </div>
   );
 }
 
-const COUNTRIES = [
+type Country = { label: string; value: string };
+
+const COUNTRIES: Country[] = [
   { value: "AF", label: "Afghanistan" },
   { value: "AX", label: "Åland" },
   { value: "AL", label: "Albania" },

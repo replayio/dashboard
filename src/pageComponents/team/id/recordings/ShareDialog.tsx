@@ -6,7 +6,7 @@ import { useAddRecordingCollaborator } from "@/graphql/queries/useAddRecordingCo
 import { useDeleteRecordingCollaborator } from "@/graphql/queries/useDeleteRecordingCollaborator";
 import { useRecordingCollaborators } from "@/graphql/queries/useRecordingCollaborators";
 import { WorkspaceRecording } from "@/graphql/types";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { useState } from "react";
 
 export function ShareDialog({
   onDismiss,
@@ -27,14 +27,6 @@ export function ShareDialog({
     setEmail("");
   });
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const onConfirm = () => {
-    addCollaborator(recording.uuid, email);
-  };
-
   return (
     <ModalDialog onDismiss={onDismiss} title="Share">
       <div className="flex flex-col gap-2">
@@ -42,8 +34,8 @@ export function ShareDialog({
         <Input
           disabled={addingCollaborator}
           name="email"
-          onChange={onChange}
-          onConfirm={onConfirm}
+          onChange={(email) => setEmail(email)}
+          onConfirm={() => addCollaborator(recording.uuid, email)}
           placeholder="Email address"
           type="text"
           value={email}

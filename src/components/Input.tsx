@@ -3,11 +3,13 @@ import { InputHTMLAttributes, KeyboardEvent } from "react";
 export function Input({
   className = "",
   disabled,
+  onChange,
   onConfirm,
   onDismiss,
   onKeyDown,
   ...rest
-}: InputHTMLAttributes<HTMLInputElement> & {
+}: Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
+  onChange?: (value: string) => void;
   onConfirm?: (value: string) => void;
   onDismiss?: () => void;
 }) {
@@ -32,6 +34,11 @@ export function Input({
         disabled ? "opacity-50" : ""
       }`}
       disabled={disabled}
+      onChange={(event) => {
+        if (onChange) {
+          onChange(event.currentTarget.value);
+        }
+      }}
       onKeyDown={onKeyDownWrapper}
       {...rest}
     />
