@@ -10,7 +10,7 @@ export function Nav({
   workspaceIsOrganization: boolean;
 }) {
   return (
-    <nav className="flex flex-row w-full bg-slate-800 text-white overflow-auto shrink-0 rounded">
+    <nav className="flex flex-row w-full bg-slate-800 text-white overflow-auto shrink-0 rounded whitespace-nowrap overflow-auto">
       {workspaceIsOrganization && (
         <NavLink
           icon="organization"
