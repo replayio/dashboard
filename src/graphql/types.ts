@@ -1,6 +1,3 @@
-// https://typeofnan.dev/creating-your-own-deeppartial-type-in-typescript/
-export type DeepPartial<T> = Partial<{ [P in keyof T]: DeepPartial<T[P]> }>;
-
 export type WorkspaceRecording = {
   buildId: string;
   createdAt: Date;
@@ -162,9 +159,7 @@ export type WorkspaceSettings = {
   motd: string | null;
 };
 
-export type WorkspaceSettingsFeatures = DeepPartial<
-  WorkspaceSettings["features"]
->;
+export type WorkspaceSettingsFeatures = Partial<WorkspaceSettings["features"]>;
 
 export type Workspace = {
   hasPaymentMethod: boolean;
