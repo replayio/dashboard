@@ -27,6 +27,7 @@ export function Select({
           assert(option);
           onChange(option);
         }}
+        value={value.label}
       >
         {options.map(({ label }) => (
           <option key={label} value={label}>

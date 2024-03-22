@@ -3,10 +3,12 @@ import { InputHTMLAttributes, KeyboardEvent } from "react";
 export function TextArea({
   className = "",
   disabled,
+  onChange,
   onConfirm,
   onDismiss,
   ...rest
-}: InputHTMLAttributes<HTMLTextAreaElement> & {
+}: Omit<InputHTMLAttributes<HTMLTextAreaElement>, "onChange"> & {
+  onChange?: (value: string) => void;
   onConfirm?: (value: string) => void;
   onDismiss?: () => void;
 }) {
@@ -31,6 +33,11 @@ export function TextArea({
         disabled ? "opacity-50" : ""
       }`}
       disabled={disabled}
+      onChange={(event) => {
+        if (onChange) {
+          onChange(event.currentTarget.value);
+        }
+      }}
       onKeyDown={onKeyDown}
       {...rest}
     />

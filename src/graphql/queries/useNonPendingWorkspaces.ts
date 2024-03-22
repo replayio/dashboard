@@ -19,6 +19,10 @@ export function useNonPendingWorkspaces() {
                   isOrganization
                   isTest
                   name
+                  settings {
+                    motd
+                    features
+                  }
                 }
               }
             }
@@ -38,6 +42,24 @@ export function useNonPendingWorkspaces() {
             isOrganization: node.isOrganization,
             isTest: node.isTest,
             name: node.name,
+            settings: node.settings
+              ? {
+                  features: {
+                    recording: {
+                      allowList:
+                        node.settings.features?.recording?.allowList ?? [],
+                      blockList:
+                        node.settings.features?.recording?.blockList ?? [],
+                      public: node.settings.features?.recording?.public == true,
+                    },
+                    user: {
+                      library: node.settings.features?.user?.library == true,
+                      autoJoin: node.settings.features?.user?.autoJoin ?? 0,
+                    },
+                  },
+                  motd: node.settings.motd ?? null,
+                }
+              : null,
           };
         }) ?? []
       );
