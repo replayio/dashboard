@@ -1,7 +1,7 @@
-import { DefaultLayout } from "@/components/DefaultLayout/DefaultLayout";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { HEADERS } from "@/constants";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import assert from "assert";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
@@ -29,10 +29,8 @@ export default class MyApp extends App<AppProps<{ accessToken: string }>> {
 
     const accessToken = this.accessToken;
 
-    const Layout =
-      "Layout" in Component
-        ? (Component.Layout as ComponentType<PropsWithChildren>)
-        : DefaultLayout;
+    assert("Layout" in Component, "Page.Layout is required");
+    const Layout = Component.Layout as ComponentType<PropsWithChildren>;
 
     let children = (
       <SessionContextProvider accessToken={accessToken}>

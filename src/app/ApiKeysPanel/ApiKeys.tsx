@@ -1,5 +1,5 @@
-import { ApiKeyRow } from "@/components/ApiKeysPanel/ApiKeyRow";
-import { CreateNewKey } from "@/components/ApiKeysPanel/CreateNewKey";
+import { ApiKeyRow } from "@/app/ApiKeysPanel/ApiKeyRow";
+import { CreateNewKey } from "@/app/ApiKeysPanel/CreateNewKey";
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
 import { useState } from "react";
 

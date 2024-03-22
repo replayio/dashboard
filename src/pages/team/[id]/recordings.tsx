@@ -2,6 +2,7 @@ import { useWorkspaceRecordings } from "@/graphql/queries/useWorkspaceRecordings
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/pageComponents/team/id/getServerSidePropsHelpers";
 import RecordingPage from "@/pageComponents/team/id/recordings/RecordingsPage";
+import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
@@ -14,6 +15,8 @@ export default function Page({
 
   return <RecordingPage isLoading={isLoading} recordings={allRecordings} />;
 }
+
+Page.Layout = TeamLayout;
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>

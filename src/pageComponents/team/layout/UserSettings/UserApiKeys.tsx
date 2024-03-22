@@ -1,4 +1,4 @@
-import { ApiKeys } from "@/components/ApiKeysPanel/ApiKeys";
+import { ApiKeys } from "@/app/ApiKeysPanel/ApiKeys";
 
 import { useCreateUserAPIKey } from "@/graphql/queries/createUserApiKey";
 import { useDeleteUserAPIKey } from "@/graphql/queries/deleteUserApiKey";

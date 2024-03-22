@@ -1,4 +1,4 @@
-import { NavLink } from "@/components/DefaultLayout/NavLink";
+import { NavLink } from "@/pageComponents/team/layout/NavLink";
 import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import { useParams } from "next/navigation";
 

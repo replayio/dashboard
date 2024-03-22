@@ -1,7 +1,7 @@
-import { Account } from "@/components/DefaultLayout/UserSettings/Account";
-import { Legal } from "@/components/DefaultLayout/UserSettings/Legal";
-import { Support } from "@/components/DefaultLayout/UserSettings/Support";
-import { UserApiKeys } from "@/components/DefaultLayout/UserSettings/UserApiKeys";
+import { Account } from "@/pageComponents/team/layout/UserSettings/Account";
+import { Legal } from "@/pageComponents/team/layout/UserSettings/Legal";
+import { Support } from "@/pageComponents/team/layout/UserSettings/Support";
+import { UserApiKeys } from "@/pageComponents/team/layout/UserSettings/UserApiKeys";
 import { Icon, IconType } from "@/components/Icon";
 import { ModalDialog } from "@/components/ModalDialog";
 import { User } from "@/graphql/types";

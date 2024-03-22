@@ -1,4 +1,4 @@
-import { WorkspaceLink } from "@/components/DefaultLayout/WorkspaceLink";
+import { WorkspaceLink } from "@/pageComponents/team/layout/WorkspaceLink";
 import { Workspace } from "@/graphql/types";
 
 export function WorkspaceLinkList({ workspaces }: { workspaces: Workspace[] }) {

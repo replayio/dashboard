@@ -1,4 +1,4 @@
-import { UserSettingsDialog } from "@/components/DefaultLayout/UserSettings/UserSettingsDialog";
+import { UserSettingsDialog } from "@/pageComponents/team/layout/UserSettings/UserSettingsDialog";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { useState } from "react";
 

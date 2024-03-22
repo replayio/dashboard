@@ -1,7 +1,7 @@
-import { NavList } from "@/components/DefaultLayout/NavList";
+import { NavList } from "@/pageComponents/team/layout/NavList";
 import { PropsWithChildren } from "react";
 
-export function DefaultLayout({ children }: PropsWithChildren) {
+export function TeamLayout({ children }: PropsWithChildren) {
   return (
     <div className="h-screen w-screen flex flex-row bg-slate-900">
       <NavList />

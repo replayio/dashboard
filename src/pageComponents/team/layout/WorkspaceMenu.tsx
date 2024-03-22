@@ -1,4 +1,4 @@
-import { NavLink } from "@/components/DefaultLayout/NavLink";
+import { NavLink } from "@/pageComponents/team/layout/NavLink";
 import { Icon } from "@/components/Icon";
 import { Workspace } from "@/graphql/types";
 import Link from "next/link";

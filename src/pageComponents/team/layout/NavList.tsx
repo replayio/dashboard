@@ -1,7 +1,7 @@
-import { CreateTeamButton } from "@/components/DefaultLayout/CreateTeamButton";
-import { CurrentUser } from "@/components/DefaultLayout/CurrentUser";
-import { WorkspaceLinkList } from "@/components/DefaultLayout/WorkspaceLinkList";
-import { WorkspaceMenu } from "@/components/DefaultLayout/WorkspaceMenu";
+import { CreateTeamButton } from "@/pageComponents/team/layout/CreateTeamButton";
+import { CurrentUser } from "@/pageComponents/team/layout/CurrentUser";
+import { WorkspaceLinkList } from "@/pageComponents/team/layout/WorkspaceLinkList";
+import { WorkspaceMenu } from "@/pageComponents/team/layout/WorkspaceMenu";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";

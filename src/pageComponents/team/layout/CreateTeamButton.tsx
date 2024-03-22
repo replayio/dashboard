@@ -1,5 +1,5 @@
 import { Button } from "@/components/Button";
-import { CreateTeamDialog } from "@/components/DefaultLayout/CreateTeamDialog";
+import { CreateTeamDialog } from "@/pageComponents/team/layout/CreateTeamDialog";
 import { Icon } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
 import { useState } from "react";

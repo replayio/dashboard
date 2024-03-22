@@ -6,6 +6,7 @@ import {
   Filters,
 } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { TestSuiteRunsPage } from "@/pageComponents/team/id/runs/TestSuiteRunsPage";
+import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
@@ -20,6 +21,8 @@ export default function Page({
     </ContextRoot>
   );
 }
+
+Page.Layout = TeamLayout;
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<any>
