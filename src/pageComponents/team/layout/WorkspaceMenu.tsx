@@ -41,9 +41,9 @@ export function WorkspaceMenu({ workspace }: { workspace: Workspace }) {
         />
       )}
       <NavLink
-        href={`/team/${workspace.id}/settings`}
+        href={`/team/${workspace.id}/settings/members`}
         iconType="menu-settings"
-        isActive={!!pathname?.endsWith("settings")}
+        isActive={!!pathname?.includes("/settings")}
         label="Settings"
       />
     </div>

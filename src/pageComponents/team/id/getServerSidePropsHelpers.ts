@@ -16,6 +16,6 @@ export async function getServerSidePropsHelpers({
 
   return {
     isTest,
-    workspaceId: params?.id,
+    workspaceId: params.id,
   };
 }
