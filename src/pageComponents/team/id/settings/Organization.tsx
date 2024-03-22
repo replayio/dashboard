@@ -1,5 +1,5 @@
 import Checkbox from "@/components/Checkbox";
-import { ExternalLink } from "@/components/ExternalLink";
+import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { TextArea } from "@/components/TextArea";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
@@ -30,6 +30,13 @@ export function Organization({ id: workspaceId }: { id: string }) {
       // No-op
     }
   );
+
+  const [name, setName] = useDebouncedState<string>(workspace.name, (name) => {
+    updateWorkspacePreferences({
+      name,
+      workspaceId,
+    });
+  });
 
   const [recordingFeatures, setRecordingFeatures] = useDebouncedState<
     WorkspaceSettings["features"]["recording"]
@@ -66,7 +73,14 @@ export function Organization({ id: workspaceId }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-2 px-1 pb-1">
-      <div className="text-sm">Recordings</div>
+      <div className="flex flex-row gap-2 items-start">
+        <div className="w-60 truncate">Name</div>
+        <Input
+          defaultValue={name}
+          onChange={setName}
+          placeholder="Your company name"
+        />
+      </div>
       <div className="flex flex-row gap-2 items-start">
         <div className="w-60 truncate"></div>
         <Checkbox
@@ -106,7 +120,6 @@ export function Organization({ id: workspaceId }: { id: string }) {
           placeholder="Recorded URLs must not match any of these domains (if set)"
         />
       </div>
-      <div className="text-sm">Members</div>
       <div className="flex flex-row gap-2 items-start">
         <div className="w-60 truncate">Automatically add users</div>
         <Select
