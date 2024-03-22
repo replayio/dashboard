@@ -10,11 +10,13 @@ export function WorkspaceMenu({ workspace }: { workspace: Workspace }) {
   return (
     <div className="flex flex-col">
       <Link
-        className="px-2 py-1 flex flex-row items-center text-lg text-white hover:text-sky-400"
+        className="px-2 py-1 flex flex-row items-center text-lg text-white hover:text-sky-400 overflow-auto"
         href="/team/me/recordings"
       >
-        <Icon className="w-4 h-4" type="back-arrow" />
-        {workspace.name}
+        <Icon className="w-4 h-4 shrink-0" type="back-arrow" />
+        <div className="truncate" title={workspace.name}>
+          {workspace.name}
+        </div>
       </Link>
 
       {workspace.isTest ? (
