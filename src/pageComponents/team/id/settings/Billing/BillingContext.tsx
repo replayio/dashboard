@@ -1,7 +1,10 @@
+import { STRIPE_KEYS } from "@/constants";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { useWorkspaceSubscription } from "@/graphql/queries/useWorkspaceSubscription";
 import { Workspace, WorkspaceSubscription } from "@/graphql/types";
 import { inUnpaidFreeTrial } from "@/utils/subscription";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   Dispatch,
   ReactNode,
@@ -19,6 +22,12 @@ type View =
   | "details"
   | "price-details"
   | "trial-details";
+
+export const stripePromise = loadStripe(
+  process.env.NODE_ENV === "development"
+    ? STRIPE_KEYS.DEVELOPMENT
+    : STRIPE_KEYS.PRODUCTION
+);
 
 type ContextType = {
   setView: Dispatch<SetStateAction<View | undefined>>;
@@ -63,6 +72,10 @@ export function BillingContextRoot({
   );
 
   return (
-    <BillingContext.Provider value={value}>{children}</BillingContext.Provider>
+    <Elements stripe={stripePromise}>
+      <BillingContext.Provider value={value}>
+        {children}
+      </BillingContext.Provider>
+    </Elements>
   );
 }

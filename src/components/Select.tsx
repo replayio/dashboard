@@ -10,11 +10,13 @@ export function Select({
   disabled,
   onChange,
   options,
+  placeholder,
   value,
 }: Omit<InputHTMLAttributes<HTMLSelectElement>, "onChange" | "value"> & {
   onChange: (value: Option) => void;
   options: Option[];
-  value: Option;
+  placeholder?: string;
+  value?: Option | null;
 }) {
   return (
     <div className="relative outline outline-2 outline-transparent focus-within:outline-sky-500 rounded">
@@ -27,7 +29,7 @@ export function Select({
           assert(option);
           onChange(option);
         }}
-        value={value.label}
+        value={value?.label}
       >
         {options.map(({ label }) => (
           <option key={label} value={label}>
@@ -36,8 +38,10 @@ export function Select({
         ))}
       </select>
       <DropDownTrigger
-        className="pointer-events-none flex flex-row items-center gap-2 bg-gray-700 px-2 py-1 h-auto rounded"
-        label={value.label}
+        className={`bg-slate-950 pointer-events-none flex flex-row items-center gap-2 px-2 py-1 h-auto rounded ${
+          !value?.label ? "text-slate-500" : "text-white"
+        }`}
+        label={value?.label ?? placeholder ?? ""}
         onClick={noop}
       />
     </div>

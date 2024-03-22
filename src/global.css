@@ -38,6 +38,10 @@ html {
   margin: 0;
 }
 
+input::placeholder {
+  color: theme("colors.slate.500");
+}
+
 /* Powers the animated indeterminate progress bar */
 
 .indeterminate {

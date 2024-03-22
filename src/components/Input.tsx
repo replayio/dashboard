@@ -28,7 +28,7 @@ export function Input({
 
   return (
     <input
-      className={`bg-slate-950 text-white px-4 py-2 outline outline-2 outline-transparent focus:outline-sky-500 rounded grow ${className} ${
+      className={`bg-slate-950 text-white px-2 py-1 outline outline-2 outline-transparent placeholder:text-slate-500 focus:outline-sky-500 rounded grow ${className} ${
         disabled ? "opacity-50" : ""
       }`}
       disabled={disabled}
