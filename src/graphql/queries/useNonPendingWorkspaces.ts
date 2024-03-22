@@ -20,7 +20,6 @@ export function useNonPendingWorkspaces() {
                   isTest
                   name
                   settings {
-                    motd
                     features
                   }
                 }
@@ -57,7 +56,6 @@ export function useNonPendingWorkspaces() {
                       autoJoin: node.settings.features?.user?.autoJoin ?? 0,
                     },
                   },
-                  motd: node.settings.motd ?? null,
                 }
               : null,
           };

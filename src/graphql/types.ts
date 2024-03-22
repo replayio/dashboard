@@ -33,7 +33,6 @@ export type User = {
   email: string;
   id: string;
   isInternal: boolean;
-  motd: string;
   nags: string[];
   name: string;
   picture: string;
@@ -156,7 +155,6 @@ export type WorkspaceSettings = {
       library: boolean;
     };
   };
-  motd: string | null;
 };
 
 export type WorkspaceSettingsFeatures = Partial<WorkspaceSettings["features"]>;

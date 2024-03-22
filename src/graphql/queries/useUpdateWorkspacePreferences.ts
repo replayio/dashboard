@@ -22,16 +22,10 @@ export function useUpdateWorkspacePreferences(
       mutation UpdateWorkspacePreferences(
         $workspaceId: ID!
         $name: String
-        $motd: String
         $features: JSONObject
       ) {
         updateWorkspaceSettings(
-          input: {
-            workspaceId: $workspaceId
-            name: $name
-            motd: $motd
-            features: $features
-          }
+          input: { workspaceId: $workspaceId, name: $name, features: $features }
         ) {
           success
         }
@@ -52,12 +46,10 @@ export function useUpdateWorkspacePreferences(
   const updateWorkspacePreferences = useCallback(
     ({
       features,
-      motd,
       name,
       workspaceId,
     }: {
       features?: WorkspaceSettingsFeatures;
-      motd?: string;
       name?: string;
       workspaceId: string;
     }) => {
@@ -65,7 +57,6 @@ export function useUpdateWorkspacePreferences(
         variables: {
           workspaceId,
           features,
-          motd,
           name,
         },
       });

@@ -31,16 +31,6 @@ export function Organization({ id: workspaceId }: { id: string }) {
     }
   );
 
-  const [motd, setMotd] = useDebouncedState<string>(
-    settings?.motd?.trim() ?? "",
-    (motd) => {
-      updateWorkspacePreferences({
-        // HACK An empty string update will be ignored; see BAC-4861
-        motd: motd.trim() || " ",
-        workspaceId,
-      });
-    }
-  );
   const [recordingFeatures, setRecordingFeatures] = useDebouncedState<
     WorkspaceSettings["features"]["recording"]
   >(
@@ -90,7 +80,6 @@ export function Organization({ id: workspaceId }: { id: string }) {
       <div className="flex flex-row gap-2 items-start">
         <div className="w-60 truncate">Allow from</div>
         <TextArea
-          className="h-14"
           defaultValue={recordingFeatures.allowList.join(", ") ?? ""}
           onChange={(value) =>
             setRecordingFeatures({
@@ -104,7 +93,6 @@ export function Organization({ id: workspaceId }: { id: string }) {
       <div className="flex flex-row gap-2 items-start">
         <div className="w-60 truncate">Block from</div>
         <TextArea
-          className="h-14"
           defaultValue={recordingFeatures.blockList.join(", ") ?? ""}
           onChange={(value) =>
             setRecordingFeatures({
@@ -136,19 +124,11 @@ export function Organization({ id: workspaceId }: { id: string }) {
             })
           }
           options={OPTIONS}
-          placeholder="Recorded URLs must not match any of these domains (if set)"
           value={
             OPTIONS.find((option) => option.value === userFeatures.autoJoin) ??
             DEFAULT_OPTION
           }
         />
-      </div>
-      <div className="flex flex-row gap-2 items-start">
-        <div className="w-60 truncate">Welcome message</div>
-        <div className="flex flex-col gap-2 grow">
-          <TextArea className="h-14" defaultValue={motd} onChange={setMotd} />
-          <ExternalLink href="/browser/new-tab">Preview</ExternalLink>
-        </div>
       </div>
     </div>
   );

@@ -18,7 +18,6 @@ export default function Page({
       <div className="w-36 h-36">
         <Hoverboard />
       </div>
-      {user?.motd && <div className="text-lg">{user.motd}</div>}
       {isWindows ? (
         <>
           <div className="font-bold">Replay on Windows is in beta</div>

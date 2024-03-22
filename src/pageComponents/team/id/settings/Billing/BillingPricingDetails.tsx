@@ -34,7 +34,7 @@ export function BillingPriceDetails() {
         </ExternalLink>
       </div>
       {pricingDetails ? (
-        <div className="flex flex-col gap-px rounded overflow-hidden text-sm">
+        <div className="flex flex-col gap-px rounded overflow-hidden">
           <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
             <div className="grow">Your team&apos;s start date</div>
             <div>
@@ -79,10 +79,7 @@ export function BillingPriceDetails() {
         <Button onClick={onClick}>Add payment method</Button>
       </div>
       <div>
-        <ExternalLink
-          className="text-sm"
-          href="https://www.replay.io/terms-of-use"
-        >
+        <ExternalLink href="https://www.replay.io/terms-of-use">
           Terms of service and cancellation policy
         </ExternalLink>
       </div>
