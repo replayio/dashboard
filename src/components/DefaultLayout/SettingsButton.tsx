@@ -1,6 +1,5 @@
 import { IconButton } from "@/components/IconButton";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
-import assert from "assert";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

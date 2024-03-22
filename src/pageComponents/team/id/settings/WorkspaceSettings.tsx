@@ -76,7 +76,7 @@ function Panel({
 
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
-      <nav className="flex flex-row w-full bg-slate-800 text-white overflow-auto shrink-0 p-2 rounded">
+      <nav className="flex flex-row w-full bg-slate-800 text-white overflow-auto shrink-0 rounded">
         {workspace.isOrganization && (
           <Item
             currentId={currentId}

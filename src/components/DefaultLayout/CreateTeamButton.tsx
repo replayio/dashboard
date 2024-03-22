@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { CreateTeamDialog } from "@/components/DefaultLayout/CreateTeamDialog";
 import { Icon } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
@@ -15,13 +16,10 @@ export function CreateTeamButton({
 
   return (
     <>
-      <button
-        className="flex flex-row gap-2 items-center text-white px-2 py-1 transition hover:bg-sky-900 underline outline-none"
-        onClick={show}
-      >
+      <Button className="w-full" onClick={show}>
         <Icon className="w-4 h-4" type="create" />
         Create new team
-      </button>
+      </Button>
       {showDialog && (
         <CreateTeamDialog isInternalUser={isInternalUser} onDismiss={hide} />
       )}

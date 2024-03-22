@@ -1,41 +1,31 @@
-import { SettingsButton } from "@/components/DefaultLayout/SettingsButton";
-import { Icon } from "@/components/Icon";
-import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
+import { Icon, IconType } from "@/components/Icon";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { HTMLAttributes } from "react";
 
-export function NavLink({ id, name }: { id: string; name: string }) {
-  const params = useParams();
-  const currentId = params?.id ?? "me";
-
-  const isActive =
-    id ===
-    decodeURIComponent(
-      Array.isArray(currentId) ? currentId[0] ?? "" : currentId
-    );
-
-  useIsomorphicLayoutEffect(() => {
-    if (isActive) {
-      const element = document.querySelector(`[data-test-id="NavLink-${id}"]`);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-    }
-  }, [id, isActive]);
-
+export function NavLink({
+  href,
+  iconType,
+  isActive,
+  label,
+  ...rest
+}: HTMLAttributes<HTMLElement> & {
+  href: string;
+  iconType: IconType;
+  isActive: boolean;
+  label: string;
+}) {
   const Component = isActive ? "div" : Link;
 
   return (
     <Component
-      className={`flex flex-row gap-2 items-center text-white px-2 py-1 transition  ${
-        isActive ? "bg-sky-900 cursor-default" : "hover:bg-sky-900"
+      className={`flex flex-row gap-2 items-center text-white px-2 py-1 transition rounded ${
+        isActive ? "bg-sky-900 cursor-default" : "hover:text-sky-400"
       }`}
-      data-test-id={`NavLink-${id}`}
-      href={`/team/${id}/recordings`}
+      href={href}
+      {...rest}
     >
-      <Icon className="w-4 h-4" type="folder" />
-      <div className="grow truncate">{name}</div>
-      {isActive && <SettingsButton id={id} />}
+      <Icon className="w-4 h-4" type={iconType} />
+      <div className="grow truncate">{label}</div>
     </Component>
   );
 }

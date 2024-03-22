@@ -21,10 +21,10 @@ export function Button({
     switch (color) {
       case "primary":
         if (variant === "solid") {
-          defaultColorsClassName = "bg-sky-500 hover:bg-sky-600 text-white";
+          defaultColorsClassName = "bg-sky-600 hover:bg-sky-700 text-white";
         } else {
           defaultColorsClassName =
-            "border border-sky-500 hover:border-sky-600 text-white";
+            "border border-sky-600 hover:border-sky-700 text-white";
         }
         break;
       case "secondary":
