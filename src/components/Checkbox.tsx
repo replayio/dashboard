@@ -28,7 +28,7 @@ export default function Checkbox({
 
   return (
     <label
-      className={`flex flex-row items-center gap-1 ${className}`}
+      className={`flex flex-row items-center gap-2 ${className}`}
       onClick={onClick}
     >
       <input

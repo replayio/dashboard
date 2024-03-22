@@ -53,7 +53,6 @@ export function Organization({ id: workspaceId }: { id: string }) {
   >(
     {
       autoJoin: features?.user?.autoJoin ?? 0,
-      library: features?.user?.library == true,
     },
     (userFeatures) => {
       updateWorkspacePreferences({
@@ -67,16 +66,20 @@ export function Organization({ id: workspaceId }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-2 px-1 pb-1">
-      <Checkbox
-        checked={!recordingFeatures.public}
-        onChange={(value: boolean) =>
-          setRecordingFeatures({
-            ...recordingFeatures,
-            public: !value,
-          })
-        }
-        label="Disable public recordings"
-      />
+      <div className="text-sm">Recordings</div>
+      <div className="flex flex-row gap-2 items-start">
+        <div className="w-60 truncate"></div>
+        <Checkbox
+          checked={!recordingFeatures.public}
+          onChange={(value: boolean) =>
+            setRecordingFeatures({
+              ...recordingFeatures,
+              public: !value,
+            })
+          }
+          label="Disable public recordings"
+        />
+      </div>
       <div className="flex flex-row gap-2 items-start">
         <div className="w-60 truncate">Allow from</div>
         <TextArea
@@ -103,16 +106,7 @@ export function Organization({ id: workspaceId }: { id: string }) {
           placeholder="Recorded URLs must not match any of these domains (if set)"
         />
       </div>
-      <Checkbox
-        checked={!userFeatures.library}
-        onChange={(value: boolean) =>
-          setUserFeatures({
-            ...userFeatures,
-            library: !value,
-          })
-        }
-        label="Disable my library"
-      />
+      <div className="text-sm">Members</div>
       <div className="flex flex-row gap-2 items-start">
         <div className="w-60 truncate">Automatically add users</div>
         <Select

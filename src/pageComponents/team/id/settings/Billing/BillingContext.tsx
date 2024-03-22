@@ -45,7 +45,7 @@ export function BillingContextRoot({
   const { workspaces } = useNonPendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
-  const stripePromise = useMemo(() => loadStripe(stripeKey), []);
+  const stripePromise = useMemo(() => loadStripe(stripeKey), [stripeKey]);
 
   useEffect(() => {
     if (subscription && workspace) {

@@ -152,7 +152,6 @@ export type WorkspaceSettings = {
     };
     user: {
       autoJoin: number;
-      library: boolean;
     };
   };
 };

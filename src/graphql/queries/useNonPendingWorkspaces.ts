@@ -59,7 +59,6 @@ export function useNonPendingWorkspaces() {
                       public: node.settings.features?.recording?.public == true,
                     },
                     user: {
-                      library: node.settings.features?.user?.library == true,
                       autoJoin: node.settings.features?.user?.autoJoin ?? 0,
                     },
                   },
