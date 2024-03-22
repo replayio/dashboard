@@ -1,10 +1,10 @@
-import { BillingAddPaymentMethod } from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingAddPaymentMethod";
+import { BillingAddPaymentMethod } from "@/pageComponents/team/id/settings/Billing/BillingAddPaymentMethod";
 import {
   BillingContext,
   BillingContextRoot,
-} from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingContext";
-import { BillingPriceDetails } from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingPricingDetails";
-import { BillingTrialDetails } from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingTrialDetails";
+} from "@/pageComponents/team/id/settings/Billing/BillingContext";
+import { BillingPriceDetails } from "@/pageComponents/team/id/settings/Billing/BillingPricingDetails";
+import { BillingTrialDetails } from "@/pageComponents/team/id/settings/Billing/BillingTrialDetails";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useContext } from "react";
 

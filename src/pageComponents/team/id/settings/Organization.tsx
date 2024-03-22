@@ -89,9 +89,9 @@ export function Organization({ id: workspaceId }: { id: string }) {
         label="Disable public recordings"
       />
       <div className="flex flex-row gap-2 items-start">
-        <div className="grow">Allow from</div>
+        <div className="w-60 truncate">Allow from</div>
         <TextArea
-          className="h-14 w-64 shrink-0 grow-0 text-sm"
+          className="h-14"
           defaultValue={features?.recording?.allowList.join(", ") ?? ""}
           onChange={(value) => {
             debouncedUpdate({
@@ -106,9 +106,9 @@ export function Organization({ id: workspaceId }: { id: string }) {
         />
       </div>
       <div className="flex flex-row gap-2 items-start">
-        <div className="grow">Block from</div>
+        <div className="w-60 truncate">Block from</div>
         <TextArea
-          className="h-14 w-64 shrink-0 grow-0 text-sm"
+          className="h-14"
           defaultValue={features?.recording?.blockList.join("\n") ?? ""}
           onChange={(value) => {
             debouncedUpdate({
@@ -137,9 +137,9 @@ export function Organization({ id: workspaceId }: { id: string }) {
         label="Disable my library"
       />
       <div className="flex flex-row gap-2 items-start">
-        <div className="grow">Automatically add users</div>
+        <div className="w-60 truncate">Automatically add users</div>
         <Select
-          className="h-14 w-64 shrink-0 grow-0 text-sm"
+          className="h-14"
           onChange={(option) =>
             updateWorkspacePreferences({
               features: {
@@ -160,13 +160,9 @@ export function Organization({ id: workspaceId }: { id: string }) {
         />
       </div>
       <div className="flex flex-row gap-2 items-start">
-        <div className="grow">Welcome message</div>
-        <div className="flex flex-col gap-2">
-          <TextArea
-            className="h-14 w-64 shrink-0 grow-0 text-sm"
-            defaultValue={motd}
-            onChange={setMotd}
-          />
+        <div className="w-60 truncate">Welcome message</div>
+        <div className="flex flex-col gap-2 grow">
+          <TextArea className="h-14" defaultValue={motd} onChange={setMotd} />
           <ExternalLink href="/browser/new-tab">Preview</ExternalLink>
         </div>
       </div>

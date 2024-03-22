@@ -1,6 +1,6 @@
 import { Icon } from "@/components/Icon";
-import { InvitationLink } from "@/components/DefaultLayout/WorkspaceSettings/InvitationLink";
-import { InviteTeamMember } from "@/components/DefaultLayout/WorkspaceSettings/InviteTeamMember";
+import { InvitationLink } from "@/pageComponents/team/id/settings/InvitationLink";
+import { InviteTeamMember } from "@/pageComponents/team/id/settings/InviteTeamMember";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 import { getPrimaryRole } from "@/utils/user";
 
@@ -9,7 +9,7 @@ export function TeamMembers({
   invitationCode,
 }: {
   id: string;
-  invitationCode: string;
+  invitationCode: string | null;
 }) {
   const { error, loading, members } = useGetWorkspaceMembers(id);
 
@@ -58,9 +58,11 @@ export function TeamMembers({
         ))}
       </div>
 
-      <div className="shrink-0">
-        <InvitationLink invitationCode={invitationCode} />
-      </div>
+      {invitationCode && (
+        <div className="shrink-0">
+          <InvitationLink invitationCode={invitationCode} />
+        </div>
+      )}
     </div>
   );
 }

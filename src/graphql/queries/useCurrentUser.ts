@@ -1,4 +1,5 @@
 import { GetUserQuery } from "@/graphql/generated/graphql";
+import { User } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import assert from "assert";
@@ -23,7 +24,7 @@ export function useCurrentUser() {
     `
   );
 
-  const user = useMemo(() => {
+  const user = useMemo<User | null>(() => {
     if (isLoading || error) {
       return null;
     }
@@ -34,7 +35,7 @@ export function useCurrentUser() {
       email: data.viewer.email,
       id: data.viewer.user.id,
       isInternal: data.viewer.internal,
-      motd: data.viewer.motd,
+      motd: data.viewer.motd ?? "",
       nags: data.viewer.nags,
       name: data.viewer.user.name ?? "",
       picture: data.viewer.user.picture ?? "",

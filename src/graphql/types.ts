@@ -36,6 +36,7 @@ export type User = {
   email: string;
   id: string;
   isInternal: boolean;
+  motd: string;
   nags: string[];
   name: string;
   picture: string;

@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button";
 import { ExternalLink } from "@/components/ExternalLink";
-import { BillingContext } from "@/components/DefaultLayout/WorkspaceSettings/Billing/BillingContext";
+import { BillingContext } from "@/pageComponents/team/id/settings/Billing/BillingContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { formatCurrency } from "@/utils/number";
 import {
@@ -25,7 +25,7 @@ export function BillingPriceDetails() {
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      <div className="grow">
+      <div>
         Replay&apos;s team Plan can expand your debugging superpowers with
         collaboration features that make it easy to work together to fix bugs
         and understand your software better.{" "}
@@ -78,7 +78,7 @@ export function BillingPriceDetails() {
       <div>
         <Button onClick={onClick}>Add payment method</Button>
       </div>
-      <div className="grow flex flex-col justify-end">
+      <div>
         <ExternalLink
           className="text-sm"
           href="https://www.replay.io/terms-of-use"

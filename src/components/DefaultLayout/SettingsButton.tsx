@@ -1,37 +1,33 @@
 import { IconButton } from "@/components/IconButton";
-import { WorkspaceSettingsDialog } from "@/components/DefaultLayout/WorkspaceSettings/WorkspaceSettingsDialog";
-import { MouseEvent, useState } from "react";
+import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import assert from "assert";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export function SettingsButton({
-  currentUserId,
-  id,
-  invitationCode,
-  name,
-}: {
-  currentUserId: string | null;
-  id: string;
-  invitationCode: string;
-  name: string;
-}) {
-  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+export function SettingsButton({ id }: { id: string }) {
+  const pathname = usePathname();
 
-  const onSettingsClick = (event: MouseEvent) => {
-    event.preventDefault();
-    setShowSettingsDialog(true);
-  };
+  const { workspaces } = useNonPendingWorkspaces();
+  const workspace = workspaces?.find((workspace) => workspace.id === id);
+
+  const isActive = pathname?.includes("settings");
+
+  let href = `/team/${id}/settings`;
+  if (isActive) {
+    if (workspace?.isTest) {
+      href = `/team/${id}/runs`;
+    } else {
+      href = `/team/${id}/recordings`;
+    }
+  }
 
   return (
-    <>
-      <IconButton onClick={onSettingsClick} iconType="settings" />
-      {showSettingsDialog && (
-        <WorkspaceSettingsDialog
-          currentUserId={currentUserId}
-          id={id}
-          invitationCode={invitationCode}
-          name={name}
-          onDismiss={() => setShowSettingsDialog(false)}
-        />
-      )}
-    </>
+    <Link href={href}>
+      <IconButton
+        className={isActive ? "outline outline-2 outline-sky-500" : ""}
+        iconClassName={isActive ? "fill-white" : ""}
+        iconType="settings"
+      />
+    </Link>
   );
 }
