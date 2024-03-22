@@ -20,6 +20,7 @@ export function useRecordingCollaborators(recordingId: string) {
     gql`
       query GetOwnerAndCollaborators($recordingId: UUID!) {
         recording(uuid: $recordingId) {
+          uuid
           collaborators {
             edges {
               node {
