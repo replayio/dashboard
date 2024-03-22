@@ -1,6 +1,7 @@
 import { TestRun } from "@/graphql/types";
 import useTooltip from "@/hooks/useTooltip";
 import { getTestRunStatsTooltip } from "@/pageComponents/team/id/runs/getTestRunStatsTooltip";
+import { getRelativeDate } from "@/utils/date";
 import { getBackgroundColorClassName } from "@/utils/test-suites";
 import assert from "assert";
 import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
@@ -31,7 +32,7 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
       // Account for days in between (e.g. weekend days)
       while (currentDateIndex < index) {
         currentData = {
-          date: testRun.date,
+          date: getRelativeDate({ daysAgo: currentDateIndex + 1 }),
           numFailedTests: 0,
           numFailedTestRuns: 0,
           numPassingTests: 0,
