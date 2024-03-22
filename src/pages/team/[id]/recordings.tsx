@@ -21,8 +21,18 @@ Page.Layout = TeamLayout;
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>
 ) {
-  const { isTest, workspaceId } = await getServerSidePropsShared(context);
-  if (isTest) {
+  const { invalidWorkspace, isTest, workspaceId } =
+    await getServerSidePropsShared(context);
+
+  if (invalidWorkspace) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/team/me/recordings",
+      },
+      props: { workspaceId },
+    };
+  } else if (isTest) {
     return {
       redirect: {
         permanent: false,
