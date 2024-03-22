@@ -24,12 +24,12 @@ export function NavList() {
   }
 
   return (
-    <nav className="flex flex-col p-1 gap-1 h-full bg-slate-800 text-white overflow-auto shrink-0 w-72">
+    <nav className="flex flex-col gap-2 h-full text-white overflow-auto shrink-0 w-72">
       <div className="flex flex-row items-center gap-2 p-2 bg-slate-950 rounded">
         <ReplayLogo className="max-h-6 max-w-6" />
         <div className="text-xl font-bold">Replay</div>
       </div>
-      <div className="flex flex-col overflow-auto">
+      <div className="flex flex-col overflow-auto bg-slate-800 rounded grow">
         {workspace ? (
           <WorkspaceMenu workspace={workspace} />
         ) : workspaces ? (
@@ -38,7 +38,6 @@ export function NavList() {
           <LoadingSpinner />
         )}
       </div>
-      <div className="grow" />
       {workspace ? null : (
         <CreateTeamButton isInternalUser={user?.isInternal == true} />
       )}

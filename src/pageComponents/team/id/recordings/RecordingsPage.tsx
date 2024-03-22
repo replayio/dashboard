@@ -52,7 +52,7 @@ export default function RecordingPage({
   };
 
   return (
-    <div className="flex flex-col gap-2 overflow-auto overflow-hidden p-2 h-full">
+    <div className="flex flex-col gap-2 overflow-auto overflow-hidden h-full">
       <div className="flex flex-row items-center gap-2 justify-between">
         <Input
           defaultValue={filter}
