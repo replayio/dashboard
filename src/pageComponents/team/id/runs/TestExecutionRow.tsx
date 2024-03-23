@@ -21,7 +21,7 @@ export function TestExecutionRow({
 
   return (
     <Link
-      className="flex flex-row items-center gap-2 text-white px-2 py-1"
+      className="flex flex-row items-center gap-2 text-white px-2 py-1 hover:text-sky-500"
       href={url ?? ""}
     >
       <Icon className={`w-6 h-6 shrink-0 ${colorClassName}`} type={iconType} />

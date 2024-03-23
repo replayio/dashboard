@@ -43,7 +43,6 @@ html {
   outline-offset: -2px;
 }
 
-a:hover,
 a:focus-visible {
   color: theme("colors.sky.500");
   outline: none;

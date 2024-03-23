@@ -19,7 +19,7 @@ export function NavLink({
   return (
     <Component
       className={`flex flex-row gap-2 items-center text-white px-2 py-1 mx-1 transition rounded ${
-        isActive ? "bg-sky-900 cursor-default" : ""
+        isActive ? "bg-sky-900 cursor-default" : "hover:text-sky-500"
       }`}
       href={href}
       {...rest}
