@@ -8,31 +8,46 @@ export function Button({
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: "primary" | "secondary";
-  variant?: "outline" | "solid";
+  variant?: "outline" | "solid" | "transparent";
 }) {
   let defaultColorsClassName = "";
   if (disabled) {
-    if (variant === "solid") {
-      defaultColorsClassName = "bg-gray-500 text-white";
-    } else {
-      defaultColorsClassName = "border border-gray-500 text-gray-700";
+    switch (variant) {
+      case "outline": {
+        defaultColorsClassName = "border border-gray-500 text-gray-700";
+        break;
+      }
+      case "solid": {
+        defaultColorsClassName = "bg-gray-500 text-white";
+        break;
+      }
     }
   } else {
     switch (color) {
       case "primary":
-        if (variant === "solid") {
-          defaultColorsClassName = "bg-sky-600 hover:bg-sky-700 text-white";
-        } else {
-          defaultColorsClassName =
-            "border border-sky-600 hover:border-sky-700 text-white";
+        switch (variant) {
+          case "outline": {
+            defaultColorsClassName =
+              "border border-sky-600 hover:border-sky-700 text-white";
+            break;
+          }
+          case "solid": {
+            defaultColorsClassName = "bg-sky-600 hover:bg-sky-700 text-white";
+            break;
+          }
         }
         break;
       case "secondary":
-        if (variant === "solid") {
-          defaultColorsClassName = "bg-rose-600 hover:bg-rose-700 text-white";
-        } else {
-          defaultColorsClassName =
-            "border border-rose-600 hover:border-rose-700 text-white";
+        switch (variant) {
+          case "outline": {
+            defaultColorsClassName =
+              "border border-rose-600 hover:border-rose-700 text-white";
+            break;
+          }
+          case "solid": {
+            defaultColorsClassName = "bg-rose-600 hover:bg-rose-700 text-white";
+            break;
+          }
         }
         break;
     }
