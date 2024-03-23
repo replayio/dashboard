@@ -24,11 +24,14 @@ export default function Page({
   return (
     <div className="h-screen flex flex-col gap-2 p-2">
       <div className="text-xl">Latest releases</div>
-      <Message>
+      <Message data-test-id="latest-releases-table">
         <ReleasesTable releases={latestReleases} />
       </Message>
       <div className="text-xl">All releases</div>
-      <Message className="shrink overflow-auto">
+      <Message
+        className="shrink overflow-auto"
+        data-test-id="all-releases-table"
+      >
         <ReleasesTable releases={releases} />
       </Message>
     </div>
@@ -40,7 +43,11 @@ function ReleasesTable({ releases }: { releases: Release[] }) {
     <table className="table-fixed">
       <tbody>
         {releases.map((release) => (
-          <tr key={release.buildId}>
+          <tr
+            data-test-name="release-row"
+            data-test-type={release.runtime}
+            key={release.buildId}
+          >
             <td className="min-w-24">{release.runtime}</td>
             <td className="min-w-20">{release.platform}</td>
             <td className="truncate">{release.buildId}</td>

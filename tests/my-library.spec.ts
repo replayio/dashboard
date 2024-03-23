@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { startTest } from "./helpers";
 
-test("should require sign-in", async ({ page }) => {
+test("my-library: filtering and share dialog", async ({ page }) => {
   await startTest({
     page,
+    pathname: "/team/me/recordings",
   });
 
   const recordingRows = page.locator('[data-test-name="recording-row"]');

@@ -26,21 +26,17 @@ export async function debugPrint(
 
 export async function startTest({
   apiKey = process.env.TEST_USER_API_KEY,
-  isTestWorkspace,
   page,
-  workspaceId = "me",
+  pathname,
 }: {
   apiKey?: string;
-  isTestWorkspace?: boolean;
   page: Page;
-  workspaceId?: string;
+  pathname: string;
 }) {
   const host = process.env.NEXT_PUBLIC_APP_URL;
   assert(host, "process.env.NEXT_PUBLIC_APP_URL is required");
 
-  const url = `${host}/team/${workspaceId}/${
-    isTestWorkspace ? "runs" : "recordings"
-  }?e2e=1&apiKey=${apiKey}`;
+  const url = `${host}${pathname}?e2e=1&apiKey=${apiKey}`;
 
   await debugPrint(page, `Navigating to ${chalk.bold(url)}`, "startTestView");
   await page.goto(url);

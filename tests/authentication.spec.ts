@@ -1,10 +1,13 @@
 import { expect, test } from "@playwright/test";
 import { startTest } from "./helpers";
 
-test("should require sign-in", async ({ page }) => {
+test("authentication: should require authentication to view the library", async ({
+  page,
+}) => {
   await startTest({
     apiKey: "",
     page,
+    pathname: "/",
   });
 
   await expect(
