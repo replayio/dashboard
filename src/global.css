@@ -49,6 +49,10 @@ a:focus-visible {
   outline: none;
 }
 
+button {
+  text-align: left;
+}
+
 input::placeholder {
   color: theme("colors.slate.500");
 }

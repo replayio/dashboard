@@ -37,12 +37,14 @@ export function TestSummaryRow({
     );
   }
 
+  const Component = isActive ? "div" : "button";
+
   return (
-    <div
-      className={`flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 ${
+    <Component
+      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 outline-0 ${
         isActive
           ? "bg-slate-700 cursor-default"
-          : "hover:bg-slate-700 cursor-pointer"
+          : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
       }`}
       onClick={() => {
         selectTestSummary(testSummary.id);
@@ -50,6 +52,6 @@ export function TestSummaryRow({
     >
       <div className="w-10 h-6 shrink-0 flex justify-center">{icon}</div>
       <div className="truncate">{testSummary.title}</div>
-    </div>
+    </Component>
   );
 }

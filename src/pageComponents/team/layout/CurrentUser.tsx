@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { UserSettingsDialog } from "@/pageComponents/team/layout/UserSettings/UserSettingsDialog";
 import { useState } from "react";
@@ -9,10 +8,9 @@ export function CurrentUser() {
   const { user } = useCurrentUser();
 
   return (
-    <Button
+    <button
       className="flex flex-row items-center gap-4 bg-slate-950 !p-2 text-white cursor-pointer rounded"
       onClick={() => setShowSettingsDialog(true)}
-      variant="transparent"
     >
       {user?.picture && (
         <img
@@ -22,7 +20,7 @@ export function CurrentUser() {
           src={user.picture}
         />
       )}
-      <div className="font-normal text-left">
+      <div>
         <div>{user?.name}</div>
         <div className="text-sm text-slate-400">View settings</div>
       </div>
@@ -32,6 +30,6 @@ export function CurrentUser() {
           onDismiss={() => setShowSettingsDialog(false)}
         />
       )}
-    </Button>
+    </button>
   );
 }

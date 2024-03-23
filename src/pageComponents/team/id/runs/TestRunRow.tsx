@@ -28,12 +28,14 @@ export function TestRunRow({
     );
   }
 
+  const Component = isActive ? "div" : "button";
+
   return (
-    <div
-      className={`flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 ${
+    <Component
+      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 outline-0 ${
         isActive
           ? "bg-slate-700 cursor-default"
-          : "hover:bg-slate-700 cursor-pointer"
+          : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
       }`}
       onClick={() => selectTestRun(testRun.id)}
     >
@@ -43,6 +45,6 @@ export function TestRunRow({
         <Icon className="w-4 h-4" type="clock" />
         {formatRelativeTime(testRun.date)}
       </div>
-    </div>
+    </Component>
   );
 }

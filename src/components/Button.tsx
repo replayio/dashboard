@@ -8,7 +8,7 @@ export function Button({
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: "primary" | "secondary";
-  variant?: "outline" | "solid" | "transparent";
+  variant?: "outline" | "solid";
 }) {
   let defaultColorsClassName = "";
   if (disabled) {
@@ -57,7 +57,7 @@ export function Button({
 
   return (
     <button
-      className={`inline-flex flex-row items-center gap-2 rounded px-2 py-1 font-bold transition outline outline-2 outline-transparent ${defaultColorsClassName} ${className}`}
+      className={`font-bold inline-flex flex-row items-center gap-2 rounded px-2 py-1 transition outline outline-2 outline-transparent ${defaultColorsClassName} ${className}`}
       disabled={disabled}
       {...rest}
     />
