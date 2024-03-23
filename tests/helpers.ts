@@ -1,4 +1,5 @@
 import { Page } from "@playwright/test";
+import assert from "assert";
 import chalk from "chalk";
 import stripAnsi from "strip-ansi";
 
@@ -34,7 +35,9 @@ export async function startTest({
   page: Page;
   workspaceId?: string;
 }) {
-  const host = process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:8080";
+  const host = process.env.NEXT_PUBLIC_APP_URL;
+  assert(host, "process.env.NEXT_PUBLIC_APP_URL is required");
+
   const url = `${host}/team/${workspaceId}/${
     isTestWorkspace ? "runs" : "recordings"
   }?e2e=1&apiKey=${apiKey}`;

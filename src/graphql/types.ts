@@ -8,6 +8,7 @@ export type WorkspaceRecording = {
   title: string;
   url: string;
   uuid: string;
+  workspaceId: string | null;
 };
 
 export type WorkspaceRecordingCollaborator = {

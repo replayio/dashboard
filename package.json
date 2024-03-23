@@ -12,6 +12,7 @@
     "start": "next start",
     "test": "jest",
     "test:e2e": "playwright test",
+    "test:e2e:debug": "playwright test --project=chromium --headed",
     "typescript": "tsc --noEmit",
     "typescript:watch": "tsc --noEmit --watch"
   },

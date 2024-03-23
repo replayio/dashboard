@@ -33,6 +33,9 @@ export function usePersonalRecordings(filter: string = "") {
                 title
                 url
                 uuid
+                workspace {
+                  id
+                }
               }
             }
           }
@@ -60,6 +63,7 @@ export function usePersonalRecordings(filter: string = "") {
         title: node.title || "",
         url: node.url || "",
         uuid: node.uuid || "",
+        workspaceId: node.workspace?.id || null,
       })) ?? []
     );
   }, [data]);

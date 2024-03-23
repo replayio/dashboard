@@ -2,6 +2,8 @@ import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
+import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
+import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { WorkspaceRecording } from "@/graphql/types";
 import { LaunchReplayModal } from "@/pageComponents/team/id/recordings/LaunchReplayModal";
 import { RecordingRow } from "@/pageComponents/team/id/recordings/RecordingRow";
@@ -18,6 +20,9 @@ export default function RecordingPage({
   recordings: WorkspaceRecording[] | undefined;
 }) {
   const [isPending, startTransition] = useTransition();
+
+  const { user } = useCurrentUser();
+  const { workspaces } = useNonPendingWorkspaces();
 
   const [filter, setFilter] = useState("");
   const [limit, setLimit] = useState(PAGE_SIZE);
@@ -55,6 +60,7 @@ export default function RecordingPage({
     <div className="flex flex-col gap-2 overflow-auto overflow-hidden h-full p-2">
       <div className="flex flex-row items-center gap-2 justify-between">
         <Input
+          data-test-id="filter-input"
           defaultValue={filter}
           disabled={isPending}
           onConfirm={onFilterConfirm}
@@ -79,9 +85,16 @@ export default function RecordingPage({
       <div className="overflow-auto flex flex-col gap-2 grow">
         <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px grow relative">
           {isLoading && <LoadingProgressBar />}
-          {filteredRecordings?.map((recording) => (
-            <RecordingRow key={recording.uuid} recording={recording} />
-          ))}
+          {user &&
+            workspaces &&
+            filteredRecordings?.map((recording) => (
+              <RecordingRow
+                key={recording.uuid}
+                recording={recording}
+                user={user}
+                workspaces={workspaces}
+              />
+            ))}
           {!isLoading && limit < numTotalRecords && (
             <div
               className={`flex flex-row items-center justify-center gap-2 px-4 py-2 bg-slate-800 font-bold cursor-pointer text-sky-300 ${

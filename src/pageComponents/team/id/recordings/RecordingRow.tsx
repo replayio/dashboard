@@ -1,17 +1,26 @@
 import { RecordingDropdown } from "@/pageComponents/team/id/recordings/RecordingDropdown";
 import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
 import { Icon } from "@/components/Icon";
-import { WorkspaceRecording } from "@/graphql/types";
+import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { getURL } from "@/utils/recording";
 import Link from "next/link";
 
-export function RecordingRow({ recording }: { recording: WorkspaceRecording }) {
+export function RecordingRow({
+  recording,
+  user,
+  workspaces,
+}: {
+  recording: WorkspaceRecording;
+  user: User;
+  workspaces: Workspace[];
+}) {
   const href = getURL(recording.uuid, recording.buildId);
 
   return (
     <Link
       className="flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
+      data-test-name="recording-row"
       href={href}
     >
       <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">
@@ -55,7 +64,11 @@ export function RecordingRow({ recording }: { recording: WorkspaceRecording }) {
           )}
         </div>
         <div className="w-6 shrink-0">
-          <RecordingDropdown recording={recording} />
+          <RecordingDropdown
+            recording={recording}
+            user={user}
+            workspaces={workspaces}
+          />
         </div>
       </div>
     </Link>

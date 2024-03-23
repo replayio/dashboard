@@ -16,6 +16,7 @@ export function ShareDialog({
   recording: WorkspaceRecording;
 }) {
   const { collaborators } = useRecordingCollaborators(recording.uuid);
+  console.log(recording);
 
   const [email, setEmail] = useState("");
 
@@ -28,8 +29,18 @@ export function ShareDialog({
   });
 
   return (
-    <ModalDialog onDismiss={onDismiss} title="Share">
+    <ModalDialog
+      data-test-id="recording-share-dialog"
+      onDismiss={onDismiss}
+      title="Share"
+    >
       <div className="flex flex-col gap-2">
+        {!recording.private && (
+          <div className="bg-yellow-300 text-yellow-950 px-2 py-1 rounded flex flex-row items-center gap-2">
+            <Icon className="w-4 h-4" type="visibility-public" />
+            Anyone with the link can view this recording
+          </div>
+        )}
         <div className="font-bold">Add people</div>
         <Input
           disabled={addingCollaborator}
@@ -87,6 +98,7 @@ function Collaborator({
       className={`flex flex-row items-center gap-2 ${
         isLoading ? "opacity-50" : ""
       }`}
+      data-test-name="collaborator-row"
     >
       <div className="shrink-0 w-8 h-8 bg-slate-700 flex items-center justify-center rounded-full overflow-hidden">
         {picture ? (
