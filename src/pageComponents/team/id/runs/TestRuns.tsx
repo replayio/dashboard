@@ -34,7 +34,7 @@ export default function TestRuns({
       {isLoadingTestRuns && <LoadingProgressBar />}
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2 items-center">
-          <div className="basis-4/12 shrink overflow-auto">
+          <div className="basis-4/12 shrink min-w-0">
             <DropDownMenu
               disabled={isPending}
               onChange={(runsStatus) => updateFilters({ runsStatus })}
@@ -42,7 +42,7 @@ export default function TestRuns({
               value={runsStatus}
             />
           </div>
-          <div className="basis-4/12 shrink overflow-auto">
+          <div className="basis-4/12 shrink min-w-0">
             <DropDownMenu
               disabled={isPending}
               onChange={(runsDateRange) => updateFilters({ runsDateRange })}
@@ -50,7 +50,7 @@ export default function TestRuns({
               value={runsDateRange}
             />
           </div>
-          <div className="basis-4/12 shrink overflow-auto">
+          <div className="basis-4/12 shrink min-w-0">
             <DropDownMenu
               disabled={isPending}
               onChange={(runsBranch) => updateFilters({ runsBranch })}

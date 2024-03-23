@@ -19,7 +19,7 @@ export function NavLink({
 
   return (
     <Link
-      className={`flex flex-row gap-2 items-center px-2 py-1 transition cursor-pointer hover:text-sky-500 ${
+      className={`flex flex-row gap-2 items-center px-2 py-1 transition cursor-pointer ${
         isActive ? "text-sky-500" : "text-white"
       }`}
       href={href}

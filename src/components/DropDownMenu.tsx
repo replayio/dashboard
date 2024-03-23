@@ -20,7 +20,11 @@ export function DropDownMenu<Options extends ValueToLabelMap>({
 }) {
   const label = options[value] as string;
 
-  const { contextMenu, onContextMenu: onClick } = useContextMenu(
+  const {
+    contextMenu,
+    onContextMenu: onClick,
+    onKeyDown,
+  } = useContextMenu(
     Object.entries(options).map(([value, label]) => (
       <ContextMenuItem
         className="text-sm px-4 py-2"
@@ -42,6 +46,7 @@ export function DropDownMenu<Options extends ValueToLabelMap>({
         disabled={disabled}
         label={label}
         onClick={onClick}
+        onKeyDown={onKeyDown}
       />
       {contextMenu}
     </>

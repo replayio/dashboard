@@ -28,7 +28,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
       <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2 relative">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 items-center">
-            <div className="basis-2/4 shrink overflow-auto">
+            <div className="basis-2/4 shrink min-w-0">
               <DropDownMenu
                 disabled={isPending}
                 onChange={(sortBy) => updateFilters({ sortBy })}
@@ -36,7 +36,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
                 value={sortBy}
               />
             </div>
-            <div className="basis-2/4 shrink overflow-auto">
+            <div className="basis-2/4 shrink min-w-0">
               <DropDownMenu
                 disabled={isPending}
                 onChange={(dateRange) => updateFilters({ dateRange })}

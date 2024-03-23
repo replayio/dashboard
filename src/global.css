@@ -38,6 +38,17 @@ html {
   margin: 0;
 }
 
+*:focus-visible {
+  outline-color: theme("colors.sky.500");
+  outline-offset: -2px;
+}
+
+a:hover,
+a:focus-visible {
+  color: theme("colors.sky.500");
+  outline: none;
+}
+
 input::placeholder {
   color: theme("colors.slate.500");
 }

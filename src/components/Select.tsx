@@ -40,11 +40,13 @@ export function Select<Type extends Option>({
         ))}
       </select>
       <DropDownTrigger
-        className={`bg-slate-950 pointer-events-none flex flex-row items-center gap-2 px-2 py-1 h-auto rounded ${
+        className={`pointer-events-none h-auto ${
           !value?.label ? "text-slate-500" : "text-white"
-        } ${disabled ? "opacity-50" : ""}`}
+        }`}
+        disabled={disabled}
         label={value?.label ?? placeholder ?? ""}
         onClick={noop}
+        tabIndex={-1}
       />
     </div>
   );
