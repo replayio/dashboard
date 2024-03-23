@@ -1,10 +1,10 @@
+import { Icon, IconType } from "@/components/Icon";
+import { ModalDialog } from "@/components/ModalDialog";
+import { User } from "@/graphql/types";
 import { Account } from "@/pageComponents/team/layout/UserSettings/Account";
 import { Legal } from "@/pageComponents/team/layout/UserSettings/Legal";
 import { Support } from "@/pageComponents/team/layout/UserSettings/Support";
 import { UserApiKeys } from "@/pageComponents/team/layout/UserSettings/UserApiKeys";
-import { Icon, IconType } from "@/components/Icon";
-import { ModalDialog } from "@/components/ModalDialog";
-import { User } from "@/graphql/types";
 import { ReactNode, useMemo, useState } from "react";
 
 type Panel = { children: ReactNode; icon: IconType; label: string };
@@ -48,27 +48,30 @@ export function UserSettingsDialog({
   return (
     <ModalDialog onDismiss={onDismiss} title="Settings">
       <div className="flex flex-row gap-4">
-        <ul className="flex flex-col gap-4 shrink-0">
+        <div className="flex flex-col gap-4 shrink-0">
           {Object.entries(panels).map(([id, value]) => {
             if (value == null) {
               return null;
             } else {
+              const isActive = activePanel === id;
+              const Component = isActive ? "div" : "button";
               return (
-                <li key={id}>
-                  <div
-                    className={`flex flex-row items-center gap-2 cursor-pointer ${
-                      activePanel === id ? "text-sky-500" : ""
-                    }`}
-                    onClick={() => setActivePanel(id)}
-                  >
-                    <Icon className="w-6 h-6" type={value.icon} />
-                    {value.label}
-                  </div>
-                </li>
+                <Component
+                  className={`flex flex-row items-center gap-2 cursor-pointer outline-0 ${
+                    isActive
+                      ? "text-sky-500"
+                      : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
+                  }`}
+                  key={id}
+                  onClick={() => setActivePanel(id)}
+                >
+                  <Icon className="w-6 h-6" type={value.icon} />
+                  {value.label}
+                </Component>
               );
             }
           })}
-        </ul>
+        </div>
         <div className="w-96 h-[250px] max-h-[250px] overflow-auto">
           {panels[activePanel]?.children ?? null}
         </div>

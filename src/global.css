@@ -42,6 +42,9 @@ html {
   outline-color: theme("colors.sky.500");
   outline-offset: -2px;
 }
+input[type="checkbox"]:focus-visible {
+  outline-offset: 0;
+}
 
 a:focus-visible {
   color: theme("colors.sky.500");

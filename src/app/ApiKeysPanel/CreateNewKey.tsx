@@ -55,6 +55,7 @@ export function CreateNewKey({
       <div className="flex flex-col gap-1">
         <div className="flex flex-row items-center gap-2">
           <Input
+            autoFocus
             disabled={isPending}
             onChange={(label) => setLabel(label)}
             onConfirm={onConfirm}

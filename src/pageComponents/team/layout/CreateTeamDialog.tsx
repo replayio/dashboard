@@ -44,6 +44,7 @@ export function CreateTeamDialog({
     <ModalDialog onDismiss={onDismiss} title="Create new team">
       <div className="flex flex-col gap-2">
         <Input
+          autoFocus
           disabled={isPending}
           onChange={(name) => setName(name)}
           onConfirm={onClick}

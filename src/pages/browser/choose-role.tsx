@@ -32,7 +32,11 @@ export default function Page() {
         <Button disabled={isPending} onClick={() => setRole("developer")}>
           Developer
         </Button>
-        <Button disabled={isPending} onClick={() => setRole("other")}>
+        <Button
+          disabled={isPending}
+          onClick={() => setRole("other")}
+          variant="outline"
+        >
           Not a Developer
         </Button>
       </div>

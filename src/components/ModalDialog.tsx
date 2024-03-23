@@ -24,6 +24,7 @@ export function ModalDialog({
       >
         <div className="text-xl font-bold">{title}</div>
         <IconButton
+          autoFocus
           className="absolute top-3 right-3"
           iconType="close"
           onClick={onDismiss}
