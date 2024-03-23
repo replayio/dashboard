@@ -36,7 +36,5 @@ function BillingWithData() {
       return <BillingPriceDetails />;
     case "trial-details":
       return <BillingTrialDetails />;
-    default:
-      return <div>Not implemented yet...</div>;
   }
 }

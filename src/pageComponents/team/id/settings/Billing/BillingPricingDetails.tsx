@@ -13,13 +13,12 @@ import {
   cardToDisplayName,
   pricingDetailsForSubscription,
 } from "@/utils/subscription";
-import assert from "assert";
 import { format } from "date-fns/format";
 import { ReactNode, useContext, useState } from "react";
 
 export function BillingPriceDetails() {
-  const { setView, subscription, workspaceId } = useContext(BillingContext);
-  assert(subscription != null, "Subscription not found");
+  const { setView, subscription, workspace, workspaceId } =
+    useContext(BillingContext);
 
   const [confirmRemovePayment, setConfirmRemovePayment] = useState(false);
 
@@ -90,7 +89,7 @@ export function BillingPriceDetails() {
             Learn more
           </ExternalLink>
         </div>
-        <PricingDetailsPanel subscription={subscription} />
+        {subscription && <PricingDetailsPanel subscription={subscription} />}
         <div>
           <Button onClick={() => setView("add-payment-method")}>
             Add payment method

@@ -14,13 +14,7 @@ import {
   useState,
 } from "react";
 
-type View =
-  | "add-payment-method"
-  | "confirm-payment-method"
-  | "delete-payment-method"
-  | "details"
-  | "price-details"
-  | "trial-details";
+type View = "add-payment-method" | "price-details" | "trial-details";
 
 type ContextType = {
   refreshSubscription: () => void;

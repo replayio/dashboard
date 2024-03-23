@@ -70,13 +70,15 @@ export function BillingAddPaymentMethod() {
 
     assert(setupIntent, "Failed to confirm card setup");
 
-    // TODO Only if re-subscribing
-    // await activateWorkspaceSubscription(
-    //   workspaceId,
-    //   workspace.subscriptionPlanKey,
-    //   setupIntent.payment_method as any
-    // );
+    if (subscription?.status === "canceled") {
+      await activateWorkspaceSubscription(
+        workspaceId,
+        workspace.subscriptionPlanKey,
+        setupIntent.payment_method as any
+      );
+    }
 
+    // Need to manually refresh GraphQL data after Stripe confirmation
     await refreshSubscription();
 
     setView("price-details");
