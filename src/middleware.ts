@@ -46,6 +46,17 @@ export async function middleware(request: NextRequest) {
 
   // Require authentication for protected routes
   if (pathname.startsWith("/org") || pathname.startsWith("/team")) {
+    // e2e tests
+    const url = new URL(nextUrl);
+    if (url.searchParams.has("e2e")) {
+      const apiKey = url.searchParams.get("apiKey");
+      if (apiKey) {
+        response.headers.set(HEADERS.accessToken, apiKey);
+
+        return response;
+      }
+    }
+
     const session = await getSession(request, response);
     if (!session) {
       const loginUrl = new URL("/api/auth/login", request.url);
