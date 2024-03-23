@@ -1,6 +1,7 @@
 import { NavLink } from "@/pageComponents/team/layout/NavLink";
 import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import { useParams } from "next/navigation";
+import { IconType } from "@/components/Icon";
 
 export function WorkspaceLink({
   id,
@@ -29,11 +30,20 @@ export function WorkspaceLink({
     }
   }, [id, isActive]);
 
+  let iconType: IconType;
+  if (id === "me") {
+    iconType = "my-library";
+  } else if (isTest) {
+    iconType = "test-suite";
+  } else {
+    iconType = "folder";
+  }
+
   return (
     <NavLink
       data-test-id={`NavLink-${id}`}
       href={isTest ? `/team/${id}/runs` : `/team/${id}/recordings`}
-      iconType={isTest ? "test-suite" : "folder"}
+      iconType={iconType}
       isActive={isActive}
       label={name}
     />

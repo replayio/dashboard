@@ -27,6 +27,7 @@ export type IconType =
   | "menu-settings"
   | "menu-test-runs"
   | "menu-tests"
+  | "my-library"
   | "organization"
   | "passing-test"
   | "passing-test-run"
@@ -150,6 +151,10 @@ export function Icon({
     case "menu-tests":
       path =
         "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z";
+      break;
+    case "my-library":
+      path =
+        "M15 7v12.97l-4.21-1.81-.79-.34-.79.34L5 19.97V7h10m4-6H8.99C7.89 1 7 1.9 7 3h10c1.1 0 2 .9 2 2v13l2 1V3c0-1.1-.9-2-2-2zm-4 4H5c-1.1 0-2 .9-2 2v16l7-3 7 3V7c0-1.1-.9-2-2-2z";
       break;
     case "organization":
       path =
