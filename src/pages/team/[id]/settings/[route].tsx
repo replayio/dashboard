@@ -25,7 +25,7 @@ export default function Page({
   }
 
   return (
-    <div className="w-full h-full flex flex-col gap-2">
+    <div className="w-full h-full flex flex-col gap-2 p-2">
       <Nav
         currentUserIsAdmin={member?.roles.includes("admin") == true}
         workspaceIsOrganization={workspace.isOrganization}

@@ -24,7 +24,7 @@ export function NavList() {
   }
 
   return (
-    <nav className="flex flex-col gap-2 h-full text-white overflow-auto shrink-0 w-72">
+    <nav className="flex flex-col gap-2 h-full text-white overflow-auto shrink-0 w-72 p-2 pr-0">
       <div className="flex flex-row items-center gap-2 p-2 bg-slate-950 rounded">
         <ReplayLogo className="max-h-6 max-w-6" />
         <div className="text-xl font-bold">Replay</div>
