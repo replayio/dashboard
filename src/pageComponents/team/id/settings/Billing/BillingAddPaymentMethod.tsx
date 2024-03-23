@@ -10,7 +10,7 @@ import assert from "assert";
 import { useContext, useState } from "react";
 
 export function BillingAddPaymentMethod() {
-  const { setView, subscription, workspace, workspaceId } =
+  const { refreshSubscription, setView, subscription, workspace, workspaceId } =
     useContext(BillingContext);
   assert(subscription != null, "Subscription not found");
 
@@ -70,11 +70,14 @@ export function BillingAddPaymentMethod() {
 
     assert(setupIntent, "Failed to confirm card setup");
 
-    await activateWorkspaceSubscription(
-      workspaceId,
-      workspace.subscriptionPlanKey,
-      setupIntent.payment_method as any
-    );
+    // TODO Only if re-subscribing
+    // await activateWorkspaceSubscription(
+    //   workspaceId,
+    //   workspace.subscriptionPlanKey,
+    //   setupIntent.payment_method as any
+    // );
+
+    await refreshSubscription();
 
     setView("price-details");
     setIsPending(false);

@@ -39,10 +39,6 @@ export function useDeleteWorkspace() {
     }
   );
 
-  if (error) {
-    console.error("Apollo error while adding a collaborator", error);
-  }
-
   const deleteWorkspace = (workspaceId: string) =>
     deleteWorkspaceMutation({
       variables: { shouldDeleteRecordings: true, workspaceId },

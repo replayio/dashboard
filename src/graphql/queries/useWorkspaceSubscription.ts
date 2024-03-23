@@ -17,6 +17,7 @@ export function useWorkspaceSubscription(workspaceId: string) {
     data,
     error: didError,
     isLoading,
+    refetch,
   } = useGraphQLQuery<
     GetWorkspaceSubscriptionQuery,
     GetWorkspaceSubscriptionQueryVariables
@@ -94,5 +95,5 @@ export function useWorkspaceSubscription(workspaceId: string) {
     }
   }, [data, didError, isLoading, workspaceId]);
 
-  return { didError, isLoading, subscription };
+  return { didError, isLoading, refetch, subscription };
 }

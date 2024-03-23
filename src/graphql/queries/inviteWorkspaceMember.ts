@@ -38,10 +38,6 @@ export function useInviteWorkspaceMember(onCompleted: () => void) {
     }
   );
 
-  if (error) {
-    console.error("Apollo error while adding a collaborator", error);
-  }
-
   const inviteWorkspaceMember = (workspaceId: string, email: string) =>
     inviteWorkspaceMemberMutation({ variables: { email, workspaceId } });
 

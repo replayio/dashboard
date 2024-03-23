@@ -41,10 +41,6 @@ export function useActivateWorkspaceSubscription() {
     }
   );
 
-  if (error) {
-    console.error("Apollo error while adding a collaborator", error);
-  }
-
   const activateWorkspaceSubscription = useCallback(
     async (
       workspaceId: string,

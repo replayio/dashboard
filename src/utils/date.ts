@@ -1,3 +1,14 @@
+export function formatRelativeDate(date: Date) {
+  const rtf = new Intl.RelativeTimeFormat("en", {
+    localeMatcher: "best fit",
+    numeric: "auto",
+    style: "long",
+  });
+
+  const ends = Math.ceil((date.getTime() - Date.now()) / (24 * 60 * 60 * 1000));
+  return rtf.format(ends, "day");
+}
+
 export function getRelativeDate({
   daysAgo,
   hoursAgo,

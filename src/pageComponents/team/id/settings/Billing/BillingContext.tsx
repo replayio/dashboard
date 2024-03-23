@@ -23,6 +23,7 @@ type View =
   | "trial-details";
 
 type ContextType = {
+  refreshSubscription: () => void;
   setView: Dispatch<SetStateAction<View | undefined>>;
   subscription: WorkspaceSubscription | undefined;
   view: View | undefined;
@@ -41,7 +42,7 @@ export function BillingContextRoot({
   stripeKey: string;
   workspaceId: string;
 }) {
-  const { subscription } = useWorkspaceSubscription(workspaceId);
+  const { refetch, subscription } = useWorkspaceSubscription(workspaceId);
   const { workspaces } = useNonPendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
@@ -52,7 +53,7 @@ export function BillingContextRoot({
       if (inUnpaidFreeTrial(workspace, subscription)) {
         setView("trial-details");
       } else {
-        // TODO
+        setView("price-details");
       }
     }
   }, [subscription, workspace]);
@@ -61,13 +62,14 @@ export function BillingContextRoot({
 
   const value = useMemo<ContextType>(
     () => ({
+      refreshSubscription: () => refetch({ workspaceId }),
       setView,
       subscription,
       view,
       workspace,
       workspaceId,
     }),
-    [subscription, view, workspace, workspaceId]
+    [refetch, subscription, view, workspace, workspaceId]
   );
 
   return (

@@ -19,7 +19,7 @@ export function ConfirmationDialog({
 }) {
   return (
     <ModalDialog onDismiss={onCancel} title={title}>
-      <div>{message}</div>
+      <div className="flex flex-col gap-2 max-w-[350px]">{message}</div>
       <div className="flex flex-row justify-end gap-2">
         <Button onClick={onCancel} variant="outline">
           {cancelButtonLabel}

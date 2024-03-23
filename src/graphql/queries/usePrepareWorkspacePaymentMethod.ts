@@ -24,10 +24,6 @@ export function usePrepareWorkspacePaymentMethod() {
     }
   );
 
-  if (error) {
-    console.error("Apollo error while adding a collaborator", error);
-  }
-
   const prepareWorkspacePaymentMethod = useCallback(
     async (workspaceId: string) => {
       const result = await mutate({ variables: { workspaceId } });

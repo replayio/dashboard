@@ -2,6 +2,7 @@ import { SessionContext } from "@/components/SessionContext";
 import { getGraphQLClient } from "@/graphql/graphQLClient";
 import {
   ApolloError,
+  ApolloQueryResult,
   DocumentNode,
   OperationVariables,
   QueryHookOptions,
@@ -22,6 +23,9 @@ export function useGraphQLQuery<
   data: Query | undefined;
   error: ApolloError | undefined;
   isLoading: boolean;
+  refetch: (
+    variables?: Partial<Variables>
+  ) => Promise<ApolloQueryResult<Query>>;
 } {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
@@ -32,7 +36,8 @@ export function useGraphQLQuery<
     data,
     error,
     loading: isLoading,
+    refetch,
   } = useQuery<Query, Variables>(query, { client, variables, ...options });
 
-  return { data, error, isLoading };
+  return { data, error, isLoading, refetch };
 }

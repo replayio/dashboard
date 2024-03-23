@@ -29,10 +29,6 @@ export function useAddRecordingCollaborator(onCompleted: () => void) {
     }
   );
 
-  if (error) {
-    console.error("Apollo error while adding a collaborator", error);
-  }
-
   const addCollaborator = (recordingId: string, email: string) =>
     addNewCollaboratorMutation({ variables: { email, recordingId } });
 
