@@ -30,7 +30,13 @@ export async function middleware(request: NextRequest) {
         }
       }
 
-      // Redirect root requests to the most recently viewed path
+      // If the user isn't signed in, redirect them to the login page
+      const session = await getSession(request, response);
+      if (!session) {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+
+      // Else redirect them to the most recently viewed path
       const cookieStore = cookies();
       const cookie = cookieStore.get(COOKIES.defaultPathname);
       const pathname = cookie
