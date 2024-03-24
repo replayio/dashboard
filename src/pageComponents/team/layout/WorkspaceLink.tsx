@@ -41,7 +41,6 @@ export function WorkspaceLink({
 
   return (
     <NavLink
-      data-test-id={`NavLink-${id}`}
       href={isTest ? `/team/${id}/runs` : `/team/${id}/recordings`}
       iconType={iconType}
       isActive={isActive}

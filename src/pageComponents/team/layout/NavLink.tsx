@@ -21,6 +21,8 @@ export function NavLink({
       className={`flex flex-row gap-2 items-center text-white px-2 py-1 mx-1 transition rounded ${
         isActive ? "bg-sky-900 cursor-default" : "hover:text-sky-500"
       }`}
+      data-is-active={isActive || undefined}
+      data-test-name="NavLink"
       href={href}
       {...rest}
     >
