@@ -1,6 +1,6 @@
 import { Icon, IconType } from "@/components/Icon";
 import Link from "next/link";
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 
 export function NavLink({
   href,
@@ -12,7 +12,7 @@ export function NavLink({
   href: string;
   iconType: IconType;
   isActive: boolean;
-  label: string;
+  label: ReactNode;
 }) {
   const Component = isActive ? "div" : Link;
 

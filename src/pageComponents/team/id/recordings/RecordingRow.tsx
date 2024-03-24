@@ -20,7 +20,7 @@ export function RecordingRow({
   return (
     <Link
       className="flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
-      data-test-name="recording-row"
+      data-test-name="RecordingRow"
       href={href}
     >
       <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">

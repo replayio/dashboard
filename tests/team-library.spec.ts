@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { navigateToPage } from "./utils/navigateToPage";
+import { getNavLink } from "./utils/getNavLink";
+import { getContextMenuItem } from "./utils/getContextMenuItem";
+import { getRecordingRow } from "./utils/getRecordingRow";
 
 test("team-library: filtering and share dialog", async ({ page }) => {
   await navigateToPage({
@@ -8,8 +11,12 @@ test("team-library: filtering and share dialog", async ({ page }) => {
       "/team/dzozMDRhOTAwOC01YzdlLTRjNmMtODQwNi0yYTY4YTNjMmEyYzk=/recordings",
   });
 
-  const recordingRows = page.locator('[data-test-name="recording-row"]');
-  await expect(recordingRows).not.toHaveCount(5);
+  // Verify the team library route has loaded based on the left-nav links
+  await expect(await getNavLink(page, "Recordings")).toBeVisible();
+  await expect(await getNavLink(page, "Settings")).toBeVisible();
+
+  const recordingRows = getRecordingRow(page);
+  await expect(recordingRows).toHaveCount(5);
 
   // Should be able to filter recordings by their name
   const input = page.locator('[data-test-id="filter-input"]');
@@ -24,13 +31,9 @@ test("team-library: filtering and share dialog", async ({ page }) => {
   await menuButton.click();
 
   // Both "Share" and "Delete" options should be visible
-  const deleteButton = page.locator('[data-test-name="ContextMenuItem"]', {
-    hasText: "Delete",
-  });
+  const deleteButton = getContextMenuItem(page, "Delete");
   expect(deleteButton).toBeVisible();
-  const shareButton = page.locator('[data-test-name="ContextMenuItem"]', {
-    hasText: "Share",
-  });
+  const shareButton = getContextMenuItem(page, "Share");
   expect(shareButton).toBeVisible();
 
   // Open the share dialog and verify recording is not public and the owner's name is shown

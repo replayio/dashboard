@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { navigateToPage } from "./utils/navigateToPage";
+import { getContextMenuItem } from "./utils/getContextMenuItem";
+import { getRecordingRow } from "./utils/getRecordingRow";
 
 test("my-library: filtering and share dialog", async ({ page }) => {
   await navigateToPage({
@@ -7,7 +9,7 @@ test("my-library: filtering and share dialog", async ({ page }) => {
     pathname: "/team/me/recordings",
   });
 
-  const recordingRows = page.locator('[data-test-name="recording-row"]');
+  const recordingRows = getRecordingRow(page);
   await expect(recordingRows).not.toHaveCount(1);
 
   // Should be able to filter recordings by their name
@@ -23,13 +25,9 @@ test("my-library: filtering and share dialog", async ({ page }) => {
   await button.click();
 
   // The "Share" option should be present but the "Delete" option should not
-  const deleteButton = page.locator('[data-test-name="ContextMenuItem"]', {
-    hasText: "Delete",
-  });
+  const deleteButton = getContextMenuItem(page, "Delete");
   expect(deleteButton).not.toBeVisible();
-  const shareButton = page.locator('[data-test-name="ContextMenuItem"]', {
-    hasText: "Share",
-  });
+  const shareButton = getContextMenuItem(page, "Share");
   expect(shareButton).toBeVisible();
 
   // Open the share dialog and verify recording is flagged as public and the owner's name is shown

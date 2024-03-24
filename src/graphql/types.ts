@@ -170,6 +170,14 @@ export type Workspace = {
   subscriptionPlanKey: string | null;
 };
 
+export type PendingWorkspace = {
+  id: string;
+  inviterEmail: string | null;
+  isOrganization: boolean;
+  isTest: boolean;
+  name: string;
+};
+
 export enum WorkspaceSubscriptionStatus {
   Active = "active",
   Canceled = "canceled",

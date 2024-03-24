@@ -1,16 +1,18 @@
-import { CreateTeamButton } from "@/pageComponents/team/layout/CreateTeamButton";
-import { CurrentUser } from "@/pageComponents/team/layout/CurrentUser";
-import { WorkspaceLinkList } from "@/pageComponents/team/layout/WorkspaceLinkList";
-import { WorkspaceMenu } from "@/pageComponents/team/layout/WorkspaceMenu";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import { usePendingWorkspaces } from "@/graphql/queries/usePendingWorkspaces";
 import { Workspace } from "@/graphql/types";
+import { CreateTeamButton } from "@/pageComponents/team/layout/CreateTeamButton";
+import { CurrentUser } from "@/pageComponents/team/layout/CurrentUser";
+import { WorkspaceLinkList } from "@/pageComponents/team/layout/WorkspaceLinkList";
+import { WorkspaceMenu } from "@/pageComponents/team/layout/WorkspaceMenu";
 import { usePathname } from "next/navigation";
 
 export function NavList() {
   const { workspaces } = useNonPendingWorkspaces();
+  const { workspaces: pendingWorkspaces } = usePendingWorkspaces();
   const { user } = useCurrentUser();
 
   const pathname = usePathname();
@@ -32,8 +34,13 @@ export function NavList() {
       <div className="flex flex-col overflow-auto bg-slate-800 rounded grow">
         {workspace ? (
           <WorkspaceMenu workspace={workspace} />
-        ) : workspaces ? (
-          <WorkspaceLinkList workspaces={workspaces} />
+        ) : pendingWorkspaces && workspaces ? (
+          <>
+            <WorkspaceLinkList
+              pendingWorkspaces={pendingWorkspaces}
+              workspaces={workspaces}
+            />
+          </>
         ) : (
           <LoadingSpinner />
         )}

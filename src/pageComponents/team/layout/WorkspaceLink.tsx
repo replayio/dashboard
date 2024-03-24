@@ -5,10 +5,12 @@ import { IconType } from "@/components/Icon";
 
 export function WorkspaceLink({
   id,
+  isPending,
   isTest,
   name,
 }: {
   id: string;
+  isPending: boolean;
   isTest: boolean;
   name: string;
 }) {
@@ -39,12 +41,30 @@ export function WorkspaceLink({
     iconType = "folder";
   }
 
+  let href;
+  if (isPending) {
+    href = `/team/${id}/pending`;
+  } else if (isTest) {
+    href = `/team/${id}/runs`;
+  } else {
+    href = `/team/${id}/recordings`;
+  }
+
   return (
     <NavLink
-      href={isTest ? `/team/${id}/runs` : `/team/${id}/recordings`}
+      href={href}
       iconType={iconType}
       isActive={isActive}
-      label={name}
+      label={
+        <div className="flex flex-row items-center gap-2">
+          <div className="truncate">{name}</div>
+          {isPending && (
+            <div className="bg-yellow-300 text-yellow-950 text-xs px-1 rounded shrink-0">
+              New
+            </div>
+          )}
+        </div>
+      }
     />
   );
 }
