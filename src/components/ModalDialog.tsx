@@ -30,6 +30,7 @@ export function ModalDialog({
         <IconButton
           autoFocus
           className="absolute top-3 right-3"
+          data-test-nam="ModalDialog-CloseButton"
           iconType="close"
           onClick={onDismiss}
         />

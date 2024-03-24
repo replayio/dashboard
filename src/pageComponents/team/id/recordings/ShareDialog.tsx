@@ -30,7 +30,7 @@ export function ShareDialog({
 
   return (
     <ModalDialog
-      data-test-id="recording-share-dialog"
+      data-test-id="Dialog-ShareRecording"
       onDismiss={onDismiss}
       title="Share"
     >

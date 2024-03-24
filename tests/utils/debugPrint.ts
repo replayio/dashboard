@@ -1,5 +1,4 @@
 import { Page } from "@playwright/test";
-import assert from "assert";
 import chalk from "chalk";
 import stripAnsi from "strip-ansi";
 
@@ -22,26 +21,4 @@ export async function debugPrint(
       { message: plainMessage, scope: formattedScope }
     );
   }
-}
-
-export async function startTest({
-  apiKey,
-  page,
-  pathname,
-}: {
-  apiKey?: string;
-  page: Page;
-  pathname: string;
-}) {
-  const host = process.env.APP_URL;
-  assert(host, "process.env.APP_URL is required");
-
-  if (apiKey === undefined) {
-    apiKey = process.env.TEST_USER_API_KEY;
-  }
-
-  const url = `${host}${pathname}?e2e=1&apiKey=${apiKey}`;
-
-  await debugPrint(page, `Navigating to ${chalk.bold(url)}`, "startTestView");
-  await page.goto(url);
 }

@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { startTest } from "./helpers";
+import { navigateToPage } from "./utils/navigateToPage";
 
 test("my-library: filtering and share dialog", async ({ page }) => {
-  await startTest({
+  await navigateToPage({
     page,
     pathname: "/team/me/recordings",
   });
@@ -32,16 +32,12 @@ test("my-library: filtering and share dialog", async ({ page }) => {
   });
   expect(shareButton).toBeVisible();
 
-  // Open the share dialog
+  // Open the share dialog and verify recording is flagged as public and the owner's name is shown
   await shareButton.click();
-
-  // Verify recording is flagged as public
-  const dialog = page.locator('[data-test-id="recording-share-dialog"]');
+  const dialog = page.locator('[data-test-id="Dialog-ShareRecording"]');
   await expect(await dialog.textContent()).toContain(
     "Anyone with the link can view this recording"
   );
-
-  // Verify recording owner is displayed
   const collaboratorRows = page.locator('[data-test-name="collaborator-row"]');
   await expect(collaboratorRows).toHaveCount(1);
   await expect(await collaboratorRows.textContent()).toContain("Jason Laster");

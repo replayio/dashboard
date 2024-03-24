@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { startTest } from "./helpers";
+import { navigateToPage } from "./utils/navigateToPage";
 
 test("authentication: should require authentication to view the library", async ({
   page,
 }) => {
-  await startTest({
+  await navigateToPage({
     apiKey: "",
     page,
     pathname: "/",

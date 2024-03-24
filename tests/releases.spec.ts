@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { startTest } from "./helpers";
+import { navigateToPage } from "./utils/navigateToPage";
 
 test("releases: should list all releases, with the most recent ones at the top", async ({
   page,
 }) => {
-  await startTest({
+  await navigateToPage({
     apiKey: "",
     page,
     pathname: "/releases",

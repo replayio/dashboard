@@ -27,7 +27,11 @@ export function DeleteDialog({
   };
 
   return (
-    <ModalDialog onDismiss={onDismiss} title="Delete Replay?">
+    <ModalDialog
+      data-test-id="Dialog-DeleteRecording"
+      onDismiss={onDismiss}
+      title="Delete Replay?"
+    >
       <div className="flex flex-col gap-2">
         <div>This action will permanently delete this replay.</div>
         <div>Are you sure you want to proceed?</div>
