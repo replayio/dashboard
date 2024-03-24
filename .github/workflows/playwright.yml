@@ -53,8 +53,6 @@ jobs:
       - name: Set UUID
         id: generate-uuid
         uses: filipstefansson/uuid-action@v1
-        with:
-          name: ${{ gihub.sha }}
       - name: Get the UUID
         run: echo "UUID is ${{ steps.generate-uuid.outputs.uuid }}"
     outputs:
