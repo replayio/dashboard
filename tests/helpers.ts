@@ -38,16 +38,6 @@ export async function startTest({
 
   if (apiKey === undefined) {
     apiKey = process.env.TEST_USER_API_KEY;
-    console.log(
-      `------------------------------\nDEBUG: apiKey (${apiKey?.length}):\n${apiKey}\n------------------------------`
-    );
-    console.log(
-      "Match?",
-      process.env.TEST_USER_API_KEY ===
-        "ruk_jukvxbSz7syp4Tw21RzEwSK2bjucNDklCEDmVkjbHMA"
-    );
-    apiKey = "ruk_jukvxbSz7syp4Tw21RzEwSK2bjucNDklCEDmVkjbHMA";
-    assert(apiKey, "process.env.TEST_USER_API_KEY is required");
   }
 
   const url = `${host}${pathname}?e2e=1&apiKey=${apiKey}`;
