@@ -1,9 +1,5 @@
 import { COOKIES, HEADERS } from "@/constants";
-import {
-  AccessTokenError,
-  getAccessToken,
-  getSession,
-} from "@auth0/nextjs-auth0/edge";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0/edge";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 
@@ -13,26 +9,24 @@ export async function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
 
+  const { ua } = userAgent(request);
+
+  const [accessToken, accessTokenSource] = await getAccessTokenForSession(
+    request,
+    response
+  );
+
   try {
     await redirectIfMobile(request);
-    await redirectIfUnauthenticated(request, response);
+    if (!accessToken) {
+      await redirectIfProtectedRoute(request, response);
+    }
   } catch (thrown) {
     if (thrown instanceof URL) {
       return NextResponse.redirect(thrown);
     }
 
     throw thrown;
-  }
-
-  // Pass User Agent along to page requests in case it affects rendered content
-  const { ua } = userAgent(request);
-  response.headers.set(HEADERS.userAgent, ua);
-
-  // Support e2e test and Support workflows
-  const url = new URL(nextUrl);
-  const apiKey = url.searchParams.get("apiKey");
-  if (apiKey) {
-    response.headers.set(HEADERS.accessToken, apiKey);
   }
 
   switch (pathname) {
@@ -57,24 +51,47 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (!apiKey) {
-    try {
-      const { accessToken } = await getAccessToken(request, response);
-      if (!accessToken) {
-        throw Error("No access token");
-      }
-
-      response.headers.set(HEADERS.accessToken, accessToken);
-    } catch (error) {
-      if (error instanceof AccessTokenError) {
-        // Ignore AccessTokenError; these are handled elsewhere
-      } else {
-        throw error;
-      }
-    }
+  // Pass User Agent along to page requests in case it affects rendered content
+  response.headers.set(HEADERS.userAgent, ua);
+  if (accessToken && accessTokenSource) {
+    response.headers.set(HEADERS.accessToken, accessToken);
+    response.headers.set(HEADERS.accessTokenSource, accessTokenSource);
   }
 
   return response;
+}
+
+async function getAccessTokenForSession(
+  request: NextRequest,
+  response: NextResponse
+) {
+  try {
+    const { accessToken } = await getAccessToken(request, response);
+    if (accessToken) {
+      // An active auth0 session should always take precedence over an apiKey URL param
+      return [accessToken, "auth0"];
+    }
+  } catch (error) {
+    // Ignore AccessTokenError; these are handled elsewhere
+  }
+
+  const url = new URL(request.nextUrl);
+  const apiKey = url.searchParams.get("apiKey");
+  if (apiKey) {
+    // e2e tests and Support login flow
+    return [apiKey, "query"];
+  }
+
+  const cookieStore = cookies();
+  const cookie = cookieStore.get(COOKIES.accessToken);
+  if (cookie) {
+    const apiKey = JSON.parse(cookie.value);
+    if (typeof apiKey === "string" && apiKey) {
+      return [apiKey, "cookie"];
+    }
+  }
+
+  return [null, null];
 }
 
 async function redirectIfMobile(request: NextRequest) {
@@ -97,30 +114,21 @@ async function redirectIfMobile(request: NextRequest) {
   }
 }
 
-async function redirectIfUnauthenticated(
+async function redirectIfProtectedRoute(
   request: NextRequest,
   response: NextResponse
 ) {
   const { nextUrl } = request;
   const { pathname } = nextUrl;
 
-  const url = new URL(nextUrl);
-  const apiKey = url.searchParams.get("apiKey");
-  if (apiKey) {
-    return;
-  }
-
   if (
     pathname === "/" ||
     pathname.startsWith("/org") ||
     pathname.startsWith("/team")
   ) {
-    const session = await getSession(request, response);
-    if (!session) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
 
-      throw loginUrl;
-    }
+    throw loginUrl;
   }
 }

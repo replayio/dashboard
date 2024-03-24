@@ -1,4 +1,5 @@
 export const COOKIES = {
+  accessToken: "replay:dashboard:access-token",
   defaultPathname: "replay:dashboard:default-pathname",
   mobileWarningDismissed: "replay:dashboard:mobile-warning-dismissed",
   testRunsFilters: "replay:dashboard:test-runs-filters",
@@ -7,6 +8,7 @@ export const COOKIES = {
 
 export const HEADERS = {
   accessToken: "x-access-token",
+  accessTokenSource: "x-access-token-source",
   userAgent: "x-user-agent",
 };
 
