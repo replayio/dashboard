@@ -33,7 +33,6 @@ jobs:
     outputs:
       testRunId: ${{ steps.uuid.outputs.result }}
   e2e-test:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     name: Playwright e2e tests
     needs: [generate-test-run-id, wait-for-vercel]
     timeout-minutes: 60
