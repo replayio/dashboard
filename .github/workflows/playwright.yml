@@ -7,6 +7,33 @@ env:
   RECORD_REPLAY_API_KEY: rwk_yaEG8jo6gcisGHHoMj8SNoOMIHSbT7REuU5E1QnKCiL
   RECORD_REPLAY_METADATA_TEST_RUN_TITLE: E2E Tests
 jobs:
+  cache-and-install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - name: Install dependencies
+        run: pnpm install
   wait-for-vercel:
     name: Wait for vercel
     runs-on: ubuntu-latest
@@ -23,7 +50,7 @@ jobs:
     name: Generate Test Run ID
     runs-on: ubuntu-latest
     steps:
-      - run: yarn add uuid
+      - run: pnpm install uuid
         shell: sh
       - uses: actions/github-script@v6
         id: uuid
@@ -34,7 +61,7 @@ jobs:
       testRunId: ${{ steps.uuid.outputs.result }}
   e2e-test:
     name: Playwright e2e tests
-    needs: [generate-test-run-id, wait-for-vercel]
+    needs: [cache-and-install, generate-test-run-id, wait-for-vercel]
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -42,8 +69,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
 
       - name: Get installed Playwright version
         id: playwright-version
@@ -73,6 +98,7 @@ jobs:
           retention-days: 30
   unit-test:
     name: Unit Tests
+    needs: cache-and-install
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -81,7 +107,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "16"
-      - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
       - name: Run tests
         run: pnpm test
