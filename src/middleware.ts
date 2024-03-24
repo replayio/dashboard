@@ -46,15 +46,13 @@ export async function middleware(request: NextRequest) {
 
   // Require authentication for protected routes
   if (pathname.startsWith("/org") || pathname.startsWith("/team")) {
-    // e2e tests
+    // Support e2e test and Support workflows
     const url = new URL(nextUrl);
-    if (url.searchParams.has("e2e")) {
-      const apiKey = url.searchParams.get("apiKey");
-      if (apiKey) {
-        response.headers.set(HEADERS.accessToken, apiKey);
+    const apiKey = url.searchParams.get("apiKey");
+    if (apiKey) {
+      response.headers.set(HEADERS.accessToken, apiKey);
 
-        return response;
-      }
+      return response;
     }
 
     const session = await getSession(request, response);
