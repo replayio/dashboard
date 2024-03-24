@@ -1,9 +1,11 @@
 name: Run test suites
 on:
   push:
-    branches: [main, master]
+    branches: main
   pull_request:
-    branches: [main, master]
+env:
+  RECORD_REPLAY_API_KEY: rwk_yaEG8jo6gcisGHHoMj8SNoOMIHSbT7REuU5E1QnKCiL
+  RECORD_REPLAY_METADATA_TEST_RUN_TITLE: E2E Tests
 jobs:
   wait-for-vercel:
     name: Wait for vercel
