@@ -36,6 +36,7 @@ export default function TestRuns({
         <div className="flex flex-row gap-2 items-center">
           <div className="basis-4/12 shrink min-w-0">
             <DropDownMenu
+              data-test-id="TestRuns-RunStatusFilter"
               disabled={isPending}
               onChange={(runsStatus) => updateFilters({ runsStatus })}
               options={RUN_STATUS_FILTERS}
@@ -44,6 +45,7 @@ export default function TestRuns({
           </div>
           <div className="basis-4/12 shrink min-w-0">
             <DropDownMenu
+              data-test-id="TestRuns-DateRangeFilter"
               disabled={isPending}
               onChange={(runsDateRange) => updateFilters({ runsDateRange })}
               options={DATE_RANGE_FILTERS}
@@ -52,6 +54,7 @@ export default function TestRuns({
           </div>
           <div className="basis-4/12 shrink min-w-0">
             <DropDownMenu
+              data-test-id="TestRuns-BranchFilter"
               disabled={isPending}
               onChange={(runsBranch) => updateFilters({ runsBranch })}
               options={BRANCH_FILTERS}
@@ -60,6 +63,7 @@ export default function TestRuns({
           </div>
         </div>
         <Input
+          data-test-id="TestRuns-TextFilter"
           defaultValue={runsFilterText}
           name="testRunFilter"
           onConfirm={(runsFilterText) => updateFilters({ runsFilterText })}

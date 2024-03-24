@@ -20,6 +20,7 @@ export function TestRunTestRow({
           ? "bg-slate-700 cursor-default"
           : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
       }`}
+      data-test-name="TestRunTests-Row"
       onClick={() => selectTest(test.id)}
     >
       <div className="truncate shrink grow">{test.title}</div>

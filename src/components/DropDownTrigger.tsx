@@ -1,5 +1,5 @@
 import { Icon } from "@/components/Icon";
-import { KeyboardEvent, MouseEvent } from "react";
+import { HTMLAttributes, KeyboardEvent, MouseEvent } from "react";
 
 export function DropDownTrigger({
   className = "",
@@ -8,7 +8,8 @@ export function DropDownTrigger({
   onClick,
   onKeyDown,
   tabIndex = 0,
-}: {
+  ...rest
+}: Omit<HTMLAttributes<HTMLDivElement>, "onClick" | "onKeyDown"> & {
   className?: string;
   disabled?: boolean;
   label: string;
@@ -24,6 +25,7 @@ export function DropDownTrigger({
       onClick={onClick}
       onKeyDown={onKeyDown}
       tabIndex={tabIndex}
+      {...rest}
     >
       <div className="grow truncate whitespace-nowrap">{label}</div>
       <Icon className="w-4 h-4" type="drop-down-caret" />

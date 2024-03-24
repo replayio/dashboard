@@ -37,6 +37,7 @@ export function TestRunRow({
           ? "bg-slate-700 cursor-default"
           : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
       }`}
+      data-test-name="TestRuns-Row"
       onClick={() => selectTestRun(testRun.id)}
     >
       <div className="w-6 h-6 shrink-0 flex justify-center">{icon}</div>

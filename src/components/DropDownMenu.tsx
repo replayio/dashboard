@@ -1,4 +1,5 @@
 import { DropDownTrigger } from "@/components/DropDownTrigger";
+import { HTMLAttributes } from "react";
 import { ContextMenuItem, useContextMenu } from "use-context-menu";
 
 type ValueToLabelMap = {
@@ -11,7 +12,11 @@ export function DropDownMenu<Options extends ValueToLabelMap>({
   onChange,
   options,
   value,
-}: {
+  ...rest
+}: Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "onChange" | "onClick" | "onKeyDown"
+> & {
   className?: string;
   disabled: boolean;
   onChange: (value: keyof Options) => void;
@@ -47,6 +52,7 @@ export function DropDownMenu<Options extends ValueToLabelMap>({
         label={label}
         onClick={onClick}
         onKeyDown={onKeyDown}
+        {...rest}
       />
       {contextMenu}
     </>

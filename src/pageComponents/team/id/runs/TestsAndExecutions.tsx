@@ -21,7 +21,10 @@ export function TestsAndExecutions({
 
   return (
     <>
-      <div className="bg-slate-900 text-white p-2 rounded">
+      <div
+        className="bg-slate-900 text-white p-2 rounded"
+        data-test-id="TestExecution"
+      >
         <ExpandableSection label="Replays" openByDefault>
           <div className="shrink-0 -mx-2">
             {selectedTest.recordings.map((recording, index) => {

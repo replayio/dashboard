@@ -30,6 +30,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
           <div className="flex flex-row gap-2 items-center">
             <div className="basis-2/4 shrink min-w-0">
               <DropDownMenu
+                data-test-id="Tests-SortByFilter"
                 disabled={isPending}
                 onChange={(sortBy) => updateFilters({ sortBy })}
                 options={SORT_BY_FILTERS}
@@ -38,6 +39,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
             </div>
             <div className="basis-2/4 shrink min-w-0">
               <DropDownMenu
+                data-test-id="Tests-DateRangeFilter"
                 disabled={isPending}
                 onChange={(dateRange) => updateFilters({ dateRange })}
                 options={DATE_RANGE_FILTERS}
@@ -46,6 +48,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
             </div>
           </div>
           <Input
+            data-test-id="Tests-TextFilter"
             defaultValue={filterText}
             onConfirm={(filterText) => updateFilters({ filterText })}
             placeholder="Filter tests"

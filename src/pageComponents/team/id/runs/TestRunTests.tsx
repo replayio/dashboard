@@ -83,6 +83,7 @@ export function TestRunTests({
         <div className="flex flex-row gap-2 items-center">
           <div className="grow">
             <DropDownMenu
+              data-test-id="TestRun-StatusFilter"
               disabled={isPending}
               onChange={(testsStatus) => updateFilters({ testsStatus })}
               options={TEST_STATUS}
@@ -100,6 +101,7 @@ export function TestRunTests({
           />
         </div>
         <Input
+          data-test-id="TestRun-TextFilter"
           defaultValue={testsFilterText}
           onConfirm={(testsFilterText) => updateFilters({ testsFilterText })}
           placeholder="Filter tests"
