@@ -48,6 +48,7 @@ jobs:
       - name: Run Playwright tests
         run: pnpm test:e2e
         env:
+          AUTH0_BASE_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           NEXT_PUBLIC_APP_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           RECORD_REPLAY_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs.testRunId }}
       - uses: actions/upload-artifact@v4
