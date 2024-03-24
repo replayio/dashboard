@@ -44,9 +44,8 @@ export default class MyApp extends App<AppProps<PageProps>> {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
-
-    const { accessToken, accessTokenSource } = this;
+    const { accessToken, props } = this;
+    const { Component, pageProps } = props;
 
     assert("Layout" in Component, "Page.Layout is required");
     const Layout = Component.Layout as ComponentType<PropsWithChildren>;

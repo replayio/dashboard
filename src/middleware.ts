@@ -1,5 +1,5 @@
 import { COOKIES, HEADERS } from "@/constants";
-import { getAccessToken, getSession } from "@auth0/nextjs-auth0/edge";
+import { getAccessToken } from "@auth0/nextjs-auth0/edge";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
   try {
     await redirectIfMobile(request);
     if (!accessToken) {
-      await redirectIfProtectedRoute(request, response);
+      await redirectIfProtectedRoute(request);
     }
   } catch (thrown) {
     if (thrown instanceof URL) {
@@ -114,10 +114,7 @@ async function redirectIfMobile(request: NextRequest) {
   }
 }
 
-async function redirectIfProtectedRoute(
-  request: NextRequest,
-  response: NextResponse
-) {
+async function redirectIfProtectedRoute(request: NextRequest) {
   const { nextUrl } = request;
   const { pathname } = nextUrl;
 
