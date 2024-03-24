@@ -50,15 +50,15 @@ jobs:
     name: Generate Test Run ID
     runs-on: ubuntu-latest
     steps:
-      - run: pnpm install uuid
-        shell: sh
-      - uses: actions/github-script@v6
-        id: uuid
+      - name: Set UUID
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1
         with:
-          result-encoding: string
-          script: return require("uuid").v4()
+          name: ${{ gihub.sha }}
+      - name: Get the UUID
+        run: echo "UUID is ${{ steps.generate-uuid.outputs.uuid }}"
     outputs:
-      testRunId: ${{ steps.uuid.outputs.result }}
+      testRunId: ${{ steps.generate-uuid.outputs.uuid }}
   e2e-test:
     name: Playwright e2e tests
     needs: [cache-and-install, generate-test-run-id, wait-for-vercel]
