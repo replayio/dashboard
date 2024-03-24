@@ -1,5 +1,7 @@
 import { Button } from "@/components/Button";
+import { COOKIES } from "@/constants";
 import { User } from "@/graphql/types";
+import { deleteCookieValueClient } from "@/utils/cookie";
 import { useState } from "react";
 
 export function Account({ user }: { user: User }) {
@@ -7,6 +9,8 @@ export function Account({ user }: { user: User }) {
 
   const onClick = async () => {
     setIsPending(true);
+
+    deleteCookieValueClient(COOKIES.accessToken);
 
     window.location.replace("/api/auth/logout");
   };

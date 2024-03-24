@@ -25,7 +25,7 @@ export async function debugPrint(
 }
 
 export async function startTest({
-  apiKey = process.env.TEST_USER_API_KEY,
+  apiKey,
   page,
   pathname,
 }: {
@@ -33,8 +33,12 @@ export async function startTest({
   page: Page;
   pathname: string;
 }) {
-  const host = process.env.NEXT_PUBLIC_APP_URL;
-  assert(host, "process.env.NEXT_PUBLIC_APP_URL is required");
+  const host = process.env.APP_URL;
+  assert(host, "process.env.APP_URL is required");
+
+  if (apiKey === undefined) {
+    apiKey = process.env.TEST_USER_API_KEY;
+  }
 
   const url = `${host}${pathname}?e2e=1&apiKey=${apiKey}`;
 

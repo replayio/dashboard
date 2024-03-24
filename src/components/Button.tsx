@@ -4,10 +4,12 @@ export function Button({
   className = "",
   color = "primary",
   disabled,
+  size = "normal",
   variant = "solid",
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: "primary" | "secondary";
+  size?: "large" | "normal";
   variant?: "outline" | "solid";
 }) {
   let defaultColorsClassName = "";
@@ -55,9 +57,21 @@ export function Button({
     defaultColorsClassName += " cursor-pointer";
   }
 
+  let defaultSizeClassName = "";
+  switch (size) {
+    case "large": {
+      defaultSizeClassName = "gap-4 rounded-md px-6 py-3";
+      break;
+    }
+    case "normal": {
+      defaultSizeClassName = "gap-2 rounded px-2 py-1";
+      break;
+    }
+  }
+
   return (
     <button
-      className={`font-bold inline-flex flex-row items-center gap-2 rounded px-2 py-1 transition outline outline-2 outline-transparent ${defaultColorsClassName} ${className}`}
+      className={`font-bold inline-flex flex-row items-center transition outline outline-2 outline-transparent ${defaultColorsClassName} ${defaultSizeClassName} ${className}`}
       disabled={disabled}
       {...rest}
     />

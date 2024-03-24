@@ -115,6 +115,9 @@ devDependencies:
   jest-environment-jsdom:
     specifier: ^29.7.0
     version: 29.7.0
+  playwright:
+    specifier: ^1.42.1
+    version: 1.42.1
   postcss:
     specifier: ^8.4.33
     version: 8.4.33

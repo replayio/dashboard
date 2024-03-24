@@ -1,9 +1,11 @@
 name: Run test suites
 on:
   push:
-    branches: [main, master]
+    branches: main
   pull_request:
-    branches: [main, master]
+env:
+  RECORD_REPLAY_API_KEY: rwk_yaEG8jo6gcisGHHoMj8SNoOMIHSbT7REuU5E1QnKCiL
+  RECORD_REPLAY_METADATA_TEST_RUN_TITLE: E2E Tests
 jobs:
   wait-for-vercel:
     name: Wait for vercel
@@ -21,17 +23,14 @@ jobs:
     name: Generate Test Run ID
     runs-on: ubuntu-latest
     steps:
-      - run: yarn add uuid
-        shell: sh
-      - uses: actions/github-script@v6
-        id: uuid
-        with:
-          result-encoding: string
-          script: return require("uuid").v4()
+      - name: Set UUID
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1
+      - name: Get the UUID
+        run: echo "UUID is ${{ steps.generate-uuid.outputs.uuid }}"
     outputs:
-      testRunId: ${{ steps.uuid.outputs.result }}
+      testRunId: ${{ steps.generate-uuid.outputs.uuid }}
   e2e-test:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     name: Playwright e2e tests
     needs: [generate-test-run-id, wait-for-vercel]
     timeout-minutes: 60
@@ -41,16 +40,56 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+
+      # Install (and cache) PNPM dependencies
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm install
+
+      # Install (and cache) Playwright dependencies
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> $GITHUB_ENV
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - run: npx playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: npx playwright install-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
       - name: Run Playwright tests
         run: pnpm test:e2e
         env:
+          APP_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           AUTH0_BASE_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
-          NEXT_PUBLIC_APP_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           RECORD_REPLAY_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs.testRunId }}
+          TEST_USER_API_KEY: ${{ secrets.TEST_USER_API_KEY }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -67,7 +106,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "16"
+
+      # Install (and cache) PNPM dependencies
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
+        run: pnpm install
+
       - name: Run tests
         run: pnpm test

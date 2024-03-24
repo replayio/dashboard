@@ -10,7 +10,5 @@ test("authentication: should require authentication to view the library", async 
     pathname: "/",
   });
 
-  await expect(
-    page.getByText("Log in to Replay to continue to Replay.")
-  ).toBeVisible();
+  await expect(page.getByText("Sign in with Google")).toBeVisible();
 });

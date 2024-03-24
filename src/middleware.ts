@@ -1,9 +1,5 @@
 import { COOKIES, HEADERS } from "@/constants";
-import {
-  AccessTokenError,
-  getAccessToken,
-  getSession,
-} from "@auth0/nextjs-auth0/edge";
+import { getAccessToken } from "@auth0/nextjs-auth0/edge";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 
@@ -15,73 +11,121 @@ export async function middleware(request: NextRequest) {
 
   const { ua } = userAgent(request);
 
-  response.headers.set(HEADERS.userAgent, ua);
+  const [accessToken, accessTokenSource] = await getAccessTokenForSession(
+    request,
+    response
+  );
+
+  try {
+    await redirectIfMobile(request);
+    if (!accessToken) {
+      await redirectIfProtectedRoute(request);
+    }
+  } catch (thrown) {
+    if (thrown instanceof URL) {
+      return NextResponse.redirect(thrown);
+    }
+
+    throw thrown;
+  }
 
   switch (pathname) {
     case "/": {
-      if (isMobile(ua)) {
-        // If the user is attempting to visit Replay on a mobile device for the first time,
-        // show them a message that it has not been optimized for mobile
-        // If they have already confirmed this message (detectable via a cookie) then let them through
-        const cookieStore = cookies();
-        const cookie = cookieStore.get(COOKIES.mobileWarningDismissed);
-        if (cookie == null && request.nextUrl.pathname !== "/mobile-warning") {
-          return NextResponse.redirect(new URL("/mobile-warning", request.url));
-        }
-      }
-
-      // Redirect root requests to the most recently viewed path
+      // Redirect them to the most recently viewed path
       const cookieStore = cookies();
       const cookie = cookieStore.get(COOKIES.defaultPathname);
-      const pathname = cookie
+
+      const redirectURL = new URL(request.url);
+      redirectURL.pathname = cookie
         ? JSON.parse(cookie.value)
         : "/team/me/recordings";
 
-      return NextResponse.redirect(new URL(pathname, request.url));
+      return NextResponse.redirect(redirectURL);
     }
     case "/org/new": {
-      return NextResponse.redirect(new URL("/team/new?type=org", request.url));
+      const redirectURL = new URL(request.url);
+      redirectURL.pathname = "/team/new";
+      redirectURL.searchParams.set("type", "org");
+
+      return NextResponse.redirect(redirectURL);
     }
   }
 
-  // Require authentication for protected routes
-  if (pathname.startsWith("/org") || pathname.startsWith("/team")) {
-    // Support e2e test and Support workflows
-    const url = new URL(nextUrl);
-    const apiKey = url.searchParams.get("apiKey");
-    if (apiKey) {
-      response.headers.set(HEADERS.accessToken, apiKey);
-
-      return response;
-    }
-
-    const session = await getSession(request, response);
-    if (!session) {
-      const loginUrl = new URL("/api/auth/login", request.url);
-      loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
-
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  try {
-    const { accessToken } = await getAccessToken(request, response);
-    if (!accessToken) {
-      throw Error("No access token");
-    }
-
+  // Pass User Agent along to page requests in case it affects rendered content
+  response.headers.set(HEADERS.userAgent, ua);
+  if (accessToken && accessTokenSource) {
     response.headers.set(HEADERS.accessToken, accessToken);
-  } catch (error) {
-    if (error instanceof AccessTokenError) {
-      // These errors will be handled via redirect
-    } else {
-      throw error;
-    }
+    response.headers.set(HEADERS.accessTokenSource, accessTokenSource);
   }
 
   return response;
 }
 
-function isMobile(ua: string) {
-  return /iP(hone|ad|od)/.test(ua) || /Android/.test(ua);
+async function getAccessTokenForSession(
+  request: NextRequest,
+  response: NextResponse
+) {
+  try {
+    const { accessToken } = await getAccessToken(request, response);
+    if (accessToken) {
+      // An active auth0 session should always take precedence over an apiKey URL param
+      return [accessToken, "auth0"];
+    }
+  } catch (error) {
+    // Ignore AccessTokenError; these are handled elsewhere
+  }
+
+  const url = new URL(request.nextUrl);
+  const apiKey = url.searchParams.get("apiKey");
+  if (apiKey) {
+    // e2e tests and Support login flow
+    return [apiKey, "query"];
+  }
+
+  const cookieStore = cookies();
+  const cookie = cookieStore.get(COOKIES.accessToken);
+  if (cookie) {
+    const apiKey = JSON.parse(cookie.value);
+    if (typeof apiKey === "string" && apiKey) {
+      return [apiKey, "cookie"];
+    }
+  }
+
+  return [null, null];
+}
+
+async function redirectIfMobile(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/") {
+    const { ua } = userAgent(request);
+
+    const isMobile = /iP(hone|ad|od)/.test(ua) || /Android/.test(ua);
+    if (isMobile) {
+      // If the user is attempting to visit Replay on a mobile device for the first time,
+      // show them a message that it has not been optimized for mobile
+      // If they have already confirmed this message (detectable via a cookie) then let them through
+      const cookieStore = cookies();
+      const cookie = cookieStore.get(COOKIES.mobileWarningDismissed);
+      if (cookie == null && request.nextUrl.pathname !== "/mobile-warning") {
+        throw new URL("/mobile-warning", request.url);
+      }
+    }
+  }
+}
+
+async function redirectIfProtectedRoute(request: NextRequest) {
+  const { nextUrl } = request;
+  const { pathname } = nextUrl;
+
+  if (
+    pathname === "/" ||
+    pathname.startsWith("/org") ||
+    pathname.startsWith("/team")
+  ) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
+
+    throw loginUrl;
+  }
 }
