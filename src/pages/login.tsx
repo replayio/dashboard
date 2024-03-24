@@ -14,12 +14,14 @@ export default function Page({
 
   if (user) {
     return (
-      <Message className="max-w-96">
-        <ReplayLogo className="text-white min-w-12 min-h-12" />
+      <Message className="max-w-96 p-8 gap-8 text-center">
+        <ReplayLogo className="text-white min-w-20 min-h-20" />
         <div>
           You are already logged in as <strong>{user.name}</strong>.
         </div>
-        <Button onClick={() => router.push("/")}>Continue to Library</Button>
+        <Button onClick={() => router.push("/")} size="large">
+          Continue to Library
+        </Button>
         {/* TODO [FE-2379] Support account switcher
         globalThis.__IS_RECORD_REPLAY_RUNTIME__ || (
           <Button
@@ -34,14 +36,17 @@ export default function Page({
     );
   } else {
     return (
-      <Message className="max-w-96">
-        <ReplayLogo className="text-white min-w-12 min-h-12" />
+      <Message className="max-w-96 p-8 gap-8 text-center">
+        <ReplayLogo className="text-white min-w-20 min-h-20" />
         <div>
           Replay captures everything you need for the perfect bug report, all in
-          one link.{" "}
-          <ExternalLink href="https://www.replay.io">Learn more</ExternalLink>
+          one link.
+          <br />
+          <ExternalLink className="text-sm mt-2" href="https://www.replay.io">
+            Learn more
+          </ExternalLink>
         </div>
-        <Button onClick={() => router.push("/api/auth/login")}>
+        <Button onClick={() => router.push("/api/auth/login")} size="large">
           Sign in with Google
         </Button>
       </Message>
