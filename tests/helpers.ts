@@ -39,7 +39,7 @@ export async function startTest({
   if (apiKey === undefined) {
     apiKey = process.env.TEST_USER_API_KEY;
     console.log(
-      `------------------------------\nDEBUG: apiKey:\n${apiKey}\n------------------------------`
+      `------------------------------\nDEBUG: apiKey (${apiKey?.length}):\n${apiKey}\n------------------------------`
     );
     assert(apiKey, "process.env.TEST_USER_API_KEY is required");
   }
