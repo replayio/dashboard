@@ -52,6 +52,7 @@ jobs:
           AUTH0_BASE_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           NEXT_PUBLIC_APP_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           RECORD_REPLAY_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs.testRunId }}
+          TEST_USER_API_KEY: ${{ secrets.TEST_USER_API_KEY }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
