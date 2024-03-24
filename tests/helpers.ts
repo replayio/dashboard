@@ -41,6 +41,12 @@ export async function startTest({
     console.log(
       `------------------------------\nDEBUG: apiKey (${apiKey?.length}):\n${apiKey}\n------------------------------`
     );
+    console.log(
+      "Match?",
+      process.env.TEST_USER_API_KEY ===
+        "ruk_jukvxbSz7syp4Tw21RzEwSK2bjucNDklCEDmVkjbHMA"
+    );
+    apiKey = "ruk_jukvxbSz7syp4Tw21RzEwSK2bjucNDklCEDmVkjbHMA";
     assert(apiKey, "process.env.TEST_USER_API_KEY is required");
   }
 
