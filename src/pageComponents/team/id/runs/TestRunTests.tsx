@@ -54,17 +54,29 @@ export function TestRunTests({
     };
 
     tests?.forEach((test) => {
-      switch (test.status) {
-        case "failed": {
+      switch (test.recordings.length) {
+        case 0: {
+          console.log(test);
+          // A test with nor recordings should also be considered a failure
+          // TODO [SCS-2090] It's a bug that GraphQL reports this as a "passed" status in some cases
           categorizedTests.failed.tests.push(test);
           break;
         }
-        case "flaky": {
-          categorizedTests.flaky.tests.push(test);
+        default: {
+          switch (test.status) {
+            case "failed": {
+              categorizedTests.failed.tests.push(test);
+              break;
+            }
+            case "flaky": {
+              categorizedTests.flaky.tests.push(test);
+              break;
+            }
+            case "passed": {
+              categorizedTests.passed.tests.push(test);
+            }
+          }
           break;
-        }
-        case "passed": {
-          categorizedTests.passed.tests.push(test);
         }
       }
     });
