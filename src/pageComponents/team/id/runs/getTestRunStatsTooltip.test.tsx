@@ -109,4 +109,19 @@ describe("getTestRunStatsTooltip", () => {
       "166 tests failed out of 5,460 total tests"
     );
   });
+
+  it("should properly format a single failing test", () => {
+    expectToContainText(
+      getTestRunStatsTooltip(
+        createChartDataType({
+          numFailedTestRuns: 1,
+          numPassingTestRuns: 9,
+          numFailedTests: 1,
+          numPassingTests: 99,
+        })
+      ),
+      "10% of 10 test runs contained at least one failing test",
+      "1 test failed out of 100 total tests"
+    );
+  });
 });

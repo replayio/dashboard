@@ -9,7 +9,7 @@ test("test-suites-runs-02: failed run in temp branch without source", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "FAILED_IN_TEMP_BRANCH_WITHOUT_SOURCE",
+    mockKey: "FAILED_IN_TEMP_BRANCH",
     page,
     pathname: "/team/dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=/runs",
   });
@@ -136,7 +136,7 @@ test("test-suites-runs-02: failed run in temp branch without source", async ({
       .click();
     await expect(errorRows).toHaveCount(1);
     await expect(await errorRows.textContent()).toContain(
-      "This is some error message"
+      "This is an error message"
     );
   }
 });

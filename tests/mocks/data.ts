@@ -23,10 +23,7 @@ export type MockData = { [key: string]: MockGraphQLQueries };
 // so they are returned by the backend in the dashboard queries
 // but the recordings are never opened by these tests so they do not need to be refreshed.
 export const MOCK_DATA = {
-  FLAKY_IN_MAIN_WITH_SOURCE: {
-    // TODO
-  },
-  FAILED_IN_TEMP_BRANCH_WITHOUT_SOURCE: {
+  FAILED_IN_TEMP_BRANCH: {
     GetTests: mockGetTests([
       partialToTestSuiteTest({
         id: "fake-test-id-1",
@@ -47,7 +44,7 @@ export const MOCK_DATA = {
         title: "Third test",
       }),
       partialToTestSuiteTest({
-        errors: ["This is some error message"],
+        errors: ["This is an error message"],
         id: "fake-test-id-4",
         recordings: [
           partialToTestSuiteTestRecording({
@@ -62,7 +59,7 @@ export const MOCK_DATA = {
         title: "Fourth test",
       }),
       partialToTestSuiteTest({
-        errors: ["This is some error message"],
+        errors: ["This is an error message"],
         id: "fake-test-id-5",
         recordings: [
           partialToTestSuiteTestRecording({
@@ -77,6 +74,7 @@ export const MOCK_DATA = {
         title: "Fifth test",
       }),
       partialToTestSuiteTest({
+        errors: ["This is an error message"],
         id: "fake-test-id-6",
         sourcePath: undefined,
         status: "failed",
@@ -89,7 +87,7 @@ export const MOCK_DATA = {
         title: "Seventh test",
       }),
       partialToTestSuiteTest({
-        errors: ["This is some error message"],
+        errors: ["This is an error message"],
         id: "fake-test-id-8",
         recordings: [
           partialToTestSuiteTestRecording({
@@ -104,6 +102,7 @@ export const MOCK_DATA = {
         title: "Eighth test",
       }),
       partialToTestSuiteTest({
+        errors: ["This is an error message"],
         id: "fake-test-id-9",
         sourcePath: undefined,
         status: "failed",
@@ -128,7 +127,7 @@ export const MOCK_DATA = {
       user: null,
     }),
   },
-  SUCCESS_IN_MAIN_WITH_SOURCE: {
+  SUCCESS_IN_MAIN: {
     GetTests: mockGetTests([
       partialToTestSuiteTest({
         id: "fake-test-id-1",

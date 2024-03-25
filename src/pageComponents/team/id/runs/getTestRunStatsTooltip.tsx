@@ -85,7 +85,8 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
     } else {
       testLabel = (
         <div>
-          <strong>{numFailedTests.toLocaleString()}</strong> tests failed out of{" "}
+          <strong>{numFailedTests.toLocaleString()}</strong>{" "}
+          {numFailedTests === 1 ? "test" : "tests"} failed out of{" "}
           <strong>{numTestsTotal.toLocaleString()}</strong> total tests
         </div>
       );
