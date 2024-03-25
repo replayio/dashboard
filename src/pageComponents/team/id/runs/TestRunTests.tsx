@@ -109,7 +109,10 @@ export function TestRunTests({
         />
       </div>
 
-      <div className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded">
+      <div
+        className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded"
+        data-test-id="TestRunTests-Metadata"
+      >
         <div className="flex flex-row items-center gap-1">
           <Icon className="w-4 h-4" type="clock" />
           {formatRelativeTime(selectedTestRun.date)}
@@ -163,7 +166,10 @@ export function TestRunTests({
         {Object.values(categorizedTests).map(({ color, count, label, tests }) =>
           count > 0 ? (
             <Fragment key={label}>
-              <div className={`font-bold mx-2 ${color}`}>
+              <div
+                className={`font-bold mx-2 ${color}`}
+                data-test-name="TestRunTests-SectionHeader"
+              >
                 {count === 1 ? `1 ${label} test` : `${count} ${label} tests`}
               </div>
               {tests.map((test, index) => (

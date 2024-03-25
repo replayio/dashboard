@@ -7,6 +7,7 @@ import {
   TestSuiteTest,
   TestSuiteTestRecording,
 } from "@/graphql/types";
+import { getRelativeDate } from "@/utils/date";
 import {
   DocumentNode,
   NetworkStatus,
@@ -27,7 +28,7 @@ const DEFAULT_WORKSPACE_ID =
 
 const mockTestSuiteTestRecording: TestSuiteTestRecording = {
   buildId: "linux-chromium-20231223-9a98fcbda70c-953b4844d9c5",
-  createdAt: new Date("2023-12-28"),
+  createdAt: getRelativeDate({ hoursAgo: 1 }),
   duration: 0,
   id: "51ee9a7d-1599-4ceb-9237-6b07e9db6264",
   isProcessed: true,
@@ -68,13 +69,13 @@ export const MOCK_DATA: Record<MockDataKey, MockGraphQLQueries> = {
       branchName: "main",
       commitId: "1234-commit-id",
       commitTitle: "Successful run in main branch",
-      date: new Date(),
+      date: getRelativeDate({ hoursAgo: 1 }),
       groupLabel: null,
       id: "fake-id",
       isPrimaryBranch: true,
       numFailed: 0,
       numFlaky: 0,
-      numPassed: 2,
+      numPassed: 1,
       prNumber: 123,
       prTitle: "Successful Pull Request Title",
       repository: null,

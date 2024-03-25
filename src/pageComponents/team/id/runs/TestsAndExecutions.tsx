@@ -23,7 +23,7 @@ export function TestsAndExecutions({
     <>
       <div
         className="bg-slate-900 text-white p-2 rounded"
-        data-test-id="TestExecution"
+        data-test-id="TestExecution-Recordings"
       >
         <ExpandableSection label="Replays" openByDefault>
           <div className="shrink-0 -mx-2">

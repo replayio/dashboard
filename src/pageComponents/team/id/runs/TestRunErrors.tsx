@@ -32,7 +32,10 @@ export function TestRunErrors({ test }: { test: TestSuiteTest }) {
   }
 
   return (
-    <div className="bg-slate-900 text-white p-2 rounded">
+    <div
+      className="bg-slate-900 text-white p-2 rounded"
+      data-test-id="TestExecution-Errors"
+    >
       <ExpandableSection label="Errors">
         <div className="flex flex-col gap-2">
           {uniqueErrors?.map((error, index) => (

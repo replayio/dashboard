@@ -83,7 +83,9 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
           />
         ))}
       </div>
-      Failure rate: {Math.round(testRunFailureRate * 100)}%
+      <div data-test-id="TestRuns-Stats-FailureRateLabel">
+        Failure rate: {Math.round(testRunFailureRate * 100)}%
+      </div>
     </div>
   );
 }
@@ -109,6 +111,7 @@ function ChartItem({
   return (
     <div
       className="relative h-full grow max-w-10 hover:bg-gray-800 transition rounded-sm overflow-hidden"
+      data-test-name="TestRuns-Stats-DayColumn"
       onMouseEnter={onMouseEnter}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}

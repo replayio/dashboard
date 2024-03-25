@@ -90,7 +90,10 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
   }
 
   return (
-    <div className="text-sm flex flex-col gap-2">
+    <div
+      className="text-sm flex flex-col gap-2"
+      data-test-name="TestRuns-Stats-DayColumn-Tooltip"
+    >
       <div className="font-bold text-base">
         {date.toLocaleString("default", { month: "short" })} {date.getDate()}
       </div>

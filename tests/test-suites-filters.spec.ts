@@ -25,10 +25,12 @@ test("test-suites-filters: text and drop-down filtering", async ({ page }) => {
   await testRunsRows.first().click();
   await expect(testRunRows).not.toHaveCount(0);
   await expect(
-    page.locator('[data-test-id="TestExecution"]')
+    page.locator('[data-test-id="TestExecution-Recordings"]')
   ).not.toBeVisible();
   await testRunRows.first().click();
-  await expect(page.locator('[data-test-id="TestExecution"]')).toBeVisible();
+  await expect(
+    page.locator('[data-test-id="TestExecution-Recordings"]')
+  ).toBeVisible();
 
   // Should filter tests by text
   await expect(testRunRows).not.toHaveCount(0);
