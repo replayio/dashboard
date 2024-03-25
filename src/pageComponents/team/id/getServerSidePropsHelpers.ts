@@ -6,7 +6,6 @@ import { GetServerSidePropsContext } from "next";
 export async function getServerSidePropsHelpers({
   params,
   req,
-  res,
 }: GetServerSidePropsContext<{ id: string }>) {
   assert(params?.id != null, '"id" parameter is required');
 

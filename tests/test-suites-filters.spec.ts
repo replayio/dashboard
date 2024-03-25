@@ -6,7 +6,7 @@ import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 import { submitInputText } from "./utils/submitInputText";
 
-test("test-suites-library: filtering", async ({ page }) => {
+test("test-suites-filters: text and drop-down filtering", async ({ page }) => {
   await navigateToPage({
     page,
     pathname: "/team/dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=/runs",

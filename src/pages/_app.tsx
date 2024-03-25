@@ -13,25 +13,31 @@ import "../global.css";
 type PageProps = {
   accessToken: string;
   accessTokenSource: string;
+  mockKey: string;
 };
 
 export default class MyApp extends App<AppProps<PageProps>> {
   accessToken: string;
   accessTokenSource: string;
+  mockKey: string;
 
   constructor(context: AppProps<PageProps>) {
     super(context);
 
     this.accessToken = context.pageProps.accessToken;
     this.accessTokenSource = context.pageProps.accessTokenSource;
+    this.mockKey = context.pageProps.mockKey;
   }
 
   static getInitialProps = async (context: AppContext) => {
     const accessToken = context.ctx.req?.headers?.[HEADERS.accessToken];
     const accessTokenSource =
       context.ctx.req?.headers?.[HEADERS.accessTokenSource];
+    const mockKey = context.ctx.req?.headers?.[HEADERS.mockKey];
 
-    return { pageProps: { accessToken, accessTokenSource } };
+    return {
+      pageProps: { accessToken, accessTokenSource, mockKey: mockKey || "" },
+    };
   };
 
   componentDidMount(): void {

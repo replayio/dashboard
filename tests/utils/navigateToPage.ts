@@ -2,13 +2,16 @@ import { Page } from "@playwright/test";
 import assert from "assert";
 import chalk from "chalk";
 import { debugPrint } from "./debugPrint";
+import { MockDataKey } from "../mocks/data";
 
 export async function navigateToPage({
   apiKey,
+  mockKey,
   page,
   pathname,
 }: {
   apiKey?: string;
+  mockKey?: MockDataKey;
   page: Page;
   pathname: string;
 }) {
@@ -26,8 +29,15 @@ export async function navigateToPage({
     host = host.slice(0, -1);
   }
 
-  const url = `${host}/${pathname}?e2e=1&apiKey=${apiKey}`;
+  const url = new URL(`${host}/${pathname}`);
+  url.searchParams.set("e2e", "1");
+  if (apiKey) {
+    url.searchParams.set("apiKey", apiKey);
+  }
+  if (mockKey) {
+    url.searchParams.set("mockKey", mockKey);
+  }
 
   await debugPrint(page, `Navigating to ${chalk.bold(url)}`, "navigateToPage");
-  await page.goto(url);
+  await page.goto(url.toString());
 }
