@@ -3,6 +3,7 @@ import { navigateToPage } from "./utils/navigateToPage";
 import { getTestRunsRow } from "./utils/getTestRunsRow";
 import { openContextMenu } from "./utils/openContextMenu";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
+import { getTestRunSections } from "./utils/getTestRunSections";
 
 test("test-suites-runs-01: passed run in main branch with source", async ({
   page,
@@ -34,7 +35,10 @@ test("test-suites-runs-01: passed run in main branch with source", async ({
     const tooltip = page.locator(
       '[data-test-name="TestRuns-Stats-DayColumn-Tooltip"]'
     );
-    await expect(await tooltip.textContent()).toContain("1 test run passed");
+
+    const tooltipText = await tooltip.textContent();
+    await expect(tooltipText).toContain("1 test run passed");
+    await expect(tooltipText).toContain("All 2 tests passed");
 
     await openContextMenu(page, "TestRuns-RunStatusFilter");
     await getContextMenuItem(page, "Only failures").click();
@@ -50,32 +54,28 @@ test("test-suites-runs-01: passed run in main branch with source", async ({
   {
     // Tests (2st column)
 
-    const header = page.locator(
-      '[data-test-name="TestRunTests-SectionHeader"]'
-    );
-    await expect(header).toHaveCount(1);
-    await expect(await header.textContent()).toContain("1 Passed test");
+    const sections = getTestRunSections(page);
+    await expect(sections).toHaveCount(1);
+    const passedSection = getTestRunSections(page, "Passed");
+    await expect(await passedSection.textContent()).toContain("2 Passed tests");
 
     const rows = page.locator('[data-test-name="TestRunTests-Row"]');
-    await expect(rows).toHaveCount(1);
-    await expect(await rows.textContent()).toContain("First test");
+    await expect(rows).toHaveCount(0);
+    await sections
+      .locator('[data-test-name="ExpandableSection-ToggleButton"]')
+      .click();
+    await expect(rows).toHaveCount(2);
+    await expect(await rows.first().textContent()).toContain("First test");
+    await expect(await rows.last().textContent()).toContain("Second test");
 
     const metadata = page.locator('[data-test-id="TestRunTests-Metadata"]');
     const metadataText = await metadata.textContent();
     expect(metadataText).toContain("1h");
     expect(metadataText).toContain("test-user-trigger");
     expect(metadataText).toContain("main");
-    expect(metadataText).toContain("100.0ms");
+    expect(metadataText).toContain("200.0ms");
 
-    await openContextMenu(page, "TestRun-StatusFilter");
-    await getContextMenuItem(page, "Failed and flaky").click();
-    await expect(rows).toHaveCount(0);
-
-    await openContextMenu(page, "TestRun-StatusFilter");
-    await getContextMenuItem(page, "All runs").click();
-    await expect(rows).toHaveCount(1);
-
-    await rows.click();
+    await rows.first().click();
   }
 
   {

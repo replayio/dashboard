@@ -5,12 +5,15 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
   const {
     date,
     numFailedTestRuns,
+    numFlakyTestRuns,
     numPassingTestRuns,
     numFailedTests,
+    numFlakyTests,
     numPassingTests,
   } = chartData;
 
-  const numRunsTotal = numFailedTestRuns + numPassingTestRuns;
+  const numRunsTotal =
+    numFailedTestRuns + numFlakyTestRuns + numPassingTestRuns;
 
   let testRunLabel = null;
   let testLabel = null;
@@ -64,7 +67,7 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
       );
     }
 
-    const numTestsTotal = numFailedTests + numPassingTests;
+    const numTestsTotal = numFailedTests + numFlakyTests + numPassingTests;
     if (numTestsTotal === 0) {
       // Redundant with no test runs
     } else if (numFailedTests === 0) {

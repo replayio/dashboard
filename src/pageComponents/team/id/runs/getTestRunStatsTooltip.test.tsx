@@ -8,8 +8,10 @@ function createChartDataType(data: Partial<TestRunStatsData>) {
   return {
     date: new Date("2000-01-01"),
     numFailedTestRuns: 0,
+    numFlakyTestRuns: 0,
     numPassingTestRuns: 0,
     numFailedTests: 0,
+    numFlakyTests: 0,
     numPassingTests: 0,
     ...data,
   };

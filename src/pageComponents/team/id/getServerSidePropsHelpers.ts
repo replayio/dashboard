@@ -20,8 +20,6 @@ export async function getServerSidePropsHelpers({
       workspaceId: params.id,
     };
   } catch (error) {
-    console.log(error);
-
     return {
       invalidWorkspace: true,
       isTest: false,

@@ -21,34 +21,158 @@ import {
 // so they are returned by the backend in the dashboard queries
 // but the recordings are never opened by these tests so they do not need to be refreshed.
 
-export type MockDataKey = "SUCCESS_IN_MAIN_WITH_SOURCE";
-
 const DEFAULT_WORKSPACE_ID =
   "dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=";
 
-const mockTestSuiteTestRecording: TestSuiteTestRecording = {
-  buildId: "linux-chromium-20231223-9a98fcbda70c-953b4844d9c5",
-  createdAt: getRelativeDate({ hoursAgo: 1 }),
-  duration: 0,
-  id: "51ee9a7d-1599-4ceb-9237-6b07e9db6264",
-  isProcessed: true,
-  numComments: 0,
-};
-
-export type MockGraphQLQueries = {
+type MockGraphQLQueries = {
   GetTests?: GetTestsQuery;
   GetTestsRunsForWorkspace?: GetTestsRunsForWorkspaceQuery;
 };
-export type MockGraphQLQueryKey = keyof MockGraphQLQueries;
+type MockGraphQLQueryKey = keyof MockGraphQLQueries;
+type MockData = { [key: string]: MockGraphQLQueries };
 
-export const MOCK_DATA: Record<MockDataKey, MockGraphQLQueries> = {
+export const MOCK_DATA = {
+  FAILED_IN_TEMP_BRANCH_WITHOUT_SOURCE: {
+    GetTests: mockGetTests([
+      {
+        id: "fake-test-id-1",
+        scope: [],
+        title: "First test",
+        sourcePath: "cypress/e2e/root-spec.ts",
+        status: "passed",
+        errors: null,
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
+      },
+      {
+        id: "fake-test-id-2",
+        scope: [],
+        title: "Second test",
+        sourcePath: "cypress/e2e/auth/comment-spec.ts",
+        status: "passed",
+        errors: null,
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
+      },
+      {
+        id: "fake-test-id-3",
+        scope: [],
+        title: "Third test",
+        sourcePath: "cypress/e2e/auth/profile-spec.ts",
+        status: "passed",
+        errors: null,
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
+      },
+      {
+        id: "fake-test-id-4",
+        scope: [],
+        title: "Fourth test",
+        sourcePath: "fourth-spec.ts",
+        status: "flaky",
+        errors: ["This is some error message"],
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+          partialTestSuiteTestRecording("227f62ce-ecc1-4a10-ad59-3948b1a8952f"),
+        ],
+      },
+      {
+        id: "fake-test-id-5",
+        scope: [],
+        title: "Fifth test",
+        sourcePath: "fifth-test.ts",
+        status: "flaky",
+        errors: ["This is some error message"],
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+          partialTestSuiteTestRecording("227f62ce-ecc1-4a10-ad59-3948b1a8952f"),
+        ],
+      },
+      {
+        id: "fake-test-id-6",
+        scope: [],
+        title: "Sixth test",
+        sourcePath: "sixth-test.ts",
+        status: "failed",
+        errors: ["This is some error message"],
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
+      },
+      {
+        id: "fake-test-id-7",
+        scope: [],
+        title: "Seventh test",
+        sourcePath: "cypress-spec.ts",
+        status: "passed",
+        errors: null,
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
+      },
+      {
+        id: "fake-test-id-8",
+        scope: [],
+        title: "Eighth test",
+        sourcePath: "cypress-spec.ts",
+        status: "flaky",
+        errors: ["This is some error message"],
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+          partialTestSuiteTestRecording("227f62ce-ecc1-4a10-ad59-3948b1a8952f"),
+        ],
+      },
+      {
+        id: "fake-test-id-9",
+        scope: [],
+        title: "Ninth test",
+        sourcePath: "cypress-spec.ts",
+        status: "failed",
+        errors: ["This is some error message"],
+        durationMs: 100,
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
+      },
+    ]),
+    GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
+      branchName: "temp",
+      commitId: "fake-commit-id",
+      commitTitle: "Failed run in temp branch",
+      date: getRelativeDate({ hoursAgo: 1 }),
+      groupLabel: null,
+      id: "fake-test-run-id",
+      isPrimaryBranch: false,
+      numFailed: 2,
+      numFlaky: 3,
+      numPassed: 4,
+      prNumber: 123,
+      prTitle: "Pull Request Title",
+      repository: null,
+      triggerUrl: "https://fake-trigger-url.com",
+      user: null,
+    }),
+  },
   SUCCESS_IN_MAIN_WITH_SOURCE: {
     GetTests: mockGetTests([
       {
         durationMs: 100,
         errors: null,
-        id: "first-test-id",
-        recordings: [mockTestSuiteTestRecording],
+        id: "fake-test-id-1",
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
         scope: [],
         sourcePath: "first-test.ts",
         status: "passed",
@@ -57,8 +181,10 @@ export const MOCK_DATA: Record<MockDataKey, MockGraphQLQueries> = {
       {
         durationMs: 100,
         errors: null,
-        id: "second-test-id",
-        recordings: [mockTestSuiteTestRecording],
+        id: "fake-test-id-2",
+        recordings: [
+          partialTestSuiteTestRecording("51ee9a7d-1599-4ceb-9237-6b07e9db6264"),
+        ],
         scope: [],
         sourcePath: "second-test.ts",
         status: "passed",
@@ -67,23 +193,25 @@ export const MOCK_DATA: Record<MockDataKey, MockGraphQLQueries> = {
     ]),
     GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
       branchName: "main",
-      commitId: "1234-commit-id",
+      commitId: "fake-commit-id",
       commitTitle: "Successful run in main branch",
       date: getRelativeDate({ hoursAgo: 1 }),
       groupLabel: null,
-      id: "fake-id",
+      id: "fake-test-run-id",
       isPrimaryBranch: true,
       numFailed: 0,
       numFlaky: 0,
-      numPassed: 1,
-      prNumber: 123,
-      prTitle: "Successful Pull Request Title",
+      numPassed: 2,
+      prNumber: null,
+      prTitle: null,
       repository: null,
-      triggerUrl: "http://example.com",
+      triggerUrl: "https://fake-trigger-url.com",
       user: "test-user-trigger",
     }),
   },
-};
+} satisfies MockData;
+
+export type MockDataKey = keyof typeof MOCK_DATA;
 
 export function getMockData<Query>(
   mockKey: MockDataKey | null,
@@ -96,7 +224,9 @@ export function getMockData<Query>(
     const definition = query.definitions[0];
     if (definition && "name" in definition && definition.name) {
       const queryName = definition.name.value;
-      const mockData = mockQueries[queryName as MockGraphQLQueryKey];
+      const mockData = (mockQueries as MockData)[
+        queryName as MockGraphQLQueryKey
+      ];
       if (mockData) {
         return {
           data: mockData as any,
@@ -174,12 +304,12 @@ function mockGetTests(
       id: workspaceId,
       testRuns: {
         __typename: "TestRunConnection",
-        edges: tests.map((test) => ({
-          __typename: "TestRunEdge",
-          node: {
-            __typename: "TestRun",
-            tests: [
-              {
+        edges: [
+          {
+            __typename: "TestRunEdge",
+            node: {
+              __typename: "TestRun",
+              tests: tests.map((test) => ({
                 __typename: "TestRunTest",
                 testId: test.id,
                 title: test.title,
@@ -188,7 +318,7 @@ function mockGetTests(
                 result: test.status,
                 errors: test.errors,
                 durationMs: test.durationMs,
-                executions: test.recordings.map((recording) => {
+                executions: test.recordings.map((recording, index) => {
                   let result;
                   switch (test.status) {
                     case "passed":
@@ -198,7 +328,10 @@ function mockGetTests(
                       result = "failed";
                       break;
                     case "flaky":
-                      result = "passed";
+                      result =
+                        index === test.recordings.length - 1
+                          ? "passed"
+                          : "failed";
                       break;
                   }
 
@@ -220,11 +353,26 @@ function mockGetTests(
                     ],
                   };
                 }),
-              },
-            ],
+              })),
+            },
           },
-        })),
+        ],
       },
     },
+  };
+}
+
+function partialTestSuiteTestRecording(
+  id: string,
+  partial: Omit<Partial<TestSuiteTestRecording>, "id"> = {}
+): TestSuiteTestRecording {
+  return {
+    buildId: "linux-chromium-20231223-9a98fcbda70c-953b4844d9c5",
+    createdAt: getRelativeDate({ hoursAgo: 1 }),
+    duration: 0,
+    isProcessed: true,
+    numComments: 0,
+    id,
+    ...partial,
   };
 }

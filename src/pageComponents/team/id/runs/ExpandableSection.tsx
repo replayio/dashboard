@@ -16,6 +16,7 @@ export function ExpandableSection({
       <div className="flex flex-row items-center gap-2">
         <div className="truncate grow font-bold">{label}</div>
         <IconButton
+          data-test-name="ExpandableSection-ToggleButton"
           iconType={open ? "drop-down-caret-down" : "drop-down-caret-left"}
           onClick={() => setOpen(!open)}
         />

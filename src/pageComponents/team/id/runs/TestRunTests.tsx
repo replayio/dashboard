@@ -5,6 +5,7 @@ import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestStatusCapsule } from "@/components/TestStatusCapsule";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import { TestRunTestRow } from "@/pageComponents/team/id/runs/TestRunTestRow";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { TEST_STATUS } from "@/pageComponents/team/id/runs/constants";
@@ -162,25 +163,38 @@ export function TestRunTests({
         )}
       </div>
 
-      <div className="overflow-auto -mx-2">
+      <div className="flex flex-col gap-2 overflow-auto">
         {Object.values(categorizedTests).map(({ color, count, label, tests }) =>
-          count > 0 ? (
-            <Fragment key={label}>
-              <div
-                className={`font-bold mx-2 ${color}`}
-                data-test-name="TestRunTests-SectionHeader"
+          tests.length > 0 ? (
+            <div
+              className="bg-slate-900 text-white p-2 rounded"
+              data-test-name="TestRunTests-Section"
+              data-test-id={`TestRunTests-Section-${label}`}
+              key={label}
+            >
+              <ExpandableSection
+                label={
+                  <div
+                    className={`font-bold mx-2 ${color}`}
+                    data-test-name="TestRunTests-Section-Header"
+                  >
+                    {count === 1
+                      ? `1 ${label} test`
+                      : `${count} ${label} tests`}
+                  </div>
+                }
+                openByDefault={label !== "Passed"}
               >
-                {count === 1 ? `1 ${label} test` : `${count} ${label} tests`}
-              </div>
-              {tests.map((test, index) => (
-                <TestRunTestRow
-                  currentTestId={selectedTestId}
-                  key={index}
-                  selectTest={selectTest}
-                  test={test}
-                />
-              ))}
-            </Fragment>
+                {tests.map((test, index) => (
+                  <TestRunTestRow
+                    currentTestId={selectedTestId}
+                    key={index}
+                    selectTest={selectTest}
+                    test={test}
+                  />
+                ))}
+              </ExpandableSection>
+            </div>
           ) : null
         )}
       </div>

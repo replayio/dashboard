@@ -41,6 +41,7 @@ export function TestRunErrors({ test }: { test: TestSuiteTest }) {
           {uniqueErrors?.map((error, index) => (
             <div
               className="flex flex-col gap-2 bg-rose-950 text-white p-2 rounded shrink-0"
+              data-test-name="TestExecution-Error-Row"
               key={index}
             >
               <div className="flex flex-row gap-2 items-center overflow-hidden">

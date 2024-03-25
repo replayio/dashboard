@@ -16,7 +16,6 @@ export function ShareDialog({
   recording: WorkspaceRecording;
 }) {
   const { collaborators } = useRecordingCollaborators(recording.uuid);
-  console.log(recording);
 
   const [email, setEmail] = useState("");
 

@@ -10,6 +10,8 @@ export type TestRunStatsData = {
   date: Date;
   numFailedTests: number;
   numFailedTestRuns: number;
+  numFlakyTests: number;
+  numFlakyTestRuns: number;
   numPassingTests: number;
   numPassingTestRuns: number;
 };
@@ -35,6 +37,8 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
           date: getRelativeDate({ daysAgo: currentDateIndex + 1 }),
           numFailedTests: 0,
           numFailedTestRuns: 0,
+          numFlakyTests: 0,
+          numFlakyTestRuns: 0,
           numPassingTests: 0,
           numPassingTestRuns: 0,
         };
@@ -48,12 +52,15 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
     assert(currentData != null);
 
     currentData.numFailedTests += testRun.numFailed;
+    currentData.numFlakyTests += testRun.numFlaky;
     currentData.numPassingTests += testRun.numPassed;
 
     if (testRun.numFailed > 0) {
       // A test run containing a single failing test is a failed test run
       numFailedTestRuns++;
       currentData.numFailedTestRuns++;
+    } else if (testRun.numFlaky > 0) {
+      currentData.numFlakyTestRuns++;
     } else {
       currentData.numPassingTestRuns++;
     }
