@@ -8,8 +8,10 @@ function createChartDataType(data: Partial<TestRunStatsData>) {
   return {
     date: new Date("2000-01-01"),
     numFailedTestRuns: 0,
+    numFlakyTestRuns: 0,
     numPassingTestRuns: 0,
     numFailedTests: 0,
+    numFlakyTests: 0,
     numPassingTests: 0,
     ...data,
   };
@@ -38,6 +40,32 @@ describe("getTestRunStatsTooltip", () => {
     expectToContainText(
       getTestRunStatsTooltip(createChartDataType({})),
       "No tests were run on this day"
+    );
+  });
+
+  it("should handle a day with only one failed test run", () => {
+    expectToContainText(
+      getTestRunStatsTooltip(
+        createChartDataType({
+          numFailedTestRuns: 1,
+          numFailedTests: 1,
+        })
+      ),
+      "1 test run failed",
+      "All 1 tests failed"
+    );
+  });
+
+  it("should handle a day with only one passing test run", () => {
+    expectToContainText(
+      getTestRunStatsTooltip(
+        createChartDataType({
+          numPassingTestRuns: 1,
+          numPassingTests: 1,
+        })
+      ),
+      "1 test run passed",
+      "All 1 tests passed"
     );
   });
 
@@ -79,6 +107,21 @@ describe("getTestRunStatsTooltip", () => {
       ),
       "22% of 51 test runs contained at least one failing test",
       "166 tests failed out of 5,460 total tests"
+    );
+  });
+
+  it("should properly format a single failing test", () => {
+    expectToContainText(
+      getTestRunStatsTooltip(
+        createChartDataType({
+          numFailedTestRuns: 1,
+          numPassingTestRuns: 9,
+          numFailedTests: 1,
+          numPassingTests: 99,
+        })
+      ),
+      "10% of 10 test runs contained at least one failing test",
+      "1 test failed out of 100 total tests"
     );
   });
 });

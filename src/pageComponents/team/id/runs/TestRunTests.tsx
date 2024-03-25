@@ -5,6 +5,7 @@ import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { TestStatusCapsule } from "@/components/TestStatusCapsule";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import { TestRunTestRow } from "@/pageComponents/team/id/runs/TestRunTestRow";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { TEST_STATUS } from "@/pageComponents/team/id/runs/constants";
@@ -53,17 +54,28 @@ export function TestRunTests({
     };
 
     tests?.forEach((test) => {
-      switch (test.status) {
-        case "failed": {
+      switch (test.recordings.length) {
+        case 0: {
+          // A test with nor recordings should also be considered a failure
+          // TODO [SCS-2090] It's a bug that GraphQL reports this as a "passed" status in some cases
           categorizedTests.failed.tests.push(test);
           break;
         }
-        case "flaky": {
-          categorizedTests.flaky.tests.push(test);
+        default: {
+          switch (test.status) {
+            case "failed": {
+              categorizedTests.failed.tests.push(test);
+              break;
+            }
+            case "flaky": {
+              categorizedTests.flaky.tests.push(test);
+              break;
+            }
+            case "passed": {
+              categorizedTests.passed.tests.push(test);
+            }
+          }
           break;
-        }
-        case "passed": {
-          categorizedTests.passed.tests.push(test);
         }
       }
     });
@@ -79,7 +91,7 @@ export function TestRunTests({
   return (
     <>
       {isLoadingTests && <LoadingProgressBar />}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2" data-test-id="TestRunTests-Filters">
         <div className="flex flex-row gap-2 items-center">
           <div className="grow">
             <DropDownMenu
@@ -109,7 +121,10 @@ export function TestRunTests({
         />
       </div>
 
-      <div className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded">
+      <div
+        className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded"
+        data-test-id="TestRunTests-Metadata"
+      >
         <div className="flex flex-row items-center gap-1">
           <Icon className="w-4 h-4" type="clock" />
           {formatRelativeTime(selectedTestRun.date)}
@@ -159,22 +174,38 @@ export function TestRunTests({
         )}
       </div>
 
-      <div className="overflow-auto -mx-2">
+      <div className="flex flex-col gap-2 overflow-auto">
         {Object.values(categorizedTests).map(({ color, count, label, tests }) =>
-          count > 0 ? (
-            <Fragment key={label}>
-              <div className={`font-bold mx-2 ${color}`}>
-                {count === 1 ? `1 ${label} test` : `${count} ${label} tests`}
-              </div>
-              {tests.map((test, index) => (
-                <TestRunTestRow
-                  currentTestId={selectedTestId}
-                  key={index}
-                  selectTest={selectTest}
-                  test={test}
-                />
-              ))}
-            </Fragment>
+          tests.length > 0 ? (
+            <div
+              className="bg-slate-900 text-white p-2 rounded"
+              data-test-name="TestRunTests-Section"
+              data-test-id={`TestRunTests-Section-${label}`}
+              key={label}
+            >
+              <ExpandableSection
+                label={
+                  <div
+                    className={`font-bold mx-2 ${color}`}
+                    data-test-name="TestRunTests-Section-Header"
+                  >
+                    {count === 1
+                      ? `1 ${label} test`
+                      : `${count} ${label} tests`}
+                  </div>
+                }
+                openByDefault={label !== "Passed"}
+              >
+                {tests.map((test, index) => (
+                  <TestRunTestRow
+                    currentTestId={selectedTestId}
+                    key={index}
+                    selectTest={selectTest}
+                    test={test}
+                  />
+                ))}
+              </ExpandableSection>
+            </div>
           ) : null
         )}
       </div>

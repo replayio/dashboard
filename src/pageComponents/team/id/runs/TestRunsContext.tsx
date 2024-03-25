@@ -143,6 +143,7 @@ export function ContextRoot({
     workspaceId,
     startDate
   );
+
   const filteredTestRuns = useMemo(() => {
     return testRuns?.filter((testRun) =>
       filterTestRun(testRun, {

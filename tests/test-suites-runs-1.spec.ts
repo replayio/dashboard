@@ -6,7 +6,7 @@ import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 import { submitInputText } from "./utils/submitInputText";
 
-test("test-suites-library: filtering", async ({ page }) => {
+test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
   await navigateToPage({
     page,
     pathname: "/team/dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=/runs",
@@ -25,10 +25,12 @@ test("test-suites-library: filtering", async ({ page }) => {
   await testRunsRows.first().click();
   await expect(testRunRows).not.toHaveCount(0);
   await expect(
-    page.locator('[data-test-id="TestExecution"]')
+    page.locator('[data-test-id="TestExecution-Recordings"]')
   ).not.toBeVisible();
   await testRunRows.first().click();
-  await expect(page.locator('[data-test-id="TestExecution"]')).toBeVisible();
+  await expect(
+    page.locator('[data-test-id="TestExecution-Recordings"]')
+  ).toBeVisible();
 
   // Should filter tests by text
   await expect(testRunRows).not.toHaveCount(0);

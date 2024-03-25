@@ -19,6 +19,7 @@ export function TestStatusCapsule({
       className={`shrink-0 flex items-center justify-center w-6 h-6 rounded-md text-xs ${getBackgroundColorClassName(
         status
       )} ${className}`}
+      data-test-name={`TestStatusCapsule-${status}`}
     >
       {count}
     </div>

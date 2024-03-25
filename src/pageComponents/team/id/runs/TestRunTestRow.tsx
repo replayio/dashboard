@@ -15,10 +15,10 @@ export function TestRunTestRow({
 
   return (
     <Component
-      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 outline-0 ${
+      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap px-2 py-1 outline-0 ${
         isActive
-          ? "bg-slate-700 cursor-default"
-          : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
+          ? "text-sky-500 cursor-default"
+          : "focus:text-sky-500 hover:text-sky-500 cursor-pointer text-white"
       }`}
       data-test-name="TestRunTests-Row"
       onClick={() => selectTest(test.id)}

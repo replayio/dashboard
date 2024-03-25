@@ -9,6 +9,7 @@ export const COOKIES = {
 export const HEADERS = {
   accessToken: "x-access-token",
   accessTokenSource: "x-access-token-source",
+  mockKey: "x-mock-key",
   userAgent: "x-user-agent",
 };
 

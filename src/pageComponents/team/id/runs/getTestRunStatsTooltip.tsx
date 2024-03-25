@@ -5,12 +5,15 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
   const {
     date,
     numFailedTestRuns,
+    numFlakyTestRuns,
     numPassingTestRuns,
     numFailedTests,
+    numFlakyTests,
     numPassingTests,
   } = chartData;
 
-  const numRunsTotal = numFailedTestRuns + numPassingTestRuns;
+  const numRunsTotal =
+    numFailedTestRuns + numFlakyTestRuns + numPassingTestRuns;
 
   let testRunLabel = null;
   let testLabel = null;
@@ -20,18 +23,35 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
     const numRunsTotal = numFailedTestRuns + numPassingTestRuns;
 
     if (numFailedTestRuns === 0) {
-      testRunLabel = (
-        <div>
-          All <strong>{numRunsTotal.toLocaleString()}</strong> test runs passed
-        </div>
-      );
+      if (numRunsTotal === 1) {
+        testRunLabel = (
+          <div>
+            <strong>1</strong> test run passed
+          </div>
+        );
+      } else {
+        testRunLabel = (
+          <div>
+            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
+            passed
+          </div>
+        );
+      }
     } else if (numPassingTestRuns === 0) {
-      testRunLabel = (
-        <div>
-          All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
-          contained at least one failing test
-        </div>
-      );
+      if (numRunsTotal === 1) {
+        testRunLabel = (
+          <div>
+            <strong>1</strong> test run failed
+          </div>
+        );
+      } else {
+        testRunLabel = (
+          <div>
+            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
+            contained at least one failing test
+          </div>
+        );
+      }
     } else {
       const percentage =
         numRunsTotal === 0
@@ -47,7 +67,7 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
       );
     }
 
-    const numTestsTotal = numFailedTests + numPassingTests;
+    const numTestsTotal = numFailedTests + numFlakyTests + numPassingTests;
     if (numTestsTotal === 0) {
       // Redundant with no test runs
     } else if (numFailedTests === 0) {
@@ -65,7 +85,8 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
     } else {
       testLabel = (
         <div>
-          <strong>{numFailedTests.toLocaleString()}</strong> tests failed out of{" "}
+          <strong>{numFailedTests.toLocaleString()}</strong>{" "}
+          {numFailedTests === 1 ? "test" : "tests"} failed out of{" "}
           <strong>{numTestsTotal.toLocaleString()}</strong> total tests
         </div>
       );
@@ -73,7 +94,10 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
   }
 
   return (
-    <div className="text-sm flex flex-col gap-2">
+    <div
+      className="text-sm flex flex-col gap-2"
+      data-test-name="TestRuns-Stats-DayColumn-Tooltip"
+    >
       <div className="font-bold text-base">
         {date.toLocaleString("default", { month: "short" })} {date.getDate()}
       </div>

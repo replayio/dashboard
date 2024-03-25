@@ -58,6 +58,12 @@ export async function middleware(request: NextRequest) {
     response.headers.set(HEADERS.accessTokenSource, accessTokenSource);
   }
 
+  const url = new URL(request.nextUrl);
+  const mockKey = url.searchParams.get("mockKey");
+  if (mockKey) {
+    response.headers.set(HEADERS.mockKey, mockKey);
+  }
+
   return response;
 }
 
