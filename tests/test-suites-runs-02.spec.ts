@@ -50,6 +50,23 @@ test("test-suites-runs-02: failed run in temp branch without source", async ({
   {
     // Tests (2st column)
 
+    const filters = page.locator('[data-test-id="TestRunTests-Filters"]');
+    await expect(
+      await filters
+        .locator('[data-test-name="TestStatusCapsule-failed"]')
+        .textContent()
+    ).toBe("2");
+    await expect(
+      await filters
+        .locator('[data-test-name="TestStatusCapsule-flaky"]')
+        .textContent()
+    ).toBe("3");
+    await expect(
+      await filters
+        .locator('[data-test-name="TestStatusCapsule-passed"]')
+        .textContent()
+    ).toBe("4");
+
     const headers = getTestRunSections(page);
     await expect(headers).toHaveCount(3);
 

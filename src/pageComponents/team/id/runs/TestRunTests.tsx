@@ -91,7 +91,7 @@ export function TestRunTests({
   return (
     <>
       {isLoadingTests && <LoadingProgressBar />}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2" data-test-id="TestRunTests-Filters">
         <div className="flex flex-row gap-2 items-center">
           <div className="grow">
             <DropDownMenu

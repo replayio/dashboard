@@ -12,7 +12,7 @@ import {
 } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
-import { getMockData } from "../../tests/mocks/data";
+import { getMockData } from "../../tests/mocks/getMockData";
 
 export function useGraphQLQuery<
   Query,

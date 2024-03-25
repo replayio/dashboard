@@ -54,6 +54,19 @@ test("test-suites-runs-01: passed run in main branch with source", async ({
   {
     // Tests (2st column)
 
+    const filters = page.locator('[data-test-id="TestRunTests-Filters"]');
+    await expect(
+      filters.locator('[data-test-name="TestStatusCapsule-failed"]')
+    ).not.toBeVisible();
+    await expect(
+      filters.locator('[data-test-name="TestStatusCapsule-flaky"]')
+    ).not.toBeVisible();
+    await expect(
+      await filters
+        .locator('[data-test-name="TestStatusCapsule-passed"]')
+        .textContent()
+    ).toBe("2");
+
     const sections = getTestRunSections(page);
     await expect(sections).toHaveCount(1);
     const passedSection = getTestRunSections(page, "Passed");
