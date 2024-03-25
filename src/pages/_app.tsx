@@ -9,6 +9,7 @@ import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
+import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 
 type PageProps = {
   accessToken: string;
@@ -50,18 +51,20 @@ export default class MyApp extends App<AppProps<PageProps>> {
   }
 
   render() {
-    const { accessToken, props } = this;
+    const { accessToken, mockKey, props } = this;
     const { Component, pageProps } = props;
 
     assert("Layout" in Component, "Page.Layout is required");
     const Layout = Component.Layout as ComponentType<PropsWithChildren>;
 
     let children = (
-      <SessionContextProvider accessToken={accessToken}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </SessionContextProvider>
+      <EndToEndTestContextProvider mockKey={mockKey}>
+        <SessionContextProvider accessToken={accessToken}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </SessionContextProvider>
+      </EndToEndTestContextProvider>
     );
 
     const isAuthenticated = !!accessToken;

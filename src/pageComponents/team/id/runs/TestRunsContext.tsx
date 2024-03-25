@@ -26,12 +26,6 @@ import {
   useState,
   useTransition,
 } from "react";
-import {
-  MOCK_DATA,
-  MockDataKey,
-  getMockTestRuns,
-  getMockTests,
-} from "../../../../../tests/mocks/data";
 
 export type Filters = {
   runsBranch: Branch;
@@ -60,11 +54,9 @@ export const RunsViewContext = createContext<
 export function ContextRoot({
   children,
   filters,
-  mockKey,
   workspaceId,
 }: PropsWithChildren & {
   filters: Partial<Filters> | null;
-  mockKey: MockDataKey | null;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
@@ -147,12 +139,10 @@ export function ContextRoot({
       break;
   }
 
-  const { isLoading: isLoadingTestRuns, testRuns: testRunsFromGraphQL } =
-    useTestSuiteTestRuns(workspaceId, startDate);
-
-  // TODO Could I mock this lower level? Maybe at ths GraphQL client level or something?
-  // Inject mock data for e2e tests
-  const testRuns = mockKey ? getMockTestRuns(mockKey) : testRunsFromGraphQL;
+  const { isLoading: isLoadingTestRuns, testRuns } = useTestSuiteTestRuns(
+    workspaceId,
+    startDate
+  );
 
   const filteredTestRuns = useMemo(() => {
     return testRuns?.filter((testRun) =>
@@ -165,12 +155,10 @@ export function ContextRoot({
     );
   }, [runsBranch, runsFilterText, runsStatus, testRuns]);
 
-  const { isLoading: isLoadingTests, tests: testsFromGraphQL } =
-    useTestSuiteTests(workspaceId, selectedTestRunId);
-
-  // TODO Could I mock this lower level? Maybe at ths GraphQL client level or something?
-  // Inject mock data for e2e tests
-  const tests = mockKey ? getMockTests(mockKey) : testsFromGraphQL;
+  const { isLoading: isLoadingTests, tests } = useTestSuiteTests(
+    workspaceId,
+    selectedTestRunId
+  );
 
   const filteredTests = useMemo(() => {
     return tests

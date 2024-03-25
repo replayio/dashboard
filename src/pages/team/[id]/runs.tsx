@@ -1,4 +1,4 @@
-import { COOKIES, HEADERS } from "@/constants";
+import { COOKIES } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/pageComponents/team/id/getServerSidePropsHelpers";
 import {
@@ -8,21 +8,15 @@ import {
 import { TestSuiteRunsPage } from "@/pageComponents/team/id/runs/TestSuiteRunsPage";
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { MockDataKey } from "../../../../tests/mocks/data";
 
 export default function Page({
   filters,
-  mockKey,
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
 
   return (
-    <ContextRoot
-      filters={filters!}
-      mockKey={mockKey}
-      workspaceId={workspaceId!}
-    >
+    <ContextRoot filters={filters!} workspaceId={workspaceId!}>
       <TestSuiteRunsPage />
     </ContextRoot>
   );
@@ -41,9 +35,6 @@ export async function getServerSideProps(
   const { invalidWorkspace, isTest, workspaceId } =
     await getServerSidePropsShared(context);
 
-  const mockKey = (context.req?.headers?.[HEADERS.mockKey] ||
-    "") as MockDataKey;
-
   if (invalidWorkspace) {
     return {
       redirect: {
@@ -52,7 +43,6 @@ export async function getServerSideProps(
       },
       props: {
         filters,
-        mockKey,
         workspaceId,
       },
     };
@@ -64,7 +54,6 @@ export async function getServerSideProps(
       },
       props: {
         filters,
-        mockKey,
         workspaceId,
       },
     };
@@ -73,7 +62,6 @@ export async function getServerSideProps(
   return {
     props: {
       filters,
-      mockKey,
       workspaceId,
     },
   };
