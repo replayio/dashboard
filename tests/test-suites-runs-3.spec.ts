@@ -5,7 +5,7 @@ import { getTestRunsRow } from "./utils/getTestRunsRow";
 import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 
-test("test-suites-runs-02: failed run in temp branch without source", async ({
+test("test-suites-runs-3: failed run in temp branch without source", async ({
   page,
 }) => {
   await navigateToPage({

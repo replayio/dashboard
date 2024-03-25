@@ -5,7 +5,7 @@ import { openContextMenu } from "./utils/openContextMenu";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestRunSections } from "./utils/getTestRunSections";
 
-test("test-suites-runs-01: passed run in main branch with source", async ({
+test("test-suites-runs-2: passed run in main branch with source", async ({
   page,
 }) => {
   await navigateToPage({
