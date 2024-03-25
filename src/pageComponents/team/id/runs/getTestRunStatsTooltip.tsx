@@ -20,18 +20,35 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
     const numRunsTotal = numFailedTestRuns + numPassingTestRuns;
 
     if (numFailedTestRuns === 0) {
-      testRunLabel = (
-        <div>
-          All <strong>{numRunsTotal.toLocaleString()}</strong> test runs passed
-        </div>
-      );
+      if (numRunsTotal === 1) {
+        testRunLabel = (
+          <div>
+            <strong>1</strong> test run passed
+          </div>
+        );
+      } else {
+        testRunLabel = (
+          <div>
+            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
+            passed
+          </div>
+        );
+      }
     } else if (numPassingTestRuns === 0) {
-      testRunLabel = (
-        <div>
-          All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
-          contained at least one failing test
-        </div>
-      );
+      if (numRunsTotal === 1) {
+        testRunLabel = (
+          <div>
+            <strong>1</strong> test run failed
+          </div>
+        );
+      } else {
+        testRunLabel = (
+          <div>
+            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
+            contained at least one failing test
+          </div>
+        );
+      }
     } else {
       const percentage =
         numRunsTotal === 0

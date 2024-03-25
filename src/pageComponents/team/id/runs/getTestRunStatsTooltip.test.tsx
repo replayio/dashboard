@@ -41,6 +41,32 @@ describe("getTestRunStatsTooltip", () => {
     );
   });
 
+  it("should handle a day with only one failed test run", () => {
+    expectToContainText(
+      getTestRunStatsTooltip(
+        createChartDataType({
+          numFailedTestRuns: 1,
+          numFailedTests: 1,
+        })
+      ),
+      "1 test run failed",
+      "All 1 tests failed"
+    );
+  });
+
+  it("should handle a day with only one passing test run", () => {
+    expectToContainText(
+      getTestRunStatsTooltip(
+        createChartDataType({
+          numPassingTestRuns: 1,
+          numPassingTests: 1,
+        })
+      ),
+      "1 test run passed",
+      "All 1 tests passed"
+    );
+  });
+
   it("should handle a day with only failed test runs", () => {
     expectToContainText(
       getTestRunStatsTooltip(
