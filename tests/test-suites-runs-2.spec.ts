@@ -9,7 +9,7 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "SUCCESS_IN_MAIN",
+    mockKey: "TEST_RUN_PASSED_PRIMARY_BRANCH",
     page,
     pathname: "/team/dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=/runs",
   });

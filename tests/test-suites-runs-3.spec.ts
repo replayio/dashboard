@@ -9,7 +9,7 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "FAILED_IN_TEMP_BRANCH",
+    mockKey: "TEST_RUN_FAILED_PR",
     page,
     pathname: "/team/dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=/runs",
   });

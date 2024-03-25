@@ -23,7 +23,7 @@ export type MockData = { [key: string]: MockGraphQLQueries };
 // so they are returned by the backend in the dashboard queries
 // but the recordings are never opened by these tests so they do not need to be refreshed.
 export const MOCK_DATA = {
-  FAILED_IN_TEMP_BRANCH: {
+  TEST_RUN_FAILED_PR: {
     GetTests: mockGetTests([
       partialToTestSuiteTest({
         id: "fake-test-id-1",
@@ -127,7 +127,7 @@ export const MOCK_DATA = {
       user: null,
     }),
   },
-  SUCCESS_IN_MAIN: {
+  TEST_RUN_PASSED_PRIMARY_BRANCH: {
     GetTests: mockGetTests([
       partialToTestSuiteTest({
         id: "fake-test-id-1",
