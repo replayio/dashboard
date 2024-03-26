@@ -3,6 +3,8 @@ import { InvitationLink } from "@/pageComponents/team/id/settings/InvitationLink
 import { InviteTeamMember } from "@/pageComponents/team/id/settings/InviteTeamMember";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 import { getPrimaryRole } from "@/utils/user";
+import { useMemo } from "react";
+import { WorkspaceMember } from "@/graphql/types";
 
 export function TeamMembers({
   id,
@@ -13,9 +15,35 @@ export function TeamMembers({
 }) {
   const { error, loading, members } = useGetWorkspaceMembers(id);
 
-  const sortedMembers = members
-    ?.slice()
-    .sort((a, b) => Number(b.isPending) - Number(a.isPending));
+  const categorizedMembers = useMemo(() => {
+    if (!members) {
+      return {};
+    }
+
+    const categories: { [role: string]: WorkspaceMember[] } = {
+      Admin: [],
+      Developer: [],
+      Contributor: [],
+      Viewer: [],
+    };
+
+    members
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((member) => {
+        const primaryRole = getPrimaryRole(member.roles);
+
+        let members = categories[primaryRole];
+        if (members == null) {
+          categories[primaryRole] = members = [];
+        }
+
+        members.push(member);
+      });
+
+    return categories;
+  }, [members]);
+  console.log(categorizedMembers);
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -23,7 +51,7 @@ export function TeamMembers({
         <InviteTeamMember workspaceId={id} />
       </div>
 
-      <div className="flex flex-col gap-1 overflow-auto shrink grow">
+      <div className="flex flex-col gap-4 overflow-auto shrink grow">
         {loading && <div className="text-slate-500">Loading...</div>}{" "}
         {error && (
           <div
@@ -33,29 +61,35 @@ export function TeamMembers({
             {error.message}
           </div>
         )}
-        {sortedMembers?.map((member, index) => (
-          <div className="flex flex-row items-center gap-2" key={index}>
-            <div className="flex items-center justify-center rounded-full w-8 h-8 overflow-hidden shrink-0 bg-slate-500">
-              {member.isPending ? (
-                <Icon className="w-6 h-6 text-slate-300" type="email" />
-              ) : member.picture ? (
-                <img
-                  alt={`${member.name} avatar`}
-                  className="w-full h-full"
-                  referrerPolicy="no-referrer"
-                  src={member.picture}
-                />
-              ) : null}
+        {Object.entries(categorizedMembers).map(([role, members]) =>
+          members.length > 0 ? (
+            <div className="flex flex-col gap-1" key={role}>
+              <div className="text-lg">{role}s</div>
+              {members.map((member, index) => (
+                <div className="flex flex-row items-center gap-2" key={index}>
+                  <div className="flex items-center justify-center rounded-full w-8 h-8 overflow-hidden shrink-0 bg-slate-500">
+                    {member.isPending ? (
+                      <Icon className="w-6 h-6 text-slate-300" type="email" />
+                    ) : member.picture ? (
+                      <img
+                        alt={`${member.name} avatar`}
+                        className="w-full h-full"
+                        referrerPolicy="no-referrer"
+                        src={member.picture}
+                      />
+                    ) : null}
+                  </div>
+                  <div className="truncate">{member.name}</div>
+                  {member.isPending && (
+                    <div className="shrink-0 text-sm text-yellow-300">
+                      (pending)
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-            <div className="truncate grow">{member.name}</div>
-            <div className="truncate shrink-0 text-sm text-slate-300">
-              {getPrimaryRole(member.roles)}{" "}
-              {member.isPending && (
-                <small className="text-yellow-300">(pending)</small>
-              )}
-            </div>
-          </div>
-        ))}
+          ) : null
+        )}
       </div>
 
       {invitationCode && (
