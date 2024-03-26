@@ -1,9 +1,9 @@
-import { NavLink } from "@/pageComponents/team/layout/NavLink";
+import { IconType } from "@/components/Icon";
+import { LeftNavLink } from "@/components/LeftNavLink";
 import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import { useParams } from "next/navigation";
-import { IconType } from "@/components/Icon";
 
-export function WorkspaceLink({
+export function TeamDefaultNavLink({
   id,
   isPending,
   isTest,
@@ -51,7 +51,7 @@ export function WorkspaceLink({
   }
 
   return (
-    <NavLink
+    <LeftNavLink
       href={href}
       iconType={iconType}
       isActive={isActive}

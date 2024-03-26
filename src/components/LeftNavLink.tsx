@@ -2,7 +2,7 @@ import { Icon, IconType } from "@/components/Icon";
 import Link from "next/link";
 import { HTMLAttributes, ReactNode } from "react";
 
-export function NavLink({
+export function LeftNavLink({
   href,
   iconType,
   isActive,
@@ -22,7 +22,7 @@ export function NavLink({
         isActive ? "bg-sky-900 cursor-default" : "hover:text-sky-500"
       }`}
       data-is-active={isActive || undefined}
-      data-test-name="NavLink"
+      data-test-name="LeftNavLink"
       href={href}
       {...rest}
     >

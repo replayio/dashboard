@@ -1,9 +1,9 @@
-import { NavList } from "@/pageComponents/team/layout/NavList";
+import { TeamNavComponent } from "@/pageComponents/team/layout/TeamNavComponent";
 import { ComponentType, PropsWithChildren } from "react";
 
 export function TeamLayout({
   children,
-  NavComponent = NavList,
+  NavComponent = TeamNavComponent,
 }: PropsWithChildren<{
   NavComponent?: ComponentType<PropsWithChildren>;
 }>) {

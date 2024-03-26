@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { navigateToPage } from "./utils/navigateToPage";
-import { getNavLink } from "./utils/getNavLink";
+import { getLeftNavLink } from "./utils/getLeftNavLink";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getRecordingRow } from "./utils/getRecordingRow";
 
@@ -12,8 +12,8 @@ test("team-library: filtering and share dialog", async ({ page }) => {
   });
 
   // Verify the team library route has loaded based on the left-nav links
-  await expect(await getNavLink(page, "Recordings")).toBeVisible();
-  await expect(await getNavLink(page, "Settings")).toBeVisible();
+  await expect(await getLeftNavLink(page, "Recordings")).toBeVisible();
+  await expect(await getLeftNavLink(page, "Settings")).toBeVisible();
 
   const recordingRows = getRecordingRow(page);
   await expect(recordingRows).toHaveCount(5);

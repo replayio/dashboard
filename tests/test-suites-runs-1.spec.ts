@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getContextMenuText } from "./utils/getContextMenuText";
-import { getNavLink } from "./utils/getNavLink";
+import { getLeftNavLink } from "./utils/getLeftNavLink";
 import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 import { submitInputText } from "./utils/submitInputText";
@@ -13,9 +13,9 @@ test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
   });
 
   // Verify the test suite route has loaded based on the left-nav links
-  await expect(await getNavLink(page, "Runs")).toBeVisible();
-  await expect(await getNavLink(page, "Tests")).toBeVisible();
-  await expect(await getNavLink(page, "Settings")).toBeVisible();
+  await expect(await getLeftNavLink(page, "Runs")).toBeVisible();
+  await expect(await getLeftNavLink(page, "Tests")).toBeVisible();
+  await expect(await getLeftNavLink(page, "Settings")).toBeVisible();
 
   const testRunsRows = page.locator('[data-test-name="TestRuns-Row"]');
   const testRunRows = page.locator('[data-test-name="TestRunTests-Row"]');
