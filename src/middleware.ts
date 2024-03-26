@@ -127,7 +127,8 @@ async function redirectIfProtectedRoute(request: NextRequest) {
   if (
     pathname === "/" ||
     pathname.startsWith("/org") ||
-    pathname.startsWith("/team")
+    pathname.startsWith("/team") ||
+    pathname.startsWith("/user")
   ) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
