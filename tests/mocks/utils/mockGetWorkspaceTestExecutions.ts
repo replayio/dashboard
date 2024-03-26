@@ -23,7 +23,7 @@ export function mockGetWorkspaceTestExecutions(
           const {
             commitAuthor = "fake-user",
             commitTitle = "Test commit title",
-            createdAt = getRelativeDate({ hoursAgo: 1 }),
+            createdAt = getRelativeDate({ minutesAgo: 1 }),
             errors = [],
             id = getUID("test-execution-id"),
             recordings = [partialToTestSuiteTestExecutionRecording()],

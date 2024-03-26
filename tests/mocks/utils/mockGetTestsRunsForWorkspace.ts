@@ -12,7 +12,7 @@ export function mockGetTestsRunsForWorkspace(
     branchName = "main",
     commitId = getUID("commit"),
     commitTitle = "Fake commit title",
-    date = getRelativeDate({ hoursAgo: 1 }),
+    date = getRelativeDate({ minutesAgo: 1 }),
     groupLabel = null,
     id = getUID("test-run"),
     isPrimaryBranch = true,
