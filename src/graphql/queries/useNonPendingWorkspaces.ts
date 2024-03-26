@@ -40,33 +40,42 @@ export function useNonPendingWorkspaces() {
   const workspaces = useMemo<Workspace[] | undefined>(() => {
     if (data) {
       return (
-        data.viewer?.workspaces.edges.map(({ node }) => {
-          return {
-            hasPaymentMethod: node.hasPaymentMethod,
-            id: node.id,
-            invitationCode: node.invitationCode ?? null,
-            isOrganization: node.isOrganization,
-            isTest: node.isTest,
-            name: node.name,
-            settings: node.settings
-              ? {
-                  features: {
-                    recording: {
-                      allowList:
-                        node.settings.features?.recording?.allowList ?? [],
-                      blockList:
-                        node.settings.features?.recording?.blockList ?? [],
-                      public: node.settings.features?.recording?.public == true,
+        data.viewer?.workspaces.edges
+          .map(({ node }) => {
+            return {
+              hasPaymentMethod: node.hasPaymentMethod,
+              id: node.id,
+              invitationCode: node.invitationCode ?? null,
+              isOrganization: node.isOrganization,
+              isTest: node.isTest,
+              name: node.name,
+              settings: node.settings
+                ? {
+                    features: {
+                      recording: {
+                        allowList:
+                          node.settings.features?.recording?.allowList ?? [],
+                        blockList:
+                          node.settings.features?.recording?.blockList ?? [],
+                        public:
+                          node.settings.features?.recording?.public == true,
+                      },
+                      user: {
+                        autoJoin: node.settings.features?.user?.autoJoin ?? 0,
+                      },
                     },
-                    user: {
-                      autoJoin: node.settings.features?.user?.autoJoin ?? 0,
-                    },
-                  },
-                }
-              : null,
-            subscriptionPlanKey: node.subscription?.plan?.key ?? null,
-          };
-        }) ?? []
+                  }
+                : null,
+              subscriptionPlanKey: node.subscription?.plan?.key ?? null,
+            };
+          })
+          .sort((a, b) => {
+            if (a.isTest === b.isTest) {
+              return a.name.localeCompare(b.name);
+            } else {
+              return a.isTest ? 1 : -1;
+            }
+          }) ?? []
       );
     }
   }, [data]);
