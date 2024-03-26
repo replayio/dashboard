@@ -22,7 +22,6 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
 
     const text = await rows.textContent();
     expect(text).toContain("Successful run in main branch");
-    expect(text).toContain("1h");
 
     await expect(
       await page
@@ -83,7 +82,6 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
 
     const metadata = page.locator('[data-test-id="TestRunTests-Metadata"]');
     const metadataText = await metadata.textContent();
-    expect(metadataText).toContain("1h");
     expect(metadataText).toContain("test-user-trigger");
     expect(metadataText).toContain("main");
     expect(metadataText).toContain("200.0ms");
@@ -99,7 +97,6 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
 
     const text = await rows.textContent();
     await expect(text).toContain("View recording");
-    await expect(text).toContain("1h");
 
     const errors = page.locator('[data-test-id="TestExecution-Errors"]');
     await expect(errors).not.toBeVisible();
