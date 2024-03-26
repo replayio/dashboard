@@ -30,18 +30,19 @@ export function ApiKeyRow({
 
   return (
     <div className="flex flex-row items-center gap-2">
-      <div className="truncate">{apiKey.label}</div>
-      <div className="text-slate-500 text-sm grow">
-        ({apiKey.recordingCount} / {apiKey.maxRecordings} recordings)
-      </div>
       <Button
         disabled={isPending}
         color="secondary"
         onClick={onDeleteButtonClick}
+        size="small"
         variant="outline"
       >
         Delete
       </Button>
+      <div className="truncate">{apiKey.label}</div>
+      <div className="text-slate-500 text-sm grow">
+        ({apiKey.recordingCount} / {apiKey.maxRecordings} recordings)
+      </div>
       {showConfirmDialog && (
         <ConfirmationDialog
           confirmButtonLabel="Delete API key"

@@ -1,4 +1,4 @@
-import { User, Workspace, WorkspaceMember } from "@/graphql/types";
+import { Workspace } from "@/graphql/types";
 import { Billing } from "@/pageComponents/team/id/settings/Billing";
 import { DeleteWorkspace } from "@/pageComponents/team/id/settings/DeleteWorkspace";
 import { Organization } from "@/pageComponents/team/id/settings/Organization";
@@ -45,7 +45,7 @@ export function WorkspaceSettings({
   }
 
   return (
-    <div className="h-full overflow-auto bg-slate-800 p-2 rounded">
+    <div className="h-full w-full overflow-auto bg-slate-800 p-2 rounded">
       {content}
     </div>
   );

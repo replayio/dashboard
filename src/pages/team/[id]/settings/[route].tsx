@@ -3,8 +3,7 @@ import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { WorkspaceSettings } from "@/pageComponents/team/id/settings/WorkspaceSettings";
-import { Nav } from "@/pageComponents/team/id/settings/layout/Nav";
-import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
+import { SettingsLayout } from "@/pageComponents/team/id/settings/layout/SettingsLayout";
 import assert from "assert";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
@@ -15,7 +14,6 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { user } = useCurrentUser();
   const { members } = useGetWorkspaceMembers(workspaceId);
-  const member = members?.find(({ id }) => id === user?.id);
 
   const { workspaces } = useNonPendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
@@ -25,12 +23,7 @@ export default function Page({
   }
 
   return (
-    <div className="w-full h-full flex flex-col gap-2 p-2">
-      <Nav
-        currentUserIsAdmin={member?.roles.includes("admin") == true}
-        workspaceIsOrganization={workspace.isOrganization}
-        workspaceId={workspaceId}
-      />
+    <div className="w-full h-full p-2">
       <WorkspaceSettings
         route={route}
         stripeKey={stripeKey}
@@ -40,7 +33,7 @@ export default function Page({
   );
 }
 
-Page.Layout = TeamLayout;
+Page.Layout = SettingsLayout;
 
 export async function getServerSideProps({
   params,

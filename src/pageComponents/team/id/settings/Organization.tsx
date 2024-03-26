@@ -74,7 +74,7 @@ export function Organization({ id: workspaceId }: { id: string }) {
   return (
     <div className="flex flex-col gap-2 px-1 pb-1">
       <div className="flex flex-row gap-2 items-start">
-        <div className="w-60 truncate">Name</div>
+        <div className="w-40 truncate">Name</div>
         <Input
           defaultValue={name}
           onChange={setName}
@@ -82,7 +82,7 @@ export function Organization({ id: workspaceId }: { id: string }) {
         />
       </div>
       <div className="flex flex-row gap-2 items-start">
-        <div className="w-60 truncate"></div>
+        <div className="w-40 truncate"></div>
         <Checkbox
           checked={!recordingFeatures.public}
           onChange={(value: boolean) =>
@@ -95,8 +95,9 @@ export function Organization({ id: workspaceId }: { id: string }) {
         />
       </div>
       <div className="flex flex-row gap-2 items-start">
-        <div className="w-60 truncate">Allow from</div>
+        <div className="w-40 truncate">Allow from</div>
         <TextArea
+          className="h-24"
           defaultValue={recordingFeatures.allowList.join(", ") ?? ""}
           onChange={(value) =>
             setRecordingFeatures({
@@ -108,8 +109,9 @@ export function Organization({ id: workspaceId }: { id: string }) {
         />
       </div>
       <div className="flex flex-row gap-2 items-start">
-        <div className="w-60 truncate">Block from</div>
+        <div className="w-40 truncate">Block from</div>
         <TextArea
+          className="h-24"
           defaultValue={recordingFeatures.blockList.join(", ") ?? ""}
           onChange={(value) =>
             setRecordingFeatures({
@@ -121,7 +123,7 @@ export function Organization({ id: workspaceId }: { id: string }) {
         />
       </div>
       <div className="flex flex-row gap-2 items-start">
-        <div className="w-60 truncate">Automatically add users</div>
+        <div className="w-40 truncate">Default permission</div>
         <Select
           className="h-14"
           onChange={(option) =>
