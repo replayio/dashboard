@@ -336,6 +336,16 @@ export type CommentReply = {
   user?: Maybe<User>;
 };
 
+export type CompleteRecordingUpload = {
+  __typename?: 'CompleteRecordingUpload';
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type CompleteRecordingUploadInput = {
+  recordingId: Scalars['UUID']['input'];
+  secret: Scalars['String']['input'];
+};
+
 export type CompleteTestRunShard = {
   __typename?: 'CompleteTestRunShard';
   success?: Maybe<Scalars['Boolean']['output']>;
@@ -618,6 +628,7 @@ export type Mutation = {
   cancelWorkspaceSubscription: CancelWorkspaceSubscription;
   claimTeamInvitationCode: ClaimTeamInvitationCode;
   closeAuthRequest: CloseAuthRequest;
+  completeRecordingUpload: CompleteRecordingUpload;
   completeTestRunShard: CompleteTestRunShard;
   createPlan: CreatePlan;
   createRecording: CreateRecording;
@@ -734,6 +745,11 @@ export type MutationClaimTeamInvitationCodeArgs = {
 
 export type MutationCloseAuthRequestArgs = {
   input: CloseAuthRequestInput;
+};
+
+
+export type MutationCompleteRecordingUploadArgs = {
+  input: CompleteRecordingUploadInput;
 };
 
 
@@ -5804,6 +5820,7 @@ export type Mutation_Root = {
   cancelWorkspaceSubscription: CancelWorkspaceSubscription;
   claimTeamInvitationCode: ClaimTeamInvitationCode;
   closeAuthRequest: CloseAuthRequest;
+  completeRecordingUpload: CompleteRecordingUpload;
   completeTestRunShard: CompleteTestRunShard;
   createPlan: CreatePlan;
   createRecording: CreateRecording;
@@ -6487,6 +6504,12 @@ export type Mutation_RootClaimTeamInvitationCodeArgs = {
 /** mutation root */
 export type Mutation_RootCloseAuthRequestArgs = {
   input: CloseAuthRequestInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootCompleteRecordingUploadArgs = {
+  input: CompleteRecordingUploadInput;
 };
 
 
@@ -13623,6 +13646,7 @@ export type Recordings = {
   /** An aggregated array relationship */
   sourceMaps_aggregate: Recording_Sourcemaps_Aggregate;
   title?: Maybe<Scalars['String']['output']>;
+  upload_completed_at?: Maybe<Scalars['timestamptz']['output']>;
   url?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   user?: Maybe<Users>;
@@ -13846,6 +13870,7 @@ export type Recordings_Bool_Exp = {
   size?: InputMaybe<Bigint_Comparison_Exp>;
   sourceMaps?: InputMaybe<Recording_Sourcemaps_Bool_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
+  upload_completed_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   url?: InputMaybe<String_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -13911,6 +13936,7 @@ export type Recordings_Insert_Input = {
   size?: InputMaybe<Scalars['bigint']['input']>;
   sourceMaps?: InputMaybe<Recording_Sourcemaps_Arr_Rel_Insert_Input>;
   title?: InputMaybe<Scalars['String']['input']>;
+  upload_completed_at?: InputMaybe<Scalars['timestamptz']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -13936,6 +13962,7 @@ export type Recordings_Max_Fields = {
   recording_id?: Maybe<Scalars['String']['output']>;
   size?: Maybe<Scalars['bigint']['output']>;
   title?: Maybe<Scalars['String']['output']>;
+  upload_completed_at?: Maybe<Scalars['timestamptz']['output']>;
   url?: Maybe<Scalars['String']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
   workspace_id?: Maybe<Scalars['uuid']['output']>;
@@ -13958,6 +13985,7 @@ export type Recordings_Max_Order_By = {
   recording_id?: InputMaybe<Order_By>;
   size?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
+  upload_completed_at?: InputMaybe<Order_By>;
   url?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
@@ -13981,6 +14009,7 @@ export type Recordings_Min_Fields = {
   recording_id?: Maybe<Scalars['String']['output']>;
   size?: Maybe<Scalars['bigint']['output']>;
   title?: Maybe<Scalars['String']['output']>;
+  upload_completed_at?: Maybe<Scalars['timestamptz']['output']>;
   url?: Maybe<Scalars['String']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
   workspace_id?: Maybe<Scalars['uuid']['output']>;
@@ -14003,6 +14032,7 @@ export type Recordings_Min_Order_By = {
   recording_id?: InputMaybe<Order_By>;
   size?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
+  upload_completed_at?: InputMaybe<Order_By>;
   url?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
@@ -14059,6 +14089,7 @@ export type Recordings_Order_By = {
   size?: InputMaybe<Order_By>;
   sourceMaps_aggregate?: InputMaybe<Recording_Sourcemaps_Aggregate_Order_By>;
   title?: InputMaybe<Order_By>;
+  upload_completed_at?: InputMaybe<Order_By>;
   url?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -14124,6 +14155,8 @@ export enum Recordings_Select_Column {
   /** column name */
   Title = 'title',
   /** column name */
+  UploadCompletedAt = 'upload_completed_at',
+  /** column name */
   Url = 'url',
   /** column name */
   UserId = 'user_id',
@@ -14155,6 +14188,7 @@ export type Recordings_Set_Input = {
   recording_id?: InputMaybe<Scalars['String']['input']>;
   size?: InputMaybe<Scalars['bigint']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+  upload_completed_at?: InputMaybe<Scalars['timestamptz']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
   workspace_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -14258,6 +14292,8 @@ export enum Recordings_Update_Column {
   Size = 'size',
   /** column name */
   Title = 'title',
+  /** column name */
+  UploadCompletedAt = 'upload_completed_at',
   /** column name */
   Url = 'url',
   /** column name */

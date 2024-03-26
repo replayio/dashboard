@@ -67,25 +67,28 @@ export function useTestSuiteTestRuns(
   const testRuns = useMemo<TestRun[] | undefined>(() => {
     if (data?.node && "testRuns" in data.node) {
       return (
-        data.node.testRuns?.edges.map(({ node }) => {
-          return {
-            branchName: node.source.branchName ?? null,
-            commitId: node.source.commitId ?? null,
-            commitTitle: node.source.commitTitle ?? null,
-            date: new Date(node.date),
-            groupLabel: node.source.groupLabel ?? null,
-            id: node.id,
-            isPrimaryBranch: node.source.isPrimaryBranch === true,
-            numFailed: node.results.counts.failed,
-            numFlaky: node.results.counts.flaky,
-            numPassed: node.results.counts.passed,
-            prNumber: node.source.prNumber ?? null,
-            prTitle: node.source.prTitle ?? null,
-            repository: node.source.repository ?? null,
-            triggerUrl: node.source.triggerUrl ?? null,
-            user: node.source.user ?? null,
-          };
-        }) ?? []
+        data.node.testRuns?.edges
+          .map(({ node }) => {
+            return {
+              branchName: node.source.branchName ?? null,
+              commitId: node.source.commitId ?? null,
+              commitTitle: node.source.commitTitle ?? null,
+              date: new Date(node.date),
+              groupLabel: node.source.groupLabel ?? null,
+              id: node.id,
+              isPrimaryBranch: node.source.isPrimaryBranch === true,
+              numFailed: node.results.counts.failed,
+              numFlaky: node.results.counts.flaky,
+              numPassed: node.results.counts.passed,
+              prNumber: node.source.prNumber ?? null,
+              prTitle: node.source.prTitle ?? null,
+              repository: node.source.repository ?? null,
+              triggerUrl: node.source.triggerUrl ?? null,
+              user: node.source.user ?? null,
+            };
+          })
+          // Newest first
+          .sort((a, b) => b.date.getTime() - a.date.getTime()) ?? []
       );
     }
   }, [data]);

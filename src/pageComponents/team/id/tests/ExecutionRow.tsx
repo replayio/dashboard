@@ -22,7 +22,7 @@ export function ExecutionRow({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-test-name="TestExecution-Row">
       <div className="flex flex-row items-center gap-2 mx-2">
         <div className="grow truncate">
           {testExecution.commitTitle || "Test"}

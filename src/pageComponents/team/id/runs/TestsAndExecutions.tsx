@@ -35,10 +35,7 @@ export function TestsAndExecutions({
                   break;
                 }
                 case "flaky": {
-                  status =
-                    index === selectedTest.recordings.length - 1
-                      ? "passed"
-                      : "flaky";
+                  status = index === 0 ? "passed" : "flaky";
                   break;
                 }
                 case "passed": {

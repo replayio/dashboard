@@ -1,17 +1,26 @@
 import {
   GetTestsQuery,
   GetTestsRunsForWorkspaceQuery,
+  GetWorkspaceTestExecutionsQuery,
+  GetWorkspaceTestsQuery,
 } from "@/graphql/generated/graphql";
 import { getRelativeDate } from "@/utils/date";
-import { RECORDING_ID_1, RECORDING_ID_2 } from "./constants";
 import { mockGetTests } from "./utils/mockGetTests";
 import { mockGetTestsRunsForWorkspace } from "./utils/mockGetTestsRunsForWorkspace";
+import { mockGetWorkspaceTestExecutions } from "./utils/mockGetWorkspaceTestExecutions";
+import { mockGetWorkspaceTests } from "./utils/mockGetWorkspaceTests";
 import { partialToTestSuiteTest } from "./utils/partialToTestSuiteTest";
+import { partialToTestSuiteTestExecutionRecording } from "./utils/partialToTestSuiteTestExecutionRecording";
 import { partialToTestSuiteTestRecording } from "./utils/partialToTestSuiteTestRecording";
 
 type MockGraphQLQueries = {
+  // Used by /team/[id]/runs
   GetTests?: GetTestsQuery;
   GetTestsRunsForWorkspace?: GetTestsRunsForWorkspaceQuery;
+
+  // Used by /team/[id]/tests
+  GetWorkspaceTestExecutions?: GetWorkspaceTestExecutionsQuery;
+  GetWorkspaceTests?: GetWorkspaceTestsQuery;
 };
 
 export type MockGraphQLQueryKey = keyof MockGraphQLQueries;
@@ -26,33 +35,25 @@ export const MOCK_DATA = {
   TEST_RUN_FAILED_PR: {
     GetTests: mockGetTests([
       partialToTestSuiteTest({
-        id: "fake-test-id-1",
         sourcePath: undefined,
         status: "passed",
         title: "First test",
       }),
       partialToTestSuiteTest({
-        id: "fake-test-id-2",
         sourcePath: undefined,
         status: "passed",
         title: "Second test",
       }),
       partialToTestSuiteTest({
-        id: "fake-test-id-3",
         sourcePath: undefined,
         status: "passed",
         title: "Third test",
       }),
       partialToTestSuiteTest({
         errors: ["This is an error message"],
-        id: "fake-test-id-4",
         recordings: [
-          partialToTestSuiteTestRecording({
-            id: RECORDING_ID_1,
-          }),
-          partialToTestSuiteTestRecording({
-            id: RECORDING_ID_2,
-          }),
+          partialToTestSuiteTestRecording(),
+          partialToTestSuiteTestRecording(),
         ],
         sourcePath: undefined,
         status: "flaky",
@@ -60,14 +61,9 @@ export const MOCK_DATA = {
       }),
       partialToTestSuiteTest({
         errors: ["This is an error message"],
-        id: "fake-test-id-5",
         recordings: [
-          partialToTestSuiteTestRecording({
-            id: RECORDING_ID_1,
-          }),
-          partialToTestSuiteTestRecording({
-            id: RECORDING_ID_2,
-          }),
+          partialToTestSuiteTestRecording(),
+          partialToTestSuiteTestRecording(),
         ],
         sourcePath: undefined,
         status: "flaky",
@@ -75,27 +71,20 @@ export const MOCK_DATA = {
       }),
       partialToTestSuiteTest({
         errors: ["This is an error message"],
-        id: "fake-test-id-6",
         sourcePath: undefined,
         status: "failed",
         title: "Sixth test",
       }),
       partialToTestSuiteTest({
-        id: "fake-test-id-7",
         sourcePath: undefined,
         status: "passed",
         title: "Seventh test",
       }),
       partialToTestSuiteTest({
         errors: ["This is an error message"],
-        id: "fake-test-id-8",
         recordings: [
-          partialToTestSuiteTestRecording({
-            id: RECORDING_ID_1,
-          }),
-          partialToTestSuiteTestRecording({
-            id: RECORDING_ID_2,
-          }),
+          partialToTestSuiteTestRecording(),
+          partialToTestSuiteTestRecording(),
         ],
         sourcePath: undefined,
         status: "flaky",
@@ -103,7 +92,6 @@ export const MOCK_DATA = {
       }),
       partialToTestSuiteTest({
         errors: ["This is an error message"],
-        id: "fake-test-id-9",
         sourcePath: undefined,
         status: "failed",
         title: "Ninth test",
@@ -111,11 +99,7 @@ export const MOCK_DATA = {
     ]),
     GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
       branchName: "temp",
-      commitId: "fake-commit-id",
       commitTitle: "Failed run in temp branch",
-      date: getRelativeDate({ hoursAgo: 1 }),
-      groupLabel: null,
-      id: "fake-test-run-id",
       isPrimaryBranch: false,
       numFailed: 2,
       numFlaky: 3,
@@ -130,13 +114,11 @@ export const MOCK_DATA = {
   TEST_RUN_PASSED_PRIMARY_BRANCH: {
     GetTests: mockGetTests([
       partialToTestSuiteTest({
-        id: "fake-test-id-1",
         sourcePath: undefined,
         status: "passed",
         title: "First test",
       }),
       partialToTestSuiteTest({
-        id: "fake-test-id-2",
         sourcePath: undefined,
         status: "passed",
         title: "Second test",
@@ -144,11 +126,7 @@ export const MOCK_DATA = {
     ]),
     GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
       branchName: "main",
-      commitId: "fake-commit-id",
       commitTitle: "Successful run in main branch",
-      date: getRelativeDate({ hoursAgo: 1 }),
-      groupLabel: null,
-      id: "fake-test-run-id",
       isPrimaryBranch: true,
       numFailed: 0,
       numFlaky: 0,
@@ -159,6 +137,116 @@ export const MOCK_DATA = {
       triggerUrl: "https://fake-trigger-url.com",
       user: "test-user-trigger",
     }),
+  },
+  TESTS_WITH_NO_RECORDINGS: {
+    GetWorkspaceTestExecutions: mockGetWorkspaceTestExecutions([]),
+    GetWorkspaceTests: mockGetWorkspaceTests([
+      {
+        stats: {
+          passed: 0,
+        },
+        title: "No tests or recordings",
+      },
+      {
+        stats: {
+          passed: 1,
+        },
+        title: "1 passing test",
+      },
+      {
+        stats: {
+          flaky: 2,
+          flakyRate: 1,
+        },
+        title: "2 flaky tests",
+      },
+      {
+        stats: {
+          failed: 1,
+          failureRate: 0.25,
+          flaky: 3,
+          flakyRate: 0.75,
+          passed: 1,
+        },
+        title: "1 failed test, 3 flaky tests",
+      },
+    ]),
+  },
+  TESTS_WITH_FAILURES: {
+    GetWorkspaceTestExecutions: mockGetWorkspaceTestExecutions([
+      {
+        commitTitle: "Commit with 2 failed tests",
+        recordings: [
+          partialToTestSuiteTestExecutionRecording({
+            createdAt: getRelativeDate({ minutesAgo: 2 }),
+            isProcessed: true,
+          }),
+          partialToTestSuiteTestExecutionRecording({
+            createdAt: getRelativeDate({ minutesAgo: 1 }),
+            isProcessed: true,
+          }),
+        ],
+        result: "failed",
+      },
+      {
+        commitTitle: "Commit with 1 passing test",
+        recordings: [partialToTestSuiteTestExecutionRecording()],
+        result: "passed",
+      },
+    ]),
+    GetWorkspaceTests: mockGetWorkspaceTests([
+      {
+        stats: {
+          failed: 1,
+          failureRate: 0.5,
+          passed: 1,
+        },
+        title: "Failed test",
+      },
+    ]),
+  },
+  TESTS_WITH_FLAKES: {
+    GetWorkspaceTestExecutions: mockGetWorkspaceTestExecutions([
+      {
+        commitTitle: "Commit with 3 flaky tests",
+        recordings: [
+          partialToTestSuiteTestExecutionRecording({
+            createdAt: getRelativeDate({ minutesAgo: 1 }),
+          }),
+          partialToTestSuiteTestExecutionRecording({
+            createdAt: getRelativeDate({ minutesAgo: 2 }),
+            isProcessed: true,
+          }),
+          partialToTestSuiteTestExecutionRecording({
+            createdAt: getRelativeDate({ minutesAgo: 3 }),
+            isProcessed: true,
+          }),
+        ],
+        result: "flaky",
+      },
+      {
+        commitTitle: "Commit with 2 flaky tests",
+        recordings: [
+          partialToTestSuiteTestExecutionRecording({
+            createdAt: getRelativeDate({ minutesAgo: 2 }),
+            isProcessed: true,
+          }),
+          partialToTestSuiteTestExecutionRecording({
+            createdAt: getRelativeDate({ minutesAgo: 1 }),
+          }),
+        ],
+        result: "flaky",
+      },
+    ]),
+    GetWorkspaceTests: mockGetWorkspaceTests([
+      {
+        stats: {
+          flaky: 2,
+          flakyRate: 1,
+        },
+        title: "Flaky test run",
+      },
+    ]),
   },
 } satisfies MockData;
 

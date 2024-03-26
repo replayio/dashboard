@@ -47,7 +47,7 @@ test("team-library: filtering and share dialog", async ({ page }) => {
   await expect(await collaboratorRows.textContent()).toContain("Owner");
   await page.locator('[data-test-nam="ModalDialog-CloseButton"]').click();
 
-  // TODO Delete dialog, confirmation
+  // Delete dialog, confirmation
   await menuButton.click();
   await deleteButton.click();
   const deleteDialog = page.locator('[data-test-id="Dialog-DeleteRecording"]');

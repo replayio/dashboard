@@ -93,13 +93,17 @@ export function useWorkspaceTestExecutions(
                 title: recording.title ?? "",
                 uuid: recording.uuid as string,
               }))
+              // Newest to oldest
               .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
             result: execution.result as TestSuiteTestStatus,
           });
         });
       });
 
-      return executions;
+      // Newest to oldest
+      return executions.sort(
+        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+      );
     }
   }, [data]);
 

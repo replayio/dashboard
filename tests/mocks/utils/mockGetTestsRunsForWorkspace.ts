@@ -2,6 +2,7 @@ import { GetTestsRunsForWorkspaceQuery } from "@/graphql/generated/graphql";
 import { TestRun } from "@/graphql/types";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 import { getRelativeDate } from "@/utils/date";
+import { getUID } from "./getUID";
 
 export function mockGetTestsRunsForWorkspace(
   testRun: Partial<TestRun>,
@@ -9,11 +10,11 @@ export function mockGetTestsRunsForWorkspace(
 ): GetTestsRunsForWorkspaceQuery {
   const {
     branchName = "main",
-    commitId = "fake-commit-id",
+    commitId = getUID("commit"),
     commitTitle = "Fake commit title",
-    date = getRelativeDate({ hoursAgo: 1 }),
+    date = getRelativeDate({ minutesAgo: 1 }),
     groupLabel = null,
-    id = "fake-test-run-id",
+    id = getUID("test-run"),
     isPrimaryBranch = true,
     numFailed = 0,
     numFlaky = 0,
