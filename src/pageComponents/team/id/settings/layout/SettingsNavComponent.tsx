@@ -1,3 +1,4 @@
+import { LeftNav } from "@/components/LeftNav";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
@@ -16,14 +17,18 @@ export function SettingsNavComponent() {
   const member = members?.find(({ id }) => id === user?.id);
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
-  if (!workspace || !user) {
-    return <LoadingProgressBar />;
+  if (workspace && user) {
+    return (
+      <SettingsNav
+        currentUserIsAdmin={member?.roles.includes("admin") == true}
+        workspace={workspace}
+      />
+    );
+  } else {
+    return (
+      <LeftNav>
+        <LoadingProgressBar />
+      </LeftNav>
+    );
   }
-
-  return (
-    <SettingsNav
-      currentUserIsAdmin={member?.roles.includes("admin") == true}
-      workspace={workspace}
-    />
-  );
 }

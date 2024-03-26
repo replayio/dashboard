@@ -1,3 +1,5 @@
+import { LeftNav } from "@/components/LeftNav";
+import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { usePendingWorkspaces } from "@/graphql/queries/usePendingWorkspaces";
@@ -30,6 +32,10 @@ export function TeamNavComponent() {
       />
     );
   } else {
-    return <LoadingSpinner />;
+    return (
+      <LeftNav>
+        <LoadingProgressBar />
+      </LeftNav>
+    );
   }
 }

@@ -23,7 +23,7 @@ export function LeftNav({
         <ReplayLogo className="max-h-6 max-w-6" />
         <div className="text-xl font-bold">Replay</div>
       </div>
-      <nav className="flex flex-col overflow-auto bg-slate-800 rounded grow">
+      <nav className="flex flex-col overflow-auto bg-slate-800 rounded grow relative">
         {backLink && (
           <Link
             className="px-2 py-1 flex flex-row items-center text-lg text-white hover:text-sky-400 overflow-auto truncate whitespace-nowrap"
