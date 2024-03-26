@@ -1,7 +1,8 @@
-import { WorkspaceLink } from "@/pageComponents/team/layout/WorkspaceLink";
+import { LeftNav } from "@/components/LeftNav";
 import { PendingWorkspace, Workspace } from "@/graphql/types";
+import { TeamDefaultNavLink } from "@/pageComponents/team/layout/TeamDefaultNavLink";
 
-export function WorkspaceLinkList({
+export function TeamDefaultNav({
   pendingWorkspaces,
   workspaces,
 }: {
@@ -9,15 +10,15 @@ export function WorkspaceLinkList({
   workspaces: Workspace[];
 }) {
   return (
-    <>
-      <WorkspaceLink
+    <LeftNav>
+      <TeamDefaultNavLink
         id="me"
         isPending={false}
         isTest={false}
         name="My Library"
       />
       {pendingWorkspaces?.map(({ id, isTest, name }) => (
-        <WorkspaceLink
+        <TeamDefaultNavLink
           id={id}
           isPending={true}
           isTest={isTest}
@@ -26,7 +27,7 @@ export function WorkspaceLinkList({
         />
       ))}
       {workspaces?.map(({ id, isTest, name }) => (
-        <WorkspaceLink
+        <TeamDefaultNavLink
           id={id}
           isPending={false}
           isTest={isTest}
@@ -34,6 +35,6 @@ export function WorkspaceLinkList({
           name={name}
         />
       ))}
-    </>
+    </LeftNav>
   );
 }

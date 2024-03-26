@@ -9,7 +9,7 @@ export function Button({
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: "primary" | "secondary";
-  size?: "large" | "normal";
+  size?: "large" | "normal" | "small";
   variant?: "outline" | "solid";
 }) {
   let defaultColorsClassName = "";
@@ -65,6 +65,10 @@ export function Button({
     }
     case "normal": {
       defaultSizeClassName = "gap-2 rounded px-2 py-1";
+      break;
+    }
+    case "small": {
+      defaultSizeClassName = "gap-2 rounded px-2 py-1 text-sm";
       break;
     }
   }
