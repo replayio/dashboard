@@ -1,6 +1,7 @@
 import {
   GetTestsQuery,
   GetTestsRunsForWorkspaceQuery,
+  GetWorkspaceMembersQuery,
   GetWorkspaceTestExecutionsQuery,
   GetWorkspaceTestsQuery,
 } from "@/graphql/generated/graphql";
@@ -12,6 +13,8 @@ import { mockGetWorkspaceTests } from "./utils/mockGetWorkspaceTests";
 import { partialToTestSuiteTest } from "./utils/partialToTestSuiteTest";
 import { partialToTestSuiteTestExecutionRecording } from "./utils/partialToTestSuiteTestExecutionRecording";
 import { partialToTestSuiteTestRecording } from "./utils/partialToTestSuiteTestRecording";
+import { mockGetWorkspaceMembers } from "./utils/mockGetWorkspaceMembers";
+import { TEST_USER_PICTURES } from "./constants";
 
 type MockGraphQLQueries = {
   // Used by /team/[id]/runs
@@ -21,6 +24,9 @@ type MockGraphQLQueries = {
   // Used by /team/[id]/tests
   GetWorkspaceTestExecutions?: GetWorkspaceTestExecutionsQuery;
   GetWorkspaceTests?: GetWorkspaceTestsQuery;
+
+  // Team settings
+  GetWorkspaceMembers?: GetWorkspaceMembersQuery;
 };
 
 export type MockGraphQLQueryKey = keyof MockGraphQLQueries;
@@ -32,6 +38,33 @@ export type MockData = { [key: string]: MockGraphQLQueries };
 // so they are returned by the backend in the dashboard queries
 // but the recordings are never opened by these tests so they do not need to be refreshed.
 export const MOCK_DATA = {
+  TEAM_SETTINGS_MEMBERS: {
+    GetWorkspaceMembers: mockGetWorkspaceMembers([
+      {
+        name: "Admin 1",
+        picture: TEST_USER_PICTURES.eleanor_diaz,
+        roles: ["viewer", "admin"],
+      },
+      {
+        name: "Admin 2",
+        roles: ["viewer", "admin"],
+      },
+      {
+        name: "Developer 1",
+        roles: ["viewer", "developer"],
+      },
+      {
+        isPending: true,
+        name: "Pending developer 1",
+        roles: ["viewer", "developer"],
+      },
+      {
+        name: "Developer 2",
+        picture: TEST_USER_PICTURES.lewis_neill,
+        roles: ["viewer", "developer"],
+      },
+    ]),
+  },
   TEST_RUN_FAILED_PR: {
     GetTests: mockGetTests([
       partialToTestSuiteTest({

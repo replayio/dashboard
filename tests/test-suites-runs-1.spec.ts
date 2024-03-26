@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getContextMenuText } from "./utils/getContextMenuText";
 import { getLeftNavLink } from "./utils/getLeftNavLink";
@@ -9,7 +10,7 @@ import { submitInputText } from "./utils/submitInputText";
 test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
   await navigateToPage({
     page,
-    pathname: "/team/dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=/runs",
+    pathname: `/team/${DEFAULT_WORKSPACE_ID}/runs`,
   });
 
   // Verify the test suite route has loaded based on the left-nav links

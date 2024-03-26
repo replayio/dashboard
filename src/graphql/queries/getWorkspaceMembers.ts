@@ -1,21 +1,14 @@
-import { SessionContext } from "@/components/SessionContext";
 import {
   GetWorkspaceMembersQuery,
   GetWorkspaceMembersQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { WorkspaceMember } from "@/graphql/types";
-import { ApolloError, gql, useQuery } from "@apollo/client";
-import assert from "assert";
-import { useContext, useMemo } from "react";
+import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
+import { gql } from "@apollo/client";
+import { useMemo } from "react";
 
 export function useGetWorkspaceMembers(workspaceId: string) {
-  const { accessToken } = useContext(SessionContext);
-  assert(accessToken != null, "accessToken is required");
-
-  const client = getGraphQLClient(accessToken);
-
-  const { data, error, loading } = useQuery<
+  const { data, error, isLoading } = useGraphQLQuery<
     GetWorkspaceMembersQuery,
     GetWorkspaceMembersQueryVariables
   >(
@@ -61,10 +54,7 @@ export function useGetWorkspaceMembers(workspaceId: string) {
         }
       }
     `,
-    {
-      client,
-      variables: { workspaceId },
-    }
+    { workspaceId }
   );
 
   const members = useMemo<WorkspaceMember[] | undefined>(() => {
@@ -96,5 +86,5 @@ export function useGetWorkspaceMembers(workspaceId: string) {
     }
   }, [data]);
 
-  return { error, members, loading };
+  return { error, isLoading, members };
 }

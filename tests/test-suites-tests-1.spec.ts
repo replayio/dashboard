@@ -1,18 +1,18 @@
 import { expect, test } from "@playwright/test";
+import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 import { submitInputText } from "./utils/submitInputText";
 
-test("test-suite-tests-1: sorting and filtering test runs", async ({
+test("test-suites-tests-1: sorting and filtering test runs", async ({
   page,
 }) => {
   await navigateToPage({
     mockKey: "TESTS_WITH_NO_RECORDINGS",
     page,
-    pathname:
-      "/team/dzowNDAyOGMwYS05ZjM1LTQ2ZjktYTkwYi1jNzJkMTIzNzUxOTI=/tests",
+    pathname: `/team/${DEFAULT_WORKSPACE_ID}/tests`,
   });
 
   {

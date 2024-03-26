@@ -2,7 +2,7 @@ import { ApiKeys } from "@/app/ApiKeysPanel/ApiKeys";
 
 import { useCreateUserAPIKey } from "@/graphql/queries/createUserApiKey";
 import { useDeleteUserAPIKey } from "@/graphql/queries/deleteUserApiKey";
-import { useGetUserSettings } from "@/graphql/queries/getUserSettings";
+import { useGetUserSettings } from "@/graphql/queries/useGetUserSettings";
 
 export function UserApiKeys() {
   const {

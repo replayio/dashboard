@@ -1,21 +1,14 @@
-import { SessionContext } from "@/components/SessionContext";
 import {
   GetWorkspaceApiKeysQuery,
   GetWorkspaceApiKeysQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
-import { gql, useQuery } from "@apollo/client";
-import assert from "assert";
-import { useContext, useMemo } from "react";
+import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
+import { gql } from "@apollo/client";
+import { useMemo } from "react";
 
 export function useGetWorkspaceApiKeys(workspaceId: string) {
-  const { accessToken } = useContext(SessionContext);
-  assert(accessToken != null, "accessToken is required");
-
-  const client = getGraphQLClient(accessToken);
-
-  const { data, error, loading } = useQuery<
+  const { data, error, isLoading } = useGraphQLQuery<
     GetWorkspaceApiKeysQuery,
     GetWorkspaceApiKeysQueryVariables
   >(
@@ -36,10 +29,7 @@ export function useGetWorkspaceApiKeys(workspaceId: string) {
         }
       }
     `,
-    {
-      client,
-      variables: { workspaceId },
-    }
+    { workspaceId }
   );
 
   const apiKeys = useMemo<ApiKey[] | undefined>(() => {
@@ -63,5 +53,5 @@ export function useGetWorkspaceApiKeys(workspaceId: string) {
     }
   }, [data]);
 
-  return { apiKeys, error, loading };
+  return { apiKeys, error, isLoading };
 }

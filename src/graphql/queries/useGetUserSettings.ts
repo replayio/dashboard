@@ -3,19 +3,14 @@ import {
   GetUserSettingsQuery,
   GetUserSettingsQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
-import { gql, useQuery } from "@apollo/client";
-import assert from "assert";
+import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
+import { gql } from "@apollo/client";
 import { useContext, useMemo } from "react";
 
 export function useGetUserSettings() {
   const { accessToken } = useContext(SessionContext);
-  assert(accessToken != null, "accessToken is required");
-
-  const client = getGraphQLClient(accessToken);
-
-  const { data, error, loading } = useQuery<
+  const { data, error, isLoading } = useGraphQLQuery<
     GetUserSettingsQuery,
     GetUserSettingsQueryVariables
   >(
@@ -32,10 +27,7 @@ export function useGetUserSettings() {
           }
         }
       }
-    `,
-    {
-      client,
-    }
+    `
   );
 
   const apiKeys = useMemo<ApiKey[] | undefined>(() => {
@@ -57,5 +49,5 @@ export function useGetUserSettings() {
     }
   }, [data]);
 
-  return { error, loading, settings: { apiKeys } };
+  return { error, isLoading, settings: { apiKeys } };
 }
