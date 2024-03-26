@@ -33,7 +33,8 @@ export type IconType =
   | "passing-test-run"
   | "primary-branch"
   | "processed-recording"
-  | "recording-no-screenshot-fallback"
+  | "recording-graphic-browser"
+  | "recording-graphic-node"
   | "secondary-branch"
   | "settings"
   | "show-more"
@@ -174,9 +175,13 @@ export function Icon({
       path =
         "M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M9.5,16.5v-9l7,4.5L9.5,16.5z";
       break;
-    case "recording-no-screenshot-fallback":
+    case "recording-graphic-browser":
       path =
         "M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z";
+      break;
+    case "recording-graphic-node":
+      path =
+        "M20,4H4C2.89,4,2,4.9,2,6v12c0,1.1,0.89,2,2,2h16c1.1,0,2-0.9,2-2V6C22,4.9,21.11,4,20,4z M20,18H4V8h16V18z M18,17h-6v-2 h6V17z M7.5,17l-1.41-1.41L8.67,13l-2.59-2.59L7.5,9l4,4L7.5,17z";
       break;
     case "secondary-branch":
       path =

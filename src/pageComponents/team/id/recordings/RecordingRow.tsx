@@ -1,7 +1,7 @@
-import { RecordingDropdown } from "@/pageComponents/team/id/recordings/RecordingDropdown";
-import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
 import { Icon } from "@/components/Icon";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
+import { RecordingDropdown } from "@/pageComponents/team/id/recordings/RecordingDropdown";
+import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { getURL } from "@/utils/recording";
 import Link from "next/link";
@@ -24,7 +24,10 @@ export function RecordingRow({
       href={href}
     >
       <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">
-        <RecordingThumbnail recordingId={recording.uuid} />
+        <RecordingThumbnail
+          buildId={recording.buildId}
+          recordingId={recording.uuid}
+        />
       </div>
       <div className="flex flex-row items-center gap-2 w-full overflow-hidden">
         <div className="flex flex-col grow gap-1 overflow-hidden">

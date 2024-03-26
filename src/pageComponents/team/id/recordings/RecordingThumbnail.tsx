@@ -1,6 +1,7 @@
 import { Icon } from "@/components/Icon";
 import { SessionContext } from "@/components/SessionContext";
 import { getRecordingThumbnailClient } from "@/graphql/queries/getRecordingThumbnail";
+import { RecordingTarget, getRecordingTarget } from "@/utils/recording";
 import {
   MutableRefObject,
   Suspense,
@@ -10,24 +11,25 @@ import {
   useState,
 } from "react";
 
-const EMPTY =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+type Props = { buildId: string; recordingId: string };
 
 // This data is lazy-loaded on the client because we currently store full-size thumbnails and loading them is slow
-export function RecordingThumbnail({ recordingId }: { recordingId: string }) {
+export function RecordingThumbnail(props: Props) {
   return (
     <Suspense fallback={null}>
-      <RecordingThumbnailSuspends recordingId={recordingId} />
+      <RecordingThumbnailSuspends {...props} />
     </Suspense>
   );
 }
 
-function RecordingThumbnailSuspends({ recordingId }: { recordingId: string }) {
+function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
   const { accessToken } = useContext(SessionContext);
 
   const [thumbnail, setThumbnail] = useState<string | null>(null);
 
   const elementRef = useRef<HTMLElement>();
+
+  const target = getRecordingTarget(buildId);
 
   useEffect(() => {
     if (accessToken == null) {
@@ -73,7 +75,11 @@ function RecordingThumbnailSuspends({ recordingId }: { recordingId: string }) {
       >
         <Icon
           className="w-6 h-6 text-gray-700"
-          type="recording-no-screenshot-fallback"
+          type={
+            target === RecordingTarget.node
+              ? "recording-graphic-node"
+              : "recording-graphic-browser"
+          }
         />
       </div>
     );
