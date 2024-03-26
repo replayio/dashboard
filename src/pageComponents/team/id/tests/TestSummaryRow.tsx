@@ -46,6 +46,7 @@ export function TestSummaryRow({
           ? "bg-slate-700 cursor-default"
           : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
       }`}
+      data-test-name="TestSummary-Row"
       onClick={() => {
         selectTestSummary(testSummary.id);
       }}

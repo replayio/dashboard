@@ -12,9 +12,11 @@ export function formatRelativeDate(date: Date) {
 export function getRelativeDate({
   daysAgo,
   hoursAgo,
+  minutesAgo,
 }: {
   daysAgo?: number;
   hoursAgo?: number;
+  minutesAgo?: number;
 }) {
   const date = new Date();
   if (daysAgo !== undefined) {
@@ -22,6 +24,9 @@ export function getRelativeDate({
     date.setHours(0, 0, 0, 0);
   } else if (hoursAgo !== undefined) {
     date.setHours(date.getHours() - hoursAgo);
+    date.setSeconds(0, 0);
+  } else if (minutesAgo !== undefined) {
+    date.setMinutes(date.getMinutes() - minutesAgo);
     date.setSeconds(0, 0);
   }
   return date;
