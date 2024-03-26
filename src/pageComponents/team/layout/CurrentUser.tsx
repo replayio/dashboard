@@ -1,16 +1,13 @@
 import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
-import { UserSettingsDialog } from "@/pageComponents/team/layout/UserSettings/UserSettingsDialog";
-import { useState } from "react";
+import Link from "next/link";
 
 export function CurrentUser() {
-  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
-
   const { user } = useCurrentUser();
 
   return (
-    <button
+    <Link
       className="flex flex-row items-center gap-4 bg-slate-950 !p-2 text-white cursor-pointer rounded"
-      onClick={() => setShowSettingsDialog(true)}
+      href="/user/settings/account"
     >
       {user?.picture && (
         <img
@@ -24,12 +21,6 @@ export function CurrentUser() {
         <div>{user?.name}</div>
         <div className="text-sm text-slate-400">View settings</div>
       </div>
-      {user && showSettingsDialog && (
-        <UserSettingsDialog
-          user={user}
-          onDismiss={() => setShowSettingsDialog(false)}
-        />
-      )}
-    </button>
+    </Link>
   );
 }

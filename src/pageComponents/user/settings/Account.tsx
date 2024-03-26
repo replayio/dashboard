@@ -1,10 +1,12 @@
 import { Button } from "@/components/Button";
 import { COOKIES } from "@/constants";
-import { User } from "@/graphql/types";
+import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { deleteCookieValueClient } from "@/utils/cookie";
 import { useState } from "react";
 
-export function Account({ user }: { user: User }) {
+export function Account() {
+  const { user } = useCurrentUser();
+
   const [isPending, setIsPending] = useState(false);
 
   const onClick = async () => {
@@ -18,7 +20,7 @@ export function Account({ user }: { user: User }) {
   return (
     <div className="flex flex-col gap-2">
       <div>
-        Signed in as <span className="font-bold">{user.name}</span>
+        Signed in as <span className="font-bold">{user?.name}</span>
       </div>
       <div>
         <Button disabled={isPending} onClick={onClick}>
