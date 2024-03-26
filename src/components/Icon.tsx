@@ -33,6 +33,7 @@ export type IconType =
   | "passing-test-run"
   | "primary-branch"
   | "processed-recording"
+  | "recording-no-screenshot-fallback"
   | "secondary-branch"
   | "settings"
   | "show-more"
@@ -172,6 +173,10 @@ export function Icon({
     case "processed-recording":
       path =
         "M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M9.5,16.5v-9l7,4.5L9.5,16.5z";
+      break;
+    case "recording-no-screenshot-fallback":
+      path =
+        "M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z";
       break;
     case "secondary-branch":
       path =

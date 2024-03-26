@@ -1,6 +1,14 @@
+import { Icon } from "@/components/Icon";
 import { SessionContext } from "@/components/SessionContext";
 import { getRecordingThumbnailClient } from "@/graphql/queries/getRecordingThumbnail";
-import { Suspense, useContext, useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  Suspense,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const EMPTY =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
@@ -19,14 +27,14 @@ function RecordingThumbnailSuspends({ recordingId }: { recordingId: string }) {
 
   const [thumbnail, setThumbnail] = useState<string | null>(null);
 
-  const imageRef = useRef<HTMLImageElement>(null);
+  const elementRef = useRef<HTMLElement>();
 
   useEffect(() => {
     if (accessToken == null) {
       return;
     }
 
-    const image = imageRef.current!;
+    const element = elementRef.current!;
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -41,19 +49,33 @@ function RecordingThumbnailSuspends({ recordingId }: { recordingId: string }) {
         }
       });
     });
-    observer.observe(image);
+    observer.observe(element);
 
     return () => {
       observer.disconnect();
     };
   }, [accessToken, recordingId]);
 
-  return (
-    <img
-      alt="Recording thumbnail"
-      className="w-full h-9 rounded-sm"
-      ref={imageRef}
-      src={thumbnail ?? EMPTY}
-    />
-  );
+  if (thumbnail) {
+    return (
+      <img
+        alt="Recording thumbnail"
+        className="w-full h-9 rounded-sm"
+        ref={elementRef as MutableRefObject<HTMLImageElement>}
+        src={thumbnail}
+      />
+    );
+  } else {
+    return (
+      <div
+        className="flex items-center justify-center w-full h-full"
+        ref={elementRef as MutableRefObject<HTMLDivElement>}
+      >
+        <Icon
+          className="w-6 h-6 text-gray-700"
+          type="recording-no-screenshot-fallback"
+        />
+      </div>
+    );
+  }
 }
