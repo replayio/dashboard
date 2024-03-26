@@ -5,7 +5,6 @@ import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { Hoverboard } from "@replayio/overboard";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
-// TODO Support organization welcome message (if set)
 export default function Page({
   userAgent,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
