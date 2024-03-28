@@ -9,6 +9,7 @@ import {
 } from "@/pageComponents/team/id/tests/constants";
 import { setCookieValueClient } from "@/utils/cookie";
 import { getRelativeDate } from "@/utils/date";
+import { useRouter } from "next/navigation";
 import {
   PropsWithChildren,
   createContext,
@@ -38,10 +39,12 @@ export const TestsViewContext = createContext<
 
 export function ContextRoot({
   children,
+  defaultTestSummaryId,
   filters,
   workspaceId,
 }: PropsWithChildren & {
   filters: Partial<Filters> | null;
+  defaultTestSummaryId: string | null;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
@@ -64,13 +67,23 @@ export function ContextRoot({
 
   const [selectedTestSummaryId, setSelectedTestSummaryId] = useState<
     string | undefined
-  >(undefined);
+  >(defaultTestSummaryId || undefined);
 
-  const selectTestSummary = useCallback((id: string) => {
-    startTransition(() => {
-      setSelectedTestSummaryId(id);
-    });
-  }, []);
+  const router = useRouter();
+
+  const selectTestSummary = useCallback(
+    (id: string) => {
+      startTransition(() => {
+        setSelectedTestSummaryId(id);
+
+        const url = new URL(window.location.href);
+        url.searchParams.set("testSummaryId", id);
+
+        router.replace(url.toString());
+      });
+    },
+    [router]
+  );
 
   const updateFilters = useCallback(
     (partialState: Partial<Filters>) => {

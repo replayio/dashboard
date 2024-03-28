@@ -11,12 +11,17 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
   filters,
+  testSummaryId,
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
 
   return (
-    <ContextRoot filters={filters} workspaceId={workspaceId}>
+    <ContextRoot
+      defaultTestSummaryId={testSummaryId}
+      filters={filters}
+      workspaceId={workspaceId}
+    >
       <TestSuiteTestsPage workspaceId={workspaceId!} />
     </ContextRoot>
   );
@@ -35,6 +40,8 @@ export async function getServerSideProps(
   const { invalidWorkspace, isTest, workspaceId } =
     await getServerSidePropsShared(context);
 
+  const testSummaryId = (context.query.testSummaryId ?? null) as string | null;
+
   if (invalidWorkspace) {
     return {
       redirect: {
@@ -43,6 +50,7 @@ export async function getServerSideProps(
       },
       props: {
         filters,
+        testSummaryId,
         workspaceId,
       },
     };
@@ -54,6 +62,7 @@ export async function getServerSideProps(
       },
       props: {
         filters,
+        testSummaryId,
         workspaceId,
       },
     };
@@ -62,6 +71,7 @@ export async function getServerSideProps(
   return {
     props: {
       filters,
+      testSummaryId,
       workspaceId,
     },
   };

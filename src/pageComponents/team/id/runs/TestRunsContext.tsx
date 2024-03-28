@@ -15,6 +15,7 @@ import {
 import { setCookieValueClient } from "@/utils/cookie";
 import { getRelativeDate } from "@/utils/date";
 import { filterTest, filterTestRun } from "@/utils/test-suites";
+import { useRouter } from "next/navigation";
 import {
   Dispatch,
   PropsWithChildren,
@@ -43,8 +44,8 @@ export const RunsViewContext = createContext<
     isPending: boolean;
     selectedTestRunId: string | undefined;
     selectedTestId: string | undefined;
-    selectTest: Dispatch<SetStateAction<string | undefined>>;
-    selectTestRun: Dispatch<SetStateAction<string | undefined>>;
+    selectTest: (id: string) => void;
+    selectTestRun: (id: string) => void;
     testRuns: TestRun[] | undefined;
     tests: TestSuiteTest[] | undefined;
     updateFilters(value: Partial<Filters>): void;
@@ -53,10 +54,14 @@ export const RunsViewContext = createContext<
 
 export function ContextRoot({
   children,
+  defaultTestId,
+  defaultTestRunId,
   filters,
   workspaceId,
 }: PropsWithChildren & {
   filters: Partial<Filters> | null;
+  defaultTestId: string | null;
+  defaultTestRunId: string | null;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
@@ -91,26 +96,39 @@ export function ContextRoot({
 
   const [selectedTestRunId, setSelectedTestRunId] = useState<
     string | undefined
-  >(undefined);
+  >(defaultTestRunId || undefined);
   const [selectedTestId, setSelectedTestId] = useState<string | undefined>(
-    undefined
+    defaultTestId || undefined
   );
 
+  const router = useRouter();
+
   const selectTest = useCallback(
-    (value: SetStateAction<string | undefined>) => {
+    (id: string) => {
       startTransition(() => {
-        setSelectedTestId(value);
+        setSelectedTestId(id);
+
+        const url = new URL(window.location.href);
+        url.searchParams.set("testId", id);
+
+        router.replace(url.toString());
       });
     },
-    []
+    [router]
   );
 
   const selectTestRun = useCallback(
-    (value: SetStateAction<string | undefined>) => {
-      setSelectedTestRunId(value);
+    (id: string) => {
+      setSelectedTestRunId(id);
       setSelectedTestId(undefined);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("testRunId", id);
+      url.searchParams.set("testId", "");
+
+      router.replace(url.toString());
     },
-    []
+    [router]
   );
 
   const updateFilters = useCallback(
