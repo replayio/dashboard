@@ -29,9 +29,9 @@ export function RecordingRow({
           recordingId={recording.uuid}
         />
       </div>
-      <div className="flex flex-row items-center gap-2 w-full overflow-hidden">
-        <div className="flex flex-col grow gap-1 overflow-hidden">
-          <div>{recording.title}</div>
+      <div className="flex flex-row items-center gap-2 w-full truncate">
+        <div className="flex flex-col grow gap-1 truncate">
+          <div className="truncate">{recording.title}</div>
           <div className="flex flex-row gap-4 text-sm text-gray-500 whitespace-nowrap">
             <div className="w-16 flex flex-row gap-1 items-center shrink-0">
               <Icon className="w-3 h-3" type="clock" />
@@ -55,7 +55,7 @@ export function RecordingRow({
             }
           />
         </div>
-        <div className="w-36 shrink-0 truncate text-sm text-center">
+        <div className="w-16 md:w-36 shrink-0 truncate text-sm text-center">
           {recording.owner?.name ?? ""}
         </div>
         <div className="w-10 shrink-0 flex flex-row items-center gap-1">

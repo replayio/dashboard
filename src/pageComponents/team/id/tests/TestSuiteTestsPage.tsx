@@ -24,7 +24,7 @@ export function TestSuiteTestsPage({ workspaceId }: { workspaceId: string }) {
   } = useContext(TestsViewContext);
 
   return (
-    <div className="flex flex-row gap-2 p-2 overflow-auto overflow-hidden h-full">
+    <div className="flex flex-col md:flex-row gap-2 p-2 overflow-auto overflow-hidden h-full">
       <div className="bg-slate-800 text-white p-2 rounded basis-2/4 overflow-auto flex flex-col gap-2 relative">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 items-center">

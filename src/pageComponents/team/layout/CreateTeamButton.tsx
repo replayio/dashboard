@@ -16,9 +16,10 @@ export function CreateTeamButton({
 
   return (
     <>
-      <Button className="w-full" onClick={show}>
-        <Icon className="w-4 h-4" type="create" />
-        Create new team
+      <Button className="w-full truncate whitespace-nowrap" onClick={show}>
+        <Icon className="w-4 h-4 shrink-0" type="create" />
+        <div className="hidden md:block">Create new team</div>
+        <div className="md:hidden">New team</div>
       </Button>
       {showDialog && (
         <CreateTeamDialog isInternalUser={isInternalUser} onDismiss={hide} />
