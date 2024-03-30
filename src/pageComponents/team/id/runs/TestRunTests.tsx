@@ -183,7 +183,11 @@ export function TestRunTests({
                       : `${count} ${label} tests`}
                   </div>
                 }
-                openByDefault={label !== "Passed"}
+                openByDefault={
+                  label !== "Passed" ||
+                  (selectedTestId != null &&
+                    tests.find((test) => test.id === selectedTestId) != null)
+                }
               >
                 {tests.map((test, index) => (
                   <TestRunTestRow

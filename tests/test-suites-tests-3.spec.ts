@@ -33,4 +33,15 @@ test("test-suites-tests-3: flaky test executions", async ({ page }) => {
       "Commit with 2 flaky test"
     );
   }
+
+  {
+    // Reloading the page should remember the previous selections
+
+    const selectedRow = getTestSummaryRow(page, { selected: true });
+    await expect(selectedRow).toBeVisible();
+    await expect(await selectedRow.textContent()).toContain("Flaky test run");
+
+    const executionRows = getTestExecutionRow(page);
+    await expect(executionRows).toHaveCount(2);
+  }
 });

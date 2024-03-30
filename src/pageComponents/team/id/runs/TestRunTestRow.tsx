@@ -20,6 +20,7 @@ export function TestRunTestRow({
           ? "text-sky-500 cursor-default"
           : "focus:text-sky-500 hover:text-sky-500 cursor-pointer text-white"
       }`}
+      data-selected={isActive || undefined}
       data-test-name="TestRunTests-Row"
       onClick={() => selectTest(test.id)}
     >

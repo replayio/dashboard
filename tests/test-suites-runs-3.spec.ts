@@ -138,4 +138,32 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
       "This is an error message"
     );
   }
+
+  {
+    // Reloading the page should remember the previous selections
+    await page.reload();
+
+    // The same run should be selected by default
+    const selectedRunRow = page.locator(
+      '[data-test-name="TestRuns-Row"][data-selected]'
+    );
+    await expect(selectedRunRow).toBeVisible();
+    await expect(await selectedRunRow.textContent()).toContain(
+      "Failed run in temp branch"
+    );
+
+    // The same test should be selected by default
+    const selectedTestsRow = page.locator(
+      '[data-test-name="TestRunTests-Row"][data-selected]'
+    );
+    await expect(selectedTestsRow).toBeVisible();
+    await expect(await selectedTestsRow.textContent()).toContain("Eighth test");
+
+    await expect(
+      page.locator('[data-test-name="TestExecution-RecordingRow"]')
+    ).toHaveCount(2);
+    await expect(
+      page.locator('[data-test-id="TestExecution-Errors"]')
+    ).toBeVisible();
+  }
 });

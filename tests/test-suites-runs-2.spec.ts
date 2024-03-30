@@ -72,6 +72,7 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
     const passedSection = getTestRunSections(page, "Passed");
     await expect(await passedSection.textContent()).toContain("2 Passed tests");
 
+    // Passed tests should be collapsed by default; expand them
     const rows = page.locator('[data-test-name="TestRunTests-Row"]');
     await expect(rows).toHaveCount(0);
     await sections
@@ -101,5 +102,35 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
 
     const errors = page.locator('[data-test-id="TestExecution-Errors"]');
     await expect(errors).not.toBeVisible();
+  }
+
+  {
+    // Reloading the page should remember the previous selections
+    await page.reload();
+
+    // The same run should be selected by default
+    const selectedRunRow = page.locator(
+      '[data-test-name="TestRuns-Row"][data-selected]'
+    );
+    await expect(selectedRunRow).toBeVisible();
+    await expect(await selectedRunRow.textContent()).toContain(
+      "Successful run in main branch"
+    );
+
+    // Passed tests should not be collapsed by default if it contains the selected test
+    await expect(
+      page.locator('[data-test-name="TestRunTests-Row"]')
+    ).toHaveCount(2);
+
+    // The same test should be selected by default
+    const selectedTestsRow = page.locator(
+      '[data-test-name="TestRunTests-Row"][data-selected]'
+    );
+    await expect(selectedTestsRow).toBeVisible();
+    await expect(await selectedTestsRow.textContent()).toContain("First test");
+
+    await expect(
+      page.locator('[data-test-name="TestExecution-RecordingRow"]')
+    ).toHaveCount(1);
   }
 });

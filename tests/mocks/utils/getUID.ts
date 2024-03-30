@@ -1,5 +1,8 @@
-import { v4 as uuid } from "uuid";
+const idCounters: { [key: string]: number } = {};
 
 export function getUID(prefix: string): string {
-  return `${prefix}-${uuid()}`;
+  const counter = idCounters[prefix] ?? 0;
+  idCounters[prefix] = counter + 1;
+
+  return `${prefix}-${counter}`;
 }
