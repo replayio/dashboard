@@ -68,7 +68,8 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
 
   let mostTestsRunsInDay = 0;
   dataByDay.forEach((data) => {
-    const numTestRuns = data.numFailedTestRuns + data.numPassingTestRuns;
+    const numTestRuns =
+      data.numFailedTestRuns + data.numFlakyTestRuns + data.numPassingTestRuns;
     if (numTestRuns > mostTestsRunsInDay) {
       mostTestsRunsInDay = numTestRuns;
     }
@@ -104,10 +105,15 @@ function ChartItem({
   data: TestRunStatsData;
   mostTestsRunsInDay: number;
 }) {
-  const numTestRuns = data.numFailedTestRuns + data.numPassingTestRuns;
-  const failurePercentage =
-    numTestRuns === 0 ? 0 : data.numFailedTestRuns / numTestRuns;
-  const percentageTotal = Math.max(0.1, numTestRuns / mostTestsRunsInDay);
+  const numTestRuns =
+    data.numFailedTestRuns + data.numFlakyTestRuns + data.numPassingTestRuns;
+
+  let failurePercentage = 0;
+  if (numTestRuns > 0 && data.numFailedTestRuns > 0) {
+    failurePercentage = data.numFailedTestRuns / numTestRuns;
+  }
+
+  const percentageTotal = numTestRuns / mostTestsRunsInDay;
 
   const tooltipContent = getTestRunStatsTooltip(data);
 
@@ -124,7 +130,7 @@ function ChartItem({
       onMouseLeave={onMouseLeave}
     >
       <div
-        className={`flex flex-col justify-end absolute bottom-0 w-full rounded-sm overflow-hidden ${
+        className={`flex flex-col justify-end absolute bottom-0 w-full rounded-sm overflow-hidden min-h-1 ${
           numTestRuns > 0 && data.numFailedTestRuns === 0
             ? getBackgroundColorClassName("passed")
             : "bg-gray-700"
@@ -133,10 +139,12 @@ function ChartItem({
           height: percentageTotal * 100 + "%",
         }}
       >
-        <div
-          className="bg-rose-500 grow-0 shrink-0"
-          style={{ height: failurePercentage * 100 + "%" }}
-        />
+        {failurePercentage > 0 && (
+          <div
+            className="bg-rose-500 grow-0 shrink-0 min-h-1"
+            style={{ height: failurePercentage * 100 + "%" }}
+          />
+        )}
       </div>
       {tooltip}
     </div>

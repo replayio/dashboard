@@ -114,7 +114,10 @@ export function TestRunTests({
         className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded"
         data-test-id="TestRunTests-Metadata"
       >
-        <div className="flex flex-row items-center gap-1">
+        <div
+          className="flex flex-row items-center gap-1"
+          suppressHydrationWarning
+        >
           <Icon className="w-4 h-4" type="clock" />
           {formatRelativeTime(selectedTestRun.date)}
         </div>

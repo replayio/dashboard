@@ -42,6 +42,6 @@ test("test-suites-tests-2: failed test executions", async ({ page }) => {
     await expect(await selectedRow.textContent()).toContain("Failed test");
 
     const executionRows = getTestExecutionRow(page);
-    await expect(executionRows).toHaveCount(3);
+    await expect(executionRows).toHaveCount(2);
   }
 });

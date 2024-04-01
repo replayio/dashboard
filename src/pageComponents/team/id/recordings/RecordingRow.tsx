@@ -37,7 +37,10 @@ export function RecordingRow({
               <Icon className="w-3 h-3" type="clock" />
               {formatDuration(recording.duration)}
             </div>
-            <div className="w-20 flex flex-row gap-1 items-center shrink-0">
+            <div
+              className="w-20 flex flex-row gap-1 items-center shrink-0"
+              suppressHydrationWarning
+            >
               <Icon className="w-3 h-3" type="calendar" />
               {formatRelativeTime(recording.createdAt)} ago
             </div>

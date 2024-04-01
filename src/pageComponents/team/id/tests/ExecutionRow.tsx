@@ -33,7 +33,10 @@ export function ExecutionRow({
             {testExecution.commitAuthor}
           </div>
         )}
-        <div className="flex flex-row gap-1 items-center shrink-0 text-sm">
+        <div
+          className="flex flex-row gap-1 items-center shrink-0 text-sm"
+          suppressHydrationWarning
+        >
           <Icon className="w-3 h-3" type="clock" />
           {formatRelativeTime(testExecution.createdAt)} ago
         </div>

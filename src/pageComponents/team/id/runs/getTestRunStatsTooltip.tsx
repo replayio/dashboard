@@ -20,8 +20,6 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
   if (numRunsTotal === 0) {
     testRunLabel = "No tests were run on this day";
   } else {
-    const numRunsTotal = numFailedTestRuns + numPassingTestRuns;
-
     if (numFailedTestRuns === 0) {
       if (numRunsTotal === 1) {
         testRunLabel = (
@@ -37,7 +35,7 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
           </div>
         );
       }
-    } else if (numPassingTestRuns === 0) {
+    } else if (numFailedTestRuns === numRunsTotal) {
       if (numRunsTotal === 1) {
         testRunLabel = (
           <div>
@@ -76,7 +74,7 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
           All <strong>{numTestsTotal.toLocaleString()}</strong> tests passed
         </div>
       );
-    } else if (numPassingTests === 0) {
+    } else if (numFailedTests === numTestsTotal) {
       testLabel = (
         <div>
           All <strong>{numTestsTotal.toLocaleString()}</strong> tests failed

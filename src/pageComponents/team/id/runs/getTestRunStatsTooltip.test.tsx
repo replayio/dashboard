@@ -82,6 +82,21 @@ describe("getTestRunStatsTooltip", () => {
     );
   });
 
+  it("should handle a day with only failed and flaky test runs", () => {
+    expectToContainText(
+      getTestRunStatsTooltip(
+        createChartDataType({
+          numFailedTestRuns: 1,
+          numFailedTests: 10,
+          numFlakyTestRuns: 1,
+          numFlakyTests: 10,
+        })
+      ),
+      "2 test runs contained at least one failing test",
+      "10 tests failed"
+    );
+  });
+
   it("should handle a day with only passing test runs", () => {
     expectToContainText(
       getTestRunStatsTooltip(
