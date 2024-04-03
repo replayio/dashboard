@@ -1,3 +1,4 @@
+import { URLS } from "@/constants";
 import {
   ApolloClient,
   InMemoryCache,
@@ -23,7 +24,7 @@ export function getGraphQLClient(accessToken: string) {
         "Content-Type": "application/json",
         "Replay-Client-Id": "196a9e7b-dba5-46ee-8b81-fac66991f431",
       },
-      uri: "https://api.replay.io/v1/graphql",
+      uri: `${URLS.api}/v1/graphql`,
     });
     const retryLink = new RetryLink({
       attempts: {

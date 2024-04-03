@@ -23,6 +23,9 @@ dependencies:
   chalk:
     specifier: ^4
     version: 4.1.2
+  cookie:
+    specifier: ^0.6.0
+    version: 0.6.0
   date-fns:
     specifier: ^3.3.1
     version: 3.3.1
@@ -79,6 +82,9 @@ devDependencies:
   '@testing-library/react':
     specifier: ^14.2.1
     version: 14.2.1(react-dom@18.2.0)(react@18.2.0)
+  '@types/cookie':
+    specifier: ^0.6.0
+    version: 0.6.0
   '@types/jest':
     specifier: ^29.5.12
     version: 29.5.12
@@ -2855,6 +2861,10 @@ packages:
     resolution: {integrity: sha512-WXCyOcRtH37HAUkpXhUduaxdm82b4GSlyTqajXviN4EfiuPgNYR109xMCKvpl6zPIpua0DGlMEDCq+g8EdoheQ==}
     dependencies:
       '@babel/types': 7.23.9
+    dev: true
+
+  /@types/cookie@0.6.0:
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
     dev: true
 
   /@types/graceful-fs@4.1.9:
