@@ -18,5 +18,5 @@ export const LOCAL_STORAGE = {};
 
 export const URLS = {
   api: "https://api.replay.io",
-  app: process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "http://localhost:8080",
+  app: process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : process.env.APP_URL,
 };
