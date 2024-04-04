@@ -1,5 +1,6 @@
 export const COOKIES = {
   accessToken: "replay:dashboard:access-token",
+  browserAuth: "replay:browser-auth",
   defaultPathname: "replay:dashboard:default-pathname",
   mobileWarningDismissed: "replay:dashboard:mobile-warning-dismissed",
   testRunsFilters: "replay:dashboard:test-runs-filters",
@@ -14,3 +15,8 @@ export const HEADERS = {
 };
 
 export const LOCAL_STORAGE = {};
+
+export const URLS = {
+  api: "https://api.replay.io",
+  app: process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : process.env.APP_URL!,
+};

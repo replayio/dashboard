@@ -1,3 +1,4 @@
+import { URLS } from "@/constants";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export type Release = {
@@ -19,7 +20,7 @@ export default async function handler(
 }
 
 export async function fetchReleases() {
-  const response = await fetch("https://api.replay.io/v1/releases");
+  const response = await fetch(`${URLS.api}/v1/releases`);
   const releases = await response.json();
   return releases as Release[];
 }

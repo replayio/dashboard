@@ -5,12 +5,14 @@ import { Message } from "@/components/Message";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { getSession } from "@auth0/nextjs-auth0";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams?.get("returnTo") || "/";
 
   if (user) {
     return (
@@ -19,19 +21,20 @@ export default function Page({
         <div>
           You are already logged in as <strong>{user.name}</strong>.
         </div>
-        <Button onClick={() => router.push("/")} size="large">
-          Continue to Library
+        <Button onClick={() => router.push(returnTo)} size="large">
+          {returnTo === "/" ? "Continue to Library" : "Continue with this account"}
         </Button>
-        {/* TODO [FE-2379] Support account switcher
+        {
         globalThis.__IS_RECORD_REPLAY_RUNTIME__ || (
           <Button
-            onClick={() => router.push("/api/auth/login")}
+            onClick={() => router.push(`/api/auth/switchAccount?returnTo=${returnTo}`)}
+            size="large"
             variant="outline"
           >
             Switch accounts
           </Button>
         )
-        */}
+        }
       </Message>
     );
   } else {
@@ -46,7 +49,7 @@ export default function Page({
             Learn more
           </ExternalLink>
         </div>
-        <Button onClick={() => router.push("/api/auth/login")} size="large">
+        <Button onClick={() => router.push(`/api/auth/login?returnTo=${returnTo}`)} size="large">
           Sign in with Google
         </Button>
       </Message>
