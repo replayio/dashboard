@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const session = await getSession(req, res);
       if (session?.refreshToken) {
         const source = await fulfillAuthRequest(browserAuth, session.refreshToken);
-        res.redirect(`/browser/auth?source=${source}`);
+        res.redirect(`/browser/authenticated?source=${source}`);
       } else {
         res.statusCode = 400;
         res.statusMessage = "Missing refresh token";
