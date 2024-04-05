@@ -4,12 +4,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "@auth0/nextjs-auth0";
 import { initAuthRequest } from "@/graphql/queries/initAuthRequest";
 import { fulfillAuthRequest } from "@/graphql/queries/fulfillAuthRequest";
-
-const getQueryValue = (query: string | string[] | undefined) => (Array.isArray(query) ? query[0] : query);
+import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const key = getQueryValue(req.query.key);
-  const source = getQueryValue(req.query.source) || "browser";
+  const key = getValueFromArrayOrString(req.query.key);
+  const source = getValueFromArrayOrString(req.query.source) || "browser";
 
   try {
     if (key) {
