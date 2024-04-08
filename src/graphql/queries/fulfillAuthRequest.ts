@@ -16,7 +16,7 @@ export async function fulfillAuthRequest(id: string, token: string) {
         }
       `,
       variables: {
-        secret: "omNN-4K*GiHhqUH8-7mUB6Ecz8ZPBtcqH68V",
+        secret: process.env.FRONTEND_API_SECRET!,
         id,
         token,
       },

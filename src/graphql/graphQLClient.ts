@@ -14,16 +14,20 @@ if (process.env.NODE_ENV === "development") {
   loadErrorMessageHandler();
 }
 
+let graphQLClientAccessToken: string | undefined;
 let graphQLClient: ApolloClient<NormalizedCacheObject>;
 
-export function getGraphQLClient(accessToken: string) {
-  if (graphQLClient == null) {
+export function getGraphQLClient(accessToken?: string) {
+  if (graphQLClient == null || graphQLClientAccessToken !== accessToken) {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "Replay-Client-Id": "196a9e7b-dba5-46ee-8b81-fac66991f431",
+    };
+    if (accessToken) {
+      headers["Authorization"] = `Bearer ${accessToken}`;
+    }
     const httpLink = createHttpLink({
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        "Replay-Client-Id": "196a9e7b-dba5-46ee-8b81-fac66991f431",
-      },
+      headers,
       uri: `${URLS.api}/v1/graphql`,
     });
     const retryLink = new RetryLink({
@@ -36,6 +40,7 @@ export function getGraphQLClient(accessToken: string) {
       },
     });
 
+    graphQLClientAccessToken = accessToken;
     graphQLClient = new ApolloClient({
       cache: new InMemoryCache({
         typePolicies: {
