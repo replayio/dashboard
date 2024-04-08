@@ -17,15 +17,24 @@ export function TestSummaryRow({
 
   let icon: ReactNode = null;
   if (showFlakyRate) {
-    icon = (
-      <div className="flex items-center justify-center bg-yellow-500 text-black w-full h-6 rounded-md shrink-0 text-xs">
-        {Math.round(testSummary.stats.flakyRate * 100)}%
-      </div>
-    );
+    if (testSummary.stats.flakyRate > 0) {
+      icon = (
+        <div className="flex items-center justify-center bg-yellow-500 text-black w-full h-6 rounded-md shrink-0 text-xs">
+          {Math.ceil(testSummary.stats.flakyRate * 100)}%
+        </div>
+      );
+    } else {
+      icon = (
+        <Icon
+          className="text-green-500 w-6 h-6 shrink-0"
+          type="passing-test-run"
+        />
+      );
+    }
   } else if (testSummary.stats.failureRate > 0) {
     icon = (
       <div className="flex items-center justify-center bg-rose-600 text-white w-full h-6 rounded-md shrink-0 text-xs">
-        {Math.round(testSummary.stats.failureRate * 100)}%
+        {Math.ceil(testSummary.stats.failureRate * 100)}%
       </div>
     );
   } else {
