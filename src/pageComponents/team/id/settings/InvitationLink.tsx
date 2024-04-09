@@ -1,4 +1,5 @@
 import { ClickToCopyString } from "@/components/ClickToCopyString";
+import { URLS } from "@/constants";
 
 export function InvitationLink({ invitationCode }: { invitationCode: string }) {
   if (!invitationCode) {
@@ -13,7 +14,7 @@ export function InvitationLink({ invitationCode }: { invitationCode: string }) {
             <strong>Invite link</strong> (click to copy)
           </div>
         }
-        value={`https://app.replay.io/team/invitation?code=${invitationCode}`}
+        value={`${URLS.app}/team/invitation?code=${invitationCode}`}
       />
     </>
   );

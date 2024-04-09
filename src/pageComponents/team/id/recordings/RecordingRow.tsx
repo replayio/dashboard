@@ -1,3 +1,4 @@
+import { EnvironmentContext } from "@/components/EnvironmentContext";
 import { Icon } from "@/components/Icon";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
 import { RecordingDropdown } from "@/pageComponents/team/id/recordings/RecordingDropdown";
@@ -5,6 +6,7 @@ import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/Recordin
 import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { getURL } from "@/utils/recording";
 import Link from "next/link";
+import { useContext } from "react";
 
 export function RecordingRow({
   recording,
@@ -15,13 +17,15 @@ export function RecordingRow({
   user: User;
   workspaces: Workspace[];
 }) {
-  const href = getURL(recording.uuid, recording.buildId);
+  const context = useContext(EnvironmentContext);
+
+  const url = getURL(context, recording.uuid, recording.buildId);
 
   return (
     <Link
       className="flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
       data-test-name="RecordingRow"
-      href={href}
+      href={url}
     >
       <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">
         <RecordingThumbnail

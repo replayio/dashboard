@@ -58,7 +58,16 @@ export async function middleware(request: NextRequest) {
     response.headers.set(HEADERS.accessTokenSource, accessTokenSource);
   }
 
+  // The library supports a set of URL parameters that must be passed along as headers to the client
   const url = new URL(request.nextUrl);
+  const devtoolsUrl = url.searchParams.get("devtoolsUrl");
+  if (devtoolsUrl) {
+    response.headers.set(HEADERS.devtoolsUrl, devtoolsUrl);
+  }
+  const devtoolsLegacyUrl = url.searchParams.get("devtoolsLegacyUrl");
+  if (devtoolsLegacyUrl) {
+    response.headers.set(HEADERS.devtoolsLegacyUrl, devtoolsLegacyUrl);
+  }
   const mockKey = url.searchParams.get("mockKey");
   if (mockKey) {
     response.headers.set(HEADERS.mockKey, mockKey);

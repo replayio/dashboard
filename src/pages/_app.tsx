@@ -1,3 +1,4 @@
+import { EnvironmentContextProvider } from "@/components/EnvironmentContext";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { COOKIES, HEADERS } from "@/constants";
 import { setCookieValueClient } from "@/utils/cookie";
@@ -9,35 +10,53 @@ import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
-import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 
 type PageProps = {
   accessToken: string;
   accessTokenSource: string;
+  devtoolsUrl: string;
+  devtoolsLegacyUrl: string;
   mockKey: string;
 };
 
 export default class MyApp extends App<AppProps<PageProps>> {
   accessToken: string;
   accessTokenSource: string;
-  mockKey: string;
+  environment: {
+    devtoolsUrl: string;
+    devtoolsLegacyUrl: string;
+    mockKey: string;
+  };
 
   constructor(context: AppProps<PageProps>) {
     super(context);
 
     this.accessToken = context.pageProps.accessToken;
     this.accessTokenSource = context.pageProps.accessTokenSource;
-    this.mockKey = context.pageProps.mockKey;
+    this.environment = {
+      devtoolsUrl: context.pageProps.devtoolsUrl,
+      devtoolsLegacyUrl: context.pageProps.devtoolsLegacyUrl,
+      mockKey: context.pageProps.mockKey,
+    };
   }
 
   static getInitialProps = async (context: AppContext) => {
     const accessToken = context.ctx.req?.headers?.[HEADERS.accessToken];
     const accessTokenSource =
       context.ctx.req?.headers?.[HEADERS.accessTokenSource];
+    const devtoolsUrl = context.ctx.req?.headers?.[HEADERS.devtoolsUrl];
+    const devtoolsLegacyUrl =
+      context.ctx.req?.headers?.[HEADERS.devtoolsLegacyUrl];
     const mockKey = context.ctx.req?.headers?.[HEADERS.mockKey];
 
     return {
-      pageProps: { accessToken, accessTokenSource, mockKey: mockKey || "" },
+      pageProps: {
+        accessToken,
+        accessTokenSource,
+        devtoolsUrl: devtoolsUrl || "",
+        devtoolsLegacyUrl: devtoolsLegacyUrl || "",
+        mockKey: mockKey || "",
+      },
     };
   };
 
@@ -51,20 +70,20 @@ export default class MyApp extends App<AppProps<PageProps>> {
   }
 
   render() {
-    const { accessToken, mockKey, props } = this;
+    const { accessToken, environment, props } = this;
     const { Component, pageProps } = props;
 
     assert("Layout" in Component, "Page.Layout is required");
     const Layout = Component.Layout as ComponentType<PropsWithChildren>;
 
     let children = (
-      <EndToEndTestContextProvider mockKey={mockKey}>
+      <EnvironmentContextProvider {...environment}>
         <SessionContextProvider accessToken={accessToken}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </SessionContextProvider>
-      </EndToEndTestContextProvider>
+      </EnvironmentContextProvider>
     );
 
     const isAuthenticated = !!accessToken;

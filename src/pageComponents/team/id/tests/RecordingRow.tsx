@@ -1,3 +1,4 @@
+import { EnvironmentContext } from "@/components/EnvironmentContext";
 import { Icon } from "@/components/Icon";
 import {
   TestSuiteTestExecutionRecording,
@@ -6,6 +7,7 @@ import {
 import { getURL } from "@/utils/recording";
 import { getColorClassName } from "@/utils/test-suites";
 import Link from "next/link";
+import { useContext } from "react";
 
 export function RecordingRow({
   recording,
@@ -14,7 +16,9 @@ export function RecordingRow({
   recording: TestSuiteTestExecutionRecording;
   status: TestSuiteTestStatus;
 }) {
-  const url = getURL(recording.id, recording.buildId);
+  const context = useContext(EnvironmentContext);
+
+  const url = getURL(context, recording.id, recording.buildId);
 
   const colorClassName = getColorClassName(status);
   const iconType = recording.isProcessed

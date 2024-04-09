@@ -1,4 +1,4 @@
-import { EndToEndTestContext } from "@/components/EndToEndTestContext";
+import { EnvironmentContext } from "@/components/EnvironmentContext";
 import { SessionContext } from "@/components/SessionContext";
 import { getGraphQLClient } from "@/graphql/graphQLClient";
 import {
@@ -35,7 +35,7 @@ export function useGraphQLQuery<
   const client = getGraphQLClient(accessToken);
 
   // Support e2e tests
-  const { mockKey } = useContext(EndToEndTestContext);
+  const { mockKey } = useContext(EnvironmentContext);
 
   // This looks like a rule violation, but mock data behavior is deterministic
   const {
