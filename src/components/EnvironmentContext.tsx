@@ -4,7 +4,6 @@ import { MockDataKey } from "../../tests/mocks/data";
 
 export type EnvironmentContextType = {
   devtoolsUrl: string | null;
-  devtoolsLegacyUrl: string | null;
   mockKey: MockDataKey | null;
 };
 
@@ -15,20 +14,17 @@ export const EnvironmentContext = createContext<EnvironmentContextType>(
 export function EnvironmentContextProvider({
   children,
   devtoolsUrl,
-  devtoolsLegacyUrl,
   mockKey,
 }: PropsWithChildren<{
   devtoolsUrl: string | null;
-  devtoolsLegacyUrl: string | null;
   mockKey: string | null;
 }>) {
   const value = useMemo<EnvironmentContextType>(
     () => ({
       devtoolsUrl: devtoolsUrl || URLS.defaultDevtools,
-      devtoolsLegacyUrl: devtoolsLegacyUrl || URLS.defaultDevtoolsLegacy,
       mockKey: mockKey as MockDataKey | null,
     }),
-    [devtoolsUrl, devtoolsLegacyUrl, mockKey]
+    [devtoolsUrl, mockKey]
   );
 
   return (

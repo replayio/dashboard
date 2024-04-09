@@ -11,7 +11,6 @@ export const HEADERS = {
   accessToken: "x-access-token",
   accessTokenSource: "x-access-token-source",
   devtoolsUrl: "x-devtools-url",
-  devtoolsLegacyUrl: "x-devtools-legacy-url",
   mockKey: "x-mock-key",
   userAgent: "x-user-agent",
 };
@@ -24,5 +23,4 @@ export const URLS = {
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : process.env.APP_URL!,
   defaultDevtools: "https://app.replay.io",
-  defaultDevtoolsLegacy: "https://legacy.replay.io",
 };

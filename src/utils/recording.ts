@@ -37,5 +37,5 @@ export function getURL(
 
   return target === "chromium"
     ? `${context.devtoolsUrl}/recording/${id}`
-    : `${context.devtoolsLegacyUrl}/recording/${id}`;
+    : `https://legacy.replay.io/recording/${id}`;
 }

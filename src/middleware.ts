@@ -64,10 +64,6 @@ export async function middleware(request: NextRequest) {
   if (devtoolsUrl) {
     response.headers.set(HEADERS.devtoolsUrl, devtoolsUrl);
   }
-  const devtoolsLegacyUrl = url.searchParams.get("devtoolsLegacyUrl");
-  if (devtoolsLegacyUrl) {
-    response.headers.set(HEADERS.devtoolsLegacyUrl, devtoolsLegacyUrl);
-  }
   const mockKey = url.searchParams.get("mockKey");
   if (mockKey) {
     response.headers.set(HEADERS.mockKey, mockKey);

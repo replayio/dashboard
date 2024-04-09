@@ -15,7 +15,6 @@ type PageProps = {
   accessToken: string;
   accessTokenSource: string;
   devtoolsUrl: string;
-  devtoolsLegacyUrl: string;
   mockKey: string;
 };
 
@@ -24,7 +23,6 @@ export default class MyApp extends App<AppProps<PageProps>> {
   accessTokenSource: string;
   environment: {
     devtoolsUrl: string;
-    devtoolsLegacyUrl: string;
     mockKey: string;
   };
 
@@ -35,7 +33,6 @@ export default class MyApp extends App<AppProps<PageProps>> {
     this.accessTokenSource = context.pageProps.accessTokenSource;
     this.environment = {
       devtoolsUrl: context.pageProps.devtoolsUrl,
-      devtoolsLegacyUrl: context.pageProps.devtoolsLegacyUrl,
       mockKey: context.pageProps.mockKey,
     };
   }
@@ -45,8 +42,6 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const accessTokenSource =
       context.ctx.req?.headers?.[HEADERS.accessTokenSource];
     const devtoolsUrl = context.ctx.req?.headers?.[HEADERS.devtoolsUrl];
-    const devtoolsLegacyUrl =
-      context.ctx.req?.headers?.[HEADERS.devtoolsLegacyUrl];
     const mockKey = context.ctx.req?.headers?.[HEADERS.mockKey];
 
     return {
@@ -54,7 +49,6 @@ export default class MyApp extends App<AppProps<PageProps>> {
         accessToken,
         accessTokenSource,
         devtoolsUrl: devtoolsUrl || "",
-        devtoolsLegacyUrl: devtoolsLegacyUrl || "",
         mockKey: mockKey || "",
       },
     };
