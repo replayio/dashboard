@@ -117,7 +117,7 @@ export default function Page({
   const [ssoLogin, setSSOLogin] = useState(false);
 
   function onLogin(connection: string) {
-    let authUrl = `/api/auth/login?connection=${connection}&returnTo=${returnTo}`;
+    let authUrl = `/api/auth/login?${new URLSearchParams({ connection, returnTo, origin: location.origin })}`;
     if (switchAccount) {
       authUrl += "&prompt=login";
     }

@@ -14,7 +14,7 @@ export function Account() {
 
     deleteCookieValueClient(COOKIES.accessToken);
 
-    window.location.replace("/api/auth/logout");
+    window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);
   };
 
   return (
