@@ -1,4 +1,35 @@
+import assert from "assert";
 import { TestRun, TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
+
+export const TEAM_TYPE_OPTIONS = [
+  { label: "Test Suite", value: "testsuite" as const },
+  { label: "Standard", value: "standard" as const },
+];
+
+export const DEFAULT_TEAM_TYPE_OPTION = TEAM_TYPE_OPTIONS[0];
+
+export function getPlanKey({
+  isOrg,
+  isInternal,
+  teamType,
+}: {
+  isOrg: boolean;
+  isInternal?: boolean;
+  teamType: "testsuite" | "standard";
+}) {
+  let planKey;
+  if (isOrg) {
+    planKey = "org-v1";
+  } else if (teamType === "standard" && !isInternal) {
+    planKey = "team-v1";
+  } else if (teamType === "standard" && isInternal) {
+    planKey = "team-internal-v1";
+  } else if (teamType === "testsuite") {
+    planKey = "testsuites-v1";
+  }
+  assert(planKey, "Invalid team type");
+  return planKey;
+}
 
 export function filterTest(
   test: TestSuiteTest,
