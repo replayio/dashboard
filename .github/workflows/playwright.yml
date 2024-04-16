@@ -3,9 +3,6 @@ on:
   push:
     branches: main
   pull_request:
-env:
-  RECORD_REPLAY_API_KEY: rwk_yaEG8jo6gcisGHHoMj8SNoOMIHSbT7REuU5E1QnKCiL
-  RECORD_REPLAY_METADATA_TEST_RUN_TITLE: E2E Tests
 jobs:
   wait-for-vercel:
     name: Wait for vercel
@@ -42,12 +39,6 @@ jobs:
           node-version: lts/*
 
       # Install (and cache) PNPM dependencies
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:
@@ -78,17 +69,22 @@ jobs:
           path: |
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      - run: npx playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: npx playwright install-deps
+
+      # install the native deps of Chromium itself which happens to be the same as the ones of Replay Chromium
+      - run: npx playwright install-deps chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
+      - name: Get Replay Chromium
+        run: npx replayio update
+
       - name: Run Playwright tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e:record
         env:
           APP_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           AUTH0_BASE_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
+          RECORD_REPLAY_METADATA_TEST_RUN_TITLE: E2E Tests
           RECORD_REPLAY_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs.testRunId }}
+          REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
           TEST_USER_API_KEY: ${{ secrets.TEST_USER_API_KEY }}
       - uses: actions/upload-artifact@v4
         if: always()
