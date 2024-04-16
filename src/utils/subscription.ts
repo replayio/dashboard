@@ -131,5 +131,13 @@ export function pricingDetailsForSubscription(
         discount: 0,
         trial: false,
       };
+    case "testsuites-v1":
+      return {
+        billingSchedule: "monthly",
+        displayName: "Test Suites",
+        seatPrice: 0,
+        discount: 0,
+        trial: false,
+      };
   }
 }
