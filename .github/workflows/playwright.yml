@@ -75,6 +75,8 @@ jobs:
           path: |
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+      # install the native deps of Chromium itself which happens to be the same as the ones of Replay Chromium
       - run: npx playwright install-deps chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
