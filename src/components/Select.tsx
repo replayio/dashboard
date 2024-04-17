@@ -7,24 +7,22 @@ type Option = {
 };
 
 export function Select<Type extends Option>({
+  className,
   disabled,
   onChange,
   options,
   placeholder,
   value,
-  className,
 }: Omit<InputHTMLAttributes<HTMLSelectElement>, "onChange" | "value"> & {
+  className?: string;
   onChange: (value: Type) => void;
   options: Type[];
   placeholder?: string;
   value?: Type | null;
-  className?: string;
 }) {
   return (
     <div
-      className={`relative outline outline-2 outline-transparent focus-within:outline-sky-500 rounded ${
-        className ? className : ""
-      }`}
+      className={`relative outline outline-2 outline-transparent focus-within:outline-sky-500 rounded ${className}`}
     >
       <select
         className={`opacity-0 absolute top-0 left-0 w-full h-full ${
