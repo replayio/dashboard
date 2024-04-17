@@ -1,18 +1,19 @@
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { SessionContext } from "@/components/SessionContext";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
-import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { WorkspaceSettings } from "@/pageComponents/team/id/settings/WorkspaceSettings";
 import { SettingsLayout } from "@/pageComponents/team/id/settings/layout/SettingsLayout";
 import assert from "assert";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { useContext } from "react";
 
 export default function Page({
   route,
   stripeKey,
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { user } = useCurrentUser();
+  const { user } = useContext(SessionContext);
   const { members } = useGetWorkspaceMembers(workspaceId);
 
   const { workspaces } = useNonPendingWorkspaces();

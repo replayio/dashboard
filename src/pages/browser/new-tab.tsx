@@ -1,7 +1,6 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { ExternalLink } from "@/components/ExternalLink";
 import { HEADERS } from "@/constants";
-import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { Hoverboard } from "@replayio/overboard";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
@@ -9,8 +8,6 @@ export default function Page({
   userAgent,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const isWindows = userAgent.includes("Windows");
-
-  const { user } = useCurrentUser();
 
   return (
     <div className="flex flex-col gap-4 items-center text-center">

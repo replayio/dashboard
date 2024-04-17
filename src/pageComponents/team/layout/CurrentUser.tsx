@@ -1,8 +1,9 @@
-import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
+import { SessionContext } from "@/components/SessionContext";
 import Link from "next/link";
+import { useContext } from "react";
 
 export function CurrentUser() {
-  const { user } = useCurrentUser();
+  const { user } = useContext(SessionContext);
 
   return (
     <Link

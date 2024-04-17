@@ -1,7 +1,9 @@
 import { COOKIES, HEADERS } from "@/constants";
 import { getAccessToken } from "@auth0/nextjs-auth0/edge";
+import cookie from "cookie";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
+import { AccessTokenCookie } from "./utils/cookie";
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
@@ -71,11 +73,27 @@ async function getAccessTokenForSession(
   request: NextRequest,
   response: NextResponse
 ) {
+  if (request.nextUrl.pathname.startsWith("/api/auth/logout")) {
+    return [null, null];
+  }
+
+  function setAccessTokenCookie(token: string, source: string) {
+    response.headers.append(
+      "Set-Cookie",
+      cookie.serialize(
+        COOKIES.accessToken,
+        JSON.stringify({ token, source } satisfies AccessTokenCookie),
+        { path: "/" }
+      )
+    );
+    return [token, source];
+  }
+
   try {
     const { accessToken } = await getAccessToken(request, response);
     if (accessToken) {
       // An active auth0 session should always take precedence over an apiKey URL param
-      return [accessToken, "auth0"];
+      return setAccessTokenCookie(accessToken, "auth0");
     }
   } catch (error) {
     // Ignore AccessTokenError; these are handled elsewhere
@@ -85,15 +103,15 @@ async function getAccessTokenForSession(
   const apiKey = url.searchParams.get("apiKey");
   if (apiKey) {
     // e2e tests and Support login flow
-    return [apiKey, "query"];
+    return setAccessTokenCookie(apiKey, "query");
   }
 
   const cookieStore = cookies();
-  const cookie = cookieStore.get(COOKIES.accessToken);
-  if (cookie) {
-    const apiKey = JSON.parse(cookie.value);
-    if (typeof apiKey === "string" && apiKey) {
-      return [apiKey, "cookie"];
+  const accessTokenCookie = cookieStore.get(COOKIES.accessToken);
+  if (accessTokenCookie) {
+    const tokenWithSource: AccessTokenCookie = JSON.parse(accessTokenCookie.value);
+    if (typeof tokenWithSource === "object" && tokenWithSource.token) {
+      return [tokenWithSource.token, tokenWithSource.source];
     }
   }
 
