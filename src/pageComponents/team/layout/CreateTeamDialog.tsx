@@ -51,7 +51,7 @@ export function CreateTeamDialog({
 
   return (
     <ModalDialog onDismiss={onDismiss} title="Create new team">
-      <div className="min-h-64 max-w-[400px] justify-between">
+      <div className="min-h-72 max-w-[400px] justify-between">
         <div className="flex flex-col gap-2">
           <label>Team name</label>
           <Input
@@ -64,7 +64,7 @@ export function CreateTeamDialog({
             value={name}
           />
           <SelectTeamType setTeamType={setTeamType} teamType={teamType} />
-          {isInternalUser && teamType === "standard" && (
+          {isInternalUser && (
             <Checkbox
               checked={bypassTrial}
               disabled={isPending}
