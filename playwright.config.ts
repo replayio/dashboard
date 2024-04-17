@@ -1,9 +1,14 @@
-import { resolve } from "path";
 import { defineConfig, devices } from "@playwright/test";
+import {
+  createReplayReporterConfig,
+  devices as replayDevices,
+} from "@replayio/playwright";
+import dotenv from "dotenv";
+import { resolve } from "path";
 
 // Read environment variables from file.
 // https://github.com/motdotla/dotenv
-require("dotenv").config({ path: resolve(__dirname, ".env.local") });
+dotenv.config({ path: resolve(__dirname, ".env.local") });
 
 // See https://playwright.dev/docs/test-configuration.
 export default defineConfig({
@@ -12,7 +17,15 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: 1,
-  reporter: "line",
+  reporter: process.env.CI
+    ? [
+        ["line"],
+        createReplayReporterConfig({
+          apiKey: process.env.REPLAY_API_KEY,
+          upload: true,
+        }) as [string, unknown],
+      ]
+    : "line",
   use: {
     launchOptions: {
       // ...
@@ -26,6 +39,10 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "replay-chromium",
+      use: { ...replayDevices["Replay Chromium"] },
     },
   ],
 });
