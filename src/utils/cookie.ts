@@ -12,3 +12,8 @@ export function getCookieValueClient(name: string): string | null {
 export function setCookieValueClient(name: string, value: any) {
   document.cookie = `${name}=${JSON.stringify(value)}; path=/`;
 }
+
+export interface AccessTokenCookie {
+  token: string;
+  source: string;
+}

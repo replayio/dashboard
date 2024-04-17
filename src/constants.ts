@@ -1,5 +1,5 @@
 export const COOKIES = {
-  accessToken: "replay:dashboard:access-token",
+  accessToken: "replay:access-token",
   authReturnTo: "replay:auth-return-to",
   browserAuth: "replay:browser-auth",
   defaultPathname: "replay:dashboard:default-pathname",

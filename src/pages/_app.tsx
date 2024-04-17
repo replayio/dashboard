@@ -1,7 +1,5 @@
 import { SessionContextProvider } from "@/components/SessionContext";
 import { COOKIES, HEADERS } from "@/constants";
-import { setCookieValueClient } from "@/utils/cookie";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import assert from "assert";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
@@ -10,17 +8,24 @@ import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
+import { listenForAccessToken } from "@/utils/replayBrowser";
+import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
+import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
+import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
+import { User } from "@/graphql/types";
 
 type PageProps = {
   accessToken: string;
   accessTokenSource: string;
   mockKey: string;
+  user: User;
 };
 
 export default class MyApp extends App<AppProps<PageProps>> {
   accessToken: string;
   accessTokenSource: string;
   mockKey: string;
+  user: User;
 
   constructor(context: AppProps<PageProps>) {
     super(context);
@@ -28,30 +33,35 @@ export default class MyApp extends App<AppProps<PageProps>> {
     this.accessToken = context.pageProps.accessToken;
     this.accessTokenSource = context.pageProps.accessTokenSource;
     this.mockKey = context.pageProps.mockKey;
+    this.user = context.pageProps.user;
   }
 
   static getInitialProps = async (context: AppContext) => {
-    const accessToken = context.ctx.req?.headers?.[HEADERS.accessToken];
+    const accessToken = getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.accessToken]);
     const accessTokenSource =
-      context.ctx.req?.headers?.[HEADERS.accessTokenSource];
+      getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.accessTokenSource]);
+    const user = accessToken ? await getCurrentUser(accessToken) : null;
     const mockKey = context.ctx.req?.headers?.[HEADERS.mockKey];
 
     return {
-      pageProps: { accessToken, accessTokenSource, mockKey: mockKey || "" },
+      pageProps: { accessToken, accessTokenSource, mockKey: mockKey || "", user },
     };
   };
 
   componentDidMount(): void {
-    const { accessToken, accessTokenSource } = this.props.pageProps;
-    if (accessToken && accessTokenSource === "query") {
-      // Store API key in a cookie to better support e2e tests and Support
-      // The alternative is to pass the API key as a URL param
-      setCookieValueClient(COOKIES.accessToken, accessToken);
+    if (global.__IS_RECORD_REPLAY_RUNTIME__ && !this.accessToken) {
+      listenForAccessToken(token => {
+        setCookieValueClient(
+          COOKIES.accessToken,
+          { token, source: "external" } satisfies AccessTokenCookie
+        );
+        window.location.reload();
+      });
     }
   }
 
   render() {
-    const { accessToken, mockKey, props } = this;
+    const { accessToken, mockKey, props, user } = this;
     const { Component, pageProps } = props;
 
     assert("Layout" in Component, "Page.Layout is required");
@@ -59,18 +69,13 @@ export default class MyApp extends App<AppProps<PageProps>> {
 
     let children = (
       <EndToEndTestContextProvider mockKey={mockKey}>
-        <SessionContextProvider accessToken={accessToken}>
+        <SessionContextProvider accessToken={accessToken} user={user}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </SessionContextProvider>
       </EndToEndTestContextProvider>
     );
-
-    const isAuthenticated = !!accessToken;
-    if (isAuthenticated) {
-      children = <UserProvider>{children}</UserProvider>;
-    }
 
     return (
       <ErrorBoundary fallback={<ErrorFallback />}>

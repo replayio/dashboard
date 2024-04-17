@@ -1,17 +1,18 @@
 import { LeftNav } from "@/components/LeftNav";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
+import { SessionContext } from "@/components/SessionContext";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
-import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { SettingsNav } from "@/pageComponents/team/id/settings/layout/SettingsNav";
 import { usePathname } from "next/navigation";
+import { useContext } from "react";
 
 export function SettingsNavComponent() {
   const pathname = usePathname();
   const workspaceId = pathname?.split("/")[2] as string;
 
   const { workspaces } = useNonPendingWorkspaces();
-  const { user } = useCurrentUser();
+  const { user } = useContext(SessionContext);
   const { members } = useGetWorkspaceMembers(workspaceId);
 
   const member = members?.find(({ id }) => id === user?.id);
