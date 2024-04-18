@@ -1,9 +1,11 @@
 import { COOKIES, HEADERS } from "@/constants";
 import { getAccessToken } from "@auth0/nextjs-auth0/edge";
 import cookie from "cookie";
+import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { AccessTokenCookie } from "./utils/cookie";
+import { CookieSerializeOptions } from "cookie";
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
@@ -78,14 +80,26 @@ async function getAccessTokenForSession(
   }
 
   function setAccessTokenCookie(token: string, source: string) {
+    const cookieOptions: CookieSerializeOptions = { path: "/", sameSite: "lax" };
+
+    if (source === "auth0") {
+      const decodedToken = jwt.decode(token, { json: true });
+      if (decodedToken && typeof decodedToken.exp === "number") {
+        const now = Math.floor(Date.now() / 1000);
+        const timeUntilExpiration = decodedToken.exp - now;
+        cookieOptions.maxAge = timeUntilExpiration;
+      }
+    }
+
     response.headers.append(
       "Set-Cookie",
       cookie.serialize(
         COOKIES.accessToken,
         JSON.stringify({ token, source } satisfies AccessTokenCookie),
-        { path: "/", sameSite: "lax" }
+        cookieOptions
       )
     );
+
     return [token, source];
   }
 
