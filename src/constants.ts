@@ -18,6 +18,6 @@ export const HEADERS = {
 export const LOCAL_STORAGE = {};
 
 export const URLS = {
-  api: "https://api.replay.io",
+  api: process.env.NEXT_PUBLIC_API_URL || "https://api.replay.io",
   app: process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : process.env.APP_URL!,
 };
