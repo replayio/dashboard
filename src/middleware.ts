@@ -83,7 +83,7 @@ async function getAccessTokenForSession(
       cookie.serialize(
         COOKIES.accessToken,
         JSON.stringify({ token, source } satisfies AccessTokenCookie),
-        { path: "/" }
+        { path: "/", sameSite: "lax" }
       )
     );
     return [token, source];

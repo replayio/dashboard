@@ -76,7 +76,7 @@ export function getGraphQLClient(accessToken?: string) {
           fetchPolicy: "cache-first",
         },
       },
-      link: from([httpLink, retryLink]),
+      link: from([retryLink, httpLink]),
     });
   }
 
