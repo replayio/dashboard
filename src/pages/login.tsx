@@ -7,12 +7,10 @@ import { ReplayLogo } from "@/components/ReplayLogo";
 import { SessionContext } from "@/components/SessionContext";
 import { getAuthConnection } from "@/graphql/queries/getAuthConnection";
 import { requestBrowserLogin } from "@/utils/replayBrowser";
-import { isLinuxOS, isMacOS } from "@/utils/os";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 const defaultConnection = "google-oauth2";
-const isMacOSOrLinux = isMacOS() || isLinuxOS();
 
 function DefaultLogin({ onLogin, onSSOLogin }: { onLogin: () => void; onSSOLogin: () => void }) {
   return (
@@ -147,7 +145,7 @@ export default function Page() {
   }
 
   // This page depends on information that is only available on the client
-  // (client operating system and whether the app is running in the Replay browser),
+  // (whether the app is running in the Replay browser),
   // so we need to disable server rendering to avoid hydration mismatches
   useEffect(() => setIsMounted(true), [setIsMounted]);
   if (!isMounted) {
@@ -163,7 +161,7 @@ export default function Page() {
         onSwitch={() => setSwitchAccount(true)}
       />
     );
-  } else if (global.__IS_RECORD_REPLAY_RUNTIME__ && isMacOSOrLinux) {
+  } else if (global.__IS_RECORD_REPLAY_RUNTIME__) {
     return <ReplayBrowserLogin />;
   } else if (ssoLogin) {
     return <SSOLogin onLogin={onLogin} />;
