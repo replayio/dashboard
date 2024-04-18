@@ -2,6 +2,7 @@ const devtoolsURL = process.env.DEVTOOLS_URL || "https://replay-devtools-new.ver
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  productionBrowserSourceMaps: true,
   rewrites: async () => [
     {
       source: "/recording/:path*",
