@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default handleAuth({
   login: (req: NextApiRequest, res: NextApiResponse) => {
     const { origin, returnTo } = handleOriginAndReturnTo(req, res);
-    handleLogin(req, res, {
+    return handleLogin(req, res, {
       authorizationParams: {
         audience: "https://api.replay.io",
         code_challenge_method: "S256",
@@ -23,7 +23,7 @@ export default handleAuth({
 
   logout: (req: NextApiRequest, res: NextApiResponse) => {
     const { returnTo } = handleOriginAndReturnTo(req, res);
-    handleLogout(req, res, { returnTo });
+    return handleLogout(req, res, { returnTo });
   },
 
   callback: (req: NextApiRequest, res: NextApiResponse) => {
@@ -34,7 +34,7 @@ export default handleAuth({
       });
       res.redirect(`/browser/error?${searchParams.toString()}`);
     } else {
-      handleCallback(req, res, { redirectUri: req.cookies[COOKIES.authReturnTo] });
+      return handleCallback(req, res, { redirectUri: req.cookies[COOKIES.authReturnTo] });
     }
   },
 });
@@ -55,6 +55,7 @@ function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse) {
       httpOnly: true,
       path: "/",
       maxAge: 5 * 60 * 1000,
+      sameSite: "lax",
     })
   );
   

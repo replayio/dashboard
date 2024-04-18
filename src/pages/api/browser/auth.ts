@@ -21,6 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           httpOnly: true,
           path: "/",
           maxAge: 5 * 60 * 1000,
+          sameSite: "lax",
         })
       );
 
