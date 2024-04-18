@@ -2,12 +2,17 @@ import { Button } from "@/components/Button";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { Message } from "@/components/Message";
 import { ReplayLogo } from "@/components/ReplayLogo";
+import { HEADERS } from "@/constants";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
-export default function Page() {
+export default function Page({
+  userAgent,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const searchParams = useSearchParams();
   const source = searchParams?.get("source");
+  const isMacOS = userAgent.includes("Macintosh");
 
   if (source === "browser") {
     return (
@@ -16,9 +21,11 @@ export default function Page() {
         <div>
           You have successfully logged in. You may close this window.
         </div>
-        <Button onClick={() => window.location.href = "replay:open"} size="large">
-          Open Replay
-        </Button>
+        {isMacOS && (
+          <Button onClick={() => window.location.href = "replay:open"} size="large">
+            Open Replay
+          </Button>
+        )}
       </Message>
     );
   } else {
@@ -37,3 +44,13 @@ export default function Page() {
 };
 
 Page.Layout = EmptyLayout;
+
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+  const userAgent = req?.headers?.[HEADERS.userAgent] as string;
+
+  return {
+    props: {
+      userAgent,
+    },
+  };
+}
