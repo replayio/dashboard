@@ -4,7 +4,7 @@ import {
   NetworkStatus,
   TypedDocumentNode,
 } from "@apollo/client";
-import { MockData, MockDataKey } from "./types";
+import { MockData } from "./types";
 
 export function getMockGraphQLResponse<Query>(
   mockGraphQLData: MockData,
@@ -13,7 +13,7 @@ export function getMockGraphQLResponse<Query>(
   const definition = query.definitions[0];
   if (definition && "name" in definition && definition.name) {
     const queryName = definition.name.value;
-    const value = mockGraphQLData[queryName as MockDataKey];
+    const value = mockGraphQLData[queryName];
     if (value) {
       const response = {
         data: value as any,
