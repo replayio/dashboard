@@ -1,10 +1,10 @@
 import { COOKIES, HEADERS } from "@/constants";
 import { getAccessToken } from "@auth0/nextjs-auth0/edge";
-import cookie, { CookieSerializeOptions } from "cookie";
+import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
-import { AccessTokenCookie } from "./utils/cookie";
+import { AccessTokenCookie, setCookieValueServer } from "./utils/cookie";
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
@@ -14,10 +14,8 @@ export async function middleware(request: NextRequest) {
 
   const { ua } = userAgent(request);
 
-  const [accessToken, accessTokenSource] = await getAccessTokenForSession(
-    request,
-    response
-  );
+  const { source: accessTokenSource, token: accessToken } =
+    await getAccessTokenForSession(request, response);
 
   try {
     await redirectIfMobile(request);
@@ -75,41 +73,32 @@ async function getAccessTokenForSession(
   response: NextResponse
 ) {
   if (request.nextUrl.pathname.startsWith("/api/auth/logout")) {
-    return [null, null];
-  }
-
-  function setAccessTokenCookie(token: string, source: string) {
-    const cookieOptions: CookieSerializeOptions = {
-      path: "/",
-      sameSite: "lax",
+    return {
+      source: null,
+      token: null,
     };
-
-    if (source === "auth0") {
-      const decodedToken = jwt.decode(token, { json: true });
-      if (decodedToken && typeof decodedToken.exp === "number") {
-        const now = Math.floor(Date.now() / 1000);
-        const timeUntilExpiration = decodedToken.exp - now;
-        cookieOptions.maxAge = timeUntilExpiration;
-      }
-    }
-
-    response.headers.append(
-      "Set-Cookie",
-      cookie.serialize(
-        COOKIES.accessToken,
-        JSON.stringify({ token, source } satisfies AccessTokenCookie),
-        cookieOptions
-      )
-    );
-
-    return [token, source];
   }
 
   try {
     const { accessToken } = await getAccessToken(request, response);
     if (accessToken) {
       // An active auth0 session should always take precedence over an apiKey URL param
-      return setAccessTokenCookie(accessToken, "auth0");
+      const data = {
+        source: "auth0",
+        token: accessToken,
+      } satisfies AccessTokenCookie;
+
+      const cookieOptions: CookieSerializeOptions = {};
+      const decodedToken = jwt.decode(accessToken, { json: true });
+      if (decodedToken && typeof decodedToken.exp === "number") {
+        const now = Math.floor(Date.now() / 1000);
+        const timeUntilExpiration = decodedToken.exp - now;
+        cookieOptions.maxAge = timeUntilExpiration;
+      }
+
+      setCookieValueServer(response, COOKIES.accessToken, data, cookieOptions);
+
+      return data;
     }
   } catch (error) {
     // Ignore AccessTokenError; these are handled elsewhere
@@ -119,7 +108,14 @@ async function getAccessTokenForSession(
   const apiKey = url.searchParams.get("apiKey");
   if (apiKey) {
     // e2e tests and Support login flow
-    return setAccessTokenCookie(apiKey, "query");
+    const data = {
+      source: "query",
+      token: apiKey,
+    } satisfies AccessTokenCookie;
+
+    setCookieValueServer(response, COOKIES.accessToken, data);
+
+    return data;
   }
 
   const cookieStore = cookies();
@@ -129,11 +125,14 @@ async function getAccessTokenForSession(
       accessTokenCookie.value
     );
     if (typeof tokenWithSource === "object" && tokenWithSource.token) {
-      return [tokenWithSource.token, tokenWithSource.source];
+      return tokenWithSource;
     }
   }
 
-  return [null, null];
+  return {
+    source: null,
+    token: null,
+  };
 }
 
 async function redirectIfMobile(request: NextRequest) {
