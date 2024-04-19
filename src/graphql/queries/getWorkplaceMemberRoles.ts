@@ -4,21 +4,18 @@ import {
 } from "@/graphql/generated/graphql";
 import { graphQLFetch } from "@/graphql/graphQLFetch";
 import { gql } from "@apollo/client";
-import { MockGraphQLData } from "tests/mocks/types";
 
 type MemberRoles = { id: string; roles: string[] };
 
 export async function getWorkplaceMemberRoles(
   workspaceId: string,
-  accessToken: string,
-  mockGraphQLData: MockGraphQLData | null
+  accessToken: string
 ): Promise<MemberRoles[]> {
   const { data, errors } = await graphQLFetch<
     GetWorkspaceMemberRolesQuery,
     GetWorkspaceMemberRolesQueryVariables
   >({
     accessToken,
-    mockGraphQLData,
     query: gql`
       query GetWorkspaceMemberRoles($workspaceId: ID!) {
         node(id: $workspaceId) {
