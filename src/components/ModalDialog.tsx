@@ -19,6 +19,7 @@ export function ModalDialog({
   const dialog = (
     <div
       className="backdrop-blur overflow-y-auto cursor-default fixed top-0 left-0 w-full h-full z-40 flex justify-center items-center bg-black/50"
+      data-test-name="ModalDialog"
       {...rest}
     >
       <div

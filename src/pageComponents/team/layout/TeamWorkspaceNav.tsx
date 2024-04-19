@@ -37,7 +37,7 @@ export function TeamWorkspaceNav({ workspace }: { workspace: Workspace }) {
         />
       )}
       <LeftNavLink
-        href={`/team/${workspace.id}/settings/members`}
+        href={`/team/${workspace.id}/settings`}
         iconType="menu-settings"
         isActive={!!pathname?.includes("/settings")}
         label="Settings"

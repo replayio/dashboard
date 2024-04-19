@@ -1,8 +1,8 @@
 import { Button } from "@/components/Button";
 import { SessionContext } from "@/components/SessionContext";
 import { COOKIES } from "@/constants";
-import { setAccessTokenInBrowserPrefs } from "@/utils/replayBrowser";
 import { deleteCookieValueClient } from "@/utils/cookie";
+import { setAccessTokenInBrowserPrefs } from "@/utils/replayBrowser";
 import { useContext, useState } from "react";
 
 export function Account() {
@@ -16,7 +16,9 @@ export function Account() {
     setAccessTokenInBrowserPrefs(null);
     deleteCookieValueClient(COOKIES.accessToken);
 
-    window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);
+    window.location.replace(
+      `/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`
+    );
   };
 
   return (
