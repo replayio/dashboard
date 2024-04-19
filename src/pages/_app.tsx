@@ -1,7 +1,6 @@
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { COOKIES, HEADERS } from "@/constants";
-import { getMockGraphQLData, setMockGraphQLData } from "@/globalMutableState";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { User } from "@/graphql/types";
 import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
@@ -45,30 +44,24 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const accessTokenSource = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.accessTokenSource]
     );
-    let mockGraphQLDataString = getValueFromArrayOrString(
+    const mockGraphQLData = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.mockGraphQLData]
     );
 
-    // See the header comment inside of the globalMutableState module for an explanation of this pattern
-    if (mockGraphQLDataString) {
-      const mockGraphQLData = JSON.parse(
-        mockGraphQLDataString
-      ) as MockGraphQLData;
-      setMockGraphQLData(mockGraphQLData);
-    } else {
-      const mockGraphQLData = getMockGraphQLData();
-      if (mockGraphQLData) {
-        mockGraphQLDataString = JSON.stringify(mockGraphQLData);
-      }
-    }
-
-    const user = accessToken ? await getCurrentUser(accessToken) : null;
+    const user = accessToken
+      ? await getCurrentUser(
+          accessToken,
+          mockGraphQLData
+            ? (JSON.parse(mockGraphQLData) as MockGraphQLData)
+            : null
+        )
+      : null;
 
     return {
       pageProps: {
         accessToken,
         accessTokenSource,
-        mockGraphQLData: mockGraphQLDataString || "",
+        mockGraphQLData: mockGraphQLData || "",
         user,
       },
     };
