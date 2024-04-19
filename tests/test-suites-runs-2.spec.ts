@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { mockGetTests } from "tests/mocks/utils/mockGetTests";
+import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRunsForWorkspace";
+import { partialToTestSuiteTest } from "tests/mocks/utils/partialToTestSuiteTest";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MOCK_DATA } from "./mocks/data";
+import { MockData } from "./mocks/types";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestRunSections } from "./utils/getTestRunSections";
 import { getTestRunsRow } from "./utils/getTestRunsRow";
@@ -12,7 +15,7 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
   page,
 }) => {
   await navigateToPage({
-    mockGraphQLData: MOCK_DATA.TEST_RUN_PASSED_PRIMARY_BRANCH,
+    mockGraphQLData,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/runs`,
   });
@@ -140,3 +143,31 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
     ).toHaveCount(1);
   }
 });
+
+const mockGraphQLData: MockData = {
+  GetTests: mockGetTests([
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "First test",
+    }),
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "Second test",
+    }),
+  ]),
+  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
+    branchName: "main",
+    commitTitle: "Successful run in main branch",
+    isPrimaryBranch: true,
+    numFailed: 0,
+    numFlaky: 0,
+    numPassed: 2,
+    prNumber: null,
+    prTitle: null,
+    repository: null,
+    triggerUrl: "https://fake-trigger-url.com",
+    user: "test-user-trigger",
+  }),
+};

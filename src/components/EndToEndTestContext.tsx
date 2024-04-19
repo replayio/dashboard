@@ -1,8 +1,8 @@
 import { PropsWithChildren, createContext, useMemo } from "react";
-import { MockGraphQLQueries } from "../../tests/mocks/data";
+import { MockData } from "../../tests/mocks/types";
 
 export type EndToEndTestContextType = {
-  mockGraphQLData: MockGraphQLQueries | null;
+  mockGraphQLData: MockData | null;
 };
 
 export const EndToEndTestContext = createContext<EndToEndTestContextType>(
@@ -16,7 +16,7 @@ export function EndToEndTestContextProvider({
   const value = useMemo<EndToEndTestContextType>(
     () => ({
       mockGraphQLData: mockGraphQLData
-        ? (JSON.parse(mockGraphQLData) as MockGraphQLQueries)
+        ? (JSON.parse(mockGraphQLData) as MockData)
         : null,
     }),
     [mockGraphQLData]
