@@ -1,11 +1,10 @@
 import { COOKIES, HEADERS } from "@/constants";
 import { getAccessToken } from "@auth0/nextjs-auth0/edge";
-import cookie from "cookie";
+import cookie, { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { AccessTokenCookie } from "./utils/cookie";
-import { CookieSerializeOptions } from "cookie";
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
@@ -63,9 +62,9 @@ export async function middleware(request: NextRequest) {
   }
 
   const url = new URL(request.nextUrl);
-  const mockKey = url.searchParams.get("mockKey");
-  if (mockKey) {
-    response.headers.set(HEADERS.mockKey, mockKey);
+  const mockGraphQLData = url.searchParams.get("mockGraphQLData");
+  if (mockGraphQLData) {
+    response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData);
   }
 
   return response;
@@ -80,7 +79,10 @@ async function getAccessTokenForSession(
   }
 
   function setAccessTokenCookie(token: string, source: string) {
-    const cookieOptions: CookieSerializeOptions = { path: "/", sameSite: "lax" };
+    const cookieOptions: CookieSerializeOptions = {
+      path: "/",
+      sameSite: "lax",
+    };
 
     if (source === "auth0") {
       const decodedToken = jwt.decode(token, { json: true });
@@ -123,7 +125,9 @@ async function getAccessTokenForSession(
   const cookieStore = cookies();
   const accessTokenCookie = cookieStore.get(COOKIES.accessToken);
   if (accessTokenCookie) {
-    const tokenWithSource: AccessTokenCookie = JSON.parse(accessTokenCookie.value);
+    const tokenWithSource: AccessTokenCookie = JSON.parse(
+      accessTokenCookie.value
+    );
     if (typeof tokenWithSource === "object" && tokenWithSource.token) {
       return [tokenWithSource.token, tokenWithSource.source];
     }

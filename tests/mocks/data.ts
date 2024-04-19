@@ -16,7 +16,7 @@ import { partialToTestSuiteTestRecording } from "./utils/partialToTestSuiteTestR
 import { mockGetWorkspaceMembers } from "./utils/mockGetWorkspaceMembers";
 import { TEST_USER_PICTURES } from "./constants";
 
-type MockGraphQLQueries = {
+export type MockGraphQLQueries = {
   // Used by /team/[id]/runs
   GetTests?: GetTestsQuery;
   GetTestsRunsForWorkspace?: GetTestsRunsForWorkspaceQuery;

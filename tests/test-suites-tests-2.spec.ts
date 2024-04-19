@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
+import { MOCK_DATA } from "./mocks/data";
 import { getRecordingRow } from "./utils/getRecordingRow";
 import { getTestExecutionRow } from "./utils/getTestExecutionRow";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
@@ -7,7 +8,7 @@ import { navigateToPage } from "./utils/navigateToPage";
 
 test("test-suites-tests-2: failed test executions", async ({ page }) => {
   await navigateToPage({
-    mockKey: "TESTS_WITH_FAILURES",
+    mockGraphQLData: MOCK_DATA.TESTS_WITH_FAILURES,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/tests`,
   });

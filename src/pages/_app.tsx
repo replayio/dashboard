@@ -1,5 +1,11 @@
+import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { COOKIES, HEADERS } from "@/constants";
+import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
+import { User } from "@/graphql/types";
+import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
+import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
+import { listenForAccessToken } from "@/utils/replayBrowser";
 import assert from "assert";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
@@ -7,24 +13,18 @@ import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import "use-context-menu/styles.css";
 import "../global.css";
-import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
-import { listenForAccessToken } from "@/utils/replayBrowser";
-import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
-import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
-import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
-import { User } from "@/graphql/types";
 
 type PageProps = {
   accessToken: string;
   accessTokenSource: string;
-  mockKey: string;
+  mockGraphQLData: string;
   user: User;
 };
 
 export default class MyApp extends App<AppProps<PageProps>> {
   accessToken: string;
   accessTokenSource: string;
-  mockKey: string;
+  mockGraphQLData: string;
   user: User;
 
   constructor(context: AppProps<PageProps>) {
@@ -32,43 +32,51 @@ export default class MyApp extends App<AppProps<PageProps>> {
 
     this.accessToken = context.pageProps.accessToken;
     this.accessTokenSource = context.pageProps.accessTokenSource;
-    this.mockKey = context.pageProps.mockKey;
+    this.mockGraphQLData = context.pageProps.mockGraphQLData;
     this.user = context.pageProps.user;
   }
 
   static getInitialProps = async (context: AppContext) => {
-    const accessToken = getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.accessToken]);
-    const accessTokenSource =
-      getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.accessTokenSource]);
+    const accessToken = getValueFromArrayOrString(
+      context.ctx.req?.headers?.[HEADERS.accessToken]
+    );
+    const accessTokenSource = getValueFromArrayOrString(
+      context.ctx.req?.headers?.[HEADERS.accessTokenSource]
+    );
     const user = accessToken ? await getCurrentUser(accessToken) : null;
-    const mockKey = context.ctx.req?.headers?.[HEADERS.mockKey];
+    const mockGraphQLData = context.ctx.req?.headers?.[HEADERS.mockGraphQLData];
 
     return {
-      pageProps: { accessToken, accessTokenSource, mockKey: mockKey || "", user },
+      pageProps: {
+        accessToken,
+        accessTokenSource,
+        mockGraphQLData: mockGraphQLData || "",
+        user,
+      },
     };
   };
 
   componentDidMount(): void {
     if (global.__IS_RECORD_REPLAY_RUNTIME__ && !this.accessToken) {
-      listenForAccessToken(token => {
-        setCookieValueClient(
-          COOKIES.accessToken,
-          { token, source: "external" } satisfies AccessTokenCookie
-        );
+      listenForAccessToken((token) => {
+        setCookieValueClient(COOKIES.accessToken, {
+          token,
+          source: "external",
+        } satisfies AccessTokenCookie);
         window.location.reload();
       });
     }
   }
 
   render() {
-    const { accessToken, mockKey, props, user } = this;
+    const { accessToken, mockGraphQLData, props, user } = this;
     const { Component, pageProps } = props;
 
     assert("Layout" in Component, "Page.Layout is required");
     const Layout = Component.Layout as ComponentType<PropsWithChildren>;
 
     let children = (
-      <EndToEndTestContextProvider mockKey={mockKey}>
+      <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
         <SessionContextProvider accessToken={accessToken} user={user}>
           <Layout>
             <Component {...pageProps} />
