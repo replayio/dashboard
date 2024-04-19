@@ -10,8 +10,6 @@ export async function initAuthRequest(key: string, source: string) {
     InitAutRequestMutation,
     InitAutRequestMutationVariables
   >({
-    // TODO Support e2e test mock mutations
-    mockGraphQLData: null,
     query: gql`
       mutation InitAutRequest($key: String!, $source: String = "browser") {
         initAuthRequest(input: { key: $key, source: $source }) {
