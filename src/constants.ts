@@ -11,7 +11,7 @@ export const COOKIES = {
 export const HEADERS = {
   accessToken: "x-access-token",
   accessTokenSource: "x-access-token-source",
-  mockKey: "x-mock-key",
+  mockGraphQLData: "x-mock-graphql-data",
   userAgent: "x-user-agent",
 };
 
@@ -19,5 +19,7 @@ export const LOCAL_STORAGE = {};
 
 export const URLS = {
   api: process.env.NEXT_PUBLIC_API_URL || "https://api.replay.io",
-  app: process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : process.env.APP_URL!,
+  app: process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : process.env.APP_URL!,
 };

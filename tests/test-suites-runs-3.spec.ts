@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
+import { MOCK_DATA } from "./mocks/data";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestRunSections } from "./utils/getTestRunSections";
 import { getTestRunsRow } from "./utils/getTestRunsRow";
@@ -11,7 +12,7 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "TEST_RUN_FAILED_PR",
+    mockGraphQLData: MOCK_DATA.TEST_RUN_FAILED_PR,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/runs`,
   });

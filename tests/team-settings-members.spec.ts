@@ -1,12 +1,13 @@
 import { expect, test } from "@playwright/test";
-import { navigateToPage } from "./utils/navigateToPage";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
+import { MOCK_DATA } from "./mocks/data";
+import { navigateToPage } from "./utils/navigateToPage";
 
 test("team-settings-members: should group members by role and show pending members", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "TEAM_SETTINGS_MEMBERS",
+    mockGraphQLData: MOCK_DATA.TEAM_SETTINGS_MEMBERS,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/settings/members`,
   });

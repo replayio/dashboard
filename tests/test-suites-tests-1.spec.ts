@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
+import { MOCK_DATA } from "./mocks/data";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
@@ -10,7 +11,7 @@ test("test-suites-tests-1: sorting and filtering test runs", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "TESTS_WITH_NO_RECORDINGS",
+    mockGraphQLData: MOCK_DATA.TESTS_WITH_NO_RECORDINGS,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/tests`,
   });

@@ -1,17 +1,17 @@
 import { Page } from "@playwright/test";
 import assert from "assert";
 import chalk from "chalk";
+import { MockGraphQLQueries } from "../mocks/data";
 import { debugPrint } from "./debugPrint";
-import { MockDataKey } from "../mocks/data";
 
 export async function navigateToPage({
   apiKey,
-  mockKey,
+  mockGraphQLData,
   page,
   pathname,
 }: {
   apiKey?: string;
-  mockKey?: MockDataKey;
+  mockGraphQLData?: MockGraphQLQueries;
   page: Page;
   pathname: string;
 }) {
@@ -34,10 +34,14 @@ export async function navigateToPage({
   if (apiKey) {
     url.searchParams.set("apiKey", apiKey);
   }
-  if (mockKey) {
-    url.searchParams.set("mockKey", mockKey);
+  if (mockGraphQLData) {
+    url.searchParams.set("mockGraphQLData", JSON.stringify(mockGraphQLData));
   }
 
-  await debugPrint(page, `Navigating to ${chalk.bold(url)}`, "navigateToPage");
+  await debugPrint(
+    page,
+    `Navigating to ${chalk.blueBright(url)}`,
+    "navigateToPage"
+  );
   await page.goto(url.toString());
 }
