@@ -4,7 +4,7 @@ import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRuns
 import { partialToTestSuiteTest } from "tests/mocks/utils/partialToTestSuiteTest";
 import { partialToTestSuiteTestRecording } from "tests/mocks/utils/partialToTestSuiteTestRecording";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockData } from "./mocks/types";
+import { MockGraphQLData } from "./mocks/types";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestRunSections } from "./utils/getTestRunSections";
 import { getTestRunsRow } from "./utils/getTestRunsRow";
@@ -178,7 +178,7 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
   }
 });
 
-const mockGraphQLData: MockData = {
+const mockGraphQLData: MockGraphQLData = {
   GetTests: mockGetTests([
     partialToTestSuiteTest({
       sourcePath: undefined,

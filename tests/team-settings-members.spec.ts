@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembers";
 import { DEFAULT_WORKSPACE_ID, TEST_USER_PICTURES } from "./mocks/constants";
-import { MockData } from "./mocks/types";
+import { MockGraphQLData } from "./mocks/types";
 import { navigateToPage } from "./utils/navigateToPage";
 
 test("team-settings-members: should group members by role and show pending members", async ({
@@ -27,7 +27,7 @@ test("team-settings-members: should group members by role and show pending membe
   await expect(users).toHaveCount(3);
 });
 
-const mockGraphQLData: MockData = {
+const mockGraphQLData: MockGraphQLData = {
   GetWorkspaceMembers: mockGetWorkspaceMembers([
     {
       name: "Admin 1",

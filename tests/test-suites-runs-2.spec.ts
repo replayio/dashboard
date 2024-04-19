@@ -3,7 +3,7 @@ import { mockGetTests } from "tests/mocks/utils/mockGetTests";
 import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRunsForWorkspace";
 import { partialToTestSuiteTest } from "tests/mocks/utils/partialToTestSuiteTest";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockData } from "./mocks/types";
+import { MockGraphQLData } from "./mocks/types";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestRunSections } from "./utils/getTestRunSections";
 import { getTestRunsRow } from "./utils/getTestRunsRow";
@@ -144,7 +144,7 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
   }
 });
 
-const mockGraphQLData: MockData = {
+const mockGraphQLData: MockGraphQLData = {
   GetTests: mockGetTests([
     partialToTestSuiteTest({
       sourcePath: undefined,

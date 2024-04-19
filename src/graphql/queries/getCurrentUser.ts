@@ -4,13 +4,18 @@ import {
 } from "@/graphql/generated/graphql";
 import { graphQLFetch } from "@/graphql/graphQLFetch";
 import { gql } from "@apollo/client";
+import { MockGraphQLData } from "tests/mocks/types";
 
-export async function getCurrentUser(accessToken: string) {
+export async function getCurrentUser(
+  accessToken: string,
+  mockGraphQLData: MockGraphQLData | null
+) {
   const { data, errors } = await graphQLFetch<
     GetUserQuery,
     GetUserQueryVariables
   >({
     accessToken,
+    mockGraphQLData,
     query: gql`
       query GetUser {
         viewer {

@@ -1,3 +1,3 @@
-export type MockData = {
+export type MockGraphQLData = {
   [queryName: string]: any;
 };

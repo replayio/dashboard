@@ -11,6 +11,7 @@ import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { MockGraphQLData } from "tests/mocks/types";
 import "use-context-menu/styles.css";
 import "../global.css";
 
@@ -43,8 +44,18 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const accessTokenSource = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.accessTokenSource]
     );
-    const user = accessToken ? await getCurrentUser(accessToken) : null;
-    const mockGraphQLData = context.ctx.req?.headers?.[HEADERS.mockGraphQLData];
+    const mockGraphQLData = getValueFromArrayOrString(
+      context.ctx.req?.headers?.[HEADERS.mockGraphQLData]
+    );
+
+    const user = accessToken
+      ? await getCurrentUser(
+          accessToken,
+          mockGraphQLData
+            ? (JSON.parse(mockGraphQLData) as MockGraphQLData)
+            : null
+        )
+      : null;
 
     return {
       pageProps: {

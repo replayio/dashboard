@@ -6,16 +6,20 @@ import {
 } from "@apollo/client";
 import assert from "assert";
 import { DocumentNode } from "graphql";
+import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
+import { MockGraphQLData } from "tests/mocks/types";
 
 export async function graphQLFetch<
   Query,
   Variables extends OperationVariables = {}
 >({
   accessToken,
+  mockGraphQLData,
   query,
   variables = {} as Variables,
 }: {
   accessToken?: string;
+  mockGraphQLData: MockGraphQLData | null;
   query: DocumentNode | TypedDocumentNode<Query, Variables>;
   variables?: Variables;
 }): Promise<ApolloQueryResult<Query>> {
@@ -26,7 +30,13 @@ export async function graphQLFetch<
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  // TODO Support e2e tests
+  // Support e2e tests
+  const mockResponse = mockGraphQLData
+    ? getMockGraphQLResponse(mockGraphQLData, query)
+    : undefined;
+  if (mockResponse) {
+    return mockResponse;
+  }
 
   assert(query.loc?.source.body);
 
