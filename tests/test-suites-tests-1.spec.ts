@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { mockGetWorkspaceTestExecutions } from "tests/mocks/utils/mockGetWorkspaceTestExecutions";
+import { mockGetWorkspaceTests } from "tests/mocks/utils/mockGetWorkspaceTests";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MOCK_DATA } from "./mocks/data";
+import { MockData } from "./mocks/types";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
@@ -11,7 +13,7 @@ test("test-suites-tests-1: sorting and filtering test runs", async ({
   page,
 }) => {
   await navigateToPage({
-    mockGraphQLData: MOCK_DATA.TESTS_WITH_NO_RECORDINGS,
+    mockGraphQLData,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/tests`,
   });
@@ -72,3 +74,38 @@ test("test-suites-tests-1: sorting and filtering test runs", async ({
 
   // Unfortunately we can't test the date filtering because this is done on the server
 });
+
+const mockGraphQLData: MockData = {
+  GetWorkspaceTestExecutions: mockGetWorkspaceTestExecutions([]),
+  GetWorkspaceTests: mockGetWorkspaceTests([
+    {
+      stats: {
+        passed: 0,
+      },
+      title: "No tests or recordings",
+    },
+    {
+      stats: {
+        passed: 1,
+      },
+      title: "1 passing test",
+    },
+    {
+      stats: {
+        flaky: 2,
+        flakyRate: 1,
+      },
+      title: "2 flaky tests",
+    },
+    {
+      stats: {
+        failed: 1,
+        failureRate: 0.25,
+        flaky: 3,
+        flakyRate: 0.75,
+        passed: 1,
+      },
+      title: "1 failed test, 3 flaky tests",
+    },
+  ]),
+};

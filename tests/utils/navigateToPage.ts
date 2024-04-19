@@ -1,7 +1,7 @@
 import { Page } from "@playwright/test";
 import assert from "assert";
 import chalk from "chalk";
-import { MockGraphQLQueries } from "../mocks/data";
+import { MockData } from "../mocks/types";
 import { debugPrint } from "./debugPrint";
 
 export async function navigateToPage({
@@ -11,7 +11,7 @@ export async function navigateToPage({
   pathname,
 }: {
   apiKey?: string;
-  mockGraphQLData?: MockGraphQLQueries;
+  mockGraphQLData?: MockData;
   page: Page;
   pathname: string;
 }) {
