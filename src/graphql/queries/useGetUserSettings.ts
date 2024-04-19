@@ -1,4 +1,3 @@
-import { SessionContext } from "@/components/SessionContext";
 import {
   GetUserSettingsQuery,
   GetUserSettingsQueryVariables,
@@ -6,29 +5,26 @@ import {
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 
 export function useGetUserSettings() {
-  const { accessToken } = useContext(SessionContext);
   const { data, error, isLoading } = useGraphQLQuery<
     GetUserSettingsQuery,
     GetUserSettingsQueryVariables
-  >(
-    gql`
-      query GetUserSettings {
-        viewer {
-          apiKeys {
-            id
-            createdAt
-            label
-            scopes
-            recordingCount
-            maxRecordings
-          }
+  >(gql`
+    query GetUserSettings {
+      viewer {
+        apiKeys {
+          id
+          createdAt
+          label
+          scopes
+          recordingCount
+          maxRecordings
         }
       }
-    `
-  );
+    }
+  `);
 
   const apiKeys = useMemo<ApiKey[] | undefined>(() => {
     if (data) {

@@ -5,6 +5,7 @@ import { getTestRunSections } from "./utils/getTestRunSections";
 import { getTestRunsRow } from "./utils/getTestRunsRow";
 import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
+import { waitForUrlChange } from "./utils/waitForUrlChange";
 
 test("test-suites-runs-2: passed run in main branch with source", async ({
   page,
@@ -48,7 +49,9 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
     await getContextMenuItem(page, "All runs").click();
     await expect(rows).toHaveCount(1);
 
-    await rows.click();
+    const promise = waitForUrlChange(page, await page.url());
+    await rows.first().click();
+    await promise;
   }
 
   {
@@ -88,7 +91,9 @@ test("test-suites-runs-2: passed run in main branch with source", async ({
     expect(metadataText).toContain("main");
     expect(metadataText).toContain("200.0ms");
 
+    const promise = waitForUrlChange(page, await page.url());
     await rows.first().click();
+    await promise;
   }
 
   {

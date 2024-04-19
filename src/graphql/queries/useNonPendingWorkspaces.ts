@@ -5,37 +5,35 @@ import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
 export function useNonPendingWorkspaces() {
-  const { data, error, isLoading } =
-    useGraphQLQuery<GetNonPendingWorkspacesQuery>(
-      gql`
-        query GetNonPendingWorkspaces {
-          viewer {
-            workspaces {
-              edges {
-                node {
-                  hasPaymentMethod
+  const { data, error, isLoading, refetch } =
+    useGraphQLQuery<GetNonPendingWorkspacesQuery>(gql`
+      query GetNonPendingWorkspaces {
+        viewer {
+          workspaces {
+            edges {
+              node {
+                hasPaymentMethod
+                id
+                invitationCode
+                isOrganization
+                isTest
+                name
+                settings {
+                  features
+                }
+                subscription {
                   id
-                  invitationCode
-                  isOrganization
-                  isTest
-                  name
-                  settings {
-                    features
-                  }
-                  subscription {
+                  plan {
                     id
-                    plan {
-                      id
-                      key
-                    }
+                    key
                   }
                 }
               }
             }
           }
         }
-      `
-    );
+      }
+    `);
 
   const workspaces = useMemo<Workspace[] | undefined>(() => {
     if (data) {
@@ -80,5 +78,5 @@ export function useNonPendingWorkspaces() {
     }
   }, [data]);
 
-  return { error, isLoading, workspaces };
+  return { error, isLoading, refetch, workspaces };
 }
