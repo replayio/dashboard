@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { mockGetWorkspaceTestExecutions } from "tests/mocks/utils/mockGetWorkspaceTestExecutions";
 import { mockGetWorkspaceTests } from "tests/mocks/utils/mockGetWorkspaceTests";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockData } from "./mocks/types";
+import { MockGraphQLData } from "./mocks/types";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
@@ -75,7 +75,7 @@ test("test-suites-tests-1: sorting and filtering test runs", async ({
   // Unfortunately we can't test the date filtering because this is done on the server
 });
 
-const mockGraphQLData: MockData = {
+const mockGraphQLData: MockGraphQLData = {
   GetWorkspaceTestExecutions: mockGetWorkspaceTestExecutions([]),
   GetWorkspaceTests: mockGetWorkspaceTests([
     {

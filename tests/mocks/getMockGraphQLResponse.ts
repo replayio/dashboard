@@ -4,10 +4,10 @@ import {
   NetworkStatus,
   TypedDocumentNode,
 } from "@apollo/client";
-import { MockData } from "./types";
+import { MockGraphQLData } from "./types";
 
 export function getMockGraphQLResponse<Query>(
-  mockGraphQLData: MockData,
+  mockGraphQLData: MockGraphQLData,
   query: DocumentNode | TypedDocumentNode<Query, any>
 ): ApolloQueryResult<Query> | undefined | undefined {
   const definition = query.definitions[0];
