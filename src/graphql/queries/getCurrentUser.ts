@@ -1,48 +1,44 @@
-import { User } from "@/graphql/types";
-import { URLS } from "@/constants";
+import {
+  GetUserQuery,
+  GetUserQueryVariables,
+} from "@/graphql/generated/graphql";
+import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { gql } from "@apollo/client";
 
 export async function getCurrentUser(accessToken: string) {
-  const resp = await fetch(`${URLS.api}/v1/graphql`, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `
-        query GetUser {
-          viewer {
-            email
-            internal
-            nags
-            user {
-              name
-              picture
-              id
-            }
+  const { data, errors } = await graphQLFetch<
+    GetUserQuery,
+    GetUserQueryVariables
+  >({
+    accessToken,
+    query: gql`
+      query GetUser {
+        viewer {
+          email
+          internal
+          nags
+          user {
+            name
+            picture
+            id
           }
         }
-      `,
-    }),
+      }
+    `,
   });
 
-  const json: any = await resp.json();
-
-  if (json.errors) {
-    throw new Error(json.errors[0].message);
+  if (errors?.length) {
+    throw new Error(errors[0]?.message);
   }
 
-  return json.data.viewer ? convertUser(json.data.viewer) : null;
-}
-
-// TODO [PRO-44] add types for the GetUser query
-function convertUser(viewer: any): User {
-  return {
-    email: viewer.email,
-    id: viewer.user.id,
-    isInternal: viewer.internal,
-    nags: viewer.nags,
-    name: viewer.user.name ?? "",
-    picture: viewer.user.picture ?? "",
-  };
+  return data.viewer
+    ? {
+        email: data.viewer.email,
+        id: data.viewer.user.id,
+        isInternal: data.viewer.internal,
+        nags: data.viewer.nags,
+        name: data.viewer.user.name ?? "",
+        picture: data.viewer.user.picture ?? "",
+      }
+    : null;
 }

@@ -1,37 +1,41 @@
-import { URLS } from "@/constants";
+import {
+  FulfillAuthRequestMutation,
+  FulfillAuthRequestMutationVariables,
+} from "@/graphql/generated/graphql";
+import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { gql } from "@apollo/client";
 
 export async function fulfillAuthRequest(id: string, token: string) {
-  const resp = await fetch(`${URLS.api}/v1/graphql`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `
-        mutation FulfillAuthRequest($secret: String!, $id: String!, $token: String!) {
-          fulfillAuthRequest(input: {secret: $secret, id: $id, token: $token}) {
-            success
-            source
-          }
+  const { data, errors } = await graphQLFetch<
+    FulfillAuthRequestMutation,
+    FulfillAuthRequestMutationVariables
+  >({
+    query: gql`
+      mutation FulfillAuthRequest(
+        $secret: String!
+        $id: String!
+        $token: String!
+      ) {
+        fulfillAuthRequest(input: { secret: $secret, id: $id, token: $token }) {
+          success
+          source
         }
-      `,
-      variables: {
-        secret: process.env.FRONTEND_API_SECRET!,
-        id,
-        token,
-      },
-    }),
+      }
+    `,
+    variables: {
+      secret: process.env.FRONTEND_API_SECRET!,
+      id,
+      token,
+    },
   });
 
-  const json = await resp.json();
-
-  if (json.errors) {
-    throw new Error(json.errors[0].message);
+  if (errors && errors.length > 0) {
+    throw new Error(errors[0]?.message);
   }
 
-  if (!json.data.fulfillAuthRequest.success) {
+  if (!data.fulfillAuthRequest.success) {
     throw new Error("Failed to fulfill authentication request");
   }
 
-  return json.data.fulfillAuthRequest.source;
+  return data.fulfillAuthRequest.source;
 }
