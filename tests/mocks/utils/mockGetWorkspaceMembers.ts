@@ -1,8 +1,7 @@
 import { GetWorkspaceMembersQuery } from "@/graphql/generated/graphql";
 import { WorkspaceMember } from "@/graphql/types";
 import { getRelativeDate } from "@/utils/date";
-import { DEFAULT_WORKSPACE_ID } from "../constants";
-import { getUID } from "./getUID";
+import { DEFAULT_USER_ID, DEFAULT_WORKSPACE_ID } from "../constants";
 
 export function mockGetWorkspaceMembers(
   partialMembers: Partial<WorkspaceMember>[],
@@ -16,7 +15,7 @@ export function mockGetWorkspaceMembers(
         __typename: "WorkspaceMemberConnection",
         edges: partialMembers.map(
           ({
-            id = getUID("workspace-member"),
+            id = DEFAULT_USER_ID,
             isPending = false,
             name = "Test User",
             picture = "",

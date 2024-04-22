@@ -7,6 +7,7 @@ import {
   Filters,
 } from "@/pageComponents/team/id/tests/TestsViewContext";
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
+import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
@@ -43,29 +44,25 @@ export async function getServerSideProps(
   const testSummaryId = (context.query.testSummaryId ?? null) as string | null;
 
   if (invalidWorkspace) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/team/me/recordings",
-      },
+    return redirectWithState({
+      context,
+      pathname: "/team/me/recordings",
       props: {
         filters,
         testSummaryId,
         workspaceId,
       },
-    };
+    });
   } else if (!isTest) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/team/${workspaceId}/recordings`,
-      },
+    return redirectWithState({
+      context,
+      pathname: `/team/${workspaceId}/recordings`,
       props: {
         filters,
         testSummaryId,
         workspaceId,
       },
-    };
+    });
   }
 
   return {

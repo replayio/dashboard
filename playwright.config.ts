@@ -25,6 +25,7 @@ export default defineConfig({
         }) as [string, unknown],
       ]
     : "line",
+  timeout: 10_000,
   use: {
     launchOptions: {
       // ...

@@ -44,24 +44,26 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const accessTokenSource = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.accessTokenSource]
     );
-    const mockGraphQLData = getValueFromArrayOrString(
+    const mockGraphQLDataString = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.mockGraphQLData]
     );
 
+    let mockGraphQLData: MockGraphQLData | null = null;
+    if (mockGraphQLDataString) {
+      try {
+        mockGraphQLData = JSON.parse(mockGraphQLDataString);
+      } catch (error) {}
+    }
+
     const user = accessToken
-      ? await getCurrentUser(
-          accessToken,
-          mockGraphQLData
-            ? (JSON.parse(mockGraphQLData) as MockGraphQLData)
-            : null
-        )
+      ? await getCurrentUser(accessToken, mockGraphQLData)
       : null;
 
     return {
       pageProps: {
         accessToken,
         accessTokenSource,
-        mockGraphQLData: mockGraphQLData || "",
+        mockGraphQLData: mockGraphQLDataString || "",
         user,
       },
     };

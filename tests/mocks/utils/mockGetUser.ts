@@ -10,7 +10,7 @@ export function mockGetUser(partialUser: DeepPartial<User> = {}): GetUserQuery {
       internal: partialUser.isInternal == true,
       nags: (partialUser.nags ?? []) as string[],
       user: {
-        name: partialUser.name ?? "Brian Vaughn",
+        name: partialUser.name ?? "Test User",
         picture: partialUser.picture,
         id: partialUser.id ?? DEFAULT_USER_ID,
       },

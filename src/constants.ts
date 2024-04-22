@@ -4,6 +4,7 @@ export const COOKIES = {
   browserAuth: "replay:browser-auth",
   defaultPathname: "replay:dashboard:default-pathname",
   mobileWarningDismissed: "replay:dashboard:mobile-warning-dismissed",
+  mockGraphQLData: "replay:mock-graphql-data",
   testRunsFilters: "replay:dashboard:test-runs-filters",
   testsFilters: "replay:dashboard:tests-filters",
 };

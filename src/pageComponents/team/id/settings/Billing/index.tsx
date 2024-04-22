@@ -1,11 +1,10 @@
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { BillingAddPaymentMethod } from "@/pageComponents/team/id/settings/Billing/BillingAddPaymentMethod";
 import {
   BillingContext,
   BillingContextRoot,
 } from "@/pageComponents/team/id/settings/Billing/BillingContext";
 import { BillingPriceDetails } from "@/pageComponents/team/id/settings/Billing/BillingPricingDetails";
-import { BillingTrialDetails } from "@/pageComponents/team/id/settings/Billing/BillingTrialDetails";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useContext } from "react";
 
 export function Billing({
@@ -34,7 +33,5 @@ function BillingWithData() {
       return <BillingAddPaymentMethod />;
     case "price-details":
       return <BillingPriceDetails />;
-    case "trial-details":
-      return <BillingTrialDetails />;
   }
 }

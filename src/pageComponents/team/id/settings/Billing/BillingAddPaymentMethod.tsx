@@ -86,7 +86,7 @@ export function BillingAddPaymentMethod() {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2" data-test-id="AddPaymentForm">
       {error && (
         <div className="bg-red-900 text-red-100 px-2 py-1 rounded">
           {error.message}
