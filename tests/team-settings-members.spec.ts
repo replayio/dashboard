@@ -1,12 +1,14 @@
 import { expect, test } from "@playwright/test";
+import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembers";
+import { DEFAULT_WORKSPACE_ID, TEST_USER_PICTURES } from "./mocks/constants";
+import { MockGraphQLData } from "./mocks/types";
 import { navigateToPage } from "./utils/navigateToPage";
-import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
 
 test("team-settings-members: should group members by role and show pending members", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "TEAM_SETTINGS_MEMBERS",
+    mockGraphQLData,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/settings/members`,
   });
@@ -24,3 +26,31 @@ test("team-settings-members: should group members by role and show pending membe
     .locator('[data-test-name="TeamMembers-MemberRow"]');
   await expect(users).toHaveCount(3);
 });
+
+const mockGraphQLData: MockGraphQLData = {
+  GetWorkspaceMembers: mockGetWorkspaceMembers([
+    {
+      name: "Admin 1",
+      picture: TEST_USER_PICTURES.eleanor_diaz,
+      roles: ["viewer", "admin"],
+    },
+    {
+      name: "Admin 2",
+      roles: ["viewer", "admin"],
+    },
+    {
+      name: "Developer 1",
+      roles: ["viewer", "developer"],
+    },
+    {
+      isPending: true,
+      name: "Pending developer 1",
+      roles: ["viewer", "developer"],
+    },
+    {
+      name: "Developer 2",
+      picture: TEST_USER_PICTURES.lewis_neill,
+      roles: ["viewer", "developer"],
+    },
+  ]),
+};

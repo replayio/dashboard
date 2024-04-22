@@ -1,33 +1,35 @@
-import { URLS } from "@/constants";
+import {
+  InitAutRequestMutation,
+  InitAutRequestMutationVariables,
+} from "@/graphql/generated/graphql";
+import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { gql } from "@apollo/client";
 
 export async function initAuthRequest(key: string, source: string) {
-  const resp = await fetch(`${URLS.api}/v1/graphql`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `
-        mutation InitAutRequest($key: String!, $source: String = "browser") {
-          initAuthRequest(input: {key: $key, source: $source}) {
-            id
-            challenge
-            serverKey
-          }
+  const { data, errors } = await graphQLFetch<
+    InitAutRequestMutation,
+    InitAutRequestMutationVariables
+  >({
+    // TODO Support e2e test mock mutations
+    mockGraphQLData: null,
+    query: gql`
+      mutation InitAutRequest($key: String!, $source: String = "browser") {
+        initAuthRequest(input: { key: $key, source: $source }) {
+          id
+          challenge
+          serverKey
         }
-      `,
-      variables: {
-        key,
-        source,
-      },
-    }),
+      }
+    `,
+    variables: {
+      key,
+      source,
+    },
   });
 
-  const json: any = await resp.json();
-
-  if (json.errors) {
-    throw new Error(json.errors[0].message);
+  if (errors?.length) {
+    throw new Error(errors[0]?.message);
   }
 
-  return json.data.initAuthRequest;
+  return data.initAuthRequest;
 }

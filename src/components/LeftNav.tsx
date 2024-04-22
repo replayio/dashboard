@@ -1,10 +1,10 @@
 import { Icon } from "@/components/Icon";
 import { ReplayLogo } from "@/components/ReplayLogo";
-import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { CreateTeamButton } from "@/pageComponents/team/layout/CreateTeamButton";
 import { CurrentUser } from "@/pageComponents/team/layout/CurrentUser";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useContext } from "react";
+import { SessionContext } from "./SessionContext";
 
 export function LeftNav({
   backLink,
@@ -15,7 +15,7 @@ export function LeftNav({
     label: string;
   };
 }>) {
-  const { user } = useCurrentUser();
+  const { user } = useContext(SessionContext);
 
   return (
     <div className="flex flex-col gap-2 h-full text-white overflow-auto shrink-0 p-2 pr-0 w-32 md:w-72">
@@ -37,8 +37,8 @@ export function LeftNav({
         )}
         {children}
       </nav>
-      {!backLink && user && (
-        <CreateTeamButton isInternalUser={user?.isInternal == true} />
+      {!backLink && (
+        <CreateTeamButton isInternalUser={user.isInternal == true} />
       )}
       <CurrentUser />
     </div>

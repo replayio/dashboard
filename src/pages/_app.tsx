@@ -1,76 +1,102 @@
+import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { COOKIES, HEADERS } from "@/constants";
-import { setCookieValueClient } from "@/utils/cookie";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
+import { User } from "@/graphql/types";
+import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
+import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
+import { listenForAccessToken } from "@/utils/replayBrowser";
 import assert from "assert";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { MockGraphQLData } from "tests/mocks/types";
 import "use-context-menu/styles.css";
 import "../global.css";
-import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 
 type PageProps = {
   accessToken: string;
   accessTokenSource: string;
-  mockKey: string;
+  mockGraphQLData: string;
+  user: User;
 };
 
 export default class MyApp extends App<AppProps<PageProps>> {
   accessToken: string;
   accessTokenSource: string;
-  mockKey: string;
+  mockGraphQLData: string;
+  user: User;
 
   constructor(context: AppProps<PageProps>) {
     super(context);
 
     this.accessToken = context.pageProps.accessToken;
     this.accessTokenSource = context.pageProps.accessTokenSource;
-    this.mockKey = context.pageProps.mockKey;
+    this.mockGraphQLData = context.pageProps.mockGraphQLData;
+    this.user = context.pageProps.user;
   }
 
   static getInitialProps = async (context: AppContext) => {
-    const accessToken = context.ctx.req?.headers?.[HEADERS.accessToken];
-    const accessTokenSource =
-      context.ctx.req?.headers?.[HEADERS.accessTokenSource];
-    const mockKey = context.ctx.req?.headers?.[HEADERS.mockKey];
+    const accessToken = getValueFromArrayOrString(
+      context.ctx.req?.headers?.[HEADERS.accessToken]
+    );
+    const accessTokenSource = getValueFromArrayOrString(
+      context.ctx.req?.headers?.[HEADERS.accessTokenSource]
+    );
+    const mockGraphQLDataString = getValueFromArrayOrString(
+      context.ctx.req?.headers?.[HEADERS.mockGraphQLData]
+    );
+
+    let mockGraphQLData: MockGraphQLData | null = null;
+    if (mockGraphQLDataString) {
+      try {
+        mockGraphQLData = JSON.parse(mockGraphQLDataString);
+      } catch (error) {}
+    }
+
+    const user = accessToken
+      ? await getCurrentUser(accessToken, mockGraphQLData)
+      : null;
 
     return {
-      pageProps: { accessToken, accessTokenSource, mockKey: mockKey || "" },
+      pageProps: {
+        accessToken,
+        accessTokenSource,
+        mockGraphQLData: mockGraphQLDataString || "",
+        user,
+      },
     };
   };
 
   componentDidMount(): void {
-    const { accessToken, accessTokenSource } = this.props.pageProps;
-    if (accessToken && accessTokenSource === "query") {
-      // Store API key in a cookie to better support e2e tests and Support
-      // The alternative is to pass the API key as a URL param
-      setCookieValueClient(COOKIES.accessToken, accessToken);
+    if (global.__IS_RECORD_REPLAY_RUNTIME__ && !this.accessToken) {
+      listenForAccessToken((token) => {
+        setCookieValueClient(COOKIES.accessToken, {
+          token,
+          source: "external",
+        } satisfies AccessTokenCookie);
+        window.location.reload();
+      });
     }
   }
 
   render() {
-    const { accessToken, mockKey, props } = this;
+    const { accessToken, mockGraphQLData, props, user } = this;
     const { Component, pageProps } = props;
 
     assert("Layout" in Component, "Page.Layout is required");
     const Layout = Component.Layout as ComponentType<PropsWithChildren>;
 
     let children = (
-      <EndToEndTestContextProvider mockKey={mockKey}>
-        <SessionContextProvider accessToken={accessToken}>
+      <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
+        <SessionContextProvider accessToken={accessToken} user={user}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </SessionContextProvider>
       </EndToEndTestContextProvider>
     );
-
-    const isAuthenticated = !!accessToken;
-    if (isAuthenticated) {
-      children = <UserProvider>{children}</UserProvider>;
-    }
 
     return (
       <ErrorBoundary fallback={<ErrorFallback />}>

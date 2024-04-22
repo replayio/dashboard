@@ -1,9 +1,10 @@
 export const COOKIES = {
-  accessToken: "replay:dashboard:access-token",
+  accessToken: "replay:access-token",
   authReturnTo: "replay:auth-return-to",
   browserAuth: "replay:browser-auth",
   defaultPathname: "replay:dashboard:default-pathname",
   mobileWarningDismissed: "replay:dashboard:mobile-warning-dismissed",
+  mockGraphQLData: "replay:mock-graphql-data",
   testRunsFilters: "replay:dashboard:test-runs-filters",
   testsFilters: "replay:dashboard:tests-filters",
 };
@@ -11,7 +12,7 @@ export const COOKIES = {
 export const HEADERS = {
   accessToken: "x-access-token",
   accessTokenSource: "x-access-token-source",
-  mockKey: "x-mock-key",
+  mockGraphQLData: "x-mock-graphql-data",
   userAgent: "x-user-agent",
 };
 

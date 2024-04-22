@@ -1,16 +1,22 @@
 import { expect, test } from "@playwright/test";
+import { mockGetTests } from "tests/mocks/utils/mockGetTests";
+import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRunsForWorkspace";
+import { partialToTestSuiteTest } from "tests/mocks/utils/partialToTestSuiteTest";
+import { partialToTestSuiteTestRecording } from "tests/mocks/utils/partialToTestSuiteTestRecording";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
+import { MockGraphQLData } from "./mocks/types";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getTestRunSections } from "./utils/getTestRunSections";
 import { getTestRunsRow } from "./utils/getTestRunsRow";
 import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
+import { waitForUrlChange } from "./utils/waitForUrlChange";
 
 test("test-suites-runs-3: failed run in temp branch without source", async ({
   page,
 }) => {
   await navigateToPage({
-    mockKey: "TEST_RUN_FAILED_PR",
+    mockGraphQLData,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/runs`,
   });
@@ -44,7 +50,9 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
     await getContextMenuItem(page, "Only failures").click();
     await expect(rows).toHaveCount(1);
 
-    await rows.click();
+    const promise = waitForUrlChange(page, await page.url());
+    await rows.first().click();
+    await promise;
   }
 
   {
@@ -115,7 +123,9 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
     await getContextMenuItem(page, "All runs").click();
     await expect(passedSection).toBeVisible();
 
+    const promise = waitForUrlChange(page, await page.url());
     await flakyRows.first().click();
+    await promise;
   }
 
   {
@@ -167,3 +177,83 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
     ).toBeVisible();
   }
 });
+
+const mockGraphQLData: MockGraphQLData = {
+  GetTests: mockGetTests([
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "First test",
+    }),
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "Second test",
+    }),
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "Third test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      recordings: [
+        partialToTestSuiteTestRecording(),
+        partialToTestSuiteTestRecording(),
+      ],
+      sourcePath: undefined,
+      status: "flaky",
+      title: "Fourth test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      recordings: [
+        partialToTestSuiteTestRecording(),
+        partialToTestSuiteTestRecording(),
+      ],
+      sourcePath: undefined,
+      status: "flaky",
+      title: "Fifth test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      sourcePath: undefined,
+      status: "failed",
+      title: "Sixth test",
+    }),
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "Seventh test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      recordings: [
+        partialToTestSuiteTestRecording(),
+        partialToTestSuiteTestRecording(),
+      ],
+      sourcePath: undefined,
+      status: "flaky",
+      title: "Eighth test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      sourcePath: undefined,
+      status: "failed",
+      title: "Ninth test",
+    }),
+  ]),
+  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
+    branchName: "temp",
+    commitTitle: "Failed run in temp branch",
+    isPrimaryBranch: false,
+    numFailed: 2,
+    numFlaky: 3,
+    numPassed: 4,
+    prNumber: 123,
+    prTitle: "Pull Request Title",
+    repository: null,
+    triggerUrl: "https://fake-trigger-url.com",
+    user: null,
+  }),
+};

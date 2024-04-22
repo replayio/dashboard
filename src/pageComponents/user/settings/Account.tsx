@@ -1,20 +1,24 @@
 import { Button } from "@/components/Button";
+import { SessionContext } from "@/components/SessionContext";
 import { COOKIES } from "@/constants";
-import { useCurrentUser } from "@/graphql/queries/useCurrentUser";
 import { deleteCookieValueClient } from "@/utils/cookie";
-import { useState } from "react";
+import { setAccessTokenInBrowserPrefs } from "@/utils/replayBrowser";
+import { useContext, useState } from "react";
 
 export function Account() {
-  const { user } = useCurrentUser();
+  const { user } = useContext(SessionContext);
 
   const [isPending, setIsPending] = useState(false);
 
   const onClick = async () => {
     setIsPending(true);
 
+    setAccessTokenInBrowserPrefs(null);
     deleteCookieValueClient(COOKIES.accessToken);
 
-    window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);
+    window.location.replace(
+      `/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`
+    );
   };
 
   return (

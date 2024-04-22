@@ -3,6 +3,7 @@ import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/pageComponents/team/id/getServerSidePropsHelpers";
 import RecordingPage from "@/pageComponents/team/id/recordings/RecordingsPage";
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
+import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
@@ -25,21 +26,17 @@ export async function getServerSideProps(
     await getServerSidePropsShared(context);
 
   if (invalidWorkspace) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/team/me/recordings",
-      },
+    return redirectWithState({
+      context,
+      pathname: "/team/me/recordings",
       props: { workspaceId },
-    };
+    });
   } else if (isTest) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/team/${workspaceId}/runs`,
-      },
+    return redirectWithState({
+      context,
+      pathname: `/team/${workspaceId}/runs`,
       props: { workspaceId },
-    };
+    });
   }
 
   return {

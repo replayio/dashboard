@@ -8,6 +8,7 @@ import {
 } from "@apollo/client";
 import { loadDevMessages, loadErrorMessageHandler } from "@apollo/client/dev";
 import { RetryLink } from "@apollo/client/link/retry";
+import { v4 as uuid } from "uuid";
 
 if (process.env.NODE_ENV === "development") {
   loadDevMessages();
@@ -17,11 +18,15 @@ if (process.env.NODE_ENV === "development") {
 let graphQLClientAccessToken: string | undefined;
 let graphQLClient: ApolloClient<NormalizedCacheObject>;
 
+// Generate a client ID so that we can easily filter backend requests down to a specific browser tab
+// This can be thought of as a session identifier
+const clientId = uuid();
+
 export function getGraphQLClient(accessToken?: string) {
   if (graphQLClient == null || graphQLClientAccessToken !== accessToken) {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "Replay-Client-Id": "196a9e7b-dba5-46ee-8b81-fac66991f431",
+      "Replay-Client-Id": clientId,
     };
     if (accessToken) {
       headers["Authorization"] = `Bearer ${accessToken}`;
@@ -76,7 +81,7 @@ export function getGraphQLClient(accessToken?: string) {
           fetchPolicy: "cache-first",
         },
       },
-      link: from([httpLink, retryLink]),
+      link: from([retryLink, httpLink]),
     });
   }
 

@@ -1,23 +1,21 @@
 import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
 import { useWorkspaceSubscription } from "@/graphql/queries/useWorkspaceSubscription";
 import { Workspace, WorkspaceSubscription } from "@/graphql/types";
-import { inUnpaidFreeTrial } from "@/utils/subscription";
 import { Elements } from "@stripe/react-stripe-js";
-import { Stripe, loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   Dispatch,
   ReactNode,
   SetStateAction,
   createContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
 
-type View = "add-payment-method" | "price-details" | "trial-details";
+type View = "add-payment-method" | "price-details";
 
 type ContextType = {
-  refreshSubscription: () => void;
+  refreshSubscription: () => Promise<void>;
   setView: Dispatch<SetStateAction<View | undefined>>;
   subscription: WorkspaceSubscription | undefined;
   view: View | undefined;
@@ -36,34 +34,35 @@ export function BillingContextRoot({
   stripeKey: string;
   workspaceId: string;
 }) {
-  const { refetch, subscription } = useWorkspaceSubscription(workspaceId);
-  const { workspaces } = useNonPendingWorkspaces();
+  const { refetch: refetchSubscription, subscription } =
+    useWorkspaceSubscription(workspaceId);
+  const { refetch: refetchWorkspaces, workspaces } = useNonPendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
   const stripePromise = useMemo(() => loadStripe(stripeKey), [stripeKey]);
 
-  useEffect(() => {
-    if (subscription && workspace) {
-      if (inUnpaidFreeTrial(workspace, subscription)) {
-        setView("trial-details");
-      } else {
-        setView("price-details");
-      }
-    }
-  }, [subscription, workspace]);
-
-  const [view, setView] = useState<View | undefined>(undefined);
+  const [view, setView] = useState<View | undefined>("price-details");
 
   const value = useMemo<ContextType>(
     () => ({
-      refreshSubscription: () => refetch({ workspaceId }),
+      refreshSubscription: async () => {
+        await refetchSubscription({ workspaceId });
+        await refetchWorkspaces();
+      },
       setView,
       subscription,
       view,
       workspace,
       workspaceId,
     }),
-    [refetch, subscription, view, workspace, workspaceId]
+    [
+      refetchSubscription,
+      refetchWorkspaces,
+      subscription,
+      view,
+      workspace,
+      workspaceId,
+    ]
   );
 
   return (

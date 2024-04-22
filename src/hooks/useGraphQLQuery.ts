@@ -10,9 +10,8 @@ import {
   TypedDocumentNode,
   useQuery,
 } from "@apollo/client";
-import assert from "assert";
 import { useContext } from "react";
-import { getMockData } from "../../tests/mocks/getMockData";
+import { getMockGraphQLResponse } from "../../tests/mocks/getMockGraphQLResponse";
 
 export function useGraphQLQuery<
   Query,
@@ -29,23 +28,32 @@ export function useGraphQLQuery<
     variables?: Partial<Variables>
   ) => Promise<ApolloQueryResult<Query>>;
 } {
+  const { mockGraphQLData } = useContext(EndToEndTestContext);
   const { accessToken } = useContext(SessionContext);
-  assert(accessToken != null, "accessToken is required");
 
   const client = getGraphQLClient(accessToken);
 
   // Support e2e tests
-  const { mockKey } = useContext(EndToEndTestContext);
+  const mockResponse = mockGraphQLData
+    ? getMockGraphQLResponse(mockGraphQLData, query)
+    : undefined;
+  if (mockResponse) {
+    return {
+      data: mockResponse.data,
+      error: mockResponse.error,
+      isLoading: mockResponse.loading,
+      refetch: async () => mockResponse,
+    };
+  }
 
-  // This looks like a rule violation, but mock data behavior is deterministic
   const {
     data,
     error,
     loading: isLoading,
     refetch,
-  } = getMockData<Query>(mockKey, query) ??
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useQuery<Query, Variables>(query, { client, variables, ...options });
+    // This looks like a rule violation, but mock data behavior is deterministic
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  } = useQuery<Query, Variables>(query, { client, variables, ...options });
 
   return { data, error, isLoading, refetch };
 }

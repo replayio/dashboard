@@ -1,6 +1,7 @@
 import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
 import { differenceInMinutes } from "date-fns/differenceInMinutes";
 import { differenceInMonths } from "date-fns/differenceInMonths";
+import { differenceInSeconds } from "date-fns/differenceInSeconds";
 import { differenceInWeeks } from "date-fns/differenceInWeeks";
 import { differenceInYears } from "date-fns/differenceInYears";
 import padStart from "lodash/padStart";
@@ -28,6 +29,7 @@ export function formatPercentage(amount: number) {
 }
 
 export function formatRelativeTime(date: Date): string {
+  const seconds = differenceInSeconds(Date.now(), date);
   const minutes = differenceInMinutes(Date.now(), date);
   const days = differenceInCalendarDays(Date.now(), date);
   const weeks = differenceInWeeks(Date.now(), date);
@@ -36,22 +38,20 @@ export function formatRelativeTime(date: Date): string {
 
   if (years > 0) {
     return `${years}y`;
-  }
-  if (months > 0) {
+  } else if (months > 0) {
     return `${months}mo`;
-  }
-  if (weeks > 0) {
+  } else if (weeks > 0) {
     return `${weeks}w`;
-  }
-  if (days > 0) {
+  } else if (days > 0) {
     return `${days}d`;
-  }
-  if (minutes >= 60) {
+  } else if (minutes >= 60) {
     return `${Math.floor(minutes / 60)}h`;
-  }
-  if (minutes > 0) {
+  } else if (minutes > 0) {
     return `${minutes}m`;
+  } else if (seconds > 0) {
+    return `${seconds}s`;
   }
+
   return "Now";
 }
 

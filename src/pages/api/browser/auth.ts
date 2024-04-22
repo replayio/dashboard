@@ -1,7 +1,7 @@
 import { COOKIES, URLS } from "@/constants";
 import cookie from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "@auth0/nextjs-auth0";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
 import { initAuthRequest } from "@/graphql/queries/initAuthRequest";
 import { fulfillAuthRequest } from "@/graphql/queries/fulfillAuthRequest";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
@@ -21,6 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           httpOnly: true,
           path: "/",
           maxAge: 5 * 60 * 1000,
+          sameSite: "lax",
         })
       );
 
@@ -39,6 +40,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const session = await getSession(req, res);
       if (session?.refreshToken) {
         const source = await fulfillAuthRequest(browserAuth, session.refreshToken);
+
+        // We have just sent our refresh token to the Replay CLI or Browser,
+        // which will use it to get new access and refresh tokens.
+        // Due to refresh token rotation, this refresh token will be invalidated
+        // after a short reuse interval (currently configured to be 2 minutes),
+        // so when our access token expires we wouldn't be able to refresh it
+        // and the user would have to login again.
+        // So we use the refresh token now to get new refresh and access tokens
+        // as long as we still can.
+        await getAccessToken(req, res, { refresh: true });
+
         res.redirect(`/browser/authenticated?source=${source}`);
       } else {
         res.statusCode = 400;
