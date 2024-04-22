@@ -1,5 +1,10 @@
 import assert from "assert";
-import { TestRun, TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
+import {
+  TestRun,
+  TestSuiteTest,
+  TestSuiteTestStatus,
+  WorkspaceSubscription,
+} from "@/graphql/types";
 
 export const TEAM_TYPE_OPTIONS = [
   { label: "Test Suite", value: "testsuite" as const },
@@ -7,29 +12,6 @@ export const TEAM_TYPE_OPTIONS = [
 ];
 
 export const DEFAULT_TEAM_TYPE_OPTION = TEAM_TYPE_OPTIONS[0];
-
-export function getPlanKey({
-  isOrg,
-  isInternal,
-  teamType,
-}: {
-  isOrg: boolean;
-  isInternal?: boolean;
-  teamType: "testsuite" | "standard";
-}) {
-  let planKey;
-  if (isOrg) {
-    planKey = "org-v1";
-  } else if (teamType === "standard" && !isInternal) {
-    planKey = "team-v1";
-  } else if (teamType === "standard" && isInternal) {
-    planKey = "team-internal-v1";
-  } else if (teamType === "testsuite") {
-    planKey = "testsuites-v1";
-  }
-  assert(planKey, "Invalid team type");
-  return planKey;
-}
 
 export function filterTest(
   test: TestSuiteTest,
@@ -130,6 +112,37 @@ export function getColorClassName(status: TestSuiteTestStatus) {
     case "passed":
       return "text-green-500";
   }
+}
+
+export function getPlanKey({
+  isOrg,
+  isInternal,
+  teamType,
+}: {
+  isOrg: boolean;
+  isInternal?: boolean;
+  teamType: "testsuite" | "standard";
+}) {
+  let planKey;
+  if (isOrg) {
+    planKey = "org-v1";
+  } else if (teamType === "standard" && !isInternal) {
+    planKey = "team-v1";
+  } else if (teamType === "standard" && isInternal) {
+    planKey = "team-internal-v1";
+  } else if (teamType === "testsuite") {
+    planKey = "testsuites-v1";
+  }
+  assert(planKey, "Invalid team type");
+  return planKey;
+}
+
+export function isPlanBeta(subscription: WorkspaceSubscription) {
+  return subscription.plan?.key === "testsuites-v1";
+}
+
+export function isPlanPricingPerSeat(subscription: WorkspaceSubscription) {
+  return subscription.plan?.key !== "testsuites-v1";
 }
 
 export function getTestRunTitle(groupedTestCases: TestRun): string {
