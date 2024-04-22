@@ -204,8 +204,8 @@ function PricingDetailsPanel({
         >
           <Icon className="w-4 h-4" type="warning" />
           <div className="truncate">
-            This is a beta plan. You are not getting charged for it. We&apos;ll
-            notify you of any changes.
+            You&apos;re currently on a beta plan offered at no cost. We&apos;ll
+            inform you of any updates or changes.
           </div>
         </div>
       )}
