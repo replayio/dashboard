@@ -6,18 +6,14 @@ import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspac
 import { useUpdateWorkspacePreferences } from "@/graphql/queries/useUpdateWorkspacePreferences";
 import { WorkspaceSettings } from "@/graphql/types";
 import useDebouncedState from "@/hooks/useDebouncedState";
+import {
+  DEFAULT_MEMBER_ROLE_OPTION,
+  MEMBER_ROLE_OPTIONS,
+  MemberRoleOption,
+} from "@/pageComponents/team/id/settings/constants";
 import assert from "assert";
 
-const OPTIONS = [
-  { label: "None", value: 0 },
-  { label: "Viewer", value: 1 },
-  { label: "Developer", value: 3 },
-  { label: "Admin", value: 131 },
-];
-const DEFAULT_OPTION = OPTIONS[0]!;
-type Option = typeof DEFAULT_OPTION;
-
-export function Organization({ id: workspaceId }: { id: string }) {
+export function Organization({ workspaceId }: { workspaceId: string }) {
   const { workspaces } = useNonPendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
   assert(workspace != null, `Workspace not found "${workspaceId}"`);
@@ -125,17 +121,17 @@ export function Organization({ id: workspaceId }: { id: string }) {
       <div className="flex flex-row gap-2 items-start">
         <div className="w-40 truncate">Default permission</div>
         <Select
-          className="h-14"
           onChange={(option) =>
             setUserFeatures({
               ...userFeatures,
-              autoJoin: (option as Option).value,
+              autoJoin: (option as MemberRoleOption).value,
             })
           }
-          options={OPTIONS}
+          options={MEMBER_ROLE_OPTIONS}
           value={
-            OPTIONS.find((option) => option.value === userFeatures.autoJoin) ??
-            DEFAULT_OPTION
+            MEMBER_ROLE_OPTIONS.find(
+              (option) => option.value === userFeatures.autoJoin
+            ) ?? DEFAULT_MEMBER_ROLE_OPTION
           }
         />
       </div>

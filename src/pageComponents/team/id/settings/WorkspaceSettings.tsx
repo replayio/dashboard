@@ -26,20 +26,20 @@ export function WorkspaceSettings({
       break;
     }
     case "delete": {
-      content = <DeleteWorkspace id={workspace.id} />;
+      content = <DeleteWorkspace workspaceId={workspace.id} />;
       break;
     }
     case "members": {
       content = (
         <TeamMembers
-          id={workspace.id}
+          workspaceId={workspace.id}
           invitationCode={workspace.invitationCode}
         />
       );
       break;
     }
     case "organization": {
-      content = <Organization id={workspace.id} />;
+      content = <Organization workspaceId={workspace.id} />;
       break;
     }
   }

@@ -67,6 +67,7 @@ export function useGetWorkspaceMembers(workspaceId: string) {
             members.push({
               id: node.user.id,
               isPending: node.__typename === "WorkspacePendingUserMember",
+              membershipId: node.id,
               name: node.user.name ?? "User",
               picture: node.user.picture ?? null,
               roles: node.roles,
@@ -75,6 +76,7 @@ export function useGetWorkspaceMembers(workspaceId: string) {
             members.push({
               id: node.id,
               isPending: true,
+              membershipId: node.id,
               name: node.email,
               picture: null,
               roles: node.roles,

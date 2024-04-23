@@ -1,19 +1,25 @@
-import { Icon } from "@/components/Icon";
+import { SessionContext } from "@/components/SessionContext";
+import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
+import { WorkspaceMember } from "@/graphql/types";
 import { InvitationLink } from "@/pageComponents/team/id/settings/InvitationLink";
 import { InviteTeamMember } from "@/pageComponents/team/id/settings/InviteTeamMember";
-import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
+import { TeamMemberRow } from "@/pageComponents/team/id/settings/TeamMemberRow";
 import { getPrimaryRole } from "@/utils/user";
-import { useMemo } from "react";
-import { WorkspaceMember } from "@/graphql/types";
+import { useContext, useMemo } from "react";
 
 export function TeamMembers({
-  id,
   invitationCode,
+  workspaceId,
 }: {
-  id: string;
   invitationCode: string | null;
+  workspaceId: string;
 }) {
-  const { error, isLoading, members } = useGetWorkspaceMembers(id);
+  const { user } = useContext(SessionContext);
+
+  const { error, isLoading, members } = useGetWorkspaceMembers(workspaceId);
+
+  const member = members?.find(({ id }) => id === user?.id);
+  const currentUserIsAdmin = member?.roles.includes("admin") == true;
 
   const categorizedMembers = useMemo(() => {
     if (!members) {
@@ -47,7 +53,7 @@ export function TeamMembers({
   return (
     <div className="flex flex-col gap-4 h-full">
       <div className="shrink-0">
-        <InviteTeamMember workspaceId={id} />
+        <InviteTeamMember workspaceId={workspaceId} />
       </div>
 
       <div className="flex flex-col gap-4 overflow-auto shrink grow">
@@ -72,30 +78,12 @@ export function TeamMembers({
                 {role}s
               </div>
               {members.map((member, index) => (
-                <div
-                  className="flex flex-row items-center gap-2"
-                  data-test-name="TeamMembers-MemberRow"
+                <TeamMemberRow
+                  currentUserId={user.id}
+                  currentUserIsAdmin={currentUserIsAdmin}
                   key={index}
-                >
-                  <div className="flex items-center justify-center rounded-full w-8 h-8 overflow-hidden shrink-0 bg-slate-500">
-                    {member.isPending ? (
-                      <Icon className="w-6 h-6 text-slate-300" type="email" />
-                    ) : member.picture ? (
-                      <img
-                        alt={`${member.name} avatar`}
-                        className="w-full h-full"
-                        referrerPolicy="no-referrer"
-                        src={member.picture}
-                      />
-                    ) : null}
-                  </div>
-                  <div className="truncate">{member.name}</div>
-                  {member.isPending && (
-                    <div className="shrink-0 text-sm text-yellow-300">
-                      (pending)
-                    </div>
-                  )}
-                </div>
+                  member={member}
+                />
               ))}
             </div>
           ) : null
