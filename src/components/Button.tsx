@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
 
-export function Button({
-  className = "",
+export  function   Button({
+  className = '',
   color = "primary",
   disabled,
   size = "normal",
