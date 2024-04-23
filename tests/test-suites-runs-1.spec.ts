@@ -1,4 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { MockGraphQLData } from "tests/mocks/types";
+import { mockGetTests } from "tests/mocks/utils/mockGetTests";
+import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRunsForWorkspace";
+import { partialToTestSuiteTest } from "tests/mocks/utils/partialToTestSuiteTest";
+import { partialToTestSuiteTestRecording } from "tests/mocks/utils/partialToTestSuiteTestRecording";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
 import { getContextMenuItem } from "./utils/getContextMenuItem";
 import { getContextMenuText } from "./utils/getContextMenuText";
@@ -9,6 +14,7 @@ import { submitInputText } from "./utils/submitInputText";
 
 test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
   await navigateToPage({
+    mockGraphQLData,
     page,
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/runs`,
   });
@@ -88,3 +94,83 @@ test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
     "Only primary branch"
   );
 });
+
+const mockGraphQLData: MockGraphQLData = {
+  GetTests: mockGetTests([
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "First test",
+    }),
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "Second test",
+    }),
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "Third test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      recordings: [
+        partialToTestSuiteTestRecording(),
+        partialToTestSuiteTestRecording(),
+      ],
+      sourcePath: undefined,
+      status: "flaky",
+      title: "Fourth test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      recordings: [
+        partialToTestSuiteTestRecording(),
+        partialToTestSuiteTestRecording(),
+      ],
+      sourcePath: undefined,
+      status: "flaky",
+      title: "Fifth test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      sourcePath: undefined,
+      status: "failed",
+      title: "Sixth test",
+    }),
+    partialToTestSuiteTest({
+      sourcePath: undefined,
+      status: "passed",
+      title: "Seventh test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      recordings: [
+        partialToTestSuiteTestRecording(),
+        partialToTestSuiteTestRecording(),
+      ],
+      sourcePath: undefined,
+      status: "flaky",
+      title: "Eighth test",
+    }),
+    partialToTestSuiteTest({
+      errors: ["This is an error message"],
+      sourcePath: undefined,
+      status: "failed",
+      title: "Ninth test",
+    }),
+  ]),
+  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
+    branchName: "temp",
+    commitTitle: "Failed run in temp branch",
+    isPrimaryBranch: false,
+    numFailed: 2,
+    numFlaky: 3,
+    numPassed: 4,
+    prNumber: 123,
+    prTitle: "Pull Request Title",
+    repository: null,
+    triggerUrl: "https://fake-trigger-url.com",
+    user: null,
+  }),
+};
