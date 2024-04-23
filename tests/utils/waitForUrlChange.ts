@@ -7,6 +7,6 @@ export async function waitForUrlChange(page: Page, prevUrl: string) {
       return;
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 250));
+    await new Promise(resolve => setTimeout(resolve, 250));
   }
 }

@@ -7,8 +7,7 @@ import { getRecordingRow } from "./utils/getRecordingRow";
 test("team-library: filtering and share dialog", async ({ page }) => {
   await navigateToPage({
     page,
-    pathname:
-      "/team/dzozMDRhOTAwOC01YzdlLTRjNmMtODQwNi0yYTY4YTNjMmEyYzk=/recordings",
+    pathname: "/team/dzozMDRhOTAwOC01YzdlLTRjNmMtODQwNi0yYTY4YTNjMmEyYzk=/recordings",
   });
 
   // Verify the team library route has loaded based on the left-nav links

@@ -13,9 +13,7 @@ export function TeamNavComponent() {
 
   const pathname = usePathname();
   const workspaceId =
-    pathname && pathname.startsWith("/team/")
-      ? pathname.split("/")[2]
-      : undefined;
+    pathname && pathname.startsWith("/team/") ? pathname.split("/")[2] : undefined;
   let workspace: Workspace | undefined = undefined;
   if (workspaceId) {
     workspace = workspaces?.find(({ id }) => id === workspaceId);
@@ -24,12 +22,7 @@ export function TeamNavComponent() {
   if (workspace) {
     return <TeamWorkspaceNav workspace={workspace} />;
   } else if (pendingWorkspaces && workspaces) {
-    return (
-      <TeamDefaultNav
-        pendingWorkspaces={pendingWorkspaces}
-        workspaces={workspaces}
-      />
-    );
+    return <TeamDefaultNav pendingWorkspaces={pendingWorkspaces} workspaces={workspaces} />;
   } else {
     return (
       <LeftNav>

@@ -40,10 +40,7 @@ export function isTrialSubscription(subscription: WorkspaceSubscription) {
   );
 }
 
-export function inUnpaidFreeTrial(
-  workspace: Workspace,
-  subscription: WorkspaceSubscription
-) {
+export function inUnpaidFreeTrial(workspace: Workspace, subscription: WorkspaceSubscription) {
   if (subscription && subscription.status === "trialing") {
     return !workspace.hasPaymentMethod;
   }
@@ -51,9 +48,7 @@ export function inUnpaidFreeTrial(
   return false;
 }
 
-export function pricingDetailsForSubscription(
-  subscription: WorkspaceSubscription
-): PlanPricing {
+export function pricingDetailsForSubscription(subscription: WorkspaceSubscription): PlanPricing {
   assert(subscription.plan?.key, "Workspace does not have a planKey");
 
   switch (subscription.plan.key) {

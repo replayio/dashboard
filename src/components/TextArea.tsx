@@ -33,7 +33,7 @@ export function TextArea({
         disabled ? "opacity-50" : ""
       }`}
       disabled={disabled}
-      onChange={(event) => {
+      onChange={event => {
         if (onChange) {
           onChange(event.currentTarget.value);
         }

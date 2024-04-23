@@ -1,8 +1,9 @@
 import { useRef } from "react";
 
-export default function useDebouncedCallback<
-  T extends (...args: any[]) => void
->(callback: T, duration: number = 100): T & { cancel: () => void } {
+export default function useDebouncedCallback<T extends (...args: any[]) => void>(
+  callback: T,
+  duration: number = 100
+): T & { cancel: () => void } {
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
 
   // @ts-ignore I don't know how to make TypeScript happy with the inner function signature.

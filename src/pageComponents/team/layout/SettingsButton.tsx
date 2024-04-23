@@ -7,7 +7,7 @@ export function SettingsButton({ id }: { id: string }) {
   const pathname = usePathname();
 
   const { workspaces } = useNonPendingWorkspaces();
-  const workspace = workspaces?.find((workspace) => workspace.id === id);
+  const workspace = workspaces?.find(workspace => workspace.id === id);
 
   const isActive = pathname?.includes("settings");
 

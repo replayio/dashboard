@@ -19,15 +19,9 @@ export function useDeleteWorkspace() {
     DeleteWorkspaceMutationVariables
   >(
     gql`
-      mutation DeleteWorkspace(
-        $workspaceId: ID!
-        $shouldDeleteRecordings: Boolean!
-      ) {
+      mutation DeleteWorkspace($workspaceId: ID!, $shouldDeleteRecordings: Boolean!) {
         deleteWorkspace(
-          input: {
-            workspaceId: $workspaceId
-            shouldDeleteRecordings: $shouldDeleteRecordings
-          }
+          input: { workspaceId: $workspaceId, shouldDeleteRecordings: $shouldDeleteRecordings }
         ) {
           success
         }

@@ -6,14 +6,10 @@ import { TestRunErrors } from "@/pageComponents/team/id/runs/TestRunErrors";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { useContext } from "react";
 
-export function TestsAndExecutions({
-  selectedTestId,
-}: {
-  selectedTestId: string;
-}) {
+export function TestsAndExecutions({ selectedTestId }: { selectedTestId: string }) {
   const { tests } = useContext(RunsViewContext);
 
-  const selectedTest = tests?.find((test) => test.id === selectedTestId);
+  const selectedTest = tests?.find(test => test.id === selectedTestId);
 
   if (selectedTest == null) {
     return <LoadingProgressBar />;
@@ -21,10 +17,7 @@ export function TestsAndExecutions({
 
   return (
     <>
-      <div
-        className="bg-slate-900 text-white p-2 rounded"
-        data-test-id="TestExecution-Recordings"
-      >
+      <div className="bg-slate-900 text-white p-2 rounded" data-test-id="TestExecution-Recordings">
         <ExpandableSection label="Replays" openByDefault>
           <div className="shrink-0 -mx-2">
             {selectedTest.recordings.map((recording, index) => {
@@ -44,13 +37,7 @@ export function TestsAndExecutions({
                 }
               }
 
-              return (
-                <TestExecutionRow
-                  key={recording.id}
-                  recording={recording}
-                  status={status}
-                />
-              );
+              return <TestExecutionRow key={recording.id} recording={recording} status={status} />;
             })}
           </div>
         </ExpandableSection>

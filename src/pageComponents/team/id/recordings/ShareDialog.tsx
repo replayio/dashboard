@@ -28,11 +28,7 @@ export function ShareDialog({
   });
 
   return (
-    <ModalDialog
-      data-test-id="Dialog-ShareRecording"
-      onDismiss={onDismiss}
-      title="Share"
-    >
+    <ModalDialog data-test-id="Dialog-ShareRecording" onDismiss={onDismiss} title="Share">
       <div className="flex flex-col gap-2">
         {!recording.private && (
           <div className="bg-yellow-300 text-yellow-950 px-2 py-1 rounded flex flex-row items-center gap-2">
@@ -44,7 +40,7 @@ export function ShareDialog({
         <Input
           disabled={addingCollaborator}
           name="email"
-          onChange={(email) => setEmail(email)}
+          onChange={email => setEmail(email)}
           onConfirm={() => addCollaborator(recording.uuid, email)}
           placeholder="Email address"
           type="text"
@@ -63,7 +59,7 @@ export function ShareDialog({
           picture={recording.owner.picture}
         />
       )}
-      {collaborators?.map((collaborator) => (
+      {collaborators?.map(collaborator => (
         <Collaborator
           collaborationId={collaborator.collaborationId}
           key={collaborator.collaborationId}
@@ -94,19 +90,12 @@ function Collaborator({
 
   return (
     <div
-      className={`flex flex-row items-center gap-2 ${
-        isLoading ? "opacity-50" : ""
-      }`}
+      className={`flex flex-row items-center gap-2 ${isLoading ? "opacity-50" : ""}`}
       data-test-name="collaborator-row"
     >
       <div className="shrink-0 w-8 h-8 bg-slate-700 flex items-center justify-center rounded-full overflow-hidden">
         {picture ? (
-          <img
-            alt={name}
-            className="w-full h-full"
-            referrerPolicy="no-referrer"
-            src={picture}
-          />
+          <img alt={name} className="w-full h-full" referrerPolicy="no-referrer" src={picture} />
         ) : (
           <Icon className="w-6 h-6 fill-slate-300" type="email" />
         )}
@@ -118,11 +107,7 @@ function Collaborator({
       </div>
       <div className="shrink-0 w-4 text-right">
         {collaborationId != null && (
-          <IconButton
-            disabled={isLoading}
-            onClick={onDeleteClick}
-            iconType="delete"
-          />
+          <IconButton disabled={isLoading} onClick={onDeleteClick} iconType="delete" />
         )}
       </div>
     </div>

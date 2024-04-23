@@ -5,9 +5,7 @@ export type EndToEndTestContextType = {
   mockGraphQLData: MockGraphQLData | null;
 };
 
-export const EndToEndTestContext = createContext<EndToEndTestContextType>(
-  null as any
-);
+export const EndToEndTestContext = createContext<EndToEndTestContextType>(null as any);
 
 export function EndToEndTestContextProvider({
   children,
@@ -15,16 +13,10 @@ export function EndToEndTestContextProvider({
 }: PropsWithChildren<{ mockGraphQLData: string | null }>) {
   const value = useMemo<EndToEndTestContextType>(
     () => ({
-      mockGraphQLData: mockGraphQLData
-        ? (JSON.parse(mockGraphQLData) as MockGraphQLData)
-        : null,
+      mockGraphQLData: mockGraphQLData ? (JSON.parse(mockGraphQLData) as MockGraphQLData) : null,
     }),
     [mockGraphQLData]
   );
 
-  return (
-    <EndToEndTestContext.Provider value={value}>
-      {children}
-    </EndToEndTestContext.Provider>
-  );
+  return <EndToEndTestContext.Provider value={value}>{children}</EndToEndTestContext.Provider>;
 }

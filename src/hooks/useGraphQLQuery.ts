@@ -13,10 +13,7 @@ import {
 import { useContext } from "react";
 import { getMockGraphQLResponse } from "../../tests/mocks/getMockGraphQLResponse";
 
-export function useGraphQLQuery<
-  Query,
-  Variables extends OperationVariables = {}
->(
+export function useGraphQLQuery<Query, Variables extends OperationVariables = {}>(
   query: DocumentNode | TypedDocumentNode<Query, Variables>,
   variables: Variables = {} as Variables,
   options: Omit<QueryHookOptions<Query, Variables>, "client" | "variables"> = {}
@@ -24,9 +21,7 @@ export function useGraphQLQuery<
   data: Query | undefined;
   error: ApolloError | undefined;
   isLoading: boolean;
-  refetch: (
-    variables?: Partial<Variables>
-  ) => Promise<ApolloQueryResult<Query>>;
+  refetch: (variables?: Partial<Variables>) => Promise<ApolloQueryResult<Query>>;
 } {
   const { mockGraphQLData } = useContext(EndToEndTestContext);
   const { accessToken } = useContext(SessionContext);
@@ -34,9 +29,7 @@ export function useGraphQLQuery<
   const client = getGraphQLClient(accessToken);
 
   // Support e2e tests
-  const mockResponse = mockGraphQLData
-    ? getMockGraphQLResponse(mockGraphQLData, query)
-    : undefined;
+  const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;
   if (mockResponse) {
     return {
       data: mockResponse.data,

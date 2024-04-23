@@ -19,14 +19,8 @@ export function useInviteWorkspaceMember(onCompleted: () => void) {
     InviteWorkspaceMemberMutationVariables
   >(
     gql`
-      mutation InviteWorkspaceMember(
-        $email: String!
-        $workspaceId: ID!
-        $roles: [String!]
-      ) {
-        addWorkspaceMember(
-          input: { email: $email, workspaceId: $workspaceId, roles: $roles }
-        ) {
+      mutation InviteWorkspaceMember($email: String!, $workspaceId: ID!, $roles: [String!]) {
+        addWorkspaceMember(input: { email: $email, workspaceId: $workspaceId, roles: $roles }) {
           success
         }
       }

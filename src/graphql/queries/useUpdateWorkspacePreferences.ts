@@ -7,9 +7,7 @@ import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
 import { gql } from "@apollo/client";
 import { useCallback } from "react";
 
-export function useUpdateWorkspacePreferences(
-  onCompleted: (success: boolean) => void
-) {
+export function useUpdateWorkspacePreferences(onCompleted: (success: boolean) => void) {
   const {
     error,
     isLoading,
@@ -19,11 +17,7 @@ export function useUpdateWorkspacePreferences(
     UpdateWorkspacePreferencesMutationVariables
   >(
     gql`
-      mutation UpdateWorkspacePreferences(
-        $workspaceId: ID!
-        $name: String
-        $features: JSONObject
-      ) {
+      mutation UpdateWorkspacePreferences($workspaceId: ID!, $name: String, $features: JSONObject) {
         updateWorkspaceSettings(
           input: { workspaceId: $workspaceId, name: $name, features: $features }
         ) {
@@ -33,7 +27,7 @@ export function useUpdateWorkspacePreferences(
     `,
     {
       refetchQueries: ["GetNonPendingWorkspaces"],
-      onCompleted: (data) => {
+      onCompleted: data => {
         onCompleted(data.updateWorkspaceSettings.success == true);
       },
     }

@@ -21,13 +21,11 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
   const { settings } = workspace;
   const { features } = settings ?? {};
 
-  const { updateWorkspacePreferences } = useUpdateWorkspacePreferences(
-    (success) => {
-      // No-op
-    }
-  );
+  const { updateWorkspacePreferences } = useUpdateWorkspacePreferences(success => {
+    // No-op
+  });
 
-  const [name, setName] = useDebouncedState<string>(workspace.name, (name) => {
+  const [name, setName] = useDebouncedState<string>(workspace.name, name => {
     updateWorkspacePreferences({
       name,
       workspaceId,
@@ -42,7 +40,7 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
       blockList: features?.recording?.blockList ?? [],
       public: features?.recording?.public == true,
     },
-    (recordingFeatures) => {
+    recordingFeatures => {
       updateWorkspacePreferences({
         features: {
           recording: recordingFeatures,
@@ -51,13 +49,11 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
       });
     }
   );
-  const [userFeatures, setUserFeatures] = useDebouncedState<
-    WorkspaceSettings["features"]["user"]
-  >(
+  const [userFeatures, setUserFeatures] = useDebouncedState<WorkspaceSettings["features"]["user"]>(
     {
       autoJoin: features?.user?.autoJoin ?? 0,
     },
-    (userFeatures) => {
+    userFeatures => {
       updateWorkspacePreferences({
         features: {
           user: userFeatures,
@@ -71,11 +67,7 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
     <div className="flex flex-col gap-2 px-1 pb-1">
       <div className="flex flex-row gap-2 items-start">
         <div className="w-40 truncate">Name</div>
-        <Input
-          defaultValue={name}
-          onChange={setName}
-          placeholder="Your company name"
-        />
+        <Input defaultValue={name} onChange={setName} placeholder="Your company name" />
       </div>
       <div className="flex flex-row gap-2 items-start">
         <div className="w-40 truncate"></div>
@@ -95,10 +87,10 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
         <TextArea
           className="h-24"
           defaultValue={recordingFeatures.allowList.join(", ") ?? ""}
-          onChange={(value) =>
+          onChange={value =>
             setRecordingFeatures({
               ...recordingFeatures,
-              allowList: value.split(",").map((value) => value.trim()),
+              allowList: value.split(",").map(value => value.trim()),
             })
           }
           placeholder="Recorded URLs must match one of these domains (if set)"
@@ -109,10 +101,10 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
         <TextArea
           className="h-24"
           defaultValue={recordingFeatures.blockList.join(", ") ?? ""}
-          onChange={(value) =>
+          onChange={value =>
             setRecordingFeatures({
               ...recordingFeatures,
-              blockList: value.split(",").map((value) => value.trim()),
+              blockList: value.split(",").map(value => value.trim()),
             })
           }
           placeholder="Recorded URLs must not match any of these domains (if set)"
@@ -121,7 +113,7 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
       <div className="flex flex-row gap-2 items-start">
         <div className="w-40 truncate">Default permission</div>
         <Select
-          onChange={(option) =>
+          onChange={option =>
             setUserFeatures({
               ...userFeatures,
               autoJoin: (option as MemberRoleOption).value,
@@ -129,9 +121,8 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
           }
           options={MEMBER_ROLE_OPTIONS}
           value={
-            MEMBER_ROLE_OPTIONS.find(
-              (option) => option.value === userFeatures.autoJoin
-            ) ?? DEFAULT_MEMBER_ROLE_OPTION
+            MEMBER_ROLE_OPTIONS.find(option => option.value === userFeatures.autoJoin) ??
+            DEFAULT_MEMBER_ROLE_OPTION
           }
         />
       </div>

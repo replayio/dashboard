@@ -9,16 +9,13 @@ export function SelectedTestSummary({
   testSummaryId: string;
   workspaceId: string;
 }) {
-  const { executions = [], isLoading } = useWorkspaceTestExecutions(
-    workspaceId,
-    testSummaryId
-  );
+  const { executions = [], isLoading } = useWorkspaceTestExecutions(workspaceId, testSummaryId);
 
   return isLoading ? (
     <LoadingProgressBar />
   ) : (
     <div className="flex flex-col gap-2 overflow-auto -mx-2">
-      {executions.map((execution) => (
+      {executions.map(execution => (
         <ExecutionRow key={execution.id} testExecution={execution} />
       ))}
     </div>

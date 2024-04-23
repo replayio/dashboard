@@ -7,21 +7,13 @@ import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
-export function useTestSuiteTestRuns(
-  workspaceId: string,
-  startDate: Date,
-  endDate?: Date
-) {
+export function useTestSuiteTestRuns(workspaceId: string, startDate: Date, endDate?: Date) {
   const { data, error, isLoading } = useGraphQLQuery<
     GetTestsRunsForWorkspaceQuery,
     GetTestsRunsForWorkspaceQueryVariables
   >(
     gql`
-      query GetTestsRunsForWorkspace(
-        $workspaceId: ID!
-        $startTime: String
-        $endTime: String
-      ) {
+      query GetTestsRunsForWorkspace($workspaceId: ID!, $startTime: String, $endTime: String) {
         node(id: $workspaceId) {
           ... on Workspace {
             id

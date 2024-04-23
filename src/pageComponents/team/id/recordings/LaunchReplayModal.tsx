@@ -20,10 +20,7 @@ export function LaunchReplayModal({ onDismiss }: { onDismiss: () => void }) {
     >
       <div className="text-center">
         {"Download it for "}
-        <ExternalLink
-          href="https://static.replay.io/downloads/replay.dmg"
-          title="Download for Mac"
-        >
+        <ExternalLink href="https://static.replay.io/downloads/replay.dmg" title="Download for Mac">
           Mac
         </ExternalLink>
         {", "}

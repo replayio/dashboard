@@ -37,7 +37,7 @@ export function getGraphQLClient(accessToken?: string) {
     });
     const retryLink = new RetryLink({
       attempts: {
-        retryIf: (error) => {
+        retryIf: error => {
           // GraphQL errors appear in error?.result?.errors.
           // We don't want to retry requests that failed due to GraphQL errors.
           return !error?.result?.errors?.length;

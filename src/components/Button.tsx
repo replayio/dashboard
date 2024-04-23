@@ -29,8 +29,7 @@ export function Button({
       case "primary":
         switch (variant) {
           case "outline": {
-            defaultColorsClassName =
-              "border border-sky-600 hover:border-sky-700 text-white";
+            defaultColorsClassName = "border border-sky-600 hover:border-sky-700 text-white";
             break;
           }
           case "solid": {
@@ -42,8 +41,7 @@ export function Button({
       case "secondary":
         switch (variant) {
           case "outline": {
-            defaultColorsClassName =
-              "border border-rose-600 hover:border-rose-700 text-white";
+            defaultColorsClassName = "border border-rose-600 hover:border-rose-700 text-white";
             break;
           }
           case "solid": {

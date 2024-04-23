@@ -6,17 +6,12 @@ import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
 import { gql } from "@apollo/client";
 import { useCallback } from "react";
 
-export function useClaimTeamInvitationCode(
-  onCompleted: (workspaceId: string) => void
-) {
+export function useClaimTeamInvitationCode(onCompleted: (workspaceId: string) => void) {
   const {
     error,
     isLoading,
     mutate: claimInvitationMutation,
-  } = useGraphQLMutation<
-    ClaimTeamInvitationCodeMutation,
-    ClaimTeamInvitationCodeMutationVariables
-  >(
+  } = useGraphQLMutation<ClaimTeamInvitationCodeMutation, ClaimTeamInvitationCodeMutationVariables>(
     gql`
       mutation ClaimTeamInvitationCode($code: ID!) {
         claimTeamInvitationCode(input: { code: $code }) {
@@ -27,7 +22,7 @@ export function useClaimTeamInvitationCode(
     `,
     {
       refetchQueries: ["GetOwnerAndCollaborators"],
-      onCompleted: (data) => {
+      onCompleted: data => {
         const workspaceId = data.claimTeamInvitationCode.workspaceId;
         onCompleted(workspaceId);
       },

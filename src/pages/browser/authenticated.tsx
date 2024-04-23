@@ -18,11 +18,9 @@ export default function Page({
     return (
       <Message className="max-w-96 p-8 gap-8 text-center">
         <ReplayLogo className="text-white min-w-20 min-h-20" />
-        <div>
-          You have successfully logged in. You may close this window.
-        </div>
+        <div>You have successfully logged in. You may close this window.</div>
         {isMacOS && (
-          <Button onClick={() => window.location.href = "replay:open"} size="large">
+          <Button onClick={() => (window.location.href = "replay:open")} size="large">
             Open Replay
           </Button>
         )}
@@ -32,16 +30,12 @@ export default function Page({
     return (
       <Message className="max-w-96 p-8 gap-8 text-center">
         <ReplayLogo className="text-white min-w-20 min-h-20" />
-        <div className="font-bold text-xl">
-          Authentication Complete
-        </div>
-        <div>
-          You have successfully logged in. You may close this window.
-        </div>
+        <div className="font-bold text-xl">Authentication Complete</div>
+        <div>You have successfully logged in. You may close this window.</div>
       </Message>
     );
   }
-};
+}
 
 Page.Layout = EmptyLayout;
 

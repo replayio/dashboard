@@ -6,11 +6,8 @@ export default function Page() {
   return null;
 }
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<any>
-) {
-  const { invalidWorkspace, isTest, workspaceId } =
-    await getServerSidePropsShared(context);
+export async function getServerSideProps(context: GetServerSidePropsContext<any>) {
+  const { invalidWorkspace, isTest, workspaceId } = await getServerSidePropsShared(context);
 
   if (invalidWorkspace) {
     return redirectWithState({
@@ -23,9 +20,7 @@ export async function getServerSideProps(
   }
   return redirectWithState({
     context,
-    pathname: isTest
-      ? `/team/${workspaceId}/runs`
-      : `/team/${workspaceId}/recordings`,
+    pathname: isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`,
     props: {
       workspaceId,
     },

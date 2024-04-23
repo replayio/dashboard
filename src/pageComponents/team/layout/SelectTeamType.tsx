@@ -1,8 +1,5 @@
 import { Select } from "@/components/Select";
-import {
-  DEFAULT_TEAM_TYPE_OPTION,
-  TEAM_TYPE_OPTIONS,
-} from "@/utils/test-suites";
+import { DEFAULT_TEAM_TYPE_OPTION, TEAM_TYPE_OPTIONS } from "@/utils/test-suites";
 
 function SelectTeamType({
   teamType,
@@ -16,11 +13,10 @@ function SelectTeamType({
       <label>Select your team type:</label>
       <Select
         className="w-full"
-        onChange={(option) => setTeamType(option.value)}
+        onChange={option => setTeamType(option.value)}
         options={TEAM_TYPE_OPTIONS}
         value={
-          TEAM_TYPE_OPTIONS.find((option) => option.value === teamType) ??
-          DEFAULT_TEAM_TYPE_OPTION
+          TEAM_TYPE_OPTIONS.find(option => option.value === teamType) ?? DEFAULT_TEAM_TYPE_OPTION
         }
       />
       <div className="text-sm text-gray-200 text-wrap">

@@ -37,9 +37,7 @@ export function LeftNav({
         )}
         {children}
       </nav>
-      {!backLink && (
-        <CreateTeamButton isInternalUser={user.isInternal == true} />
-      )}
+      {!backLink && <CreateTeamButton isInternalUser={user.isInternal == true} />}
       <CurrentUser />
     </div>
   );

@@ -28,7 +28,7 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   let currentDateIndex = -1;
   let currentData: TestRunStatsData | null = null;
 
-  testRuns.forEach((testRun) => {
+  testRuns.forEach(testRun => {
     const index = differenceInCalendarDays(new Date(), testRun.date);
     if (index !== currentDateIndex) {
       // Account for days in between (e.g. weekend days)
@@ -67,9 +67,8 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   });
 
   let mostTestsRunsInDay = 0;
-  dataByDay.forEach((data) => {
-    const numTestRuns =
-      data.numFailedTestRuns + data.numFlakyTestRuns + data.numPassingTestRuns;
+  dataByDay.forEach(data => {
+    const numTestRuns = data.numFailedTestRuns + data.numFlakyTestRuns + data.numPassingTestRuns;
     if (numTestRuns > mostTestsRunsInDay) {
       mostTestsRunsInDay = numTestRuns;
     }
@@ -77,18 +76,13 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
 
   dataByDay.reverse();
 
-  const testRunFailureRate =
-    testRuns.length > 0 ? numFailedTestRuns / testRuns.length : 0;
+  const testRunFailureRate = testRuns.length > 0 ? numFailedTestRuns / testRuns.length : 0;
 
   return (
     <div className="flex flex-col gap-2 px-2 pt-2 py-1 bg-slate-900 rounded">
       <div className="flex flex-row justify-center gap-2 h-10">
         {dataByDay.map((data, index) => (
-          <ChartItem
-            data={data}
-            key={index}
-            mostTestsRunsInDay={mostTestsRunsInDay}
-          />
+          <ChartItem data={data} key={index} mostTestsRunsInDay={mostTestsRunsInDay} />
         ))}
       </div>
       <div data-test-id="TestRuns-Stats-FailureRateLabel">
@@ -105,8 +99,7 @@ function ChartItem({
   data: TestRunStatsData;
   mostTestsRunsInDay: number;
 }) {
-  const numTestRuns =
-    data.numFailedTestRuns + data.numFlakyTestRuns + data.numPassingTestRuns;
+  const numTestRuns = data.numFailedTestRuns + data.numFlakyTestRuns + data.numPassingTestRuns;
 
   let failurePercentage = 0;
   if (numTestRuns > 0 && data.numFailedTestRuns > 0) {

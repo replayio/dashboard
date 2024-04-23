@@ -40,9 +40,7 @@ export function ModalDialog({
     </div>
   );
 
-  return typeof document !== "undefined"
-    ? createPortal(dialog, document.body)
-    : dialog;
+  return typeof document !== "undefined" ? createPortal(dialog, document.body) : dialog;
 }
 
 function stopPropagation(event: MouseEvent) {

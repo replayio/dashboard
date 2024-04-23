@@ -8,9 +8,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
-export default function Page({
-  code,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Page({ code }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { accessToken } = useContext(SessionContext);
   const router = useRouter();
 
@@ -18,9 +16,7 @@ export default function Page({
     async (workspaceId: string) => {
       const { isTest } = await getWorkspace(accessToken, workspaceId);
 
-      router.replace(
-        isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`
-      );
+      router.replace(isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`);
     }
   );
 
@@ -33,9 +29,7 @@ export default function Page({
   if (error || !code) {
     return (
       <div className="bg-red-600 text-white flex flex-col p-2 rounded-md">
-        {!code
-          ? "Invalid invitation code"
-          : error?.message ?? "An error occurred"}
+        {!code ? "Invalid invitation code" : error?.message ?? "An error occurred"}
       </div>
     );
   }
@@ -49,9 +43,7 @@ export default function Page({
 
 Page.Layout = EmptyLayout;
 
-export async function getServerSideProps({
-  query,
-}: GetServerSidePropsContext<{ code: string }>) {
+export async function getServerSideProps({ query }: GetServerSidePropsContext<{ code: string }>) {
   const { code } = query;
 
   return {

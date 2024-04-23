@@ -11,19 +11,15 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
 
-  const { isLoading, recordings: allRecordings } =
-    useWorkspaceRecordings(workspaceId);
+  const { isLoading, recordings: allRecordings } = useWorkspaceRecordings(workspaceId);
 
   return <RecordingPage isLoading={isLoading} recordings={allRecordings} />;
 }
 
 Page.Layout = TeamLayout;
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ id: string }>
-) {
-  const { invalidWorkspace, isTest, workspaceId } =
-    await getServerSidePropsShared(context);
+export async function getServerSideProps(context: GetServerSidePropsContext<{ id: string }>) {
+  const { invalidWorkspace, isTest, workspaceId } = await getServerSidePropsShared(context);
 
   if (invalidWorkspace) {
     return redirectWithState({

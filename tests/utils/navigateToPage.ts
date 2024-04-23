@@ -38,10 +38,6 @@ export async function navigateToPage({
     url.searchParams.set("mockGraphQLData", JSON.stringify(mockGraphQLData));
   }
 
-  await debugPrint(
-    page,
-    `Navigating to ${chalk.blueBright(url)}`,
-    "navigateToPage"
-  );
+  await debugPrint(page, `Navigating to ${chalk.blueBright(url)}`, "navigateToPage");
   await page.goto(url.toString());
 }

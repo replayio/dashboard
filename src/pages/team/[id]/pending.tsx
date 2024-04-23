@@ -13,11 +13,8 @@ export default function Page({
 
 Page.Layout = TeamLayout;
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ id: string }>
-) {
-  const { invalidWorkspace, isTest, workspaceId } =
-    await getServerSidePropsShared(context);
+export async function getServerSideProps(context: GetServerSidePropsContext<{ id: string }>) {
+  const { invalidWorkspace, isTest, workspaceId } = await getServerSidePropsShared(context);
 
   if (invalidWorkspace) {
     return redirectWithState({

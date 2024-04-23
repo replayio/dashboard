@@ -12,14 +12,13 @@ export function mockGetNonPendingWorkspaces(
       __typename: "AuthenticatedUser",
       workspaces: {
         __typename: "UserWorkspaceConnection",
-        edges: partialWorkspaces.map((workspace) => ({
+        edges: partialWorkspaces.map(workspace => ({
           __typename: "UserWorkspaceEdge",
           node: {
             __typename: "Workspace",
             hasPaymentMethod: workspace.hasPaymentMethod ?? false,
             id: workspace.id ?? DEFAULT_WORKSPACE_ID,
-            invitationCode:
-              workspace.invitationCode ?? "11111111-2222-3333-4444-55555555",
+            invitationCode: workspace.invitationCode ?? "11111111-2222-3333-4444-55555555",
             isOrganization: workspace.isOrganization ?? false,
             isTest: workspace.isTest ?? false,
             name: workspace.name ?? "Fake Worksapce",
@@ -29,12 +28,10 @@ export function mockGetNonPendingWorkspaces(
                   features: {
                     user: {
                       library: true,
-                      autoJoin:
-                        workspace.settings.features?.user?.autoJoin ?? false,
+                      autoJoin: workspace.settings.features?.user?.autoJoin ?? false,
                     },
                     recording: {
-                      public:
-                        workspace.settings.features?.recording?.public ?? true,
+                      public: workspace.settings.features?.recording?.public ?? true,
                       allowList: [],
                       blockList: [],
                     },

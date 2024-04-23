@@ -4,11 +4,7 @@ import { Icon } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
 import { useState } from "react";
 
-export function CreateTeamButton({
-  isInternalUser,
-}: {
-  isInternalUser: boolean;
-}) {
+export function CreateTeamButton({ isInternalUser }: { isInternalUser: boolean }) {
   const [showDialog, setShowDialog] = useState(false);
 
   const show = () => setShowDialog(true);
@@ -21,9 +17,7 @@ export function CreateTeamButton({
         <div className="hidden md:block">Create new team</div>
         <div className="md:hidden">New team</div>
       </Button>
-      {showDialog && (
-        <CreateTeamDialog isInternalUser={isInternalUser} onDismiss={hide} />
-      )}
+      {showDialog && <CreateTeamDialog isInternalUser={isInternalUser} onDismiss={hide} />}
     </>
   );
 }

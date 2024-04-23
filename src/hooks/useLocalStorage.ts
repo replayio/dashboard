@@ -32,11 +32,7 @@ export default function useLocalStorage<Type>(
   // Sync changes from local storage
   useIsomorphicLayoutEffect(() => {
     const onStorage = (event: StorageEvent) => {
-      if (
-        key === event.key &&
-        event.newValue &&
-        event.newValue !== JSON.stringify(value)
-      ) {
+      if (key === event.key && event.newValue && event.newValue !== JSON.stringify(value)) {
         setValue(JSON.parse(event.newValue) as any);
       }
     };

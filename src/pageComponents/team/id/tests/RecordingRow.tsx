@@ -1,8 +1,5 @@
 import { Icon } from "@/components/Icon";
-import {
-  TestSuiteTestExecutionRecording,
-  TestSuiteTestStatus,
-} from "@/graphql/types";
+import { TestSuiteTestExecutionRecording, TestSuiteTestStatus } from "@/graphql/types";
 import { getURL } from "@/utils/recording";
 import { getColorClassName } from "@/utils/test-suites";
 import Link from "next/link";
@@ -17,9 +14,7 @@ export function RecordingRow({
   const url = getURL(recording.id, recording.buildId);
 
   const colorClassName = getColorClassName(status);
-  const iconType = recording.isProcessed
-    ? "processed-recording"
-    : "unprocessed-recording";
+  const iconType = recording.isProcessed ? "processed-recording" : "unprocessed-recording";
 
   return (
     <Link

@@ -32,7 +32,7 @@ export default function RecordingPage({
     let recordings = allRecordings;
 
     if (filter) {
-      recordings = recordings?.filter((recording) =>
+      recordings = recordings?.filter(recording =>
         recording.title.toLowerCase().includes(filter.toLowerCase())
       );
     }
@@ -65,29 +65,23 @@ export default function RecordingPage({
           disabled={isPending}
           onConfirm={onFilterConfirm}
           placeholder={
-            isLoading
-              ? "Search recordings"
-              : `Search ${formatNumber(numTotalRecords)} recordings`
+            isLoading ? "Search recordings" : `Search ${formatNumber(numTotalRecords)} recordings`
           }
           type="text"
         />
 
         {globalThis.__IS_RECORD_REPLAY_RUNTIME__ || (
-          <Button onClick={() => setShowLaunchModal(true)}>
-            Launch Replay
-          </Button>
+          <Button onClick={() => setShowLaunchModal(true)}>Launch Replay</Button>
         )}
 
-        {showLaunchModal && (
-          <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />
-        )}
+        {showLaunchModal && <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />}
       </div>
       <div className="overflow-auto flex flex-col gap-2 grow">
         <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px grow relative">
           {isLoading && <LoadingProgressBar />}
           {user &&
             workspaces &&
-            filteredRecordings?.map((recording) => (
+            filteredRecordings?.map(recording => (
               <RecordingRow
                 key={recording.uuid}
                 recording={recording}
@@ -109,9 +103,7 @@ export default function RecordingPage({
               Show More
             </div>
           )}
-          {!isLoading && numTotalRecords === 0 && (
-            <div>No recordings have been uploaded yet.</div>
-          )}
+          {!isLoading && numTotalRecords === 0 && <div>No recordings have been uploaded yet.</div>}
         </div>
       </div>
     </div>

@@ -27,10 +27,7 @@ export default function Checkbox({
   };
 
   return (
-    <label
-      className={`flex flex-row items-center gap-2 ${className}`}
-      onClick={onClick}
-    >
+    <label className={`flex flex-row items-center gap-2 ${className}`} onClick={onClick}>
       <input
         autoFocus={didChange}
         className="focus:outline-sky-500"

@@ -1,25 +1,12 @@
-import {
-  GetTestsQuery,
-  GetTestsQueryVariables,
-} from "@/graphql/generated/graphql";
-import {
-  TestSuiteTest,
-  TestSuiteTestAttemptResult,
-  TestSuiteTestRecording,
-} from "@/graphql/types";
+import { GetTestsQuery, GetTestsQueryVariables } from "@/graphql/generated/graphql";
+import { TestSuiteTest, TestSuiteTestAttemptResult, TestSuiteTestRecording } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import assert from "assert";
 import { useMemo } from "react";
 
-export function useTestSuiteTests(
-  workspaceId: string,
-  testRunId: string | undefined
-) {
-  const { data, error, isLoading } = useGraphQLQuery<
-    GetTestsQuery,
-    GetTestsQueryVariables
-  >(
+export function useTestSuiteTests(workspaceId: string, testRunId: string | undefined) {
+  const { data, error, isLoading } = useGraphQLQuery<GetTestsQuery, GetTestsQueryVariables>(
     gql`
       query GetTests($workspaceId: ID!, $id: String!) {
         node(id: $workspaceId) {
@@ -67,10 +54,7 @@ export function useTestSuiteTests(
 
   const tests = useMemo<TestSuiteTest[] | undefined>(() => {
     if (data) {
-      assert(
-        data.node && "testRuns" in data.node,
-        "Test run recordings could not be loaded"
-      );
+      assert(data.node && "testRuns" in data.node, "Test run recordings could not be loaded");
 
       if (data.node?.testRuns?.edges.length === 0) {
         return [];
@@ -79,7 +63,7 @@ export function useTestSuiteTests(
       const testRun = data.node?.testRuns?.edges[0];
       assert(testRun, "Test run not found");
 
-      return testRun.node.tests.map((test) => {
+      return testRun.node.tests.map(test => {
         let numFailed = 0;
         let numPassed = 0;
 
@@ -95,7 +79,7 @@ export function useTestSuiteTests(
             }
           }
 
-          recordings.forEach((recording) => {
+          recordings.forEach(recording => {
             mappedRecordings.push({
               buildId: recording.buildId ?? "",
               createdAt: new Date(recording.createdAt),
@@ -114,8 +98,7 @@ export function useTestSuiteTests(
           recordings: mappedRecordings,
           scope: test.scope,
           sourcePath: test.sourcePath,
-          status:
-            numFailed === 0 ? "passed" : numPassed === 0 ? "failed" : "flaky",
+          status: numFailed === 0 ? "passed" : numPassed === 0 ? "failed" : "flaky",
           title: test.title,
         } satisfies TestSuiteTest;
       });

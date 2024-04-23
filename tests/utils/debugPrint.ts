@@ -2,11 +2,7 @@ import { Page } from "@playwright/test";
 import chalk from "chalk";
 import stripAnsi from "strip-ansi";
 
-export async function debugPrint(
-  page: Page | null,
-  message: string,
-  scope?: string
-) {
+export async function debugPrint(page: Page | null, message: string, scope?: string) {
   const formattedScope = scope ? `(${scope})` : "";
   console.log(message, formattedScope ? chalk.dim(formattedScope) : "");
 

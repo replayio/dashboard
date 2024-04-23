@@ -1,18 +1,11 @@
 import { URLS } from "@/constants";
-import {
-  ApolloQueryResult,
-  OperationVariables,
-  TypedDocumentNode,
-} from "@apollo/client";
+import { ApolloQueryResult, OperationVariables, TypedDocumentNode } from "@apollo/client";
 import assert from "assert";
 import { DocumentNode } from "graphql";
 import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
 import { MockGraphQLData } from "tests/mocks/types";
 
-export async function graphQLFetch<
-  Query,
-  Variables extends OperationVariables = {}
->({
+export async function graphQLFetch<Query, Variables extends OperationVariables = {}>({
   accessToken,
   mockGraphQLData,
   query,
@@ -31,9 +24,7 @@ export async function graphQLFetch<
   }
 
   // Support e2e tests
-  const mockResponse = mockGraphQLData
-    ? getMockGraphQLResponse(mockGraphQLData, query)
-    : undefined;
+  const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;
   if (mockResponse) {
     return mockResponse;
   }

@@ -28,13 +28,7 @@ export function useWorkspaceTestExecutions(
         node(id: $workspaceId) {
           ... on Workspace {
             id
-            tests(
-              filter: {
-                testId: $testId
-                startTime: $startTime
-                endTime: $endTime
-              }
-            ) {
+            tests(filter: { testId: $testId, startTime: $startTime, endTime: $endTime }) {
               edges {
                 node {
                   executions {
@@ -76,7 +70,7 @@ export function useWorkspaceTestExecutions(
       const executions: TestSuiteTestExecution[] = [];
 
       data.node.tests.edges.forEach(({ node }) => {
-        node.executions.forEach((execution) => {
+        node.executions.forEach(execution => {
           executions.push({
             commitAuthor: execution.commitAuthor ?? "",
             commitTitle: execution.commitTitle ?? "",
@@ -84,7 +78,7 @@ export function useWorkspaceTestExecutions(
             errors: execution.errors ?? [],
             id: execution.testRunId,
             recordings: execution.recordings
-              .map((recording) => ({
+              .map(recording => ({
                 buildId: recording.buildId ?? "",
                 createdAt: new Date(recording.createdAt),
                 duration: recording.duration ?? 0,
@@ -101,9 +95,7 @@ export function useWorkspaceTestExecutions(
       });
 
       // Newest to oldest
-      return executions.sort(
-        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-      );
+      return executions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
   }, [data]);
 

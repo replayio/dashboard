@@ -74,14 +74,8 @@ export function ContextRoot({
     ...filters,
   });
 
-  const {
-    runsBranch,
-    runsDateRange,
-    runsFilterText,
-    runsStatus,
-    testsFilterText,
-    testsStatus,
-  } = state;
+  const { runsBranch, runsDateRange, runsFilterText, runsStatus, testsFilterText, testsStatus } =
+    state;
 
   useEffect(() => {
     setCookieValueClient(COOKIES.testRunsFilters, {
@@ -94,9 +88,9 @@ export function ContextRoot({
 
   const [isPending, startTransition] = useTransition();
 
-  const [selectedTestRunId, setSelectedTestRunId] = useState<
-    string | undefined
-  >(defaultTestRunId || undefined);
+  const [selectedTestRunId, setSelectedTestRunId] = useState<string | undefined>(
+    defaultTestRunId || undefined
+  );
   const [selectedTestId, setSelectedTestId] = useState<string | undefined>(
     defaultTestId || undefined
   );
@@ -134,7 +128,7 @@ export function ContextRoot({
   const updateFilters = useCallback(
     (partialState: Partial<Filters>) => {
       startTransition(() => {
-        setState((prevState) => ({
+        setState(prevState => ({
           ...prevState,
           ...partialState,
         }));
@@ -157,13 +151,10 @@ export function ContextRoot({
       break;
   }
 
-  const { isLoading: isLoadingTestRuns, testRuns } = useTestSuiteTestRuns(
-    workspaceId,
-    startDate
-  );
+  const { isLoading: isLoadingTestRuns, testRuns } = useTestSuiteTestRuns(workspaceId, startDate);
 
   const filteredTestRuns = useMemo(() => {
-    return testRuns?.filter((testRun) =>
+    return testRuns?.filter(testRun =>
       filterTestRun(testRun, {
         afterDate: getRelativeDate({ daysAgo: 6 }),
         branch: runsBranch,
@@ -173,14 +164,11 @@ export function ContextRoot({
     );
   }, [runsBranch, runsFilterText, runsStatus, testRuns]);
 
-  const { isLoading: isLoadingTests, tests } = useTestSuiteTests(
-    workspaceId,
-    selectedTestRunId
-  );
+  const { isLoading: isLoadingTests, tests } = useTestSuiteTests(workspaceId, selectedTestRunId);
 
   const filteredTests = useMemo(() => {
     return tests
-      ?.filter((test) =>
+      ?.filter(test =>
         filterTest(test, {
           status: testsStatus,
           text: testsFilterText,
@@ -228,9 +216,5 @@ export function ContextRoot({
     ]
   );
 
-  return (
-    <RunsViewContext.Provider value={value}>
-      {children}
-    </RunsViewContext.Provider>
-  );
+  return <RunsViewContext.Provider value={value}>{children}</RunsViewContext.Provider>;
 }

@@ -61,11 +61,7 @@ export default function useModalDismissSignal(
       if (ownerDocument !== null) {
         ownerDocument.removeEventListener("keydown", handleKeyboardEvent);
         ownerDocument.removeEventListener("click", handleMouseEvent, true);
-        ownerDocument.removeEventListener(
-          "contextmenu",
-          handleMouseEvent,
-          true
-        );
+        ownerDocument.removeEventListener("contextmenu", handleMouseEvent, true);
         ownerDocument.removeEventListener("mousedown", handleMouseEvent, true);
       }
     };

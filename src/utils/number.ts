@@ -55,13 +55,8 @@ export function formatRelativeTime(date: Date): string {
   return "Now";
 }
 
-export function formatTimestamp(
-  ms: number,
-  showHighPrecision: boolean = false
-) {
-  const seconds = showHighPrecision
-    ? Math.floor(ms / 1000)
-    : Math.round(ms / 1000.0);
+export function formatTimestamp(ms: number, showHighPrecision: boolean = false) {
+  const seconds = showHighPrecision ? Math.floor(ms / 1000) : Math.round(ms / 1000.0);
   const minutesString = Math.floor(seconds / 60);
   const secondsString = padStart(String(seconds % 60), 2, "0");
   if (showHighPrecision) {

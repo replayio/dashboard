@@ -16,12 +16,5 @@ export function SettingsNavLink({
   const href = `/user/settings/${route}`;
   const isActive = pathname === href;
 
-  return (
-    <LeftNavLink
-      href={href}
-      iconType={iconType}
-      isActive={isActive}
-      label={label}
-    />
-  );
+  return <LeftNavLink href={href} iconType={iconType} isActive={isActive} label={label} />;
 }

@@ -2,14 +2,7 @@ import { Icon } from "@/components/Icon";
 import { SessionContext } from "@/components/SessionContext";
 import { getRecordingThumbnailClient } from "@/graphql/queries/getRecordingThumbnail";
 import { RecordingTarget, getRecordingTarget } from "@/utils/recording";
-import {
-  MutableRefObject,
-  Suspense,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { MutableRefObject, Suspense, useContext, useEffect, useRef, useState } from "react";
 
 type Props = { buildId: string; recordingId: string };
 
@@ -38,14 +31,12 @@ function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
 
     const element = elementRef.current!;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
-          getRecordingThumbnailClient(accessToken, recordingId).then(
-            (thumbnail) => {
-              setThumbnail(thumbnail);
-            }
-          );
+          getRecordingThumbnailClient(accessToken, recordingId).then(thumbnail => {
+            setThumbnail(thumbnail);
+          });
 
           observer.disconnect();
         }
@@ -76,9 +67,7 @@ function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
         <Icon
           className="w-6 h-6 text-gray-700"
           type={
-            target === RecordingTarget.node
-              ? "recording-graphic-node"
-              : "recording-graphic-browser"
+            target === RecordingTarget.node ? "recording-graphic-node" : "recording-graphic-browser"
           }
         />
       </div>

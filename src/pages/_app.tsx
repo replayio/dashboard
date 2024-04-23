@@ -38,9 +38,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
   }
 
   static getInitialProps = async (context: AppContext) => {
-    const accessToken = getValueFromArrayOrString(
-      context.ctx.req?.headers?.[HEADERS.accessToken]
-    );
+    const accessToken = getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.accessToken]);
     const accessTokenSource = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.accessTokenSource]
     );
@@ -55,9 +53,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
       } catch (error) {}
     }
 
-    const user = accessToken
-      ? await getCurrentUser(accessToken, mockGraphQLData)
-      : null;
+    const user = accessToken ? await getCurrentUser(accessToken, mockGraphQLData) : null;
 
     return {
       pageProps: {
@@ -71,7 +67,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
 
   componentDidMount(): void {
     if (global.__IS_RECORD_REPLAY_RUNTIME__ && !this.accessToken) {
-      listenForAccessToken((token) => {
+      listenForAccessToken(token => {
         setCookieValueClient(COOKIES.accessToken, {
           token,
           source: "external",

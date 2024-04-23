@@ -18,16 +18,11 @@ export function useActivateWorkspaceSubscription() {
         $paymentMethodBillingId: String!
       ) {
         setWorkspaceDefaultPaymentMethod(
-          input: {
-            workspaceId: $workspaceId
-            paymentMethodId: $paymentMethodBillingId
-          }
+          input: { workspaceId: $workspaceId, paymentMethodId: $paymentMethodBillingId }
         ) {
           success
         }
-        activateWorkspaceSubscription(
-          input: { workspaceId: $workspaceId, planKey: $planKey }
-        ) {
+        activateWorkspaceSubscription(input: { workspaceId: $workspaceId, planKey: $planKey }) {
           success
           subscription {
             effectiveUntil
@@ -42,18 +37,13 @@ export function useActivateWorkspaceSubscription() {
   );
 
   const activateWorkspaceSubscription = useCallback(
-    async (
-      workspaceId: string,
-      planKey: string,
-      paymentMethodBillingId: string
-    ) => {
+    async (workspaceId: string, planKey: string, paymentMethodBillingId: string) => {
       const result = await mutate({
         variables: { paymentMethodBillingId, planKey, workspaceId },
       });
 
       return {
-        activateWorkspaceSuccess:
-          result.data?.activateWorkspaceSubscription.success == true,
+        activateWorkspaceSuccess: result.data?.activateWorkspaceSubscription.success == true,
         setWorkspaceDefaultPaymentMethodSuccess:
           result.data?.setWorkspaceDefaultPaymentMethod?.success == true,
       };

@@ -12,15 +12,9 @@ export function useRemovePaymentMethod(onCompleted?: () => void) {
     RemovePaymentMethodMutationVariables
   >(
     gql`
-      mutation RemovePaymentMethod(
-        $workspaceId: ID!
-        $paymentMethodId: String!
-      ) {
+      mutation RemovePaymentMethod($workspaceId: ID!, $paymentMethodId: String!) {
         deleteWorkspacePaymentMethod(
-          input: {
-            workspaceId: $workspaceId
-            paymentMethodId: $paymentMethodId
-          }
+          input: { workspaceId: $workspaceId, paymentMethodId: $paymentMethodId }
         ) {
           success
         }
@@ -38,8 +32,7 @@ export function useRemovePaymentMethod(onCompleted?: () => void) {
         variables: { paymentMethodId, workspaceId },
       });
 
-      const { success = false } =
-        result.data?.deleteWorkspacePaymentMethod ?? {};
+      const { success = false } = result.data?.deleteWorkspacePaymentMethod ?? {};
 
       return success;
     },

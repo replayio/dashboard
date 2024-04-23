@@ -19,7 +19,7 @@ export function mockGetWorkspaceTestExecutions(
       id: workspaceId,
       tests: {
         __typename: "TestsConnection",
-        edges: partials.map((partial) => {
+        edges: partials.map(partial => {
           const {
             commitAuthor = "fake-user",
             commitTitle = "Test commit title",
@@ -43,7 +43,7 @@ export function mockGetWorkspaceTestExecutions(
                   commitTitle,
                   commitAuthor,
                   result,
-                  recordings: recordings.map((recording) => ({
+                  recordings: recordings.map(recording => ({
                     __typename: "Recording",
                     buildId: recording.buildId,
                     id: recording.id,

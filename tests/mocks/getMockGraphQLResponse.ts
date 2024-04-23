@@ -1,9 +1,4 @@
-import {
-  ApolloQueryResult,
-  DocumentNode,
-  NetworkStatus,
-  TypedDocumentNode,
-} from "@apollo/client";
+import { ApolloQueryResult, DocumentNode, NetworkStatus, TypedDocumentNode } from "@apollo/client";
 import { MockGraphQLData } from "./types";
 
 export function getMockGraphQLResponse<Query>(

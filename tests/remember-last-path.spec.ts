@@ -27,9 +27,7 @@ test("remember-last-path: requests to the root path should auto re-direct back t
       hasText: "Replay: Authenticated e2e tests",
     });
     await link.click();
-    await expect(
-      page.locator('[data-test-id="LeftNavLink-BackLink"]')
-    ).toBeVisible();
+    await expect(page.locator('[data-test-id="LeftNavLink-BackLink"]')).toBeVisible();
   }
 
   // Navigate to root and expect to be redirected back to team recordings page

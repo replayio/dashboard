@@ -6,17 +6,12 @@ import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
 import { gql } from "@apollo/client";
 import { useCallback } from "react";
 
-export function useUpdateUserPreferences(
-  onCompleted: (success: boolean) => void
-) {
+export function useUpdateUserPreferences(onCompleted: (success: boolean) => void) {
   const {
     error,
     isLoading,
     mutate: updateUserPreferencesMutation,
-  } = useGraphQLMutation<
-    UpdateUserPreferencesMutation,
-    UpdateUserPreferencesMutationVariables
-  >(
+  } = useGraphQLMutation<UpdateUserPreferencesMutation, UpdateUserPreferencesMutationVariables>(
     gql`
       mutation UpdateUserPreferences($preferences: JSONObject!) {
         updateUserPreferences(input: { preferences: $preferences }) {
@@ -26,7 +21,7 @@ export function useUpdateUserPreferences(
     `,
     {
       refetchQueries: ["GetOwnerAndCollaborators"],
-      onCompleted: (data) => {
+      onCompleted: data => {
         onCompleted(data.updateUserPreferences.success == true);
       },
     }

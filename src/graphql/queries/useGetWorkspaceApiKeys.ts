@@ -37,7 +37,7 @@ export function useGetWorkspaceApiKeys(workspaceId: string) {
       const apiKeys: ApiKey[] = [];
 
       if (data?.node && "apiKeys" in data.node && data.node.apiKeys != null) {
-        data.node.apiKeys.forEach((key) => {
+        data.node.apiKeys.forEach(key => {
           apiKeys.push({
             id: key.id,
             createdAt: new Date(key.createdAt),

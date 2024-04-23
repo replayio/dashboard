@@ -10,15 +10,10 @@ export function useAddRecordingCollaborator(onCompleted: () => void) {
     error,
     isLoading,
     mutate: addNewCollaboratorMutation,
-  } = useGraphQLMutation<
-    AddCollaboratorMutation,
-    AddCollaboratorMutationVariables
-  >(
+  } = useGraphQLMutation<AddCollaboratorMutation, AddCollaboratorMutationVariables>(
     gql`
       mutation AddCollaborator($email: String!, $recordingId: ID!) {
-        addRecordingCollaborator(
-          input: { email: $email, recordingId: $recordingId }
-        ) {
+        addRecordingCollaborator(input: { email: $email, recordingId: $recordingId }) {
           success
         }
       }

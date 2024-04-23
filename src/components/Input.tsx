@@ -34,7 +34,7 @@ export function Input({
         disabled ? "opacity-50" : ""
       }`}
       disabled={disabled}
-      onChange={(event) => {
+      onChange={event => {
         if (onChange) {
           onChange(event.currentTarget.value);
         }

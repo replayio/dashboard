@@ -18,10 +18,7 @@ export function TeamDefaultNavLink({
   const currentId = params?.id ?? "me";
 
   const isActive =
-    id ===
-    decodeURIComponent(
-      Array.isArray(currentId) ? currentId[0] ?? "" : currentId
-    );
+    id === decodeURIComponent(Array.isArray(currentId) ? currentId[0] ?? "" : currentId);
 
   useIsomorphicLayoutEffect(() => {
     if (isActive) {
@@ -59,9 +56,7 @@ export function TeamDefaultNavLink({
         <div className="flex flex-row items-center gap-2">
           <div className="truncate">{name}</div>
           {isPending && (
-            <div className="bg-yellow-300 text-yellow-950 text-xs px-1 rounded shrink-0">
-              New
-            </div>
+            <div className="bg-yellow-300 text-yellow-950 text-xs px-1 rounded shrink-0">New</div>
           )}
         </div>
       }

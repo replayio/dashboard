@@ -24,10 +24,7 @@ export function RecordingRow({
       href={href}
     >
       <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">
-        <RecordingThumbnail
-          buildId={recording.buildId}
-          recordingId={recording.uuid}
-        />
+        <RecordingThumbnail buildId={recording.buildId} recordingId={recording.uuid} />
       </div>
       <div className="flex flex-row items-center gap-2 w-full truncate">
         <div className="flex flex-col grow gap-1 truncate">
@@ -53,9 +50,7 @@ export function RecordingRow({
         >
           <Icon
             className={`w-5 h-5 ${recording.private ? "text-slate-500" : ""}`}
-            type={
-              recording.private ? "visibility-private" : "visibility-public"
-            }
+            type={recording.private ? "visibility-private" : "visibility-public"}
           />
         </div>
         <div className="w-16 md:w-36 shrink-0 truncate text-sm text-center">
@@ -70,11 +65,7 @@ export function RecordingRow({
           )}
         </div>
         <div className="w-6 shrink-0">
-          <RecordingDropdown
-            recording={recording}
-            user={user}
-            workspaces={workspaces}
-          />
+          <RecordingDropdown recording={recording} user={user} workspaces={workspaces} />
         </div>
       </div>
     </Link>

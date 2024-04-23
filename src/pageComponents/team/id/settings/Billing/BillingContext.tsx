@@ -3,14 +3,7 @@ import { useWorkspaceSubscription } from "@/graphql/queries/useWorkspaceSubscrip
 import { Workspace, WorkspaceSubscription } from "@/graphql/types";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  createContext,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, ReactNode, SetStateAction, createContext, useMemo, useState } from "react";
 
 type View = "add-payment-method" | "price-details";
 
@@ -34,8 +27,7 @@ export function BillingContextRoot({
   stripeKey: string;
   workspaceId: string;
 }) {
-  const { refetch: refetchSubscription, subscription } =
-    useWorkspaceSubscription(workspaceId);
+  const { refetch: refetchSubscription, subscription } = useWorkspaceSubscription(workspaceId);
   const { refetch: refetchWorkspaces, workspaces } = useNonPendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
@@ -55,21 +47,12 @@ export function BillingContextRoot({
       workspace,
       workspaceId,
     }),
-    [
-      refetchSubscription,
-      refetchWorkspaces,
-      subscription,
-      view,
-      workspace,
-      workspaceId,
-    ]
+    [refetchSubscription, refetchWorkspaces, subscription, view, workspace, workspaceId]
   );
 
   return (
     <Elements stripe={stripePromise}>
-      <BillingContext.Provider value={value}>
-        {children}
-      </BillingContext.Provider>
+      <BillingContext.Provider value={value}>{children}</BillingContext.Provider>
     </Elements>
   );
 }

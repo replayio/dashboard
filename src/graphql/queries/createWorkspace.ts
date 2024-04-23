@@ -8,10 +8,7 @@ import { gql, useMutation } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
-export function useCreateWorkspace(
-  onCompleted: (id: string) => void,
-  onFailed: () => void
-) {
+export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: () => void) {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 

@@ -16,10 +16,7 @@ export function IconButton({
       className={`${className} bg-white/10 hover:bg-white/20 p-1 rounded transition`}
       {...rest}
     >
-      <Icon
-        className={`w-4 h-4 fill-slate-300 ${iconClassName}`}
-        type={iconType}
-      />
+      <Icon className={`w-4 h-4 fill-slate-300 ${iconClassName}`} type={iconType} />
       {children}
     </button>
   );

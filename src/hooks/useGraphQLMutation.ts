@@ -12,10 +12,7 @@ import {
 import assert from "assert";
 import { useContext } from "react";
 
-export function useGraphQLMutation<
-  Query,
-  Variables extends OperationVariables = {}
->(
+export function useGraphQLMutation<Query, Variables extends OperationVariables = {}>(
   query: DocumentNode | TypedDocumentNode<Query, Variables>,
   options: Omit<MutationHookOptions<Query, Variables>, "client"> = {}
 ): {
@@ -28,10 +25,10 @@ export function useGraphQLMutation<
 
   const client = getGraphQLClient(accessToken);
 
-  const [mutate, { error, loading: isLoading }] = useMutation<Query, Variables>(
-    query,
-    { client, ...options }
-  );
+  const [mutate, { error, loading: isLoading }] = useMutation<Query, Variables>(query, {
+    client,
+    ...options,
+  });
 
   return { error, isLoading, mutate };
 }

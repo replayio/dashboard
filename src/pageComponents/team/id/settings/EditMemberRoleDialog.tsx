@@ -20,19 +20,14 @@ export function EditMemberRoleDialog({
 }) {
   const [isPending, setIsPending] = useState(false);
 
-  const [memberRole, setMemberRole] = useState<MemberRoleOption>(
-    getRoleOption(member.roles)
-  );
+  const [memberRole, setMemberRole] = useState<MemberRoleOption>(getRoleOption(member.roles));
 
   const { updateWorkspaceMemberRoles } = useUpdateWorkspaceMemberRoles();
 
   const updateRoles = async () => {
     setIsPending(true);
     try {
-      await updateWorkspaceMemberRoles(
-        member.membershipId,
-        getMembershipRoles(memberRole)
-      );
+      await updateWorkspaceMemberRoles(member.membershipId, getMembershipRoles(memberRole));
     } finally {
       setIsPending(false);
       onDismiss();
@@ -40,13 +35,9 @@ export function EditMemberRoleDialog({
   };
 
   return (
-    <ModalDialog
-      data-test-id="Dialog-EditMemberRole"
-      onDismiss={onDismiss}
-      title={member.name}
-    >
+    <ModalDialog data-test-id="Dialog-EditMemberRole" onDismiss={onDismiss} title={member.name}>
       <Select
-        onChange={(option) => {
+        onChange={option => {
           setMemberRole(option as MemberRoleOption);
         }}
         options={MEMBER_ROLE_OPTIONS}

@@ -65,9 +65,9 @@ export function ContextRoot({
 
   const [isPending, startTransition] = useTransition();
 
-  const [selectedTestSummaryId, setSelectedTestSummaryId] = useState<
-    string | undefined
-  >(defaultTestSummaryId || undefined);
+  const [selectedTestSummaryId, setSelectedTestSummaryId] = useState<string | undefined>(
+    defaultTestSummaryId || undefined
+  );
 
   const router = useRouter();
 
@@ -88,7 +88,7 @@ export function ContextRoot({
   const updateFilters = useCallback(
     (partialState: Partial<Filters>) => {
       startTransition(() => {
-        setState((prevState) => ({
+        setState(prevState => ({
           ...prevState,
           ...partialState,
         }));
@@ -111,15 +111,12 @@ export function ContextRoot({
       break;
   }
 
-  const { isLoading, testSummaries } = useWorkspaceTests(
-    workspaceId,
-    startDate
-  );
+  const { isLoading, testSummaries } = useWorkspaceTests(workspaceId, startDate);
 
   const filteredTestSummaries = useMemo(() => {
     let summaries = Array.from(testSummaries ?? []);
 
-    summaries = summaries.filter((test) => {
+    summaries = summaries.filter(test => {
       if (filterText) {
         if (!test.title.toLowerCase().includes(filterText.toLowerCase())) {
           return false;
@@ -145,10 +142,7 @@ export function ContextRoot({
   }, [filterText, sortBy, testSummaries]);
 
   const filteredSelectedTestSummaryId = useMemo(
-    () =>
-      filteredTestSummaries.find(
-        (summary) => summary.id === selectedTestSummaryId
-      )?.id,
+    () => filteredTestSummaries.find(summary => summary.id === selectedTestSummaryId)?.id,
     [filteredTestSummaries, selectedTestSummaryId]
   );
 
@@ -177,9 +171,5 @@ export function ContextRoot({
     ]
   );
 
-  return (
-    <TestsViewContext.Provider value={value}>
-      {children}
-    </TestsViewContext.Provider>
-  );
+  return <TestsViewContext.Provider value={value}>{children}</TestsViewContext.Provider>;
 }

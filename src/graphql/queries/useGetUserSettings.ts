@@ -1,7 +1,4 @@
-import {
-  GetUserSettingsQuery,
-  GetUserSettingsQueryVariables,
-} from "@/graphql/generated/graphql";
+import { GetUserSettingsQuery, GetUserSettingsQueryVariables } from "@/graphql/generated/graphql";
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
@@ -30,7 +27,7 @@ export function useGetUserSettings() {
     if (data) {
       const apiKeys: ApiKey[] = [];
 
-      data?.viewer?.apiKeys?.forEach((key) => {
+      data?.viewer?.apiKeys?.forEach(key => {
         apiKeys.push({
           id: key.id,
           createdAt: new Date(key.createdAt),

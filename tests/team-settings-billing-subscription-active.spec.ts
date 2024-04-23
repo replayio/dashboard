@@ -19,9 +19,7 @@ test("team-settings-billing-subscription-active: should show information about t
   const banner = page.locator('[data-test-name="Header"]');
   await expect(banner).not.toBeVisible();
 
-  await expect(
-    page.locator('[data-test-id="AddPaymentMethodButton"]')
-  ).not.toBeVisible();
+  await expect(page.locator('[data-test-id="AddPaymentMethodButton"]')).not.toBeVisible();
 
   const table = page.locator('[data-test-id="PricingDetailsTable"]');
   await expect(table).toContainText("Renewal date");

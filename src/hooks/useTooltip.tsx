@@ -42,11 +42,7 @@ export default function useTooltip({
   }, delay);
 
   useIsomorphicLayoutEffect(() => {
-    if (
-      mouseCoordinates === null ||
-      mouseTarget === null ||
-      showTooltip === false
-    ) {
+    if (mouseCoordinates === null || mouseTarget === null || showTooltip === false) {
       return;
     }
 
@@ -73,10 +69,8 @@ export default function useTooltip({
       if (position) {
         const targetRect = mouseTarget.getBoundingClientRect();
 
-        styleLeft =
-          targetRect.left + mouseTarget.offsetWidth / 2 - tooltipWidth / 2;
-        styleTop =
-          targetRect.top + mouseTarget.offsetHeight / 2 - tooltipHeight / 2;
+        styleLeft = targetRect.left + mouseTarget.offsetWidth / 2 - tooltipWidth / 2;
+        styleTop = targetRect.top + mouseTarget.offsetHeight / 2 - tooltipHeight / 2;
 
         switch (position) {
           case "above":
@@ -89,8 +83,7 @@ export default function useTooltip({
             styleLeft = targetRect.left - tooltipWidth - MARGIN_SMALL;
             break;
           case "right-of":
-            styleLeft =
-              targetRect.left + mouseTarget.offsetWidth + MARGIN_SMALL;
+            styleLeft = targetRect.left + mouseTarget.offsetWidth + MARGIN_SMALL;
             break;
         }
       } else {
@@ -100,16 +93,10 @@ export default function useTooltip({
         // For the target we intentionally use the bounding rect (rather than clientWidth/clientHeight)
         // because this takes scale into consideration, which is important for targets like HTMLCanvasElements.
         const containerRect = container.getBoundingClientRect();
-        if (
-          styleLeft + tooltipWidth + MARGIN_LARGE >
-          containerRect.left + containerRect.width
-        ) {
+        if (styleLeft + tooltipWidth + MARGIN_LARGE > containerRect.left + containerRect.width) {
           marginLeft = `-${tooltipWidth + MARGIN_LARGE * 2}px`;
         }
-        if (
-          styleTop + tooltipHeight + MARGIN_LARGE >
-          containerRect.top + containerRect.height
-        ) {
+        if (styleTop + tooltipHeight + MARGIN_LARGE > containerRect.top + containerRect.height) {
           marginTop = `-${tooltipHeight + MARGIN_LARGE * 2}px`;
         }
       }
@@ -144,7 +131,7 @@ export default function useTooltip({
     reposition();
 
     return () => {
-      scrollTargets.forEach((target) => {
+      scrollTargets.forEach(target => {
         target.removeEventListener("scroll", onScroll);
       });
 
