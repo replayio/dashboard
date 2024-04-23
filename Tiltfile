@@ -1,4 +1,4 @@
-def dashboard(working_directory=config.main_dir, resource_deps=[]):
+def dashboard(working_directory=config.main_dir, api='https://api.replay.io/v1/graphql', resource_deps=[]):
   local_resource(
     "dashboard deps",
     "pnpm install",
@@ -12,5 +12,8 @@ def dashboard(working_directory=config.main_dir, resource_deps=[]):
     deps=[],
     resource_deps=["dashboard deps"] + resource_deps,
     serve_dir=working_directory,
-    serve_env={"DEVTOOLS_URL": "http://localhost:8081"}
+    serve_env={
+        "DEVTOOLS_URL": "http://localhost:8081",
+        "NEXT_PUBLIC_API_URL": api,
+    }
   )
