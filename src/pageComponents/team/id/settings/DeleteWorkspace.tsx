@@ -4,7 +4,7 @@ import { useDeleteWorkspace } from "@/graphql/queries/deleteWorkspace";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function DeleteWorkspace({ id }: { id: string }) {
+export function DeleteWorkspace({ workspaceId }: { workspaceId: string }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
@@ -16,7 +16,7 @@ export function DeleteWorkspace({ id }: { id: string }) {
     const handleDelete = async () => {
       setIsPending(true);
 
-      await deleteWorkspace(id);
+      await deleteWorkspace(workspaceId);
 
       router.replace("/team/me/recordings");
     };

@@ -1,11 +1,11 @@
 import { Button } from "@/components/Button";
-import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Icon } from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useActivateWorkspaceSubscription } from "@/graphql/queries/useActivateWorkspaceSubscription";
 import { useRemovePaymentMethod } from "@/graphql/queries/useRemovePaymentMethod";
 import { WorkspaceSubscription } from "@/graphql/types";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { BillingContext } from "@/pageComponents/team/id/settings/Billing/BillingContext";
 import { formatRelativeDate } from "@/utils/date";
 import { formatCurrency } from "@/utils/number";
@@ -17,7 +17,7 @@ import {
 import { isPlanBeta, isPlanPricingPerSeat } from "@/utils/test-suites";
 import assert from "assert";
 import { format } from "date-fns/format";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 export function BillingPriceDetails() {
   const { subscription } = useContext(BillingContext);
@@ -164,20 +164,40 @@ function PricingDetailsPanel({
 }) {
   const { refreshSubscription, workspaceId } = useContext(BillingContext);
 
-  const [confirmRemovePayment, setConfirmRemovePayment] = useState(false);
-
   const { removePaymentMethod } = useRemovePaymentMethod();
 
   const paymentMethod = subscription.paymentMethods?.[0];
 
-  const removePaymentMethodConfirmed = async () => {
-    setConfirmRemovePayment(false);
-
-    if (paymentMethod) {
-      await removePaymentMethod(workspaceId, paymentMethod.id);
-      await refreshSubscription();
+  const { confirmationDialog, showConfirmationDialog } = useConfirmDialog(
+    async (confirmed: boolean) => {
+      if (confirmed) {
+        if (paymentMethod) {
+          await removePaymentMethod(workspaceId, paymentMethod.id);
+          await refreshSubscription();
+        }
+      }
+    },
+    {
+      confirmButtonLabel: "Remove payment method",
+      message: (
+        <div className="flex flex-col gap-2">
+          <div>
+            Removing a payment method will prevent any future charges for this
+            subscription. You will need to a new payment method to continue your
+            subscription beyond the current billing cycle.
+          </div>
+          {paymentMethod && (
+            <div>
+              Are you sure you want to remove the{" "}
+              {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
+              {paymentMethod.card.last4}?
+            </div>
+          )}
+        </div>
+      ),
+      title: "Remove payment method",
     }
-  };
+  );
 
   const pricingDetails = subscription
     ? pricingDetailsForSubscription(subscription)
@@ -256,36 +276,14 @@ function PricingDetailsPanel({
               <button
                 className="text-sky-500 outline-0 hover:underline focus:underline"
                 data-test-id="RemovePaymentMethodButton"
-                onClick={() => setConfirmRemovePayment(true)}
+                onClick={showConfirmationDialog}
               >
                 {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
                 {paymentMethod.card.last4}
               </button>
             </div>
 
-            {confirmRemovePayment && (
-              <ConfirmationDialog
-                confirmButtonLabel="Remove payment method"
-                message={
-                  <div className="flex flex-col gap-2">
-                    <div>
-                      Removing a payment method will prevent any future charges
-                      for this subscription. You will need to a new payment
-                      method to continue your subscription beyond the current
-                      billing cycle.
-                    </div>
-                    <div>
-                      Are you sure you want to remove the{" "}
-                      {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
-                      {paymentMethod.card.last4}?
-                    </div>
-                  </div>
-                }
-                onCancel={() => setConfirmRemovePayment(false)}
-                onConfirm={removePaymentMethodConfirmed}
-                title="Remove payment method"
-              />
-            )}
+            {confirmationDialog}
           </div>
         )}
       </div>

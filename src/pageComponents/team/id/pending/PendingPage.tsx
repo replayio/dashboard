@@ -1,12 +1,12 @@
 import { Button } from "@/components/Button";
-import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { SessionContext } from "@/components/SessionContext";
 import { acceptPendingWorkspaceInvitation } from "@/graphql/queries/acceptPendingWorkspaceInvitation";
 import { declinePendingWorkspaceInvitation } from "@/graphql/queries/declinePendingWorkspaceInvitation";
 import { usePendingWorkspaces } from "@/graphql/queries/usePendingWorkspaces";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 export function PendingPage({
   isTest,
@@ -22,7 +22,24 @@ export function PendingPage({
   const { isLoading, workspaces } = usePendingWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
-  const [showConfirmDecline, setShowConfirmDecline] = useState(false);
+  const { confirmationDialog, showConfirmationDialog } = useConfirmDialog(
+    async (confirmed: boolean) => {
+      if (confirmed) {
+        const success = await declinePendingWorkspaceInvitation(
+          accessToken,
+          workspaceId
+        );
+        if (success) {
+          router.push("/team/me/recordings");
+        }
+      }
+    },
+    {
+      confirmButtonLabel: "Decline invitation",
+      message: "Are you sure you want to decline this invitation?",
+      title: "Confirm",
+    }
+  );
 
   if (isLoading || !workspace) {
     return <LoadingSpinner />;
@@ -37,20 +54,6 @@ export function PendingPage({
       router.push(
         isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`
       );
-    }
-  };
-
-  const declineInvitation = async () => {
-    if (!showConfirmDecline) {
-      setShowConfirmDecline(true);
-    } else {
-      const success = await declinePendingWorkspaceInvitation(
-        accessToken,
-        workspaceId
-      );
-      if (success) {
-        router.push("/team/me/recordings");
-      }
     }
   };
 
@@ -73,19 +76,11 @@ export function PendingPage({
       </div>
       <div className="flex flex-row space-x-2 text-base">
         <Button onClick={acceptInvitation}>Accept</Button>
-        <Button color="secondary" onClick={declineInvitation}>
+        <Button color="secondary" onClick={showConfirmationDialog}>
           Decline
         </Button>
       </div>
-      {showConfirmDecline && (
-        <ConfirmationDialog
-          confirmButtonLabel="Decline invitation"
-          message="Are you sure you want to decline this invitation?"
-          onCancel={() => setShowConfirmDecline(false)}
-          onConfirm={declineInvitation}
-          title="Confirm"
-        />
-      )}
+      {confirmationDialog}
     </div>
   );
 }

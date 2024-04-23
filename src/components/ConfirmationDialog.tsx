@@ -8,14 +8,14 @@ export function ConfirmationDialog({
   message,
   onCancel,
   onConfirm,
-  title,
+  title = "Confirm",
 }: {
   cancelButtonLabel?: string;
   confirmButtonLabel?: string;
   message: ReactNode;
   onCancel: () => void;
   onConfirm: () => void;
-  title: string;
+  title?: string;
 }) {
   return (
     <ModalDialog onDismiss={onCancel} title={title}>

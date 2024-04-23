@@ -89,6 +89,7 @@ export type TestSuiteTestRecording = {
 export type WorkspaceMember = {
   id: string;
   isPending: boolean;
+  membershipId: string;
   name: string;
   picture: string | null;
   roles: string[];
