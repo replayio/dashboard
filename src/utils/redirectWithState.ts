@@ -27,7 +27,7 @@ export function redirectWithState<Props>({
 
   const destination = `${pathname}?${new URLSearchParams({
     ...params,
-    mockGraphQLData: mockGraphQLDataString || "",
+    ...(mockGraphQLDataString && { mockGraphQLData: mockGraphQLDataString }),
   })}`;
 
   return {
