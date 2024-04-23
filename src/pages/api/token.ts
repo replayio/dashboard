@@ -5,6 +5,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { accessToken } = await getAccessToken(req, res);
-  res.status(200).send(accessToken);
+  try {
+    const { accessToken } = await getAccessToken(req, res);
+    res.status(200).send(accessToken);
+  } catch {
+    res.status(401).send("Not logged in");
+  }
 }
