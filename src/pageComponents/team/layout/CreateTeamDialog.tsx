@@ -18,14 +18,12 @@ export function CreateTeamDialog({
   const [bypassTrial, setBypassTrial] = useState(false);
   const [name, setName] = useState("");
   const [isPending, setIsPending] = useState(false);
-  const [teamType, setTeamType] = useState<"testsuite" | "standard">(
-    "testsuite"
-  );
+  const [teamType, setTeamType] = useState<"testsuite" | "standard">("testsuite");
 
   const router = useRouter();
 
   const { createWorkspace, error } = useCreateWorkspace(
-    (id) => {
+    id => {
       router.replace(`/team/${id}/recordings`);
 
       onDismiss();
@@ -57,7 +55,7 @@ export function CreateTeamDialog({
           <Input
             autoFocus
             disabled={isPending}
-            onChange={(name) => setName(name)}
+            onChange={name => setName(name)}
             onConfirm={onClick}
             onDismiss={onDismiss}
             placeholder="Team name"
@@ -70,11 +68,10 @@ export function CreateTeamDialog({
               disabled={isPending}
               label={
                 <>
-                  Bypass trial{" "}
-                  <small className="text-yellow-300">(internal only)</small>
+                  Bypass trial <small className="text-yellow-300">(internal only)</small>
                 </>
               }
-              onChange={(value) => setBypassTrial(value)}
+              onChange={value => setBypassTrial(value)}
             />
           )}
           {error && (

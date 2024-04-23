@@ -37,13 +37,7 @@ const VIEWER: MemberRoleOption = {
   value: WorkspaceUserRole.Viewer,
 };
 
-export const MEMBER_ROLE_OPTIONS = [
-  NO_ROLE,
-  VIEWER,
-  CONTRIBUTOR,
-  DEVELOPER,
-  ADMIN,
-];
+export const MEMBER_ROLE_OPTIONS = [NO_ROLE, VIEWER, CONTRIBUTOR, DEVELOPER, ADMIN];
 
 export const DEFAULT_MEMBER_ROLE_OPTION = NO_ROLE;
 

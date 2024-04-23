@@ -20,12 +20,7 @@ export function TestRunRow({
   if (testRun.numFailed > 0) {
     icon = <TestStatusCapsule count={testRun.numFailed} status="failed" />;
   } else {
-    icon = (
-      <Icon
-        className="text-green-500 w-6 h-6 shrink-0"
-        type="passing-test-run"
-      />
-    );
+    icon = <Icon className="text-green-500 w-6 h-6 shrink-0" type="passing-test-run" />;
   }
 
   const Component = isActive ? "div" : "button";

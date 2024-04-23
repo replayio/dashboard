@@ -14,19 +14,13 @@ test("releases: should list all releases, with the most recent ones at the top",
     const table = page.locator('[data-test-id="latest-releases-table"]');
     await expect(table).toBeVisible();
 
-    const chromiumRows = table.locator(
-      '[data-test-name="release-row"][data-test-type="chromium"]'
-    );
+    const chromiumRows = table.locator('[data-test-name="release-row"][data-test-type="chromium"]');
     await expect(await chromiumRows.count()).toBeGreaterThan(1);
 
-    const geckoRows = table.locator(
-      '[data-test-name="release-row"][data-test-type="gecko"]'
-    );
+    const geckoRows = table.locator('[data-test-name="release-row"][data-test-type="gecko"]');
     await expect(await geckoRows.count()).toBeGreaterThan(1);
 
-    const nodeRows = table.locator(
-      '[data-test-name="release-row"][data-test-type="node"]'
-    );
+    const nodeRows = table.locator('[data-test-name="release-row"][data-test-type="node"]');
     await expect(await nodeRows.count()).toBeGreaterThan(1);
   }
 
@@ -34,19 +28,13 @@ test("releases: should list all releases, with the most recent ones at the top",
     const table = page.locator('[data-test-id="all-releases-table"]');
     await expect(table).toBeVisible();
 
-    const chromiumRows = table.locator(
-      '[data-test-name="release-row"][data-test-type="chromium"]'
-    );
+    const chromiumRows = table.locator('[data-test-name="release-row"][data-test-type="chromium"]');
     await expect(await chromiumRows.count()).toBeGreaterThan(1);
 
-    const geckoRows = table.locator(
-      '[data-test-name="release-row"][data-test-type="gecko"]'
-    );
+    const geckoRows = table.locator('[data-test-name="release-row"][data-test-type="gecko"]');
     await expect(await geckoRows.count()).toBeGreaterThan(1);
 
-    const nodeRows = table.locator(
-      '[data-test-name="release-row"][data-test-type="node"]'
-    );
+    const nodeRows = table.locator('[data-test-name="release-row"][data-test-type="node"]');
     await expect(await nodeRows.count()).toBeGreaterThan(1);
   }
 });

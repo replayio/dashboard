@@ -6,9 +6,7 @@ import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
 import { gql } from "@apollo/client";
 import { useCallback } from "react";
 
-export function useUpdateWorkspaceMemberRoles(
-  onCompleted?: (success: boolean) => void
-) {
+export function useUpdateWorkspaceMemberRoles(onCompleted?: (success: boolean) => void) {
   const {
     error,
     isLoading,
@@ -26,7 +24,7 @@ export function useUpdateWorkspaceMemberRoles(
     `,
     {
       refetchQueries: ["GetWorkspaceMembers"],
-      onCompleted: (data) => {
+      onCompleted: data => {
         onCompleted?.(data.updateWorkspaceMemberRole.success == true);
       },
     }

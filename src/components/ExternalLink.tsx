@@ -12,12 +12,5 @@ export function ExternalLink(props: {
     window.open(props.href);
   };
 
-  return (
-    <Link
-      onClick={onClick}
-      rel="noopener noreferrer"
-      target="_blank"
-      {...props}
-    />
-  );
+  return <Link onClick={onClick} rel="noopener noreferrer" target="_blank" {...props} />;
 }

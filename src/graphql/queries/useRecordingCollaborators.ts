@@ -13,10 +13,7 @@ export function useRecordingCollaborators(recordingId: string) {
     data,
     error: didError,
     isLoading,
-  } = useGraphQLQuery<
-    GetOwnerAndCollaboratorsQuery,
-    GetOwnerAndCollaboratorsQueryVariables
-  >(
+  } = useGraphQLQuery<GetOwnerAndCollaboratorsQuery, GetOwnerAndCollaboratorsQueryVariables>(
     gql`
       query GetOwnerAndCollaborators($recordingId: UUID!) {
         recording(uuid: $recordingId) {
@@ -65,9 +62,7 @@ export function useRecordingCollaborators(recordingId: string) {
     { recordingId }
   );
 
-  const collaborators = useMemo<
-    WorkspaceRecordingCollaborator[] | undefined
-  >(() => {
+  const collaborators = useMemo<WorkspaceRecordingCollaborator[] | undefined>(() => {
     if (data) {
       const collaborators: WorkspaceRecordingCollaborator[] = [];
       data?.recording?.collaborators?.edges?.forEach(({ node }) => {

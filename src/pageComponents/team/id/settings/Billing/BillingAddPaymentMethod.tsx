@@ -28,13 +28,7 @@ export function BillingAddPaymentMethod() {
   const stripe = useStripe();
 
   const submit = async () => {
-    if (
-      !country ||
-      !elements ||
-      isPending ||
-      !stripe ||
-      !workspace?.subscriptionPlanKey
-    ) {
+    if (!country || !elements || isPending || !stripe || !workspace?.subscriptionPlanKey) {
       return;
     }
 
@@ -46,21 +40,18 @@ export function BillingAddPaymentMethod() {
     const { paymentSecret } = await prepareWorkspacePaymentMethod(workspaceId);
     assert(paymentSecret, "Failed to create payment secret");
 
-    const { error, setupIntent } = await stripe.confirmCardSetup(
-      paymentSecret,
-      {
-        payment_method: {
-          card: cardElement,
-          billing_details: {
-            name,
-            address: {
-              country: country.value,
-              postal_code: postalCode,
-            },
+    const { error, setupIntent } = await stripe.confirmCardSetup(paymentSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name,
+          address: {
+            country: country.value,
+            postal_code: postalCode,
           },
         },
-      }
-    );
+      },
+    });
 
     if (error) {
       setError(error);
@@ -87,11 +78,7 @@ export function BillingAddPaymentMethod() {
 
   return (
     <div className="flex flex-col gap-2" data-test-id="AddPaymentForm">
-      {error && (
-        <div className="bg-red-900 text-red-100 px-2 py-1 rounded">
-          {error.message}
-        </div>
-      )}
+      {error && <div className="bg-red-900 text-red-100 px-2 py-1 rounded">{error.message}</div>}
       <div className="text-lg">Add payment method</div>
       <div className="text-sm">Card information</div>
       <div className={isPending ? "opacity-50" : ""}>
@@ -118,32 +105,24 @@ export function BillingAddPaymentMethod() {
         />
       </div>
       <div className="text-sm">Name on card</div>
-      <Input
-        disabled={isPending}
-        onChange={(name) => setName(name)}
-        value={name}
-      />
+      <Input disabled={isPending} onChange={name => setName(name)} value={name} />
       <div className="text-sm">Country or region</div>
       <Select
         className="h-14"
         disabled={isPending}
-        onChange={(country) => setCountry(country)}
+        onChange={country => setCountry(country)}
         options={COUNTRIES}
         placeholder="Country or region"
         value={country}
       />
       <Input
         disabled={isPending}
-        onChange={(postalCode) => setPostalCode(postalCode)}
+        onChange={postalCode => setPostalCode(postalCode)}
         placeholder="Postal code"
         value={postalCode}
       />
       <div className="flex flex-row items-center gap-2">
-        <Button
-          disabled={isPending}
-          onClick={() => setView("price-details")}
-          variant="outline"
-        >
+        <Button disabled={isPending} onClick={() => setView("price-details")} variant="outline">
           Cancel
         </Button>
         <Button disabled={isPending} onClick={submit}>

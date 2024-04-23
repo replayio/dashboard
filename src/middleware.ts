@@ -14,8 +14,10 @@ export async function middleware(request: NextRequest) {
 
   const { ua } = userAgent(request);
 
-  const { source: accessTokenSource, token: accessToken } =
-    await getAccessTokenForSession(request, response);
+  const { source: accessTokenSource, token: accessToken } = await getAccessTokenForSession(
+    request,
+    response
+  );
 
   try {
     await redirectIfMobile(request);
@@ -37,9 +39,7 @@ export async function middleware(request: NextRequest) {
       const cookie = cookieStore.get(COOKIES.defaultPathname);
 
       const redirectURL = new URL(request.url);
-      redirectURL.pathname = cookie
-        ? JSON.parse(cookie.value)
-        : "/team/me/recordings";
+      redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/team/me/recordings";
 
       return NextResponse.redirect(redirectURL);
     }
@@ -76,10 +76,7 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
-async function getAccessTokenForSession(
-  request: NextRequest,
-  response: NextResponse
-) {
+async function getAccessTokenForSession(request: NextRequest, response: NextResponse) {
   if (request.nextUrl.pathname.startsWith("/api/auth/logout")) {
     return {
       source: null,
@@ -129,9 +126,7 @@ async function getAccessTokenForSession(
   const cookieStore = cookies();
   const accessTokenCookie = cookieStore.get(COOKIES.accessToken);
   if (accessTokenCookie) {
-    const tokenWithSource: AccessTokenCookie = JSON.parse(
-      accessTokenCookie.value
-    );
+    const tokenWithSource: AccessTokenCookie = JSON.parse(accessTokenCookie.value);
     if (typeof tokenWithSource === "object" && tokenWithSource.token) {
       return tokenWithSource;
     }

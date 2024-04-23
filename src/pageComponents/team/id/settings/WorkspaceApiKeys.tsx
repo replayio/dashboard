@@ -12,9 +12,7 @@ export function WorkspaceApiKeys({ workspaceId }: { workspaceId: string }) {
   return (
     <ApiKeys
       apiKeys={apiKeys}
-      createKey={(label: string, scopes: ApiKeyScope[]) =>
-        createApiKey(workspaceId, label, scopes)
-      }
+      createKey={(label: string, scopes: ApiKeyScope[]) => createApiKey(workspaceId, label, scopes)}
       deleteKey={deleteApiKey}
       scopes={["admin:all", "write:sourcemap"]}
     />

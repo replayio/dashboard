@@ -36,11 +36,7 @@ export async function getWorkspaceSubscriptionStatus(
 
   if (errors && errors.length > 0) {
     throw new Error(errors[0]?.message);
-  } else if (
-    !data?.node ||
-    !("subscription" in data?.node) ||
-    !data?.node?.subscription?.status
-  ) {
+  } else if (!data?.node || !("subscription" in data?.node) || !data?.node?.subscription?.status) {
     throw new Error("Subscription not found");
   }
 

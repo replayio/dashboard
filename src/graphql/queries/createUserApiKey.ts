@@ -45,10 +45,7 @@ export function useCreateUserAPIKey() {
       variables: { label, scopes },
     });
 
-    assert(
-      response?.data?.createUserAPIKey != null,
-      "Workspace API key creation failed"
-    );
+    assert(response?.data?.createUserAPIKey != null, "Workspace API key creation failed");
 
     return response.data.createUserAPIKey.keyValue;
   };

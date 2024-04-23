@@ -23,7 +23,7 @@ export function InviteTeamMember({ workspaceId }: { workspaceId: string }) {
     <div className="flex flex-row items-center gap-2">
       <Input
         disabled={isPending}
-        onChange={(email) => setEmail(email)}
+        onChange={email => setEmail(email)}
         onConfirm={onConfirm}
         placeholder="Email address"
         value={email}

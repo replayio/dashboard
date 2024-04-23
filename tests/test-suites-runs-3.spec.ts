@@ -12,9 +12,7 @@ import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 import { waitForUrlChange } from "./utils/waitForUrlChange";
 
-test("test-suites-runs-3: failed run in temp branch without source", async ({
-  page,
-}) => {
+test("test-suites-runs-3: failed run in temp branch without source", async ({ page }) => {
   await navigateToPage({
     mockGraphQLData,
     page,
@@ -31,16 +29,12 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
     expect(text).toContain("Failed run in temp branch");
 
     await expect(
-      await page
-        .locator('[data-test-id="TestRuns-Stats-FailureRateLabel"]')
-        .textContent()
+      await page.locator('[data-test-id="TestRuns-Stats-FailureRateLabel"]').textContent()
     ).toBe("Failure rate: 100%");
 
     const column = page.locator('[data-test-name="TestRuns-Stats-DayColumn"]');
     await column.hover();
-    const tooltip = page.locator(
-      '[data-test-name="TestRuns-Stats-DayColumn-Tooltip"]'
-    );
+    const tooltip = page.locator('[data-test-name="TestRuns-Stats-DayColumn-Tooltip"]');
 
     const tooltipText = await tooltip.textContent();
     await expect(tooltipText).toContain("1 test run failed");
@@ -60,19 +54,13 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
 
     const filters = page.locator('[data-test-id="TestRunTests-Filters"]');
     await expect(
-      await filters
-        .locator('[data-test-name="TestStatusCapsule-failed"]')
-        .textContent()
+      await filters.locator('[data-test-name="TestStatusCapsule-failed"]').textContent()
     ).toBe("2");
     await expect(
-      await filters
-        .locator('[data-test-name="TestStatusCapsule-flaky"]')
-        .textContent()
+      await filters.locator('[data-test-name="TestStatusCapsule-flaky"]').textContent()
     ).toBe("3");
     await expect(
-      await filters
-        .locator('[data-test-name="TestStatusCapsule-passed"]')
-        .textContent()
+      await filters.locator('[data-test-name="TestStatusCapsule-passed"]').textContent()
     ).toBe("4");
 
     const headers = getTestRunSections(page);
@@ -86,20 +74,12 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
     await expect(await flakySection.textContent()).toContain("3 Flaky tests");
     await expect(await passedSection.textContent()).toContain("4 Passed tests");
 
-    const failedRows = failedSection.locator(
-      '[data-test-name="TestRunTests-Row"]'
-    );
-    const flakyRows = flakySection.locator(
-      '[data-test-name="TestRunTests-Row"]'
-    );
-    const passedRows = passedSection.locator(
-      '[data-test-name="TestRunTests-Row"]'
-    );
+    const failedRows = failedSection.locator('[data-test-name="TestRunTests-Row"]');
+    const flakyRows = flakySection.locator('[data-test-name="TestRunTests-Row"]');
+    const passedRows = passedSection.locator('[data-test-name="TestRunTests-Row"]');
 
     await expect(failedRows).toHaveCount(2);
-    await expect(await failedRows.first().textContent()).toContain(
-      "Ninth test"
-    );
+    await expect(await failedRows.first().textContent()).toContain("Ninth test");
     await expect(await failedRows.last().textContent()).toContain("Sixth test");
 
     await expect(flakyRows).toHaveCount(3);
@@ -136,17 +116,11 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
 
     const errors = page.locator('[data-test-id="TestExecution-Errors"]');
     await expect(errors).toBeVisible();
-    const errorRows = errors.locator(
-      '[data-test-name="TestExecution-Error-Row"]'
-    );
+    const errorRows = errors.locator('[data-test-name="TestExecution-Error-Row"]');
     await expect(errorRows).toHaveCount(0);
-    await errors
-      .locator('[data-test-name="ExpandableSection-ToggleButton"]')
-      .click();
+    await errors.locator('[data-test-name="ExpandableSection-ToggleButton"]').click();
     await expect(errorRows).toHaveCount(1);
-    await expect(await errorRows.textContent()).toContain(
-      "This is an error message"
-    );
+    await expect(await errorRows.textContent()).toContain("This is an error message");
   }
 
   {
@@ -154,27 +128,17 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({
     await page.reload();
 
     // The same run should be selected by default
-    const selectedRunRow = page.locator(
-      '[data-test-name="TestRuns-Row"][data-selected]'
-    );
+    const selectedRunRow = page.locator('[data-test-name="TestRuns-Row"][data-selected]');
     await expect(selectedRunRow).toBeVisible();
-    await expect(await selectedRunRow.textContent()).toContain(
-      "Failed run in temp branch"
-    );
+    await expect(await selectedRunRow.textContent()).toContain("Failed run in temp branch");
 
     // The same test should be selected by default
-    const selectedTestsRow = page.locator(
-      '[data-test-name="TestRunTests-Row"][data-selected]'
-    );
+    const selectedTestsRow = page.locator('[data-test-name="TestRunTests-Row"][data-selected]');
     await expect(selectedTestsRow).toBeVisible();
     await expect(await selectedTestsRow.textContent()).toContain("Eighth test");
 
-    await expect(
-      page.locator('[data-test-name="TestExecution-RecordingRow"]')
-    ).toHaveCount(2);
-    await expect(
-      page.locator('[data-test-id="TestExecution-Errors"]')
-    ).toBeVisible();
+    await expect(page.locator('[data-test-name="TestExecution-RecordingRow"]')).toHaveCount(2);
+    await expect(page.locator('[data-test-id="TestExecution-Errors"]')).toBeVisible();
   }
 });
 
@@ -197,20 +161,14 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [
-        partialToTestSuiteTestRecording(),
-        partialToTestSuiteTestRecording(),
-      ],
+      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
       sourcePath: undefined,
       status: "flaky",
       title: "Fourth test",
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [
-        partialToTestSuiteTestRecording(),
-        partialToTestSuiteTestRecording(),
-      ],
+      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
       sourcePath: undefined,
       status: "flaky",
       title: "Fifth test",
@@ -228,10 +186,7 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [
-        partialToTestSuiteTestRecording(),
-        partialToTestSuiteTestRecording(),
-      ],
+      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
       sourcePath: undefined,
       status: "flaky",
       title: "Eighth test",

@@ -1,8 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import {
-  createReplayReporterConfig,
-  devices as replayDevices,
-} from "@replayio/playwright";
+import { createReplayReporterConfig, devices as replayDevices } from "@replayio/playwright";
 import dotenv from "dotenv";
 import { resolve } from "path";
 

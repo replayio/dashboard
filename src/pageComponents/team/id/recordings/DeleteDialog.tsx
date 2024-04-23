@@ -15,7 +15,7 @@ export function DeleteDialog({
 
   const { deleteRecording } = useDeleteRecording(async () => {
     // The interaction feels better if you see the "delete" button update to its disabled state for a second before the dialog closes
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     onDismiss();
   });
@@ -27,11 +27,7 @@ export function DeleteDialog({
   };
 
   return (
-    <ModalDialog
-      data-test-id="Dialog-DeleteRecording"
-      onDismiss={onDismiss}
-      title="Delete Replay?"
-    >
+    <ModalDialog data-test-id="Dialog-DeleteRecording" onDismiss={onDismiss} title="Delete Replay?">
       <div className="flex flex-col gap-2">
         <div>This action will permanently delete this replay.</div>
         <div>Are you sure you want to proceed?</div>

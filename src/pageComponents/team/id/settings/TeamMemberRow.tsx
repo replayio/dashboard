@@ -16,39 +16,33 @@ export function TeamMemberRow({
   member: WorkspaceMember;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const [showEditMemberRoleDialog, setShowEditMemberRoleDialog] =
-    useState(false);
+  const [showEditMemberRoleDialog, setShowEditMemberRoleDialog] = useState(false);
 
   const { removeUserFromWorkspace } = useRemoveUserFromWorkspace();
 
-  const {
-    confirmationDialog: confirmRemoveDialog,
-    showConfirmationDialog: showRemoveDialog,
-  } = useConfirmDialog(
-    async (confirmRemove: boolean) => {
-      if (confirmRemove) {
-        setIsPending(true);
+  const { confirmationDialog: confirmRemoveDialog, showConfirmationDialog: showRemoveDialog } =
+    useConfirmDialog(
+      async (confirmRemove: boolean) => {
+        if (confirmRemove) {
+          setIsPending(true);
 
-        try {
-          await removeUserFromWorkspace(member.membershipId);
-        } finally {
-          setIsPending(false);
+          try {
+            await removeUserFromWorkspace(member.membershipId);
+          } finally {
+            setIsPending(false);
+          }
         }
+      },
+      {
+        cancelButtonLabel: "No",
+        confirmButtonLabel: "Yes, remove",
+        message: `Are you sure you want to remove ${member.name} from this team?`,
+        title: member.name,
       }
-    },
-    {
-      cancelButtonLabel: "No",
-      confirmButtonLabel: "Yes, remove",
-      message: `Are you sure you want to remove ${member.name} from this team?`,
-      title: member.name,
-    }
-  );
+    );
 
   return (
-    <div
-      className="flex flex-row items-center gap-2"
-      data-test-name="TeamMembers-MemberRow"
-    >
+    <div className="flex flex-row items-center gap-2" data-test-name="TeamMembers-MemberRow">
       {currentUserId !== member.id && currentUserIsAdmin && (
         <>
           <IconButton
@@ -85,9 +79,7 @@ export function TeamMemberRow({
         ) : null}
       </div>
       <div className="truncate">{member.name}</div>
-      {member.isPending && (
-        <div className="shrink-0 text-sm text-yellow-300">(pending)</div>
-      )}
+      {member.isPending && <div className="shrink-0 text-sm text-yellow-300">(pending)</div>}
     </div>
   );
 }

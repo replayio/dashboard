@@ -10,10 +10,7 @@ export function useDeleteRecordingCollaborator() {
     error,
     isLoading,
     mutate: deleteCollaboratorMutation,
-  } = useGraphQLMutation<
-    DeleteCollaboratorMutation,
-    DeleteCollaboratorMutationVariables
-  >(
+  } = useGraphQLMutation<DeleteCollaboratorMutation, DeleteCollaboratorMutationVariables>(
     gql`
       mutation DeleteCollaborator($collaborationId: ID!) {
         removeRecordingCollaborator(input: { id: $collaborationId }) {

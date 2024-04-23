@@ -8,13 +8,7 @@ import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
-export function PendingPage({
-  isTest,
-  workspaceId,
-}: {
-  isTest: boolean;
-  workspaceId: string;
-}) {
+export function PendingPage({ isTest, workspaceId }: { isTest: boolean; workspaceId: string }) {
   const { accessToken } = useContext(SessionContext);
 
   const router = useRouter();
@@ -25,10 +19,7 @@ export function PendingPage({
   const { confirmationDialog, showConfirmationDialog } = useConfirmDialog(
     async (confirmed: boolean) => {
       if (confirmed) {
-        const success = await declinePendingWorkspaceInvitation(
-          accessToken,
-          workspaceId
-        );
+        const success = await declinePendingWorkspaceInvitation(accessToken, workspaceId);
         if (success) {
           router.push("/team/me/recordings");
         }
@@ -46,14 +37,9 @@ export function PendingPage({
   }
 
   const acceptInvitation = async () => {
-    const success = await acceptPendingWorkspaceInvitation(
-      accessToken,
-      workspaceId
-    );
+    const success = await acceptPendingWorkspaceInvitation(accessToken, workspaceId);
     if (success) {
-      router.push(
-        isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`
-      );
+      router.push(isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`);
     }
   };
 
@@ -65,10 +51,7 @@ export function PendingPage({
           {workspace.inviterEmail ? (
             <>
               {" "}
-              by{" "}
-              <a href={`mailto:${workspace.inviterEmail}`}>
-                {workspace.inviterEmail}
-              </a>
+              by <a href={`mailto:${workspace.inviterEmail}`}>{workspace.inviterEmail}</a>
             </>
           ) : null}
           .

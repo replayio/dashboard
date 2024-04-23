@@ -5,35 +5,34 @@ import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
 export function useNonPendingWorkspaces() {
-  const { data, error, isLoading, refetch } =
-    useGraphQLQuery<GetNonPendingWorkspacesQuery>(gql`
-      query GetNonPendingWorkspaces {
-        viewer {
-          workspaces {
-            edges {
-              node {
-                hasPaymentMethod
+  const { data, error, isLoading, refetch } = useGraphQLQuery<GetNonPendingWorkspacesQuery>(gql`
+    query GetNonPendingWorkspaces {
+      viewer {
+        workspaces {
+          edges {
+            node {
+              hasPaymentMethod
+              id
+              invitationCode
+              isOrganization
+              isTest
+              name
+              settings {
+                features
+              }
+              subscription {
                 id
-                invitationCode
-                isOrganization
-                isTest
-                name
-                settings {
-                  features
-                }
-                subscription {
+                plan {
                   id
-                  plan {
-                    id
-                    key
-                  }
+                  key
                 }
               }
             }
           }
         }
       }
-    `);
+    }
+  `);
 
   const workspaces = useMemo<Workspace[] | undefined>(() => {
     if (data) {
@@ -51,12 +50,9 @@ export function useNonPendingWorkspaces() {
                 ? {
                     features: {
                       recording: {
-                        allowList:
-                          node.settings.features?.recording?.allowList ?? [],
-                        blockList:
-                          node.settings.features?.recording?.blockList ?? [],
-                        public:
-                          node.settings.features?.recording?.public == true,
+                        allowList: node.settings.features?.recording?.allowList ?? [],
+                        blockList: node.settings.features?.recording?.blockList ?? [],
+                        public: node.settings.features?.recording?.public == true,
                       },
                       user: {
                         autoJoin: node.settings.features?.user?.autoJoin ?? 0,

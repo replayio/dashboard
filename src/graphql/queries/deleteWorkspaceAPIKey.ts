@@ -35,8 +35,7 @@ export function useDeleteWorkspaceAPIKey() {
     console.error("Apollo error while deleting a user API key", error);
   }
 
-  const deleteApiKey = (id: string) =>
-    deleteApiKeyMutation({ variables: { id } });
+  const deleteApiKey = (id: string) => deleteApiKeyMutation({ variables: { id } });
 
   return { deleteApiKey, error, loading };
 }

@@ -3,10 +3,7 @@ import { ComponentProps, ReactNode, useState } from "react";
 
 export function useConfirmDialog(
   onConfirmedOrRejected: (confirmed: boolean) => void,
-  props: Omit<
-    ComponentProps<typeof ConfirmationDialog>,
-    "onCancel" | "onConfirm"
-  >
+  props: Omit<ComponentProps<typeof ConfirmationDialog>, "onCancel" | "onConfirm">
 ) {
   const [showDialog, setShowDialog] = useState(false);
 

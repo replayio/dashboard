@@ -13,10 +13,7 @@ export function DropDownMenu<Options extends ValueToLabelMap>({
   options,
   value,
   ...rest
-}: Omit<
-  HTMLAttributes<HTMLDivElement>,
-  "onChange" | "onClick" | "onKeyDown"
-> & {
+}: Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "onClick" | "onKeyDown"> & {
   className?: string;
   disabled: boolean;
   onChange: (value: keyof Options) => void;
@@ -31,11 +28,7 @@ export function DropDownMenu<Options extends ValueToLabelMap>({
     onKeyDown,
   } = useContextMenu(
     Object.entries(options).map(([value, label]) => (
-      <ContextMenuItem
-        className="text-sm px-4 py-2"
-        key={value}
-        onSelect={() => onChange(value)}
-      >
+      <ContextMenuItem className="text-sm px-4 py-2" key={value} onSelect={() => onChange(value)}>
         {label}
       </ContextMenuItem>
     )),

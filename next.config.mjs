@@ -6,9 +6,9 @@ const nextConfig = {
   rewrites: async () => [
     {
       source: "/recording/:path*",
-      destination: `${devtoolsURL}/recording/:path*`
-    }
-  ]
+      destination: `${devtoolsURL}/recording/:path*`,
+    },
+  ],
 };
 
 export default nextConfig;

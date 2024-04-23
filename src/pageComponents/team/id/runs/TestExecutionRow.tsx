@@ -15,9 +15,7 @@ export function TestExecutionRow({
   const url = getURL(recording.id, recording.buildId);
 
   const colorClassName = getColorClassName(status);
-  const iconType = recording.isProcessed
-    ? "processed-recording"
-    : "unprocessed-recording";
+  const iconType = recording.isProcessed ? "processed-recording" : "unprocessed-recording";
 
   return (
     <Link

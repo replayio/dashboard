@@ -12,8 +12,7 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
     numPassingTests,
   } = chartData;
 
-  const numRunsTotal =
-    numFailedTestRuns + numFlakyTestRuns + numPassingTestRuns;
+  const numRunsTotal = numFailedTestRuns + numFlakyTestRuns + numPassingTestRuns;
 
   let testRunLabel = null;
   let testLabel = null;
@@ -30,8 +29,7 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
       } else {
         testRunLabel = (
           <div>
-            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
-            passed
+            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs passed
           </div>
         );
       }
@@ -45,22 +43,19 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
       } else {
         testRunLabel = (
           <div>
-            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs
-            contained at least one failing test
+            All <strong>{numRunsTotal.toLocaleString()}</strong> test runs contained at least one
+            failing test
           </div>
         );
       }
     } else {
       const percentage =
-        numRunsTotal === 0
-          ? 0
-          : Math.round((numFailedTestRuns / numRunsTotal) * 100);
+        numRunsTotal === 0 ? 0 : Math.round((numFailedTestRuns / numRunsTotal) * 100);
 
       testRunLabel = (
         <div>
-          <strong>{percentage}%</strong> of{" "}
-          <strong>{numRunsTotal.toLocaleString()}</strong> test runs contained
-          at least one failing test
+          <strong>{percentage}%</strong> of <strong>{numRunsTotal.toLocaleString()}</strong> test
+          runs contained at least one failing test
         </div>
       );
     }
@@ -92,10 +87,7 @@ export function getTestRunStatsTooltip(chartData: TestRunStatsData): ReactNode {
   }
 
   return (
-    <div
-      className="text-sm flex flex-col gap-2"
-      data-test-name="TestRuns-Stats-DayColumn-Tooltip"
-    >
+    <div className="text-sm flex flex-col gap-2" data-test-name="TestRuns-Stats-DayColumn-Tooltip">
       <div className="font-bold text-base">
         {date.toLocaleString("default", { month: "short" })} {date.getDate()}
       </div>

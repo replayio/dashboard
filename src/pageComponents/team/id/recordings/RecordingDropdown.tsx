@@ -59,12 +59,8 @@ export function RecordingDropdown({
         iconType="vertical-dots"
       />
       {contextMenu}
-      {showDeleteDialog && (
-        <DeleteDialog onDismiss={onDismissShareDialog} recording={recording} />
-      )}
-      {showShareDialog && (
-        <ShareDialog onDismiss={onDismissShareDialog} recording={recording} />
-      )}
+      {showDeleteDialog && <DeleteDialog onDismiss={onDismissShareDialog} recording={recording} />}
+      {showShareDialog && <ShareDialog onDismiss={onDismissShareDialog} recording={recording} />}
     </>
   );
 }

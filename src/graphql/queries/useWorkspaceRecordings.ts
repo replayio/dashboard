@@ -13,10 +13,7 @@ export function useWorkspaceRecordings(id: string, filter: string = "") {
     data,
     error: didError,
     isLoading,
-  } = useGraphQLQuery<
-    GetWorkspaceRecordingsQuery,
-    GetWorkspaceRecordingsQueryVariables
-  >(
+  } = useGraphQLQuery<GetWorkspaceRecordingsQuery, GetWorkspaceRecordingsQueryVariables>(
     gql`
       query GetWorkspaceRecordings($id: ID!, $filter: String) {
         node(id: $id) {

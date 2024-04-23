@@ -17,29 +17,23 @@ export function mockGetWorkspaceSubscription(
         __typename: "WorkspaceSubscription",
         id: getUID("workspace-subscription"),
         effectiveFrom:
-          partialWorkspaceSubscription.effectiveFrom ??
-          getRelativeDate({ daysAgo: 7 }),
+          partialWorkspaceSubscription.effectiveFrom ?? getRelativeDate({ daysAgo: 7 }),
         effectiveUntil:
-          partialWorkspaceSubscription.effectiveUntil ??
-          getRelativeDate({ daysAgo: -7 }),
+          partialWorkspaceSubscription.effectiveUntil ?? getRelativeDate({ daysAgo: -7 }),
         status: partialWorkspaceSubscription.status ?? "trialing",
-        trialEnds:
-          partialWorkspaceSubscription.trialEnds ??
-          getRelativeDate({ daysAgo: -7 }),
+        trialEnds: partialWorkspaceSubscription.trialEnds ?? getRelativeDate({ daysAgo: -7 }),
         seatCount: partialWorkspaceSubscription.seatCount ?? 0,
-        paymentMethods: partialWorkspaceSubscription.paymentMethods?.map(
-          (paymentMethod) => ({
-            __typename: "PaymentMethod",
-            card: {
-              __typename: "PaymentMethodCard",
-              brand: paymentMethod?.card?.brand ?? "Visa",
-              last4: paymentMethod?.card?.last4 ?? "1234",
-            },
-            default: paymentMethod?.default ?? true,
-            id: paymentMethod?.id ?? getUID("payment-method"),
-            type: paymentMethod?.type ?? "card",
-          })
-        ),
+        paymentMethods: partialWorkspaceSubscription.paymentMethods?.map(paymentMethod => ({
+          __typename: "PaymentMethod",
+          card: {
+            __typename: "PaymentMethodCard",
+            brand: paymentMethod?.card?.brand ?? "Visa",
+            last4: paymentMethod?.card?.last4 ?? "1234",
+          },
+          default: paymentMethod?.default ?? true,
+          id: paymentMethod?.id ?? getUID("payment-method"),
+          type: paymentMethod?.type ?? "card",
+        })),
         plan: {
           __typename: "Plan",
           id: partialWorkspaceSubscription.plan?.id ?? getUID("plan"),

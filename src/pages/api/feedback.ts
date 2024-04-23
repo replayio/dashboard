@@ -2,10 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const { FORM_CARRY_TOKEN } = process.env;
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+export default async function handler(request: NextApiRequest, response: NextApiResponse) {
   try {
     const { body } = request;
 

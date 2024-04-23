@@ -6,9 +6,7 @@ import { UserApiKeys } from "@/pageComponents/user/settings/UserApiKeys";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { ReactNode } from "react";
 
-export default function Page({
-  route,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Page({ route }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   let panel: ReactNode = null;
   switch (route) {
     case "account": {
@@ -38,9 +36,7 @@ export default function Page({
 
 Page.Layout = SettingsLayout;
 
-export async function getServerSideProps({
-  params,
-}: GetServerSidePropsContext<{ route: string }>) {
+export async function getServerSideProps({ params }: GetServerSidePropsContext<{ route: string }>) {
   return {
     props: { route: params?.route as string },
   };

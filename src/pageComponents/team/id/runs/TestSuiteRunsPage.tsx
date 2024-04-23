@@ -5,25 +5,15 @@ import { TestsAndExecutions } from "@/pageComponents/team/id/runs/TestsAndExecut
 import { useContext } from "react";
 
 export function TestSuiteRunsPage() {
-  const {
-    selectedTestId,
-    selectedTestRunId,
-    selectTest,
-    selectTestRun,
-    testRuns,
-  } = useContext(RunsViewContext);
+  const { selectedTestId, selectedTestRunId, selectTest, selectTestRun, testRuns } =
+    useContext(RunsViewContext);
 
-  const selectedTestRun = testRuns?.find(
-    (testRun) => testRun.id === selectedTestRunId
-  );
+  const selectedTestRun = testRuns?.find(testRun => testRun.id === selectedTestRunId);
 
   return (
     <div className="flex flex-col md:flex-row gap-2 p-2 overflow-auto overflow-hidden h-full">
       <div className="bg-slate-800 text-white p-2 rounded basis-6/12 md:basis-4/12 overflow-auto flex flex-col gap-2 relative">
-        <TestRuns
-          selectedTestRunId={selectedTestRunId}
-          selectTestRun={selectTestRun}
-        />
+        <TestRuns selectedTestRunId={selectedTestRunId} selectTestRun={selectTestRun} />
       </div>
       <div className="bg-slate-800 text-white p-2 rounded basis-6/12 md:basis-4/12 overflow-auto flex flex-col gap-2 relative">
         {selectedTestRun != null ? (

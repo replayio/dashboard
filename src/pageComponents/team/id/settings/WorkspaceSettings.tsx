@@ -31,10 +31,7 @@ export function WorkspaceSettings({
     }
     case "members": {
       content = (
-        <TeamMembers
-          workspaceId={workspace.id}
-          invitationCode={workspace.invitationCode}
-        />
+        <TeamMembers workspaceId={workspace.id} invitationCode={workspace.invitationCode} />
       );
       break;
     }
@@ -44,9 +41,5 @@ export function WorkspaceSettings({
     }
   }
 
-  return (
-    <div className="h-full w-full overflow-auto bg-slate-800 p-2 rounded">
-      {content}
-    </div>
-  );
+  return <div className="h-full w-full overflow-auto bg-slate-800 p-2 rounded">{content}</div>;
 }

@@ -38,7 +38,7 @@ export default function TestRuns({
             <DropDownMenu
               data-test-id="TestRuns-RunStatusFilter"
               disabled={isPending}
-              onChange={(runsStatus) => updateFilters({ runsStatus })}
+              onChange={runsStatus => updateFilters({ runsStatus })}
               options={RUN_STATUS_FILTERS}
               value={runsStatus}
             />
@@ -47,7 +47,7 @@ export default function TestRuns({
             <DropDownMenu
               data-test-id="TestRuns-DateRangeFilter"
               disabled={isPending}
-              onChange={(runsDateRange) => updateFilters({ runsDateRange })}
+              onChange={runsDateRange => updateFilters({ runsDateRange })}
               options={DATE_RANGE_FILTERS}
               value={runsDateRange}
             />
@@ -56,7 +56,7 @@ export default function TestRuns({
             <DropDownMenu
               data-test-id="TestRuns-BranchFilter"
               disabled={isPending}
-              onChange={(runsBranch) => updateFilters({ runsBranch })}
+              onChange={runsBranch => updateFilters({ runsBranch })}
               options={BRANCH_FILTERS}
               value={runsBranch}
             />
@@ -66,14 +66,14 @@ export default function TestRuns({
           data-test-id="TestRuns-TextFilter"
           defaultValue={runsFilterText}
           name="testRunFilter"
-          onConfirm={(runsFilterText) => updateFilters({ runsFilterText })}
+          onConfirm={runsFilterText => updateFilters({ runsFilterText })}
           placeholder="Filter test runs"
           type="text"
         />
       </div>
       {testRuns != null ? <TestRunStatsGraph testRuns={testRuns} /> : null}
       <div className="overflow-y-auto -mx-2">
-        {testRuns?.map((testRun) => (
+        {testRuns?.map(testRun => (
           <TestRunRow
             currentTestRunId={selectedTestRunId}
             key={testRun.id}

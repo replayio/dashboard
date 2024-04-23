@@ -10,10 +10,7 @@ export function useRemoveUserFromWorkspace(onCompleted?: () => void) {
     error,
     isLoading,
     mutate: RemoveUserFromWorkspaceMutation,
-  } = useGraphQLMutation<
-    RemoveUserFromWorkspaceMutation,
-    RemoveUserFromWorkspaceMutationVariables
-  >(
+  } = useGraphQLMutation<RemoveUserFromWorkspaceMutation, RemoveUserFromWorkspaceMutationVariables>(
     gql`
       mutation RemoveUserFromWorkspace($membershipId: ID!) {
         removeWorkspaceMember(input: { id: $membershipId }) {

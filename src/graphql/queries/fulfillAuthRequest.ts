@@ -13,11 +13,7 @@ export async function fulfillAuthRequest(id: string, token: string) {
     // TODO Support e2e test mock mutations
     mockGraphQLData: null,
     query: gql`
-      mutation FulfillAuthRequest(
-        $secret: String!
-        $id: String!
-        $token: String!
-      ) {
+      mutation FulfillAuthRequest($secret: String!, $id: String!, $token: String!) {
         fulfillAuthRequest(input: { secret: $secret, id: $id, token: $token }) {
           success
           source

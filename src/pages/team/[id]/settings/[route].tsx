@@ -25,11 +25,7 @@ export default function Page({
 
   return (
     <div className="w-full h-full p-2">
-      <WorkspaceSettings
-        route={route}
-        stripeKey={stripeKey}
-        workspace={workspace}
-      />
+      <WorkspaceSettings route={route} stripeKey={stripeKey} workspace={workspace} />
     </div>
   );
 }

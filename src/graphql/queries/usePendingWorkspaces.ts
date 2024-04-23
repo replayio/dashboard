@@ -5,28 +5,26 @@ import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
 export function usePendingWorkspaces() {
-  const { data, error, isLoading } = useGraphQLQuery<GetPendingWorkspacesQuery>(
-    gql`
-      query GetPendingWorkspaces {
-        viewer {
-          workspaceInvitations {
-            edges {
-              node {
-                workspace {
-                  id
-                  name
-                  recordingCount
-                  isOrganization
-                  isTest
-                }
-                inviterEmail
+  const { data, error, isLoading } = useGraphQLQuery<GetPendingWorkspacesQuery>(gql`
+    query GetPendingWorkspaces {
+      viewer {
+        workspaceInvitations {
+          edges {
+            node {
+              workspace {
+                id
+                name
+                recordingCount
+                isOrganization
+                isTest
               }
+              inviterEmail
             }
           }
         }
       }
-    `
-  );
+    }
+  `);
 
   const workspaces = useMemo<PendingWorkspace[] | undefined>(() => {
     if (data) {

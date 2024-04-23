@@ -2,14 +2,11 @@ import cookie, { CookieSerializeOptions } from "cookie";
 import { NextResponse } from "next/server";
 
 export function deleteCookieValueClient(name: string) {
-  document.cookie =
-    name + "=; expires=-1; Max-Age=-99999999; path=/; SameSite=Lax";
+  document.cookie = name + "=; expires=-1; Max-Age=-99999999; path=/; SameSite=Lax";
 }
 
 export function getCookieValueClient<Type = string>(name: string): Type | null {
-  const value =
-    document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() ??
-    null;
+  const value = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() ?? null;
   return value !== null ? (JSON.parse(value) as Type) : null;
 }
 

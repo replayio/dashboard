@@ -12,7 +12,7 @@ export function TestRunErrors({ test }: { test: TestSuiteTest }) {
   const uniqueErrors = useMemo(() => {
     const errors =
       test.errors?.reduce((acc, e) => {
-        const existingError = acc.find((a) => a.message === e);
+        const existingError = acc.find(a => a.message === e);
 
         if (existingError) {
           existingError.count += 1;
@@ -32,10 +32,7 @@ export function TestRunErrors({ test }: { test: TestSuiteTest }) {
   }
 
   return (
-    <div
-      className="bg-slate-900 text-white p-2 rounded"
-      data-test-id="TestExecution-Errors"
-    >
+    <div className="bg-slate-900 text-white p-2 rounded" data-test-id="TestExecution-Errors">
       <ExpandableSection label="Errors">
         <div className="flex flex-col gap-2">
           {uniqueErrors?.map((error, index) => (

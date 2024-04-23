@@ -31,13 +31,9 @@ test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
   await expect(testRunRows).toHaveCount(0);
   await testRunsRows.first().click();
   await expect(testRunRows).not.toHaveCount(0);
-  await expect(
-    page.locator('[data-test-id="TestExecution-Recordings"]')
-  ).not.toBeVisible();
+  await expect(page.locator('[data-test-id="TestExecution-Recordings"]')).not.toBeVisible();
   await testRunRows.first().click();
-  await expect(
-    page.locator('[data-test-id="TestExecution-Recordings"]')
-  ).toBeVisible();
+  await expect(page.locator('[data-test-id="TestExecution-Recordings"]')).toBeVisible();
 
   // Should filter tests by text
   await expect(testRunRows).not.toHaveCount(0);
@@ -48,16 +44,12 @@ test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
 
   // It's difficult to test drop-down filters because content is dynamic
   // but we can test that their most recent state is remembered after reloading the page
-  await expect(await getContextMenuText(page, "TestRun-StatusFilter")).toBe(
-    "All runs"
-  );
+  await expect(await getContextMenuText(page, "TestRun-StatusFilter")).toBe("All runs");
   await openContextMenu(page, "TestRun-StatusFilter");
   await getContextMenuItem(page, "Failed and flaky").click();
   await page.reload();
   await testRunsRows.first().click();
-  await expect(await getContextMenuText(page, "TestRun-StatusFilter")).toBe(
-    "Failed and flaky"
-  );
+  await expect(await getContextMenuText(page, "TestRun-StatusFilter")).toBe("Failed and flaky");
 
   // Should filter test runs by text
   await expect(testRunsRows).not.toHaveCount(0);
@@ -68,15 +60,9 @@ test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
 
   // It's difficult to test drop-down filters because content is dynamic
   // but we can test that their most recent state is remembered after reloading the page
-  await expect(await getContextMenuText(page, "TestRuns-RunStatusFilter")).toBe(
-    "All runs"
-  );
-  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe(
-    "Last 7 days"
-  );
-  await expect(await getContextMenuText(page, "TestRuns-BranchFilter")).toBe(
-    "All branches"
-  );
+  await expect(await getContextMenuText(page, "TestRuns-RunStatusFilter")).toBe("All runs");
+  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe("Last 7 days");
+  await expect(await getContextMenuText(page, "TestRuns-BranchFilter")).toBe("All branches");
   await openContextMenu(page, "TestRuns-RunStatusFilter");
   await getContextMenuItem(page, "Only failures").click();
   await openContextMenu(page, "TestRuns-DateRangeFilter");
@@ -84,15 +70,9 @@ test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
   await openContextMenu(page, "TestRuns-BranchFilter");
   await getContextMenuItem(page, "Only primary branch").click();
   await page.reload();
-  await expect(await getContextMenuText(page, "TestRuns-RunStatusFilter")).toBe(
-    "Only failures"
-  );
-  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe(
-    "Last day"
-  );
-  await expect(await getContextMenuText(page, "TestRuns-BranchFilter")).toBe(
-    "Only primary branch"
-  );
+  await expect(await getContextMenuText(page, "TestRuns-RunStatusFilter")).toBe("Only failures");
+  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe("Last day");
+  await expect(await getContextMenuText(page, "TestRuns-BranchFilter")).toBe("Only primary branch");
 });
 
 const mockGraphQLData: MockGraphQLData = {
@@ -114,20 +94,14 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [
-        partialToTestSuiteTestRecording(),
-        partialToTestSuiteTestRecording(),
-      ],
+      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
       sourcePath: undefined,
       status: "flaky",
       title: "Fourth test",
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [
-        partialToTestSuiteTestRecording(),
-        partialToTestSuiteTestRecording(),
-      ],
+      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
       sourcePath: undefined,
       status: "flaky",
       title: "Fifth test",
@@ -145,10 +119,7 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [
-        partialToTestSuiteTestRecording(),
-        partialToTestSuiteTestRecording(),
-      ],
+      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
       sourcePath: undefined,
       status: "flaky",
       title: "Eighth test",

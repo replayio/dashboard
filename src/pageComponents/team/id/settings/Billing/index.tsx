@@ -7,13 +7,7 @@ import {
 import { BillingPriceDetails } from "@/pageComponents/team/id/settings/Billing/BillingPricingDetails";
 import { useContext } from "react";
 
-export function Billing({
-  stripeKey,
-  workspaceId,
-}: {
-  stripeKey: string;
-  workspaceId: string;
-}) {
+export function Billing({ stripeKey, workspaceId }: { stripeKey: string; workspaceId: string }) {
   return (
     <BillingContextRoot stripeKey={stripeKey} workspaceId={workspaceId}>
       <BillingWithData />

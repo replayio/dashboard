@@ -21,10 +21,7 @@ function Tooltip({ children, className, forwardedRef, style }: TooltipProps) {
   );
 }
 
-function TooltipRefForwarder(
-  props: TooltipProps,
-  ref: ForwardedRef<HTMLDivElement>
-) {
+function TooltipRefForwarder(props: TooltipProps, ref: ForwardedRef<HTMLDivElement>) {
   return <Tooltip forwardedRef={ref} {...props} />;
 }
 

@@ -25,7 +25,7 @@ function expectToContainText(tooltip: ReactNode, ...expectedTexts: string[]) {
     root.render(tooltip);
   });
 
-  expectedTexts.forEach((expectedText) => {
+  expectedTexts.forEach(expectedText => {
     expect(container.textContent).toContain(expectedText);
   });
 }

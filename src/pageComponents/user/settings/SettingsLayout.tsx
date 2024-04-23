@@ -3,7 +3,5 @@ import { SettingsNavComponent } from "@/pageComponents/user/settings/SettingsNav
 import { PropsWithChildren } from "react";
 
 export function SettingsLayout({ children }: PropsWithChildren) {
-  return (
-    <TeamLayout NavComponent={SettingsNavComponent}>{children}</TeamLayout>
-  );
+  return <TeamLayout NavComponent={SettingsNavComponent}>{children}</TeamLayout>;
 }

@@ -22,14 +22,8 @@ export function TestRunTests({
   selectedTestRun: TestRun;
   selectTest: (id: string) => void;
 }) {
-  const {
-    isLoadingTests,
-    isPending,
-    testsFilterText,
-    testsStatus,
-    tests,
-    updateFilters,
-  } = useContext(RunsViewContext);
+  const { isLoadingTests, isPending, testsFilterText, testsStatus, tests, updateFilters } =
+    useContext(RunsViewContext);
 
   const categorizedTests = useMemo(() => {
     const categorizedTests = {
@@ -53,7 +47,7 @@ export function TestRunTests({
       },
     };
 
-    tests?.forEach((test) => {
+    tests?.forEach(test => {
       switch (test.status) {
         case "failed": {
           categorizedTests.failed.tests.push(test);
@@ -73,7 +67,7 @@ export function TestRunTests({
   }, [selectedTestRun, tests]);
 
   let durationMs = 0;
-  tests?.forEach((test) => {
+  tests?.forEach(test => {
     durationMs += test.durationMs;
   });
 
@@ -86,25 +80,19 @@ export function TestRunTests({
             <DropDownMenu
               data-test-id="TestRun-StatusFilter"
               disabled={isPending}
-              onChange={(testsStatus) => updateFilters({ testsStatus })}
+              onChange={testsStatus => updateFilters({ testsStatus })}
               options={TEST_STATUS}
               value={testsStatus}
             />
           </div>
-          <TestStatusCapsule
-            count={selectedTestRun.numFailed}
-            status="failed"
-          />
+          <TestStatusCapsule count={selectedTestRun.numFailed} status="failed" />
           <TestStatusCapsule count={selectedTestRun.numFlaky} status="flaky" />
-          <TestStatusCapsule
-            count={selectedTestRun.numPassed}
-            status="passed"
-          />
+          <TestStatusCapsule count={selectedTestRun.numPassed} status="passed" />
         </div>
         <Input
           data-test-id="TestRun-TextFilter"
           defaultValue={testsFilterText}
-          onConfirm={(testsFilterText) => updateFilters({ testsFilterText })}
+          onConfirm={testsFilterText => updateFilters({ testsFilterText })}
           placeholder="Filter tests"
           type="text"
         />
@@ -114,10 +102,7 @@ export function TestRunTests({
         className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded"
         data-test-id="TestRunTests-Metadata"
       >
-        <div
-          className="flex flex-row items-center gap-1"
-          suppressHydrationWarning
-        >
+        <div className="flex flex-row items-center gap-1" suppressHydrationWarning>
           <Icon className="w-4 h-4" type="clock" />
           {formatRelativeTime(selectedTestRun.date)}
         </div>
@@ -131,11 +116,7 @@ export function TestRunTests({
           <div className="flex flex-row items-center gap-1">
             <Icon
               className="w-4 h-4"
-              type={
-                selectedTestRun.isPrimaryBranch
-                  ? "primary-branch"
-                  : "secondary-branch"
-              }
+              type={selectedTestRun.isPrimaryBranch ? "primary-branch" : "secondary-branch"}
             />
             {selectedTestRun.branchName}
           </div>
@@ -181,15 +162,12 @@ export function TestRunTests({
                     className={`font-bold mx-2 ${color}`}
                     data-test-name="TestRunTests-Section-Header"
                   >
-                    {count === 1
-                      ? `1 ${label} test`
-                      : `${count} ${label} tests`}
+                    {count === 1 ? `1 ${label} test` : `${count} ${label} tests`}
                   </div>
                 }
                 openByDefault={
                   label !== "Passed" ||
-                  (selectedTestId != null &&
-                    tests.find((test) => test.id === selectedTestId) != null)
+                  (selectedTestId != null && tests.find(test => test.id === selectedTestId) != null)
                 }
               >
                 {tests.map((test, index) => (

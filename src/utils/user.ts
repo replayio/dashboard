@@ -8,10 +8,7 @@ export function canDeleteRecording(
   if (userId == recording.owner?.id) {
     return true;
   } else {
-    if (
-      recording.workspaceId &&
-      workspaces.find(({ id }) => id === recording.workspaceId)
-    ) {
+    if (recording.workspaceId && workspaces.find(({ id }) => id === recording.workspaceId)) {
       return true;
     }
   }

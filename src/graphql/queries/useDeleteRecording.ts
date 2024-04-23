@@ -10,10 +10,7 @@ export function useDeleteRecording(onCompleted: () => void) {
     error,
     isLoading,
     mutate: deleteRecordingMutation,
-  } = useGraphQLMutation<
-    DeleteRecordingMutation,
-    DeleteRecordingMutationVariables
-  >(
+  } = useGraphQLMutation<DeleteRecordingMutation, DeleteRecordingMutationVariables>(
     gql`
       mutation DeleteRecording($recordingId: ID!) {
         deleteRecording(input: { id: $recordingId }) {

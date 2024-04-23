@@ -17,7 +17,7 @@ export function mockGetWorkspaceTests(
       id: workspaceId,
       tests: {
         __typename: "TestsConnection",
-        edges: partials.map((partial) => {
+        edges: partials.map(partial => {
           const {
             id = getUID("test-summary-id"),
             scope = [],

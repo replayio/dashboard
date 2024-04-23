@@ -31,7 +31,5 @@ export function getRecordingTarget(buildId: string): RecordingTarget {
 export function getURL(id: string, buildId: string) {
   const target = getRecordingTarget(buildId);
 
-  return target === "chromium"
-    ? `/recording/${id}`
-    : `https://legacy.replay.io/recording/${id}`;
+  return target === "chromium" ? `/recording/${id}` : `https://legacy.replay.io/recording/${id}`;
 }

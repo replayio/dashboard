@@ -244,12 +244,7 @@ export function Icon({
   }
 
   return (
-    <svg
-      className={className}
-      fill="currentColor"
-      viewBox="0 0 24 24"
-      {...rest}
-    >
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" {...rest}>
       <path d="M0 0h24v24H0z" fill="none" />
       {path}
     </svg>

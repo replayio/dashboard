@@ -17,7 +17,7 @@ export default handleAuth({
         connection: getValueFromArrayOrString(req.query.connection),
         redirect_uri: `${origin}/api/auth/callback`,
       },
-      returnTo
+      returnTo,
     });
   },
 
@@ -34,7 +34,9 @@ export default handleAuth({
       });
       res.redirect(`/browser/error?${searchParams.toString()}`);
     } else {
-      return handleCallback(req, res, { redirectUri: req.cookies[COOKIES.authReturnTo] });
+      return handleCallback(req, res, {
+        redirectUri: req.cookies[COOKIES.authReturnTo],
+      });
     }
   },
 });
@@ -58,6 +60,6 @@ function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse) {
       sameSite: "lax",
     })
   );
-  
+
   return { origin, returnTo };
 }

@@ -12,13 +12,7 @@ import { useContext, useEffect, useState } from "react";
 
 const defaultConnection = "google-oauth2";
 
-function DefaultLogin({
-  onLogin,
-  onSSOLogin,
-}: {
-  onLogin: () => void;
-  onSSOLogin: () => void;
-}) {
+function DefaultLogin({ onLogin, onSSOLogin }: { onLogin: () => void; onSSOLogin: () => void }) {
   return (
     <Message className="max-w-96 p-8 gap-8 text-center">
       <LoginMessaging />
@@ -41,8 +35,7 @@ function LoginMessaging() {
     <>
       <ReplayLogo className="text-white min-w-20 min-h-20" />
       <div>
-        Replay captures everything you need for the perfect bug report, all in
-        one link.
+        Replay captures everything you need for the perfect bug report, all in one link.
         <br />
         <ExternalLink className="text-sm mt-2" href="https://www.replay.io">
           Learn more
@@ -92,17 +85,13 @@ function SSOLogin({ onLogin }: { onLogin: (connection: string) => void }) {
           placeholder="user@company.com"
           value={email}
           onConfirm={onSSOLogin}
-          onChange={(value) => setEmail(value)}
+          onChange={value => setEmail(value)}
         />
         <Button onClick={onSSOLogin} size="large">
           Sign in
         </Button>
       </div>
-      <Button
-        onClick={() => onLogin(defaultConnection)}
-        size="large"
-        variant="outline"
-      >
+      <Button onClick={() => onLogin(defaultConnection)} size="large" variant="outline">
         Sign in with Google
       </Button>
     </Message>
@@ -172,11 +161,7 @@ export default function Page() {
     return (
       <SwitchAccountMessage
         name={user.name}
-        label={
-          returnTo === "/"
-            ? "Continue to Library"
-            : "Continue with this account"
-        }
+        label={returnTo === "/" ? "Continue to Library" : "Continue with this account"}
         onContinue={() => router.push(returnTo)}
         onSwitch={() => setSwitchAccount(true)}
       />

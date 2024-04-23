@@ -1,13 +1,7 @@
 import { copyText } from "@/utils/copy";
 import { ReactNode } from "react";
 
-export function ClickToCopyString({
-  header,
-  value,
-}: {
-  header?: ReactNode;
-  value: string;
-}) {
+export function ClickToCopyString({ header, value }: { header?: ReactNode; value: string }) {
   const onClick = () => {
     copyText(value);
   };

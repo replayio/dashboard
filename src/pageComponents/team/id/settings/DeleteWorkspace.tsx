@@ -23,19 +23,13 @@ export function DeleteWorkspace({ workspaceId }: { workspaceId: string }) {
 
     return (
       <div className="flex flex-col gap-4" key="confirmation">
-        <div className="text-rose-500 font-bold">
-          This action cannot be undone.
-        </div>
+        <div className="text-rose-500 font-bold">This action cannot be undone.</div>
         <div>
-          This will permanently delete this repository and delete all of the
-          replays, api-keys, sourcemaps and remove all team member associations.
+          This will permanently delete this repository and delete all of the replays, api-keys,
+          sourcemaps and remove all team member associations.
         </div>
         <div className="flex flex-row items-center gap-2 text-rose-400 font-bold">
-          <Button
-            disabled={isPending}
-            variant="outline"
-            onClick={() => setShowConfirmation(false)}
-          >
+          <Button disabled={isPending} variant="outline" onClick={() => setShowConfirmation(false)}>
             Cancel
           </Button>
           <Button disabled={isPending} color="secondary" onClick={handleDelete}>
@@ -49,8 +43,7 @@ export function DeleteWorkspace({ workspaceId }: { workspaceId: string }) {
       <div className="flex flex-col gap-4">
         <div>Are you sure you want to delete this team?</div>
         <div className="flex flex-row items-center gap-1 text-rose-500 font-bold">
-          This action cannot be undone{" "}
-          <Icon className="w-5 h-5" type="warning" />
+          This action cannot be undone <Icon className="w-5 h-5" type="warning" />
         </div>
         <div>
           <Button color="secondary" onClick={() => setShowConfirmation(true)}>

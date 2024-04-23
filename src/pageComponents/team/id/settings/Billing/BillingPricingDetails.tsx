@@ -43,11 +43,7 @@ export function BillingPriceDetails() {
   }
 }
 
-function SubscriptionDefaultView({
-  subscription,
-}: {
-  subscription: WorkspaceSubscription;
-}) {
+function SubscriptionDefaultView({ subscription }: { subscription: WorkspaceSubscription }) {
   return (
     <div className="flex flex-col gap-2 h-full">
       <PricingDetailsPanel subscription={subscription} />
@@ -55,18 +51,13 @@ function SubscriptionDefaultView({
   );
 }
 
-function SubscriptionStatusCanceled({
-  subscription,
-}: {
-  subscription: WorkspaceSubscription;
-}) {
+function SubscriptionStatusCanceled({ subscription }: { subscription: WorkspaceSubscription }) {
   const { setView, workspace, workspaceId } = useContext(BillingContext);
   assert(workspace);
 
   const { activateWorkspaceSubscription } = useActivateWorkspaceSubscription();
 
-  const isPast =
-    Date.now() - new Date(subscription.effectiveUntil!).getTime() > 0;
+  const isPast = Date.now() - new Date(subscription.effectiveUntil!).getTime() > 0;
 
   const onClick = async () => {
     if (workspace.hasPaymentMethod) {
@@ -98,15 +89,11 @@ function SubscriptionStatusCanceled({
           <button
             className="text-black underline"
             data-test-id={
-              workspace.hasPaymentMethod
-                ? "ResumeSubscriptionLink"
-                : "AddPaymentMethodLink"
+              workspace.hasPaymentMethod ? "ResumeSubscriptionLink" : "AddPaymentMethodLink"
             }
             onClick={onClick}
           >
-            {workspace.hasPaymentMethod
-              ? "Resume Subscription"
-              : "Add payment method"}
+            {workspace.hasPaymentMethod ? "Resume Subscription" : "Add payment method"}
           </button>
         </div>
       )}
@@ -115,11 +102,7 @@ function SubscriptionStatusCanceled({
   );
 }
 
-function SubscriptionStatusTrialing({
-  subscription,
-}: {
-  subscription: WorkspaceSubscription;
-}) {
+function SubscriptionStatusTrialing({ subscription }: { subscription: WorkspaceSubscription }) {
   const { setView, workspace } = useContext(BillingContext);
 
   assert(workspace);
@@ -134,10 +117,8 @@ function SubscriptionStatusTrialing({
         Trial ends {formatRelativeDate(subscription.trialEnds)}
       </div>
       <div>
-        Existing replays will continue to be debuggable. New replays will
-        require an active subscription.{" "}
-        <a href="mailto:support@replay.io">Email us</a> if you have any
-        questions.
+        Existing replays will continue to be debuggable. New replays will require an active
+        subscription. <a href="mailto:support@replay.io">Email us</a> if you have any questions.
       </div>
       <PricingDetailsPanel subscription={subscription} />
       {workspace.hasPaymentMethod || (
@@ -157,11 +138,7 @@ function SubscriptionStatusTrialing({
   );
 }
 
-function PricingDetailsPanel({
-  subscription,
-}: {
-  subscription: WorkspaceSubscription;
-}) {
+function PricingDetailsPanel({ subscription }: { subscription: WorkspaceSubscription }) {
   const { refreshSubscription, workspaceId } = useContext(BillingContext);
 
   const { removePaymentMethod } = useRemovePaymentMethod();
@@ -182,15 +159,14 @@ function PricingDetailsPanel({
       message: (
         <div className="flex flex-col gap-2">
           <div>
-            Removing a payment method will prevent any future charges for this
-            subscription. You will need to a new payment method to continue your
-            subscription beyond the current billing cycle.
+            Removing a payment method will prevent any future charges for this subscription. You
+            will need to a new payment method to continue your subscription beyond the current
+            billing cycle.
           </div>
           {paymentMethod && (
             <div>
-              Are you sure you want to remove the{" "}
-              {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
-              {paymentMethod.card.last4}?
+              Are you sure you want to remove the {cardToDisplayName(paymentMethod.card.brand)}{" "}
+              ending with {paymentMethod.card.last4}?
             </div>
           )}
         </div>
@@ -199,9 +175,7 @@ function PricingDetailsPanel({
     }
   );
 
-  const pricingDetails = subscription
-    ? pricingDetailsForSubscription(subscription)
-    : null;
+  const pricingDetails = subscription ? pricingDetailsForSubscription(subscription) : null;
 
   let effectiveUntilLabel = "Renewal date";
   switch (subscription.status) {
@@ -224,8 +198,8 @@ function PricingDetailsPanel({
         >
           <Icon className="w-4 h-4" type="warning" />
           <div className="truncate">
-            You&apos;re currently on a beta plan offered at no cost. We&apos;ll
-            inform you of any updates or changes.
+            You&apos;re currently on a beta plan offered at no cost. We&apos;ll inform you of any
+            updates or changes.
           </div>
         </div>
       )}
@@ -236,16 +210,12 @@ function PricingDetailsPanel({
         <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
           <div className="grow">{effectiveUntilLabel}</div>
           <div>
-            {subscription?.effectiveUntil
-              ? format(subscription?.effectiveUntil, "MMM d, y")
-              : ""}
+            {subscription?.effectiveUntil ? format(subscription?.effectiveUntil, "MMM d, y") : ""}
           </div>
         </div>
         <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
           <div className="grow">Renewal schedule</div>
-          <div className="capitalize">
-            {pricingDetails?.billingSchedule ?? "monthly"}
-          </div>
+          <div className="capitalize">{pricingDetails?.billingSchedule ?? "monthly"}</div>
         </div>
         {isPlanPricingPerSeat(subscription) && (
           <>
@@ -256,18 +226,14 @@ function PricingDetailsPanel({
             <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
               <div className="grow">Cost per seat</div>
               <div>
-                {pricingDetails?.seatPrice != null
-                  ? formatCurrency(pricingDetails.seatPrice)
-                  : ""}
+                {pricingDetails?.seatPrice != null ? formatCurrency(pricingDetails.seatPrice) : ""}
               </div>
             </div>
           </>
         )}
         <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
           <div className="grow">Monthly charge</div>
-          <div>
-            {formatCurrency(calculateMonthlyCost(subscription, pricingDetails))}
-          </div>
+          <div>{formatCurrency(calculateMonthlyCost(subscription, pricingDetails))}</div>
         </div>
         {paymentMethod && (
           <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
@@ -278,8 +244,7 @@ function PricingDetailsPanel({
                 data-test-id="RemovePaymentMethodButton"
                 onClick={showConfirmationDialog}
               >
-                {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
-                {paymentMethod.card.last4}
+                {cardToDisplayName(paymentMethod.card.brand)} ending with {paymentMethod.card.last4}
               </button>
             </div>
 

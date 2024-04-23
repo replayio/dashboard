@@ -23,9 +23,7 @@ export function CreateNewKey({
     return (
       <>
         <div className="text-yellow-300 font-bold">Copy your API key now.</div>
-        <div className="text-yellow-300">
-          This is the only time it will be shown.
-        </div>
+        <div className="text-yellow-300">This is the only time it will be shown.</div>
         <ClickToCopyString value={keyValue} />
       </>
     );
@@ -57,7 +55,7 @@ export function CreateNewKey({
           <Input
             autoFocus
             disabled={isPending}
-            onChange={(label) => setLabel(label)}
+            onChange={label => setLabel(label)}
             onConfirm={onConfirm}
             name="apiKeyLabel"
             placeholder="API key label"
@@ -73,7 +71,7 @@ export function CreateNewKey({
               <Checkbox
                 checked={admin}
                 label="Create recordings"
-                onChange={(newChecked) => setAdmin(newChecked)}
+                onChange={newChecked => setAdmin(newChecked)}
               />
             )}
 
@@ -81,7 +79,7 @@ export function CreateNewKey({
               <Checkbox
                 checked={writeSourcemaps}
                 label="Upload source maps"
-                onChange={(newChecked) => setWriteSourcemaps(newChecked)}
+                onChange={newChecked => setWriteSourcemaps(newChecked)}
               />
             )}
           </div>

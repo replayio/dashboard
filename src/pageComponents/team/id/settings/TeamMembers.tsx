@@ -36,7 +36,7 @@ export function TeamMembers({
     members
       .slice()
       .sort((a, b) => a.name.localeCompare(b.name))
-      .forEach((member) => {
+      .forEach(member => {
         const primaryRole = getPrimaryRole(member.roles);
 
         let members = categories[primaryRole];

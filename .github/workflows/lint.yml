@@ -1,0 +1,38 @@
+name: Lint
+on:
+  push:
+    branches: main
+  pull_request:
+jobs:
+  trunk_check_runner:
+    name: Trunk Check runner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install (and cache) PNPM dependencies
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - name: Install dependencies
+        run: pnpm install
+
+      # Run commands
+      - name: Run Lint command
+        run: pnpm run lint
+
+      - name: Check formatting
+        run: pnpm run prettier:ci

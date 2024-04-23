@@ -1,7 +1,4 @@
-import {
-  GetWorkspaceQuery,
-  GetWorkspaceQueryVariables,
-} from "@/graphql/generated/graphql";
+import { GetWorkspaceQuery, GetWorkspaceQueryVariables } from "@/graphql/generated/graphql";
 import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { gql } from "@apollo/client";
 import assert from "assert";
@@ -24,10 +21,7 @@ export async function getWorkspace(
 ): Promise<{ id: string; isOrganization: boolean; isTest: boolean }> {
   const graphQLClient = getGraphQLClient(accessToken);
 
-  const response = await graphQLClient.query<
-    GetWorkspaceQuery,
-    GetWorkspaceQueryVariables
-  >({
+  const response = await graphQLClient.query<GetWorkspaceQuery, GetWorkspaceQueryVariables>({
     query: QUERY,
     variables: { workspaceId },
   });

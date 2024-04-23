@@ -12,9 +12,7 @@ export function SettingsNav({
   return (
     <LeftNav
       backLink={{
-        href: workspace.isTest
-          ? `/team/${workspace.id}/runs`
-          : `/team/${workspace.id}/recordings`,
+        href: workspace.isTest ? `/team/${workspace.id}/runs` : `/team/${workspace.id}/recordings`,
         label: `${workspace.name}: Settings`,
       }}
     >

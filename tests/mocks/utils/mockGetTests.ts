@@ -17,7 +17,7 @@ export function mockGetTests(
             __typename: "TestRunEdge",
             node: {
               __typename: "TestRun",
-              tests: tests.map((test) => ({
+              tests: tests.map(test => ({
                 __typename: "TestRunTest",
                 testId: test.id,
                 title: test.title,
@@ -36,10 +36,7 @@ export function mockGetTests(
                       result = "failed";
                       break;
                     case "flaky":
-                      result =
-                        index === test.recordings.length - 1
-                          ? "passed"
-                          : "failed";
+                      result = index === test.recordings.length - 1 ? "passed" : "failed";
                       break;
                   }
 

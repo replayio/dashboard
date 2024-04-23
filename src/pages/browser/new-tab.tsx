@@ -18,18 +18,15 @@ export default function Page({
         <>
           <div className="font-bold">Replay on Windows is in beta</div>
           <div className="text-sm">
-            We are hoping to release a new Chrome-based browser in a couple of
-            months which will be more reliable. Please{" "}
-            <ExternalLink href="https://www.replay.io/contact">
-              contact us
-            </ExternalLink>{" "}
-            with any feedback.
+            We are hoping to release a new Chrome-based browser in a couple of months which will be
+            more reliable. Please{" "}
+            <ExternalLink href="https://www.replay.io/contact">contact us</ExternalLink> with any
+            feedback.
           </div>
         </>
       ) : (
         <div>
-          Please navigate to the page you want to record, then press the blue
-          record button.
+          Please navigate to the page you want to record, then press the blue record button.
         </div>
       )}
     </div>

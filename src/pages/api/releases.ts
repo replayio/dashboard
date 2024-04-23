@@ -11,10 +11,7 @@ export type Release = {
   version: string | null;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const json = await fetchReleases();
   res.status(200).json(json);
 }

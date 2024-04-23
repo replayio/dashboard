@@ -29,9 +29,9 @@ export function Select<Type extends Option>({
           disabled ? "pointer-events-none" : "cursor-pointer"
         }`}
         disabled={disabled}
-        onChange={(event) => {
+        onChange={event => {
           const label = event.currentTarget.value;
-          const option = options.find((option) => option.label === label);
+          const option = options.find(option => option.label === label);
           assert(option);
           onChange(option);
         }}
@@ -44,9 +44,7 @@ export function Select<Type extends Option>({
         ))}
       </select>
       <DropDownTrigger
-        className={`pointer-events-none h-auto ${
-          !value?.label ? "text-slate-500" : "text-white"
-        }`}
+        className={`pointer-events-none h-auto ${!value?.label ? "text-slate-500" : "text-white"}`}
         disabled={disabled}
         label={value?.label ?? placeholder ?? ""}
         onClick={noop}

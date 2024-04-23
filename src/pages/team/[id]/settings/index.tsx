@@ -12,41 +12,27 @@ export default function Page() {
   return null;
 }
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ id: string }>
-) {
+export async function getServerSideProps(context: GetServerSidePropsContext<{ id: string }>) {
   const { params, req } = context;
 
   assert(params?.id != null, '"id" parameter is required');
 
-  const accessToken = getValueFromArrayOrString(
-    req?.headers?.[HEADERS.accessToken]
-  );
+  const accessToken = getValueFromArrayOrString(req?.headers?.[HEADERS.accessToken]);
   assert(accessToken != null, "accessToken is required");
 
-  const mockGraphQLDataString = getValueFromArrayOrString(
-    req?.headers?.[HEADERS.mockGraphQLData]
-  );
+  const mockGraphQLDataString = getValueFromArrayOrString(req?.headers?.[HEADERS.mockGraphQLData]);
   const mockGraphQLData = mockGraphQLDataString
     ? (JSON.parse(mockGraphQLDataString) as MockGraphQLData)
     : null;
 
   const workspaceId = params.id;
-  const status = await getWorkspaceSubscriptionStatus(
-    workspaceId,
-    accessToken,
-    mockGraphQLData
-  );
+  const status = await getWorkspaceSubscriptionStatus(workspaceId, accessToken, mockGraphQLData);
 
   // If the subscription is canceled, the default tab for workspace settings is billing
   // else the default tab for workspace settings is Team Members
   if (status === "canceled") {
     const user = await getCurrentUser(accessToken, mockGraphQLData);
-    const members = await getWorkplaceMemberRoles(
-      workspaceId,
-      accessToken,
-      mockGraphQLData
-    );
+    const members = await getWorkplaceMemberRoles(workspaceId, accessToken, mockGraphQLData);
     const member = members?.find(({ id }) => id === user?.id);
     const currentUserIsAdmin = member?.roles.includes("admin") == true;
     if (currentUserIsAdmin) {

@@ -2,11 +2,7 @@ import {
   GetWorkspaceSubscriptionQuery,
   GetWorkspaceSubscriptionQueryVariables,
 } from "@/graphql/generated/graphql";
-import {
-  PlanKey,
-  SubscriptionStatus,
-  WorkspaceSubscription,
-} from "@/graphql/types";
+import { PlanKey, SubscriptionStatus, WorkspaceSubscription } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import assert from "assert";
@@ -18,10 +14,7 @@ export function useWorkspaceSubscription(workspaceId: string) {
     error: didError,
     isLoading,
     refetch,
-  } = useGraphQLQuery<
-    GetWorkspaceSubscriptionQuery,
-    GetWorkspaceSubscriptionQueryVariables
-  >(
+  } = useGraphQLQuery<GetWorkspaceSubscriptionQuery, GetWorkspaceSubscriptionQueryVariables>(
     gql`
       query GetWorkspaceSubscription($workspaceId: ID!) {
         node(id: $workspaceId) {
@@ -72,7 +65,7 @@ export function useWorkspaceSubscription(workspaceId: string) {
         effectiveUntil: new Date(subscription.effectiveUntil),
         id: subscription.id,
         paymentMethods:
-          subscription.paymentMethods?.map((paymentMethod) => ({
+          subscription.paymentMethods?.map(paymentMethod => ({
             card: {
               brand: paymentMethod.card.brand,
               last4: paymentMethod.card.last4,
