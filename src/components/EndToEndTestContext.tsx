@@ -15,7 +15,7 @@ export function EndToEndTestContextProvider({
     () => ({
       mockGraphQLData: mockGraphQLData ? (JSON.parse(mockGraphQLData) as MockGraphQLData) : null,
     }),
-    [mockGraphQLData]
+    []
   );
 
   return <EndToEndTestContext.Provider value={value}>{children}</EndToEndTestContext.Provider>;
