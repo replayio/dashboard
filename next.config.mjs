@@ -1,4 +1,4 @@
-const devtoolsURL = process.env.DEVTOOLS_URL || "https://replay-devtools-new.vercel.app";
+const devtoolsURL = process.env.DEVTOOLS_URL || "https://replay-devtools.vercel.app";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
