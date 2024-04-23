@@ -1,3 +1,5 @@
 {
-    "typescript.enablePromptUseWorkspaceTsdk": false
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "typescript.enablePromptUseWorkspaceTsdk": false
 }

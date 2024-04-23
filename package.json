@@ -11,7 +11,7 @@
     "graphql-types": "graphql-codegen --config codegen.ts",
     "lint": "next lint",
     "prettier": "prettier . --write",
-    "prettier:ci": "prettier . --list-different",
+    "prettier:ci": "prettier . --check",
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
