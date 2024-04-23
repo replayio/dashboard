@@ -14,6 +14,7 @@ import {
   cardToDisplayName,
   pricingDetailsForSubscription,
 } from "@/utils/subscription";
+import { isPlanBeta, isPlanPricingPerSeat } from "@/utils/test-suites";
 import assert from "assert";
 import { format } from "date-fns/format";
 import { useContext, useState } from "react";
@@ -195,81 +196,99 @@ function PricingDetailsPanel({
   }
 
   return pricingDetails ? (
-    <div
-      className="flex flex-col gap-px rounded overflow-hidden"
-      data-test-id="PricingDetailsTable"
-    >
-      <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-        <div className="grow">{effectiveUntilLabel}</div>
-        <div>
-          {subscription?.effectiveUntil
-            ? format(subscription?.effectiveUntil, "MMM d, y")
-            : ""}
-        </div>
-      </div>
-      <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-        <div className="grow">Renewal schedule</div>
-        <div className="capitalize">
-          {pricingDetails?.billingSchedule ?? "monthly"}
-        </div>
-      </div>
-      <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-        <div className="grow">Number of seats</div>
-        <div>{subscription.seatCount}</div>
-      </div>
-      <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-        <div className="grow">Cost per seat</div>
-        <div>
-          {pricingDetails?.seatPrice != null
-            ? formatCurrency(pricingDetails.seatPrice)
-            : ""}
-        </div>
-      </div>
-      <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-        <div className="grow">Monthly charge</div>
-        <div>
-          {formatCurrency(calculateMonthlyCost(subscription, pricingDetails))}
-        </div>
-      </div>
-      {paymentMethod && (
-        <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-          <div className="grow">Payment method</div>
-          <div>
-            <button
-              className="text-sky-500 outline-0 hover:underline focus:underline"
-              data-test-id="RemovePaymentMethodButton"
-              onClick={() => setConfirmRemovePayment(true)}
-            >
-              {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
-              {paymentMethod.card.last4}
-            </button>
+    <div className="flex flex-col gap-2 h-full">
+      {isPlanBeta(subscription) && (
+        <div
+          className="bg-yellow-300 text-yellow-950 px-2 py-1 rounded flex flex-row items-center gap-1 truncate"
+          data-test-name="Header"
+        >
+          <Icon className="w-4 h-4" type="warning" />
+          <div className="truncate">
+            You&apos;re currently on a beta plan offered at no cost. We&apos;ll
+            inform you of any updates or changes.
           </div>
-
-          {confirmRemovePayment && (
-            <ConfirmationDialog
-              confirmButtonLabel="Remove payment method"
-              message={
-                <div className="flex flex-col gap-2">
-                  <div>
-                    Removing a payment method will prevent any future charges
-                    for this subscription. You will need to a new payment method
-                    to continue your subscription beyond the current billing
-                    cycle.
-                  </div>
-                  <div>
-                    Are you sure you want to remove the{" "}
-                    {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
-                    {paymentMethod.card.last4}?
-                  </div>
-                </div>
-              }
-              onCancel={() => setConfirmRemovePayment(false)}
-              onConfirm={removePaymentMethodConfirmed}
-              title="Remove payment method"
-            />
-          )}
         </div>
       )}
+      <div
+        className="flex flex-col gap-px rounded overflow-hidden"
+        data-test-id="PricingDetailsTable"
+      >
+        <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
+          <div className="grow">{effectiveUntilLabel}</div>
+          <div>
+            {subscription?.effectiveUntil
+              ? format(subscription?.effectiveUntil, "MMM d, y")
+              : ""}
+          </div>
+        </div>
+        <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
+          <div className="grow">Renewal schedule</div>
+          <div className="capitalize">
+            {pricingDetails?.billingSchedule ?? "monthly"}
+          </div>
+        </div>
+        {isPlanPricingPerSeat(subscription) && (
+          <>
+            <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
+              <div className="grow">Number of seats</div>
+              <div>{subscription.seatCount}</div>
+            </div>
+            <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
+              <div className="grow">Cost per seat</div>
+              <div>
+                {pricingDetails?.seatPrice != null
+                  ? formatCurrency(pricingDetails.seatPrice)
+                  : ""}
+              </div>
+            </div>
+          </>
+        )}
+        <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
+          <div className="grow">Monthly charge</div>
+          <div>
+            {formatCurrency(calculateMonthlyCost(subscription, pricingDetails))}
+          </div>
+        </div>
+        {paymentMethod && (
+          <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
+            <div className="grow">Payment method</div>
+            <div>
+              <button
+                className="text-sky-500 outline-0 hover:underline focus:underline"
+                data-test-id="RemovePaymentMethodButton"
+                onClick={() => setConfirmRemovePayment(true)}
+              >
+                {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
+                {paymentMethod.card.last4}
+              </button>
+            </div>
+
+            {confirmRemovePayment && (
+              <ConfirmationDialog
+                confirmButtonLabel="Remove payment method"
+                message={
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      Removing a payment method will prevent any future charges
+                      for this subscription. You will need to a new payment
+                      method to continue your subscription beyond the current
+                      billing cycle.
+                    </div>
+                    <div>
+                      Are you sure you want to remove the{" "}
+                      {cardToDisplayName(paymentMethod.card.brand)} ending with{" "}
+                      {paymentMethod.card.last4}?
+                    </div>
+                  </div>
+                }
+                onCancel={() => setConfirmRemovePayment(false)}
+                onConfirm={removePaymentMethodConfirmed}
+                title="Remove payment method"
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   ) : (
     <div className="flex flex-col px-2 py-1 rounded bg-slate-900 text-sm">

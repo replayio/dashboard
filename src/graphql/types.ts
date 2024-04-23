@@ -196,7 +196,8 @@ export type PlanKey =
   | "org-annual-v1"
   | "org-annual-contract-v1"
   | "team-oss-v1"
-  | "team-internal-v1";
+  | "team-internal-v1"
+  | "testsuites-v1";
 
 export type Plan = {
   id: string;
