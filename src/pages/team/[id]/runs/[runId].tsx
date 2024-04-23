@@ -21,6 +21,7 @@ export async function getServerSideProps(
 
   return redirectWithState({
     context,
-    pathname: `/team/${workspaceId}/runs?testRunId=${runId}`,
+    params: { testRunId: runId },
+    pathname: `/team/${workspaceId}/runs`,
   });
 }
