@@ -23,6 +23,7 @@
   font-size: 14px;
   color-scheme: dark;
   background-color: theme("colors.slate.900");
+  color: theme("colors.white");
 
   --context-menu-item-font-size: 14px;
   --context-menu-item-padding: 0.5rem 1rem;
