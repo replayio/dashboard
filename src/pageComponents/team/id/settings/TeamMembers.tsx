@@ -21,33 +21,19 @@ export function TeamMembers({
   const member = members?.find(({ id }) => id === user?.id);
   const currentUserIsAdmin = member?.roles.includes("admin") == true;
 
-  const categorizedMembers = useMemo(() => {
-    if (!members) {
-      return {};
-    }
-
-    const categories: { [role: string]: WorkspaceMember[] } = {
-      Admin: [],
-      Developer: [],
-      Contributor: [],
-      Viewer: [],
-    };
-
-    members
-      .slice()
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .forEach(member => {
-        const primaryRole = getPrimaryRole(member.roles);
-
-        let members = categories[primaryRole];
-        if (members == null) {
-          categories[primaryRole] = members = [];
+  // Alpha sort, but with pending members at the top (so they're clearly visible)
+  const sortedMembers = useMemo(() => {
+    return (
+      members?.sort((a, b) => {
+        if (a.isPending && !b.isPending) {
+          return -1;
+        } else if (!a.isPending && b.isPending) {
+          return 1;
+        } else {
+          return a.name.localeCompare(b.name);
         }
-
-        members.push(member);
-      });
-
-    return categories;
+      }) ?? []
+    );
   }, [members]);
 
   return (
@@ -56,7 +42,7 @@ export function TeamMembers({
         <InviteTeamMember workspaceId={workspaceId} />
       </div>
 
-      <div className="flex flex-col gap-4 overflow-auto shrink grow">
+      <div className="flex flex-col gap-1 overflow-auto shrink grow">
         {isLoading && <div className="text-slate-500">Loading...</div>}{" "}
         {error && (
           <div
@@ -66,28 +52,14 @@ export function TeamMembers({
             {error.message}
           </div>
         )}
-        {Object.entries(categorizedMembers).map(([role, members]) =>
-          members.length > 0 ? (
-            <div
-              className="flex flex-col gap-1"
-              data-test-id={`TeamMembers-Role-${role}`}
-              data-test-name="TeamMembers-Role"
-              key={role}
-            >
-              <div className="text-lg" data-test-name="TeamMembers-RoleTitle">
-                {role}s
-              </div>
-              {members.map((member, index) => (
-                <TeamMemberRow
-                  currentUserId={user.id}
-                  currentUserIsAdmin={currentUserIsAdmin}
-                  key={index}
-                  member={member}
-                />
-              ))}
-            </div>
-          ) : null
-        )}
+        {sortedMembers.map((member, index) => (
+          <TeamMemberRow
+            currentUserId={user.id}
+            currentUserIsAdmin={currentUserIsAdmin}
+            key={index}
+            member={member}
+          />
+        ))}
       </div>
 
       {invitationCode && (

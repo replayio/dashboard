@@ -4,6 +4,8 @@ import { WorkspaceMember } from "@/graphql/types";
 import { useRemoveUserFromWorkspace } from "@/graphql/useRemoveUserFromWorkspace";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { EditMemberRoleDialog } from "@/pageComponents/team/id/settings/EditMemberRoleDialog";
+import { Roles } from "@/pageComponents/team/id/settings/constants";
+import { getPrimaryRole } from "@/utils/user";
 import { useState } from "react";
 
 export function TeamMemberRow({
@@ -43,7 +45,7 @@ export function TeamMemberRow({
 
   return (
     <div className="flex flex-row items-center gap-2" data-test-name="TeamMembers-MemberRow">
-      {currentUserId !== member.id && currentUserIsAdmin && (
+      {currentUserIsAdmin && (
         <>
           <IconButton
             disabled={isPending}
@@ -53,12 +55,13 @@ export function TeamMemberRow({
           />
           {showEditMemberRoleDialog && (
             <EditMemberRoleDialog
+              currentUserId={currentUserId}
               member={member}
               onDismiss={() => setShowEditMemberRoleDialog(false)}
             />
           )}
           <IconButton
-            disabled={isPending}
+            disabled={isPending || currentUserId === member.id}
             iconType="delete"
             onClick={showRemoveDialog}
             title="Remove member"
@@ -79,7 +82,28 @@ export function TeamMemberRow({
         ) : null}
       </div>
       <div className="truncate">{member.name}</div>
-      {member.isPending && <div className="shrink-0 text-sm text-yellow-300">(pending)</div>}
+      {member.roles.includes(Roles.Admin.graphQLValue) && (
+        <div
+          className="shrink-0 text-xs bg-rose-600 px-1 rounded-sm"
+          data-test-name="TeamMembers-Role-Admin"
+        >
+          admin
+        </div>
+      )}
+      <div
+        className="shrink-0 text-xs bg-slate-600 px-1 rounded-sm"
+        data-test-name={`TeamMembers-Role-${getPrimaryRole(member.roles).label}`}
+      >
+        {getPrimaryRole(member.roles).label}
+      </div>
+      {member.isPending && (
+        <div
+          className="shrink-0 text-xs bg-yellow-300 text-black px-1 rounded-sm"
+          data-test-name="TeamMembers-PendingInvitation"
+        >
+          (pending)
+        </div>
+      )}
     </div>
   );
 }
