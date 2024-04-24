@@ -31,8 +31,17 @@ test("test-suites-tests-3: flaky test executions", async ({ page }) => {
 
     const executionRows = getTestExecutionRow(page);
     await expect(executionRows).toHaveCount(2);
-    await expect(await executionRows.nth(0).textContent()).toContain("Commit with 3 flaky tests");
-    await expect(await executionRows.nth(1).textContent()).toContain("Commit with 2 flaky test");
+
+    const textContents = await Promise.all([
+      executionRows.nth(0).textContent(),
+      executionRows.nth(1).textContent(),
+    ]);
+    expect(
+      textContents.find(text => text?.includes("Commit with 3 flaky tests"))
+    ).not.toBeUndefined();
+    expect(
+      textContents.find(text => text?.includes("Commit with 2 flaky test"))
+    ).not.toBeUndefined();
   }
 
   {

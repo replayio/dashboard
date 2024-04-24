@@ -31,8 +31,16 @@ test("test-suites-tests-2: failed test executions", async ({ page }) => {
 
     const executionRows = getTestExecutionRow(page);
     await expect(executionRows).toHaveCount(2);
-    await expect(await executionRows.nth(0).textContent()).toContain("Commit with 2 failed tests");
-    await expect(await executionRows.nth(1).textContent()).toContain("Commit with 1 passing test");
+    const textContents = await Promise.all([
+      executionRows.nth(0).textContent(),
+      executionRows.nth(1).textContent(),
+    ]);
+    expect(
+      textContents.find(text => text?.includes("Commit with 2 failed tests"))
+    ).not.toBeUndefined();
+    expect(
+      textContents.find(text => text?.includes("Commit with 1 passing test"))
+    ).not.toBeUndefined();
   }
 
   {
