@@ -9,7 +9,7 @@ import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
 import { MockGraphQLData } from "./mocks/types";
 import { navigateToPage } from "./utils/navigateToPage";
 
-test("team-settings-default-tab-subscription-canceled: should show the billing tab by default for canceled subscriptions", async ({
+test("team-settings-default-tab-subscription-canceled-no-payment: should show the billing tab by default for canceled subscriptions", async ({
   page,
 }) => {
   await navigateToPage({
@@ -21,9 +21,9 @@ test("team-settings-default-tab-subscription-canceled: should show the billing t
   const navLink = getLeftNavLink(page, "Billing");
   await expect(await navLink.getAttribute("data-is-active")).toBe("true");
 
-  // UI should show "Resume Subscription" prompt
+  // UI should so "Add payment method" prompt
   const header = page.locator('[data-test-name="Header"]');
-  await expect(header).toContainText("Resume Subscription");
+  await expect(header).toContainText("Add payment method");
 });
 
 const mockWorkspaceMembers = mockGetWorkspaceMembers([
@@ -34,11 +34,7 @@ const mockWorkspaceMembers = mockGetWorkspaceMembers([
 
 const mockWorkspaceSubscription = mockGetWorkspaceSubscription({
   effectiveUntil: getRelativeDate({ daysAgo: 1 }),
-  paymentMethods: [
-    {
-      default: true,
-    },
-  ],
+  paymentMethods: [],
   status: "canceled",
   trialEnds: getRelativeDate({ daysAgo: 1 }),
 });
@@ -47,7 +43,7 @@ const mockGraphQLData: MockGraphQLData = {
   GetUser: mockGetUser(),
   GetNonPendingWorkspaces: mockGetNonPendingWorkspaces([
     {
-      hasPaymentMethod: true,
+      hasPaymentMethod: false,
     },
   ]),
   GetWorkspaceMembers: mockWorkspaceMembers,

@@ -97,7 +97,7 @@ function SubscriptionStatusCanceled({ subscription }: { subscription: WorkspaceS
           </button>
         </div>
       )}
-      <PricingDetailsPanel subscription={subscription} />
+      <PricingDetailsPanel hideAddPaymentMethodFooter subscription={subscription} />
     </div>
   );
 }
@@ -121,16 +121,6 @@ function SubscriptionStatusTrialing({ subscription }: { subscription: WorkspaceS
         subscription. <a href="mailto:support@replay.io">Email us</a> if you have any questions.
       </div>
       <PricingDetailsPanel subscription={subscription} />
-      {workspace.hasPaymentMethod || (
-        <div>
-          <Button
-            data-test-id="AddPaymentMethodButton"
-            onClick={() => setView("add-payment-method")}
-          >
-            Add payment method
-          </Button>
-        </div>
-      )}
       <ExternalLink href="https://www.replay.io/terms-of-use">
         Terms of service and cancellation policy
       </ExternalLink>
@@ -138,8 +128,14 @@ function SubscriptionStatusTrialing({ subscription }: { subscription: WorkspaceS
   );
 }
 
-function PricingDetailsPanel({ subscription }: { subscription: WorkspaceSubscription }) {
-  const { refreshSubscription, workspaceId } = useContext(BillingContext);
+function PricingDetailsPanel({
+  hideAddPaymentMethodFooter = false,
+  subscription,
+}: {
+  hideAddPaymentMethodFooter?: boolean;
+  subscription: WorkspaceSubscription;
+}) {
+  const { refreshSubscription, setView, workspaceId } = useContext(BillingContext);
 
   const { removePaymentMethod } = useRemovePaymentMethod();
 
@@ -190,7 +186,7 @@ function PricingDetailsPanel({ subscription }: { subscription: WorkspaceSubscrip
   }
 
   return pricingDetails ? (
-    <div className="flex flex-col gap-2 h-full">
+    <div className="flex flex-col gap-2">
       {isPlanBeta(subscription) && (
         <div
           className="bg-yellow-300 text-yellow-950 px-2 py-1 rounded flex flex-row items-center gap-1 truncate"
@@ -252,6 +248,16 @@ function PricingDetailsPanel({ subscription }: { subscription: WorkspaceSubscrip
           </div>
         )}
       </div>
+      {!paymentMethod && !hideAddPaymentMethodFooter && (
+        <div>
+          <Button
+            data-test-id="AddPaymentMethodButton"
+            onClick={() => setView("add-payment-method")}
+          >
+            Add payment method
+          </Button>
+        </div>
+      )}
     </div>
   ) : (
     <div className="flex flex-col px-2 py-1 rounded bg-slate-900 text-sm">
