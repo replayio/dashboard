@@ -11,13 +11,13 @@ describe("utils/user", () => {
   describe("getDefaultPermissionBitmask", () => {
     it("should set the correct bitmask for a Debugger role", () => {
       expect(getDefaultPermissionBitmask(Roles.Debugger)).toBe(
-        Roles.Debugger.bitmask | Roles.Contributor.bitmask
+        Roles.Contributor.bitmask | Roles.Debugger.bitmask | Roles.Viewer.bitmask
       );
     });
 
     it("should set the correct bitmask for a Viewer role", () => {
       expect(getDefaultPermissionBitmask(Roles.Viewer)).toBe(
-        Roles.Viewer.bitmask | Roles.Contributor.bitmask
+        Roles.Contributor.bitmask | Roles.Viewer.bitmask
       );
     });
 
