@@ -13,7 +13,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.RECORD
+  reporter: process.env.REPLAY_PLAYWRIGHT_FIXTURE
     ? [
         ["line"],
         createReplayReporterConfig({
