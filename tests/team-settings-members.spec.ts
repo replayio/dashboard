@@ -4,7 +4,7 @@ import { DEFAULT_WORKSPACE_ID, TEST_USER_PICTURES } from "./mocks/constants";
 import { MockGraphQLData } from "./mocks/types";
 import { navigateToPage } from "./utils/navigateToPage";
 
-test("team-settings-members: should group members by role and show pending members", async ({
+test("team-settings-members: should label member roles and pending member invites", async ({
   page,
 }) => {
   await navigateToPage({
@@ -13,18 +13,25 @@ test("team-settings-members: should group members by role and show pending membe
     pathname: `/team/${DEFAULT_WORKSPACE_ID}/settings/members`,
   });
 
-  const roles = page.locator('[data-test-name="TeamMembers-Role"]');
-  await expect(roles).toHaveCount(2);
-
   const admins = page
-    .locator('[data-test-id="TeamMembers-Role-Admin"]')
-    .locator('[data-test-name="TeamMembers-MemberRow"]');
+    .locator('[data-test-name="TeamMembers-MemberRow"]')
+    .locator('[data-test-name="TeamMembers-Role-Admin"]');
   await expect(admins).toHaveCount(2);
 
-  const users = page
-    .locator('[data-test-id="TeamMembers-Role-User"]')
-    .locator('[data-test-name="TeamMembers-MemberRow"]');
-  await expect(users).toHaveCount(3);
+  const developers = page
+    .locator('[data-test-name="TeamMembers-MemberRow"]')
+    .locator('[data-test-name="TeamMembers-Role-Developer"]');
+  await expect(developers).toHaveCount(3);
+
+  const viewers = page
+    .locator('[data-test-name="TeamMembers-MemberRow"]')
+    .locator('[data-test-name="TeamMembers-Role-Viewer"]');
+  await expect(viewers).toHaveCount(2);
+
+  const pendingInvitations = page
+    .locator('[data-test-name="TeamMembers-MemberRow"]')
+    .locator('[data-test-name="TeamMembers-PendingInvitation"]');
+  await expect(pendingInvitations).toHaveCount(1);
 });
 
 const mockGraphQLData: MockGraphQLData = {
@@ -32,25 +39,25 @@ const mockGraphQLData: MockGraphQLData = {
     {
       name: "Admin 1",
       picture: TEST_USER_PICTURES.eleanor_diaz,
-      roles: ["viewer", "admin"],
+      roles: ["admin", "debugger"],
     },
     {
       name: "Admin 2",
-      roles: ["viewer", "admin"],
+      roles: ["admin", "viewer"],
     },
     {
       name: "Developer 1",
-      roles: ["viewer", "developer"],
+      roles: ["debugger"],
     },
     {
       isPending: true,
       name: "Pending developer 1",
-      roles: ["viewer", "developer"],
+      roles: ["debugger"],
     },
     {
-      name: "Developer 2",
+      name: "Viewer 2",
       picture: TEST_USER_PICTURES.lewis_neill,
-      roles: ["viewer", "developer"],
+      roles: ["viewer"],
     },
   ]),
 };

@@ -18,6 +18,10 @@ export default function Checkbox({
   const [didChange, setDidChange] = useState(false);
 
   const onClick = (event: MouseEvent) => {
+    if (disabled) {
+      return;
+    }
+
     event.preventDefault();
     event.stopPropagation();
 
@@ -27,7 +31,10 @@ export default function Checkbox({
   };
 
   return (
-    <label className={`flex flex-row items-center gap-2 ${className}`} onClick={onClick}>
+    <label
+      className={`flex flex-row items-center gap-2 ${className} ${disabled ? "opacity-50" : ""}`}
+      onClick={onClick}
+    >
       <input
         autoFocus={didChange}
         className="focus:outline-sky-500"

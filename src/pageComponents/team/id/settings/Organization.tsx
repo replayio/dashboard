@@ -116,12 +116,12 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
           onChange={option =>
             setUserFeatures({
               ...userFeatures,
-              autoJoin: (option as MemberRoleOption).value,
+              autoJoin: (option as MemberRoleOption).bitmask,
             })
           }
           options={MEMBER_ROLE_OPTIONS}
           value={
-            MEMBER_ROLE_OPTIONS.find(option => option.value === userFeatures.autoJoin) ??
+            MEMBER_ROLE_OPTIONS.find(option => option.bitmask === userFeatures.autoJoin) ??
             DEFAULT_MEMBER_ROLE_OPTION
           }
         />

@@ -1,4 +1,5 @@
 import { Workspace, WorkspaceRecording } from "@/graphql/types";
+import { Roles } from "@/pageComponents/team/id/settings/constants";
 
 export function canDeleteRecording(
   recording: WorkspaceRecording,
@@ -16,14 +17,37 @@ export function canDeleteRecording(
   return false;
 }
 
-export function getPrimaryRole(roles: string[]) {
-  if (roles.includes("admin")) {
-    return "Admin";
-  } else if (roles.includes("debugger")) {
-    return "Developer";
-  } else if (roles.includes("contributor")) {
-    return "Contributor";
+export function getPrimaryRole(membershipRoles: string[]) {
+  if (membershipRoles.includes("debugger")) {
+    return Roles.Debugger;
   } else {
-    return "User";
+    return Roles.Viewer;
   }
+}
+
+export function toggleAdminRole(isAdmin: boolean, prevRoles: string[]) {
+  let nextRoles = new Set(prevRoles);
+
+  if (isAdmin) {
+    nextRoles.add(Roles.Admin.graphQLValue);
+  } else {
+    nextRoles.delete(Roles.Admin.graphQLValue);
+  }
+
+  return [...nextRoles].sort();
+}
+
+export function assignDebuggerRole(prevRoles: string[]) {
+  let nextRoles = new Set(prevRoles);
+  nextRoles.add(Roles.Debugger.graphQLValue);
+
+  return [...nextRoles].sort();
+}
+
+export function assignViewerRole(prevRoles: string[]) {
+  let nextRoles = new Set(prevRoles);
+  nextRoles.delete(Roles.Debugger.graphQLValue);
+  nextRoles.add(Roles.Viewer.graphQLValue);
+
+  return [...nextRoles].sort();
 }
