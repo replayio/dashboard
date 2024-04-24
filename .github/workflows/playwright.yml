@@ -82,6 +82,7 @@ jobs:
         env:
           APP_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
           AUTH0_BASE_URL: ${{ needs.wait-for-vercel.outputs.preview_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RECORD_REPLAY_METADATA_TEST_RUN_TITLE: E2E Tests
           RECORD_REPLAY_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs.testRunId }}
           REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
