@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:e2e": "playwright test --project=chromium",
     "test:e2e:debug": "playwright test --project=chromium --workers 1 --headed",
-    "test:e2e:record": "REPLAY_PLAYWRIGHT_FIXTURE=1 playwright test --project=replay-chromium",
+    "test:e2e:record": "RECORD=1 REPLAY_PLAYWRIGHT_FIXTURE=1 playwright test --project=replay-chromium",
     "typescript": "tsc --noEmit",
     "typescript:watch": "tsc --noEmit --watch"
   },
