@@ -6,7 +6,7 @@ import { useUpdateWorkspaceMemberRoles } from "@/graphql/queries/useUpdateWorksp
 import { WorkspaceMember } from "@/graphql/types";
 import {
   MEMBER_ROLE_OPTIONS,
-  MemberRoleOption,
+  WorkspaceUserRoleType,
   Roles,
 } from "@/pageComponents/team/id/settings/constants";
 import {
@@ -42,7 +42,7 @@ export function EditMemberRoleDialog({
     }
   };
 
-  const onSelectChange = (debuggerOrViewerRole: MemberRoleOption) => {
+  const onSelectChange = (debuggerOrViewerRole: WorkspaceUserRoleType) => {
     if (debuggerOrViewerRole === Roles.Debugger) {
       setRoles(assignDebuggerRole(roles));
     } else {

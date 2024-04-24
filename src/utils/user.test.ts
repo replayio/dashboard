@@ -2,11 +2,35 @@ import { Roles } from "@/pageComponents/team/id/settings/constants";
 import {
   assignDebuggerRole,
   assignViewerRole,
+  getDefaultPermissionBitmask,
   getPrimaryRole,
   toggleAdminRole,
 } from "@/utils/user";
 
 describe("utils/user", () => {
+  describe("getDefaultPermissionBitmask", () => {
+    it("should set the correct bitmask for a Debugger role", () => {
+      expect(getDefaultPermissionBitmask(Roles.Debugger)).toBe(
+        Roles.Contributor.bitmask | Roles.Debugger.bitmask | Roles.Viewer.bitmask
+      );
+    });
+
+    it("should set the correct bitmask for a Viewer role", () => {
+      expect(getDefaultPermissionBitmask(Roles.Viewer)).toBe(
+        Roles.Contributor.bitmask | Roles.Viewer.bitmask
+      );
+    });
+
+    it("should throw if an unsupported default role is specified", () => {
+      expect(() => getDefaultPermissionBitmask(Roles.Contributor)).toThrow(
+        `Unsupported default role: ${Roles.Contributor.label}`
+      );
+      expect(() => getDefaultPermissionBitmask(Roles.Admin)).toThrow(
+        `Unsupported default role: ${Roles.Admin.label}`
+      );
+    });
+  });
+
   describe("getPrimaryRole", () => {
     it("should identify an debugger/developer", () => {
       expect(getPrimaryRole(["debugger"])).toBe(Roles.Debugger);
