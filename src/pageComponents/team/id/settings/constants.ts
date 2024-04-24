@@ -4,17 +4,13 @@ export type WorkspaceUserRoleType = {
   label: string;
 };
 
-// Copied from the backend: src/graphqlapi/models.ts
+// Keep this in sync with the backend: src/graphqlapi/models.ts
 export enum WorkspaceUserRole {
-  None = 0,
-  // Can view objects within a workspace
-  Viewer = 1 << 0,
-  // Can run evaluations on a replay in the workspace
-  Debugger = 1 << 1,
-  // Can upload new objects to a workspace
-  Contributor = 1 << 2,
-  // Can manage workspace including billing
-  Admin = 1 << 7,
+  None = 0b00000000,
+  Viewer = 0b00000001,
+  Debugger = 0b00000010,
+  Contributor = 0b00000100,
+  Admin = 0b10000000,
 }
 
 export const Roles: Record<keyof typeof WorkspaceUserRole, WorkspaceUserRoleType> = {
