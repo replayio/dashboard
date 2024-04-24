@@ -1,5 +1,5 @@
 import { Workspace, WorkspaceRecording } from "@/graphql/types";
-import { Roles } from "@/pageComponents/team/id/settings/constants";
+import { WorkspaceUserRoleType, Roles } from "@/pageComponents/team/id/settings/constants";
 
 export function canDeleteRecording(
   recording: WorkspaceRecording,
@@ -15,6 +15,17 @@ export function canDeleteRecording(
   }
 
   return false;
+}
+
+export function getDefaultPermissionBitmask(role: WorkspaceUserRoleType) {
+  switch (role) {
+    case Roles.Debugger:
+      return Roles.Debugger.bitmask | Roles.Contributor.bitmask;
+    case Roles.Viewer:
+      return Roles.Viewer.bitmask | Roles.Contributor.bitmask;
+    default:
+      throw Error(`Unsupported default role: ${role.label}`);
+  }
 }
 
 export function getPrimaryRole(membershipRoles: string[]) {

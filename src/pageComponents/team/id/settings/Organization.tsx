@@ -9,8 +9,9 @@ import useDebouncedState from "@/hooks/useDebouncedState";
 import {
   DEFAULT_MEMBER_ROLE_OPTION,
   MEMBER_ROLE_OPTIONS,
-  MemberRoleOption,
+  WorkspaceUserRoleType,
 } from "@/pageComponents/team/id/settings/constants";
+import { getDefaultPermissionBitmask } from "@/utils/user";
 import assert from "assert";
 
 export function Organization({ workspaceId }: { workspaceId: string }) {
@@ -116,7 +117,7 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
           onChange={option =>
             setUserFeatures({
               ...userFeatures,
-              autoJoin: (option as MemberRoleOption).bitmask,
+              autoJoin: getDefaultPermissionBitmask(option as WorkspaceUserRoleType),
             })
           }
           options={MEMBER_ROLE_OPTIONS}

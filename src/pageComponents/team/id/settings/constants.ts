@@ -1,4 +1,4 @@
-export type MemberRoleOption = {
+export type WorkspaceUserRoleType = {
   bitmask: number;
   graphQLValue: string;
   label: string;
@@ -17,7 +17,7 @@ export enum WorkspaceUserRole {
   Admin = 1 << 7,
 }
 
-export const Roles: Record<keyof typeof WorkspaceUserRole, MemberRoleOption> = {
+export const Roles: Record<keyof typeof WorkspaceUserRole, WorkspaceUserRoleType> = {
   Admin: { bitmask: WorkspaceUserRole.Admin, graphQLValue: "admin", label: "Admin" },
   Contributor: {
     bitmask: WorkspaceUserRole.Contributor,
