@@ -39,7 +39,6 @@ export function toggleAdminRole(isAdmin: boolean, prevRoles: string[]) {
 
 export function assignDebuggerRole(prevRoles: string[]) {
   let nextRoles = new Set(prevRoles);
-  nextRoles.delete(Roles.Viewer.graphQLValue);
   nextRoles.add(Roles.Debugger.graphQLValue);
 
   return [...nextRoles].sort();

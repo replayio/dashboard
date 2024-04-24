@@ -24,12 +24,17 @@ describe("utils/user", () => {
 
   describe("toggleAdminRole", () => {
     it("should assign an admin role", () => {
-      expect(toggleAdminRole(true, ["debugger"])).toEqual(["admin", "debugger"]);
+      expect(toggleAdminRole(true, ["debugger", "viewer"])).toEqual([
+        "admin",
+        "debugger",
+        "viewer",
+      ]);
       expect(toggleAdminRole(true, ["viewer"])).toEqual(["admin", "viewer"]);
-      expect(toggleAdminRole(true, ["contributor", "debugger"])).toEqual([
+      expect(toggleAdminRole(true, ["contributor", "debugger", "viewer"])).toEqual([
         "admin",
         "contributor",
         "debugger",
+        "viewer",
       ]);
       expect(toggleAdminRole(true, ["contributor", "viewer"])).toEqual([
         "admin",
@@ -37,12 +42,17 @@ describe("utils/user", () => {
         "viewer",
       ]);
     });
+
     it("should remove an admin role", () => {
-      expect(toggleAdminRole(false, ["admin", "debugger"])).toEqual(["debugger"]);
+      expect(toggleAdminRole(false, ["admin", "debugger", "viewer"])).toEqual([
+        "debugger",
+        "viewer",
+      ]);
       expect(toggleAdminRole(false, ["admin", "viewer"])).toEqual(["viewer"]);
-      expect(toggleAdminRole(false, ["admin", "contributor", "debugger"])).toEqual([
+      expect(toggleAdminRole(false, ["admin", "contributor", "debugger", "viewer"])).toEqual([
         "contributor",
         "debugger",
+        "viewer",
       ]);
       expect(toggleAdminRole(false, ["admin", "contributor", "viewer"])).toEqual([
         "contributor",
@@ -53,14 +63,19 @@ describe("utils/user", () => {
 
   describe("assignDebuggerRole", () => {
     it("should assign an debugger/developer role", () => {
-      expect(assignDebuggerRole(["viewer"])).toEqual(["debugger"]);
-      expect(assignDebuggerRole(["debugger"])).toEqual(["debugger"]);
-      expect(assignDebuggerRole(["contributor", "viewer"])).toEqual(["contributor", "debugger"]);
-      expect(assignDebuggerRole(["admin", "viewer"])).toEqual(["admin", "debugger"]);
+      expect(assignDebuggerRole(["viewer"])).toEqual(["debugger", "viewer"]);
+      expect(assignDebuggerRole(["debugger", "viewer"])).toEqual(["debugger", "viewer"]);
+      expect(assignDebuggerRole(["contributor", "viewer"])).toEqual([
+        "contributor",
+        "debugger",
+        "viewer",
+      ]);
+      expect(assignDebuggerRole(["admin", "viewer"])).toEqual(["admin", "debugger", "viewer"]);
       expect(assignDebuggerRole(["admin", "contributor", "viewer"])).toEqual([
         "admin",
         "contributor",
         "debugger",
+        "viewer",
       ]);
     });
   });
