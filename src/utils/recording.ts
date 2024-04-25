@@ -39,9 +39,6 @@ export function getExecutionStatus(
   executions: { result: string /*TestSuiteTestAttemptResult*/ }[]
 ): TestSuiteTestStatus {
   switch (execution.result) {
-    case "failed": {
-      return "failed";
-    }
     case "flaky": {
       if (executions.length === 1) {
         // Cypress tests are recorded on a single recordings since the app under test is in an iframe there
@@ -54,9 +51,12 @@ export function getExecutionStatus(
         return executions[0] === execution ? "passed" : "flaky";
       }
     }
-    default: {
-      // TODO: handle unknown and skipped
+    case "passed": {
       return "passed";
+    }
+    default: {
+      // TODO: handle unknown, skipped, timedOut
+      return "failed";
     }
   }
 }
