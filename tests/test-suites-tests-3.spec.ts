@@ -73,7 +73,7 @@ const mockGraphQLData: MockGraphQLData = {
           isProcessed: true,
         }),
       ],
-      result: "flaky",
+      status: "flaky",
     },
     {
       commitTitle: "Commit with 2 flaky tests",
@@ -86,7 +86,7 @@ const mockGraphQLData: MockGraphQLData = {
           createdAt: getRelativeDate({ minutesAgo: 1 }),
         }),
       ],
-      result: "flaky",
+      status: "flaky",
     },
   ]),
   GetWorkspaceTests: mockGetWorkspaceTests([

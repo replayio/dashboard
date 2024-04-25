@@ -66,11 +66,16 @@ export type TestSuiteTestAttemptResult =
   | "timedOut"
   | "unknown";
 
+export type TestSuiteTestExecutionSummary = {
+  recordings: TestSuiteTestRecording[];
+  status: TestSuiteTestStatus;
+};
+
 export type TestSuiteTest = {
   durationMs: number;
   errors: string[] | null;
+  executions: TestSuiteTestExecutionSummary[];
   id: string;
-  recordings: TestSuiteTestRecording[];
   scope: string[];
   sourcePath: string;
   status: TestSuiteTestStatus;
@@ -142,7 +147,7 @@ export type TestSuiteTestExecution = {
   errors: string[];
   id: string;
   recordings: TestSuiteTestExecutionRecording[];
-  result: TestSuiteTestStatus;
+  status: TestSuiteTestStatus;
 };
 
 export type WorkspaceSettings = {

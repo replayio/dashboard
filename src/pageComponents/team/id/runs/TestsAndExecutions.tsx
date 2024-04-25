@@ -4,6 +4,7 @@ import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSecti
 import { TestExecutionRow } from "@/pageComponents/team/id/runs/TestExecutionRow";
 import { TestRunErrors } from "@/pageComponents/team/id/runs/TestRunErrors";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
+import { exec } from "child_process";
 import { useContext } from "react";
 
 export function TestsAndExecutions({ selectedTestId }: { selectedTestId: string }) {
@@ -20,24 +21,14 @@ export function TestsAndExecutions({ selectedTestId }: { selectedTestId: string 
       <div className="bg-slate-900 text-white p-2 rounded" data-test-id="TestExecution-Recordings">
         <ExpandableSection label="Replays" openByDefault>
           <div className="shrink-0 -mx-2">
-            {selectedTest.recordings.map((recording, index) => {
-              let status: TestSuiteTestStatus;
-              switch (selectedTest.status) {
-                case "failed": {
-                  status = "failed";
-                  break;
-                }
-                case "flaky": {
-                  status = index === 0 ? "passed" : "flaky";
-                  break;
-                }
-                case "passed": {
-                  status = "passed";
-                  break;
-                }
-              }
-
-              return <TestExecutionRow key={recording.id} recording={recording} status={status} />;
+            {selectedTest.executions.flatMap((execution, index) => {
+              return execution.recordings.map(recording => (
+                <TestExecutionRow
+                  key={recording.id}
+                  recording={recording}
+                  status={execution.status}
+                />
+              ));
             })}
           </div>
         </ExpandableSection>

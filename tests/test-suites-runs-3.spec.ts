@@ -50,7 +50,7 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({ pa
   }
 
   {
-    // Tests (2st column)
+    // Tests (2nd column)
 
     const filters = page.locator('[data-test-id="TestRunTests-Filters"]');
     await expect(
@@ -161,14 +161,22 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+      executions: [
+        {
+          recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+        },
+      ],
       sourcePath: undefined,
       status: "flaky",
       title: "Fourth test",
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+      executions: [
+        {
+          recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+        },
+      ],
       sourcePath: undefined,
       status: "flaky",
       title: "Fifth test",
@@ -186,7 +194,11 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+      executions: [
+        {
+          recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+        },
+      ],
       sourcePath: undefined,
       status: "flaky",
       title: "Eighth test",

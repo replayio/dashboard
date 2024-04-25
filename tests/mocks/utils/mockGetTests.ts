@@ -1,5 +1,5 @@
 import { GetTestsQuery } from "@/graphql/generated/graphql";
-import { TestSuiteTest } from "@/graphql/types";
+import { TestSuiteTest, TestSuiteTestStatus } from "@/graphql/types";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 
 export function mockGetTests(
@@ -26,25 +26,12 @@ export function mockGetTests(
                 result: test.status,
                 errors: test.errors,
                 durationMs: test.durationMs,
-                executions: test.recordings.map((recording, index) => {
-                  let result;
-                  switch (test.status) {
-                    case "passed":
-                      result = "passed";
-                      break;
-                    case "failed":
-                      result = "failed";
-                      break;
-                    case "flaky":
-                      result = index === test.recordings.length - 1 ? "passed" : "failed";
-                      break;
-                  }
-
+                executions: test.executions.map((execution, index) => {
                   return {
                     __typename: "TestRunTestExecution",
-                    result,
-                    recordings: [
-                      {
+                    result: execution.status,
+                    recordings: execution.recordings.map(recording => {
+                      return {
                         __typename: "Recording",
                         buildId: recording.buildId,
                         uuid: recording.id,
@@ -54,8 +41,8 @@ export function mockGetTests(
                         comments: recording.numComments
                           ? Array.from({ length: recording.numComments })
                           : [],
-                      },
-                    ],
+                      };
+                    }),
                   };
                 }),
               })),

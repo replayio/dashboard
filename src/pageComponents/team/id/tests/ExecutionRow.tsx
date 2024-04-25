@@ -1,22 +1,9 @@
-import { Icon, IconType } from "@/components/Icon";
+import { Icon } from "@/components/Icon";
 import { TestSuiteTestExecution } from "@/graphql/types";
 import { RecordingRow } from "@/pageComponents/team/id/tests/RecordingRow";
 import { formatRelativeTime } from "@/utils/number";
 
 export function ExecutionRow({ testExecution }: { testExecution: TestSuiteTestExecution }) {
-  let iconType: IconType;
-  switch (testExecution.result) {
-    case "failed":
-      iconType = "failed-test";
-      break;
-    case "flaky":
-      iconType = "flaky-test";
-      break;
-    case "passed":
-      iconType = "passing-test";
-      break;
-  }
-
   return (
     <div className="flex flex-col" data-test-name="TestExecution-Row">
       <div className="flex flex-row items-center gap-2 mx-2">
@@ -34,17 +21,7 @@ export function ExecutionRow({ testExecution }: { testExecution: TestSuiteTestEx
       </div>
       <div className="flex flex-col">
         {testExecution.recordings.map((recording, index) => (
-          <RecordingRow
-            key={recording.id}
-            recording={recording}
-            status={
-              testExecution.result === "flaky"
-                ? index === 0
-                  ? "passed"
-                  : "flaky"
-                : testExecution.result
-            }
-          />
+          <RecordingRow key={recording.id} recording={recording} status={testExecution.status} />
         ))}
       </div>
     </div>

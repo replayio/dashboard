@@ -94,14 +94,22 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+      executions: [
+        {
+          recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+        },
+      ],
       sourcePath: undefined,
       status: "flaky",
       title: "Fourth test",
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+      executions: [
+        {
+          recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+        },
+      ],
       sourcePath: undefined,
       status: "flaky",
       title: "Fifth test",
@@ -119,7 +127,11 @@ const mockGraphQLData: MockGraphQLData = {
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+      executions: [
+        {
+          recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+        },
+      ],
       sourcePath: undefined,
       status: "flaky",
       title: "Eighth test",

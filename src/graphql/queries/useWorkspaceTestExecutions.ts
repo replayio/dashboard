@@ -2,8 +2,9 @@ import {
   GetWorkspaceTestExecutionsQuery,
   GetWorkspaceTestExecutionsQueryVariables,
 } from "@/graphql/generated/graphql";
-import { TestSuiteTestExecution, TestSuiteTestStatus } from "@/graphql/types";
+import { TestSuiteTestExecution } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
+import { getExecutionStatus } from "@/utils/recording";
 import { gql } from "@apollo/client";
 import assert from "assert";
 import { useMemo } from "react";
@@ -89,7 +90,7 @@ export function useWorkspaceTestExecutions(
               }))
               // Newest to oldest
               .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
-            result: execution.result as TestSuiteTestStatus,
+            status: getExecutionStatus(execution, node.executions),
           });
         });
       });

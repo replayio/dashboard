@@ -69,12 +69,12 @@ const mockGraphQLData: MockGraphQLData = {
           isProcessed: true,
         }),
       ],
-      result: "failed",
+      status: "failed",
     },
     {
       commitTitle: "Commit with 1 passing test",
       recordings: [partialToTestSuiteTestExecutionRecording()],
-      result: "passed",
+      status: "passed",
     },
   ]),
   GetWorkspaceTests: mockGetWorkspaceTests([
