@@ -69,8 +69,11 @@ export type TestSuiteTestAttemptResult =
 export type TestSuiteTest = {
   durationMs: number;
   errors: string[] | null;
+  executions: {
+    recordings: TestSuiteTestRecording[];
+    status: TestSuiteTestStatus;
+  }[];
   id: string;
-  recordings: TestSuiteTestRecording[];
   scope: string[];
   sourcePath: string;
   status: TestSuiteTestStatus;
@@ -142,7 +145,7 @@ export type TestSuiteTestExecution = {
   errors: string[];
   id: string;
   recordings: TestSuiteTestExecutionRecording[];
-  result: TestSuiteTestStatus;
+  status: TestSuiteTestStatus;
 };
 
 export type WorkspaceSettings = {

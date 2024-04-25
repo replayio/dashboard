@@ -1,6 +1,7 @@
 import { GetTestsQuery, GetTestsQueryVariables } from "@/graphql/generated/graphql";
-import { TestSuiteTest, TestSuiteTestAttemptResult, TestSuiteTestRecording } from "@/graphql/types";
+import { TestSuiteTest, TestSuiteTestAttemptResult, TestSuiteTestStatus } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
+import { getExecutionStatus } from "@/utils/recording";
 import { gql } from "@apollo/client";
 import assert from "assert";
 import { useMemo } from "react";
@@ -67,8 +68,8 @@ export function useTestSuiteTests(workspaceId: string, testRunId: string | undef
         let numFailed = 0;
         let numPassed = 0;
 
-        const mappedRecordings: TestSuiteTestRecording[] = [];
-        test.executions.forEach(({ recordings, result }) => {
+        const executions = test.executions.map(execution => {
+          const { recordings, result } = execution;
           switch (result as TestSuiteTestAttemptResult) {
             case "failed": {
               numFailed++;
@@ -76,29 +77,38 @@ export function useTestSuiteTests(workspaceId: string, testRunId: string | undef
             }
             case "passed": {
               numPassed++;
+              break;
             }
           }
 
-          recordings.forEach(recording => {
-            mappedRecordings.push({
+          return {
+            recordings: recordings.map(recording => ({
               buildId: recording.buildId ?? "",
               createdAt: new Date(recording.createdAt),
               duration: recording.duration ?? 0,
               id: recording.uuid as string,
               isProcessed: recording.isProcessed === true,
               numComments: recording.comments?.length ?? 0,
-            });
-          });
+            })),
+            status: getExecutionStatus(execution, test.executions),
+          };
         });
 
         return {
           durationMs: test.durationMs,
           errors: test.errors ?? null,
+          executions,
           id: test.testId,
-          recordings: mappedRecordings,
           scope: test.scope,
           sourcePath: test.sourcePath,
-          status: numFailed === 0 ? "passed" : numPassed === 0 ? "failed" : "flaky",
+          status:
+            test.result === "flaky"
+              ? "flaky"
+              : numFailed === 0
+                ? "passed"
+                : numPassed === 0
+                  ? "failed"
+                  : "flaky",
           title: test.title,
         } satisfies TestSuiteTest;
       });

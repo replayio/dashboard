@@ -6,7 +6,7 @@ export function partialToTestSuiteTest({
   durationMs = 100,
   errors = null,
   id = getUID("test-id"),
-  recordings = [partialToTestSuiteTestRecording()],
+  executions = [{ status: "passed", recordings: [partialToTestSuiteTestRecording()] }],
   scope = [],
   sourcePath = "path/to/source.ts",
   status = "passed",
@@ -15,8 +15,8 @@ export function partialToTestSuiteTest({
   return {
     durationMs,
     errors,
+    executions,
     id,
-    recordings,
     scope,
     sourcePath,
     status,

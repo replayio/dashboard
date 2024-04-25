@@ -1,4 +1,4 @@
-import { Recording } from "@/graphql/generated/graphql";
+import { TestSuiteTestStatus } from "@/graphql/types";
 
 export enum RecordingTarget {
   gecko = "gecko",
@@ -32,4 +32,31 @@ export function getURL(id: string, buildId: string) {
   const target = getRecordingTarget(buildId);
 
   return target === "chromium" ? `/recording/${id}` : `https://legacy.replay.io/recording/${id}`;
+}
+
+export function getExecutionStatus(
+  execution: { result: string /*TestSuiteTestAttemptResult*/ },
+  executions: { result: string /*TestSuiteTestAttemptResult*/ }[]
+): TestSuiteTestStatus {
+  switch (execution.result) {
+    case "failed": {
+      return "failed";
+    }
+    case "flaky": {
+      if (executions.length === 1) {
+        // Cypress tests are recorded on a single recordings since the app under test is in an iframe there
+        // it means that the final successful is on the same recording as the flakes before it
+        return "flaky";
+      } else {
+        // recordings come sorted, the newest one (the last one) is first
+        // this recording should be displayed as passed since it's the final successful one
+        // the previous ones (latter ones in the array) are flaky
+        return executions[0] === execution ? "passed" : "flaky";
+      }
+    }
+    default: {
+      // TODO: handle unknown and skipped
+      return "passed";
+    }
+  }
 }

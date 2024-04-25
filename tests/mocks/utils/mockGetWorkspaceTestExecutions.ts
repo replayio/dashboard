@@ -27,7 +27,7 @@ export function mockGetWorkspaceTestExecutions(
             errors = [],
             id = getUID("test-execution-id"),
             recordings = [partialToTestSuiteTestExecutionRecording()],
-            result = "passed",
+            status = "passed",
           } = partial;
 
           return {
@@ -42,7 +42,7 @@ export function mockGetWorkspaceTestExecutions(
                   createdAt: createdAt.toISOString(),
                   commitTitle,
                   commitAuthor,
-                  result,
+                  result: status,
                   recordings: recordings.map(recording => ({
                     __typename: "Recording",
                     buildId: recording.buildId,
