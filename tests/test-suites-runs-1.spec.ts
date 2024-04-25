@@ -97,7 +97,6 @@ const mockGraphQLData: MockGraphQLData = {
       executions: [
         {
           recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
-          status: "flaky",
         },
       ],
       sourcePath: undefined,
@@ -109,7 +108,6 @@ const mockGraphQLData: MockGraphQLData = {
       executions: [
         {
           recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
-          status: "flaky",
         },
       ],
       sourcePath: undefined,
@@ -132,7 +130,6 @@ const mockGraphQLData: MockGraphQLData = {
       executions: [
         {
           recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
-          status: "flaky",
         },
       ],
       sourcePath: undefined,
