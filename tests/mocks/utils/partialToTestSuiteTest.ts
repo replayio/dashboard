@@ -24,8 +24,8 @@ export function partialToTestSuiteTest({
         assert(executionStatus !== "flaky");
         executionStatus ??= status;
       } else {
-        assert(!executionStatus || executionStatus === "flaky");
-        executionStatus = "flaky";
+        assert(executionStatus !== "passed");
+        executionStatus ??= "flaky";
       }
       return {
         status: executionStatus,
