@@ -22,7 +22,7 @@ export function Account() {
   return (
     <div className="flex flex-col gap-2">
       <div>
-        Signed in as <span className="font-bold">{user?.name}</span>
+        Signed in as <span className="font-bold">{user.name}</span> ({user.email})
       </div>
       <div>
         <Button disabled={isPending} onClick={onClick}>
