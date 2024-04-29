@@ -3,6 +3,7 @@ import { SessionContextProvider } from "@/components/SessionContext";
 import { COOKIES, HEADERS } from "@/constants";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { User } from "@/graphql/types";
+import { decompress } from "@/utils/compression";
 import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { listenForAccessToken } from "@/utils/replayBrowser";
@@ -45,13 +46,9 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const mockGraphQLDataString = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.mockGraphQLData]
     );
-
-    let mockGraphQLData: MockGraphQLData | null = null;
-    if (mockGraphQLDataString) {
-      try {
-        mockGraphQLData = JSON.parse(mockGraphQLDataString);
-      } catch (error) {}
-    }
+    const mockGraphQLData = mockGraphQLDataString
+      ? decompress<MockGraphQLData>(mockGraphQLDataString)
+      : null;
 
     const user = accessToken ? await getCurrentUser(accessToken, mockGraphQLData) : null;
 
