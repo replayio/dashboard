@@ -22,9 +22,6 @@ export function decompress<Type extends Object>(text: string): Type | null {
   if (text != null) {
     try {
       const compressed = JSON.parse(text);
-      if (!compressed) {
-        return compressed;
-      }
 
       return decompressJSON(compressed) as Type;
     } catch (error) {}
