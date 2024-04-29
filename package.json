@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev -p 8080",
+    "dev": "npm run dev:prod",
+    "dev:local": "DEVTOOLS_URL=http://localhost:8081 pnpm dev -- -p 8080",
+    "dev:prod": "next dev -p 8080",
     "preprod": "NEXT_PUBLIC_API_URL=http://graphql-api.pre-prod.replay.prod/v1/graphql next dev -p 8080",
     "graphql": "pnpm graphql-schema && pnpm graphql-types",
     "graphql-schema": "gq https://graphql.replay.io/v1/graphql -H \"X-Hasura-Admin-Secret: $HASURA_KEY\" --introspect > schema.graphql",
