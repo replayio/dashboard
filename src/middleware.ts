@@ -76,6 +76,10 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
+export const config = {
+  matcher: ["/((?!_next/static|recording/_next/static|recording/images|recording/fonts).*)"],
+};
+
 async function getAccessTokenForSession(request: NextRequest, response: NextResponse) {
   if (request.nextUrl.pathname.startsWith("/api/auth/logout")) {
     return {
