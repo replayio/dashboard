@@ -23,6 +23,9 @@ dependencies:
   chalk:
     specifier: ^4
     version: 4.1.2
+  compress-json:
+    specifier: ^3.0.3
+    version: 3.0.3
   cookie:
     specifier: ^0.6.0
     version: 0.6.0
@@ -5865,6 +5868,13 @@ packages:
       }
     engines: { node: ">=4.0.0" }
     dev: true
+
+  /compress-json@3.0.3:
+    resolution:
+      {
+        integrity: sha512-O7iS9kq39q83h79q0GwuJVEd5g+dPDU7bca/834bMlOIVO5zvJfQsEKRrjg6Tr4qLlN5xJoud4vWyq3lwvLj1w==,
+      }
+    dev: false
 
   /concat-map@0.0.1:
     resolution:

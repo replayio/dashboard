@@ -2,6 +2,7 @@ import { HEADERS } from "@/constants";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { getWorkplaceMemberRoles } from "@/graphql/queries/getWorkplaceMemberRoles";
 import { getWorkspaceSubscriptionStatus } from "@/graphql/queries/getWorkspaceSubscriptionStatus";
+import { decompress } from "@/utils/compression";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { redirectWithState } from "@/utils/redirectWithState";
 import assert from "assert";
@@ -22,7 +23,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<{ id
 
   const mockGraphQLDataString = getValueFromArrayOrString(req?.headers?.[HEADERS.mockGraphQLData]);
   const mockGraphQLData = mockGraphQLDataString
-    ? (JSON.parse(mockGraphQLDataString) as MockGraphQLData)
+    ? decompress<MockGraphQLData>(mockGraphQLDataString)
     : null;
 
   const workspaceId = params.id;
