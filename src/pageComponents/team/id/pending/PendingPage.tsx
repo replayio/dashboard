@@ -1,25 +1,27 @@
 import { Button } from "@/components/Button";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { SessionContext } from "@/components/SessionContext";
 import { acceptPendingWorkspaceInvitation } from "@/graphql/queries/acceptPendingWorkspaceInvitation";
 import { declinePendingWorkspaceInvitation } from "@/graphql/queries/declinePendingWorkspaceInvitation";
-import { usePendingWorkspaces } from "@/graphql/queries/usePendingWorkspaces";
+import { PendingWorkspace } from "@/graphql/types";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
-export function PendingPage({ isTest, workspaceId }: { isTest: boolean; workspaceId: string }) {
+export function PendingPage({
+  isTest,
+  workspace,
+}: {
+  isTest: boolean;
+  workspace: PendingWorkspace;
+}) {
   const { accessToken } = useContext(SessionContext);
 
   const router = useRouter();
 
-  const { isLoading, workspaces } = usePendingWorkspaces();
-  const workspace = workspaces?.find(({ id }) => id === workspaceId);
-
   const { confirmationDialog, showConfirmationDialog } = useConfirmDialog(
     async (confirmed: boolean) => {
       if (confirmed) {
-        const success = await declinePendingWorkspaceInvitation(accessToken, workspaceId);
+        const success = await declinePendingWorkspaceInvitation(accessToken, workspace.id);
         if (success) {
           router.push("/team/me/recordings");
         }
@@ -32,14 +34,10 @@ export function PendingPage({ isTest, workspaceId }: { isTest: boolean; workspac
     }
   );
 
-  if (isLoading || !workspace) {
-    return <LoadingSpinner />;
-  }
-
   const acceptInvitation = async () => {
-    const success = await acceptPendingWorkspaceInvitation(accessToken, workspaceId);
+    const success = await acceptPendingWorkspaceInvitation(accessToken, workspace.id);
     if (success) {
-      router.push(isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`);
+      router.push(isTest ? `/team/${workspace.id}/runs` : `/team/${workspace.id}/recordings`);
     }
   };
 

@@ -1,9 +1,10 @@
 import { HEADERS } from "@/constants";
+import { getPendingWorkspaces } from "@/graphql/queries/getPendingWorkspaces";
 import { getWorkspace } from "@/graphql/queries/getWorkspaceType";
 import assert from "assert";
 import { GetServerSidePropsContext } from "next";
 
-export async function getServerSidePropsHelpers({
+export async function getServerSideWorkspaceProps({
   params,
   req,
 }: GetServerSidePropsContext<{ id: string }>) {
@@ -13,16 +14,21 @@ export async function getServerSidePropsHelpers({
   const accessToken = req?.headers?.[HEADERS.accessToken] as string;
 
   try {
-    const { isTest } = await getWorkspace(accessToken, workspaceId);
+    const [{ isTest }, pendingWorkspaces] = await Promise.all([
+      getWorkspace(accessToken, workspaceId),
+      // usually it won't be a critical error so let's pretend there are no pending workspaces in case of an error
+      getPendingWorkspaces(accessToken).catch(() => []),
+    ]);
 
     return {
+      isInvalid: false as const,
+      isPending: !!pendingWorkspaces.find(({ id }) => id === workspaceId),
       isTest,
       workspaceId: params.id,
     };
   } catch (error) {
     return {
-      invalidWorkspace: true,
-      isTest: false,
+      isInvalid: true as const,
       workspaceId,
     };
   }
