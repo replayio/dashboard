@@ -35,7 +35,6 @@ export async function navigateToPage({
   if (apiKey) {
     url.searchParams.set("apiKey", apiKey);
   }
-  console.log("mockGraphQLData:", typeof mockGraphQLData, mockGraphQLData);
   if (mockGraphQLData) {
     url.searchParams.set("mockGraphQLData", compress(mockGraphQLData));
   }

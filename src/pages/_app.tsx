@@ -1,3 +1,4 @@
+import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { COOKIES, HEADERS } from "@/constants";
@@ -7,7 +8,6 @@ import { decompress } from "@/utils/compression";
 import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { listenForAccessToken } from "@/utils/replayBrowser";
-import assert from "assert";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
@@ -78,8 +78,10 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const { accessToken, mockGraphQLData, props, user } = this;
     const { Component, pageProps } = props;
 
-    assert("Layout" in Component, "Page.Layout is required");
-    const Layout = Component.Layout as ComponentType<PropsWithChildren>;
+    let Layout: ComponentType<PropsWithChildren> = EmptyLayout;
+    if ("Layout" in Component) {
+      Layout = Component.Layout as ComponentType<PropsWithChildren>;
+    }
 
     let children = (
       <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
