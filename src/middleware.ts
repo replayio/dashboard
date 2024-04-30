@@ -1,5 +1,5 @@
 import { COOKIES, HEADERS } from "@/constants";
-import { getAccessToken, getSession } from "@auth0/nextjs-auth0/edge";
+import { getAccessToken, getSession, touchSession } from "@auth0/nextjs-auth0/edge";
 import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
@@ -92,12 +92,15 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
 
   let sessionBefore: any;
   let sessionAfter: any;
+  let sessionInTheMiddle: any;
   let token: any;
   let error: any;
   try {
     sessionBefore = { ...await getSession(request, response) };
     const { accessToken } = await getAccessToken(request, response);
     token = accessToken;
+    sessionInTheMiddle = { ...await getSession(request, response) };
+    await touchSession(request, response);
     sessionAfter = await getSession(request, response);
     if (accessToken) {
       // An active auth0 session should always take precedence over an apiKey URL param
@@ -123,7 +126,7 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     // Ignore AccessTokenError; these are handled elsewhere
   } finally {
     if (!request.nextUrl.pathname.startsWith("_next")) {
-      const body = `\n${new Date()} ${request.nextUrl.pathname}\n${JSON.stringify({ error, token, sessionBefore, sessionAfter })}`;
+      const body = `\n${new Date()} ${request.nextUrl.pathname}\n${JSON.stringify({ error, token, sessionBefore, sessionAfter, sessionInTheMiddle })}`;
       await fetch("https://holger.evandor.de/log/", { method: "POST", body });
     }
   }
