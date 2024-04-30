@@ -1,6 +1,6 @@
 import { COOKIES } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
-import { getServerSidePropsHelpers as getServerSidePropsShared } from "@/pageComponents/team/id/getServerSidePropsHelpers";
+import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerSidePropsHelpers";
 import { ContextRoot, Filters } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { TestSuiteRunsPage } from "@/pageComponents/team/id/runs/TestSuiteRunsPage";
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
@@ -33,32 +33,26 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   const stringValue = context.req.cookies[COOKIES.testRunsFilters];
   const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
 
-  const { invalidWorkspace, isTest, workspaceId } = await getServerSidePropsShared(context);
+  const { isInvalid, isTest, pendingWorkspace, workspaceId } =
+    await getServerSideWorkspaceProps(context);
 
   const testId = (context.query.testId ?? null) as string | null;
   const testRunId = (context.query.testRunId ?? null) as string | null;
 
-  if (invalidWorkspace) {
+  if (isInvalid) {
     return redirectWithState({
       context,
       pathname: "/team/me/recordings",
-      props: {
-        filters,
-        testId,
-        testRunId,
-        workspaceId,
-      },
+    });
+  } else if (pendingWorkspace) {
+    return redirectWithState({
+      context,
+      pathname: `/team/${workspaceId}/pending`,
     });
   } else if (!isTest) {
     return redirectWithState({
       context,
       pathname: `/team/${workspaceId}/recordings`,
-      props: {
-        filters,
-        testId,
-        testRunId,
-        workspaceId,
-      },
     });
   }
 
