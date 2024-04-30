@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev -p 8080",
+    "dev": "npm run dev:prod",
+    "dev:local": "DEVTOOLS_URL=http://localhost:8081 pnpm dev -- -p 8080",
+    "dev:prod": "next dev -p 8080",
     "preprod": "NEXT_PUBLIC_API_URL=http://graphql-api.pre-prod.replay.prod/v1/graphql next dev -p 8080",
     "graphql": "pnpm graphql-schema && pnpm graphql-types",
     "graphql-schema": "gq https://graphql.replay.io/v1/graphql -H \"X-Hasura-Admin-Secret: $HASURA_KEY\" --introspect > schema.graphql",
@@ -28,6 +30,7 @@
     "@stripe/react-stripe-js": "^2.6.2",
     "@stripe/stripe-js": "^3.0.10",
     "chalk": "^4",
+    "compress-json": "^3.0.3",
     "cookie": "^0.6.0",
     "date-fns": "^3.3.1",
     "graphql": "^16.8.1",
@@ -38,7 +41,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.13",
-    "react-resizable-panels": "^2.0.1",
+    "react-resizable-panels": "^2.0.19",
     "use-context-menu": "^0.4.13",
     "uuid": "^9.0.1"
   },

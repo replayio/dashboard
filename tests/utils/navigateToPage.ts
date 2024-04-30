@@ -1,3 +1,4 @@
+import { compress } from "@/utils/compression";
 import { Page } from "@playwright/test";
 import assert from "assert";
 import chalk from "chalk";
@@ -35,7 +36,7 @@ export async function navigateToPage({
     url.searchParams.set("apiKey", apiKey);
   }
   if (mockGraphQLData) {
-    url.searchParams.set("mockGraphQLData", JSON.stringify(mockGraphQLData));
+    url.searchParams.set("mockGraphQLData", compress(mockGraphQLData));
   }
 
   await debugPrint(page, `Navigating to ${chalk.blueBright(url)}`, "navigateToPage");

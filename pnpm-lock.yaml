@@ -23,6 +23,9 @@ dependencies:
   chalk:
     specifier: ^4
     version: 4.1.2
+  compress-json:
+    specifier: ^3.0.3
+    version: 3.0.3
   cookie:
     specifier: ^0.6.0
     version: 0.6.0
@@ -54,8 +57,8 @@ dependencies:
     specifier: ^4.0.13
     version: 4.0.13(react@18.2.0)
   react-resizable-panels:
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^2.0.19
+    version: 2.0.19(react-dom@18.2.0)(react@18.2.0)
   use-context-menu:
     specifier: ^0.4.13
     version: 0.4.13(react-dom@18.2.0)(react@18.2.0)
@@ -5865,6 +5868,13 @@ packages:
       }
     engines: { node: ">=4.0.0" }
     dev: true
+
+  /compress-json@3.0.3:
+    resolution:
+      {
+        integrity: sha512-O7iS9kq39q83h79q0GwuJVEd5g+dPDU7bca/834bMlOIVO5zvJfQsEKRrjg6Tr4qLlN5xJoud4vWyq3lwvLj1w==,
+      }
+    dev: false
 
   /concat-map@0.0.1:
     resolution:
@@ -12274,10 +12284,10 @@ packages:
       }
     dev: true
 
-  /react-resizable-panels@2.0.1(react-dom@18.2.0)(react@18.2.0):
+  /react-resizable-panels@2.0.19(react-dom@18.2.0)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-h+YJ+E70/UVsWjq4RVJhW0ua+yYFo5AcDkSUaVXLqBjor5CLYl9TypqoAlrYoWvlnZIQuntuo2g3aScTT5XiNw==,
+        integrity: sha512-v3E41kfKSuCPIvJVb4nL4mIZjjKIn/gh6YqZF/gDfQDolv/8XnhJBek4EiV2gOr3hhc5A3kOGOayk3DhanpaQw==,
       }
     peerDependencies:
       react: ^16.14.0 || ^17.0.0 || ^18.0.0

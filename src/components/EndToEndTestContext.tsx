@@ -1,3 +1,4 @@
+import { decompress } from "@/utils/compression";
 import { PropsWithChildren, createContext, useMemo } from "react";
 import { MockGraphQLData } from "../../tests/mocks/types";
 
@@ -9,13 +10,15 @@ export const EndToEndTestContext = createContext<EndToEndTestContextType>(null a
 
 export function EndToEndTestContextProvider({
   children,
-  mockGraphQLData,
+  mockGraphQLData: mockGraphQLDataString,
 }: PropsWithChildren<{ mockGraphQLData: string | null }>) {
   const value = useMemo<EndToEndTestContextType>(
     () => ({
-      mockGraphQLData: mockGraphQLData ? (JSON.parse(mockGraphQLData) as MockGraphQLData) : null,
+      mockGraphQLData: mockGraphQLDataString
+        ? decompress<MockGraphQLData>(mockGraphQLDataString)
+        : null,
     }),
-    [mockGraphQLData]
+    [mockGraphQLDataString]
   );
 
   return <EndToEndTestContext.Provider value={value}>{children}</EndToEndTestContext.Provider>;
