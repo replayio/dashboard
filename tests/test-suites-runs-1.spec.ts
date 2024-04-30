@@ -61,17 +61,17 @@ test("test-suites-runs-1: text and drop-down filters", async ({ page }) => {
   // It's difficult to test drop-down filters because content is dynamic
   // but we can test that their most recent state is remembered after reloading the page
   await expect(await getContextMenuText(page, "TestRuns-RunStatusFilter")).toBe("All runs");
-  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe("Last 7 days");
+  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe("Past week");
   await expect(await getContextMenuText(page, "TestRuns-BranchFilter")).toBe("All branches");
   await openContextMenu(page, "TestRuns-RunStatusFilter");
   await getContextMenuItem(page, "Only failures").click();
   await openContextMenu(page, "TestRuns-DateRangeFilter");
-  await getContextMenuItem(page, "Last day").click();
+  await getContextMenuItem(page, "Past day").click();
   await openContextMenu(page, "TestRuns-BranchFilter");
   await getContextMenuItem(page, "Only primary branch").click();
   await page.reload();
   await expect(await getContextMenuText(page, "TestRuns-RunStatusFilter")).toBe("Only failures");
-  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe("Last day");
+  await expect(await getContextMenuText(page, "TestRuns-DateRangeFilter")).toBe("Past day");
   await expect(await getContextMenuText(page, "TestRuns-BranchFilter")).toBe("Only primary branch");
 });
 

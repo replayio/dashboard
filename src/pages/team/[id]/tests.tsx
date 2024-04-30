@@ -9,13 +9,19 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
   filters,
+  retentionLimit,
   testSummaryId,
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
 
   return (
-    <ContextRoot defaultTestSummaryId={testSummaryId} filters={filters} workspaceId={workspaceId}>
+    <ContextRoot
+      defaultTestSummaryId={testSummaryId}
+      filters={filters}
+      retentionLimit={retentionLimit}
+      workspaceId={workspaceId}
+    >
       <TestSuiteTestsPage workspaceId={workspaceId!} />
     </ContextRoot>
   );
@@ -27,7 +33,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   const stringValue = context.req.cookies[COOKIES.testsFilters];
   const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
 
-  const { isInvalid, isTest, pendingWorkspace, workspaceId } =
+  const { isInvalid, isTest, pendingWorkspace, retentionLimit, workspaceId } =
     await getServerSideWorkspaceProps(context);
 
   const testSummaryId = (context.query.testSummaryId ?? null) as string | null;
@@ -52,6 +58,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   return {
     props: {
       filters,
+      retentionLimit,
       testSummaryId,
       workspaceId,
     },

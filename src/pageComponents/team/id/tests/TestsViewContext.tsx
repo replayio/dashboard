@@ -3,12 +3,11 @@ import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestSummary } from "@/graphql/types";
 import {
   DEFAULT_DATE_RANGE_FILTER,
-  DEFAULT_SORT_BY_FILTER,
   DateRange,
-  SortBy,
-} from "@/pageComponents/team/id/tests/constants";
+  getDateForDateRange,
+} from "@/pageComponents/team/constants";
+import { DEFAULT_SORT_BY_FILTER, SortBy } from "@/pageComponents/team/id/tests/constants";
 import { setCookieValueClient } from "@/utils/cookie";
-import { getRelativeDate } from "@/utils/date";
 import { useRouter } from "next/navigation";
 import {
   PropsWithChildren,
@@ -30,6 +29,7 @@ export const TestsViewContext = createContext<
   Filters & {
     isLoading: boolean;
     isPending: boolean;
+    retentionLimit: number;
     selectedTestSummaryId: string | undefined;
     selectTestSummary: (id: string) => void;
     testSummaries: TestSuiteTestSummary[] | undefined;
@@ -41,10 +41,12 @@ export function ContextRoot({
   children,
   defaultTestSummaryId,
   filters,
+  retentionLimit,
   workspaceId,
 }: PropsWithChildren & {
   filters: Partial<Filters> | null;
   defaultTestSummaryId: string | null;
+  retentionLimit: number;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
@@ -97,19 +99,7 @@ export function ContextRoot({
     [setState]
   );
 
-  let startDate: Date;
-  switch (state.dateRange) {
-    case "day":
-      startDate = getRelativeDate({ daysAgo: 1 });
-      break;
-    case "hour":
-      startDate = getRelativeDate({ hoursAgo: 1 });
-      break;
-    case "week":
-    default:
-      startDate = getRelativeDate({ daysAgo: 7 });
-      break;
-  }
+  const startDate = getDateForDateRange(state.dateRange);
 
   const { isLoading, testSummaries } = useWorkspaceTests(workspaceId, startDate);
 
@@ -152,6 +142,7 @@ export function ContextRoot({
       filterText,
       isLoading,
       isPending,
+      retentionLimit,
       selectedTestSummaryId: filteredSelectedTestSummaryId,
       selectTestSummary,
       sortBy,
@@ -165,6 +156,7 @@ export function ContextRoot({
       filterText,
       isLoading,
       isPending,
+      retentionLimit,
       selectTestSummary,
       sortBy,
       updateFilters,

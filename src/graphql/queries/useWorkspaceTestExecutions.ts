@@ -12,9 +12,12 @@ import { useMemo } from "react";
 export function useWorkspaceTestExecutions(
   workspaceId: string,
   testId: string,
-  startTime: string = "",
-  endTime: string = ""
+  startDate?: Date,
+  endDate?: Date
 ) {
+  const endTime = endDate ? endDate.toISOString().substring(0, 10) : undefined;
+  const startTime = startDate ? startDate.toISOString().substring(0, 10) : undefined;
+
   const { data, error, isLoading } = useGraphQLQuery<
     GetWorkspaceTestExecutionsQuery,
     GetWorkspaceTestExecutionsQueryVariables
@@ -57,8 +60,8 @@ export function useWorkspaceTestExecutions(
       }
     `,
     {
-      endTime: endTime || undefined,
-      startTime: startTime || undefined,
+      endTime,
+      startTime,
       testId,
       workspaceId,
     }

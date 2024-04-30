@@ -9,6 +9,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
   filters,
+  retentionLimit,
   testId,
   testRunId,
   workspaceId,
@@ -20,6 +21,7 @@ export default function Page({
       defaultTestId={testId}
       defaultTestRunId={testRunId}
       filters={filters!}
+      retentionLimit={retentionLimit}
       workspaceId={workspaceId!}
     >
       <TestSuiteRunsPage />
@@ -33,7 +35,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   const stringValue = context.req.cookies[COOKIES.testRunsFilters];
   const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
 
-  const { isInvalid, isTest, pendingWorkspace, workspaceId } =
+  const { isInvalid, isTest, pendingWorkspace, retentionLimit, workspaceId } =
     await getServerSideWorkspaceProps(context);
 
   const testId = (context.query.testId ?? null) as string | null;
@@ -59,6 +61,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   return {
     props: {
       filters,
+      retentionLimit,
       testId,
       testRunId,
       workspaceId,

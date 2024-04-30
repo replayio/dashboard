@@ -89,13 +89,13 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   const testFailureRate = numTests > 0 ? numFailedTests / numTests : 0;
 
   return (
-    <div className="flex flex-col gap-2 px-2 pt-2 py-1 bg-slate-900 rounded">
-      <div className="flex flex-row justify-center gap-2 h-10">
+    <div className="flex flex-col items-center gap-2 px-2 pt-2 py-1 bg-slate-900 rounded">
+      <div className="inline-flex flex-row gap-2 h-10 overflow-x-auto max-w-full w-auto">
         {dataByDay.map((data, index) => (
           <ChartItem data={data} key={index} mostTestsRunsInDay={mostTestsRunsInDay} />
         ))}
       </div>
-      <div className="flex flex-row justify-around gap-2">
+      <div className="flex flex-row justify-around gap-2 w-full">
         <Stats
           data-test-id="TestRuns-Stats-RunFailureRateSummary"
           label="run"
@@ -170,7 +170,7 @@ function ChartItem({
 
   return (
     <div
-      className="relative h-full grow max-w-10 hover:bg-gray-800 transition rounded-sm overflow-hidden"
+      className="relative h-full grow max-w-10 hover:bg-gray-800 transition rounded-sm overflow-hidden w-10 min-w-2"
       data-test-name="TestRuns-Stats-DayColumn"
       onMouseEnter={onMouseEnter}
       onMouseMove={onMouseMove}

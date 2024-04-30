@@ -1,14 +1,11 @@
 import { DropDownMenu } from "@/components/DropDownMenu";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
+import { DATE_RANGE_FILTERS } from "@/pageComponents/team/constants";
 import { TestRunRow } from "@/pageComponents/team/id/runs/TestRunRow";
 import { TestRunStatsGraph } from "@/pageComponents/team/id/runs/TestRunStatsGraph";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
-import {
-  BRANCH_FILTERS,
-  DATE_RANGE_FILTERS,
-  RUN_STATUS_FILTERS,
-} from "@/pageComponents/team/id/runs/constants";
+import { BRANCH_FILTERS, RUN_STATUS_FILTERS } from "@/pageComponents/team/id/runs/constants";
 import { useContext } from "react";
 
 export default function TestRuns({
