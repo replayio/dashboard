@@ -29,8 +29,11 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({ pa
     expect(text).toContain("Failed run in temp branch");
 
     await expect(
-      await page.locator('[data-test-id="TestRuns-Stats-FailureRateLabel"]').textContent()
-    ).toBe("Failure rate: 100%");
+      await page.locator('[data-test-id="TestRuns-Stats-RunFailureRateSummary"]').textContent()
+    ).toBe("runs failed: 100% (1 of 1)");
+    await expect(
+      await page.locator('[data-test-id="TestRuns-Stats-TestFailureRateSummary"]').textContent()
+    ).toBe("tests failed: 56% (5 of 9)");
 
     const column = page.locator('[data-test-name="TestRuns-Stats-DayColumn"]');
     await column.hover();

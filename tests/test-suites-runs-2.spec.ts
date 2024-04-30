@@ -28,8 +28,11 @@ test("test-suites-runs-2: passed run in main branch with source", async ({ page 
     expect(text).toContain("Successful run in main branch");
 
     await expect(
-      await page.locator('[data-test-id="TestRuns-Stats-FailureRateLabel"]').textContent()
-    ).toBe("Failure rate: 0%");
+      await page.locator('[data-test-id="TestRuns-Stats-RunFailureRateSummary"]').textContent()
+    ).toBe("no failed runs (1 total)");
+    await expect(
+      await page.locator('[data-test-id="TestRuns-Stats-TestFailureRateSummary"]').textContent()
+    ).toBe("no failed tests (2 total)");
 
     const column = page.locator('[data-test-name="TestRuns-Stats-DayColumn"]');
     await column.hover();
