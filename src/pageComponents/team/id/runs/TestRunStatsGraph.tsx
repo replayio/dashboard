@@ -5,6 +5,7 @@ import { getRelativeDate } from "@/utils/date";
 import { getBackgroundColorClassName } from "@/utils/test-suites";
 import assert from "assert";
 import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
+import { HTMLAttributes } from "react";
 
 export type TestRunStatsData = {
   date: Date;
@@ -22,6 +23,8 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   }
 
   let numFailedTestRuns = 0;
+  let numFailedTests = 0;
+  let numTests = 0;
 
   const dataByDay: TestRunStatsData[] = [];
 
@@ -55,6 +58,10 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
     currentData.numFlakyTests += testRun.numFlaky;
     currentData.numPassingTests += testRun.numPassed;
 
+    // TODO Is this right?
+    numFailedTests += testRun.numFailed + testRun.numFlaky;
+    numTests += testRun.numFailed + testRun.numFlaky + testRun.numPassed;
+
     if (testRun.numFailed > 0) {
       // A test run containing a single failing test is a failed test run
       numFailedTestRuns++;
@@ -76,7 +83,10 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
 
   dataByDay.reverse();
 
-  const testRunFailureRate = testRuns.length > 0 ? numFailedTestRuns / testRuns.length : 0;
+  const numTestRuns = testRuns.length;
+  const testRunFailureRate = numTestRuns > 0 ? numFailedTestRuns / numTestRuns : 0;
+
+  const testFailureRate = numTests > 0 ? numFailedTests / numTests : 0;
 
   return (
     <div className="flex flex-col gap-2 px-2 pt-2 py-1 bg-slate-900 rounded">
@@ -85,9 +95,53 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
           <ChartItem data={data} key={index} mostTestsRunsInDay={mostTestsRunsInDay} />
         ))}
       </div>
-      <div data-test-id="TestRuns-Stats-FailureRateLabel">
-        Failure rate: {Math.round(testRunFailureRate * 100)}%
+      <div className="flex flex-row justify-around gap-2">
+        <Stats
+          data-test-id="TestRuns-Stats-RunFailureRateSummary"
+          label="run"
+          failureCount={numFailedTestRuns}
+          failureRate={testRunFailureRate}
+          totalCount={numTestRuns}
+        />
+        <Stats
+          data-test-id="TestRuns-Stats-TestFailureRateSummary"
+          label="test"
+          failureCount={numFailedTests}
+          failureRate={testFailureRate}
+          totalCount={numTests}
+        />
       </div>
+    </div>
+  );
+}
+
+function Stats({
+  failureRate,
+  failureCount,
+  label,
+  totalCount,
+  ...rest
+}: HTMLAttributes<HTMLDivElement> & {
+  failureRate: number;
+  failureCount: number;
+  label: string;
+  totalCount: number;
+}) {
+  if (totalCount === 0) {
+    return null;
+  }
+
+  const primaryLabel =
+    failureRate === 0
+      ? `no failed ${label}s`
+      : `${label}s failed: ${Math.round(failureRate * 100)}%`;
+  const secondaryLabel =
+    failureCount === 0 ? `${totalCount} total` : `${failureCount} of ${totalCount}`;
+
+  return (
+    <div {...rest} className="flex flex-row flex-wrap items-center">
+      <div className="mr-1 capitalize">{primaryLabel} </div>
+      <div className="text-xs text-slate-300">({secondaryLabel})</div>
     </div>
   );
 }
