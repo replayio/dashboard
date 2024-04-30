@@ -19,14 +19,15 @@ export default function Page({
 Page.Layout = TeamLayout;
 
 export async function getServerSideProps(context: GetServerSidePropsContext<{ id: string }>) {
-  const { isInvalid, isPending, isTest, workspaceId } = await getServerSideWorkspaceProps(context);
+  const { isInvalid, isTest, pendingWorkspace, workspaceId } =
+    await getServerSideWorkspaceProps(context);
 
   if (isInvalid) {
     return redirectWithState({
       context,
       pathname: "/team/me/recordings",
     });
-  } else if (isPending) {
+  } else if (pendingWorkspace) {
     return redirectWithState({
       context,
       pathname: `/team/${workspaceId}/pending`,

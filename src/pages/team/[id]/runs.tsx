@@ -33,7 +33,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   const stringValue = context.req.cookies[COOKIES.testRunsFilters];
   const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
 
-  const { isInvalid, isPending, isTest, workspaceId } = await getServerSideWorkspaceProps(context);
+  const { isInvalid, isTest, pendingWorkspace, workspaceId } =
+    await getServerSideWorkspaceProps(context);
 
   const testId = (context.query.testId ?? null) as string | null;
   const testRunId = (context.query.testRunId ?? null) as string | null;
@@ -43,7 +44,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
       context,
       pathname: "/team/me/recordings",
     });
-  } else if (isPending) {
+  } else if (pendingWorkspace) {
     return redirectWithState({
       context,
       pathname: `/team/${workspaceId}/pending`,

@@ -22,8 +22,8 @@ export async function getServerSideWorkspaceProps({
 
     return {
       isInvalid: false as const,
-      isPending: !!pendingWorkspaces.find(({ id }) => id === workspaceId),
       isTest,
+      pendingWorkspace: pendingWorkspaces.find(({ id }) => id === workspaceId),
       workspaceId: params.id,
     };
   } catch (error) {
