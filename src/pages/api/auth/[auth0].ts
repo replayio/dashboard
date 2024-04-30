@@ -12,7 +12,7 @@ export default handleAuth({
         audience: "https://api.replay.io",
         code_challenge_method: "S256",
         response_type: "code" as "code",
-        scope: "openid profile offline_access",
+        scope: "openid offline_access",
         prompt: getValueFromArrayOrString(req.query.prompt),
         connection: getValueFromArrayOrString(req.query.connection),
         redirect_uri: `${origin}/api/auth/callback`,
