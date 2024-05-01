@@ -172,7 +172,7 @@ export type Workspace = {
   isOrganization: boolean;
   isTest: boolean;
   name: string;
-  retentionLimitDays: number;
+  retentionLimitDays: number | null;
   settings: WorkspaceSettings | null;
   subscriptionPlanKey: string | null;
 };

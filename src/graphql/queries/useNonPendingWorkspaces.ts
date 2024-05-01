@@ -47,7 +47,7 @@ export function useNonPendingWorkspaces() {
               isOrganization: node.isOrganization,
               isTest: node.isTest,
               name: node.name,
-              retentionLimitDays: node.retentionLimit ?? Number.POSITIVE_INFINITY,
+              retentionLimitDays: node.retentionLimit ?? null,
               settings: node.settings
                 ? {
                     features: {

@@ -29,7 +29,7 @@ export const TestsViewContext = createContext<
   Filters & {
     isLoading: boolean;
     isPending: boolean;
-    retentionLimit: number;
+    retentionLimit: number | null;
     selectedTestSummaryId: string | undefined;
     selectTestSummary: (id: string) => void;
     testSummaries: TestSuiteTestSummary[] | undefined;
@@ -46,7 +46,7 @@ export function ContextRoot({
 }: PropsWithChildren & {
   filters: Partial<Filters> | null;
   defaultTestSummaryId: string | null;
-  retentionLimit: number;
+  retentionLimit: number | null;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
