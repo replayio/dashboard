@@ -42,7 +42,7 @@ export const RunsViewContext = createContext<
     isLoadingTestRuns: boolean;
     isLoadingTests: boolean;
     isPending: boolean;
-    retentionLimit: number;
+    retentionLimit: number | null;
     selectedTestRunId: string | undefined;
     selectedTestId: string | undefined;
     selectTest: (id: string) => void;
@@ -64,7 +64,7 @@ export function ContextRoot({
   filters: Partial<Filters> | null;
   defaultTestId: string | null;
   defaultTestRunId: string | null;
-  retentionLimit: number;
+  retentionLimit: number | null;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({

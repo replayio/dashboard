@@ -1,8 +1,8 @@
 import { Icon } from "@/components/Icon";
 import { TestSuiteTestExecutionRecording, TestSuiteTestStatus } from "@/graphql/types";
-import { getRelativeDate } from "@/utils/date";
 import { getURL } from "@/utils/recording";
 import { getColorClassName } from "@/utils/test-suites";
+import { isDateWithinRetentionLimits } from "@/utils/workspace";
 import Link from "next/link";
 
 export function RecordingRow({
@@ -11,15 +11,14 @@ export function RecordingRow({
   status,
 }: {
   recording: TestSuiteTestExecutionRecording;
-  retentionLimit: number;
+  retentionLimit: number | null;
   status: TestSuiteTestStatus;
 }) {
   const url = getURL(recording.id, recording.buildId);
 
   const iconType = recording.isProcessed ? "processed-recording" : "unprocessed-recording";
 
-  const isWithinRetentionLimit =
-    recording.createdAt.getTime() >= getRelativeDate({ daysAgo: retentionLimit }).getTime();
+  const isWithinRetentionLimit = isDateWithinRetentionLimits(recording.createdAt, retentionLimit);
 
   if (isWithinRetentionLimit) {
     const colorClassName = getColorClassName(status);
