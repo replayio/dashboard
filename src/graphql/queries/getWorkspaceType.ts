@@ -10,6 +10,7 @@ const QUERY = gql`
         id
         isOrganization
         isTest
+        retentionLimit
       }
     }
   }
@@ -18,7 +19,7 @@ const QUERY = gql`
 export async function getWorkspace(
   accessToken: string,
   workspaceId: string
-): Promise<{ id: string; isOrganization: boolean; isTest: boolean }> {
+): Promise<{ id: string; isOrganization: boolean; isTest: boolean; retentionLimit: number }> {
   const graphQLClient = getGraphQLClient(accessToken);
 
   const response = await graphQLClient.query<GetWorkspaceQuery, GetWorkspaceQueryVariables>({
@@ -34,5 +35,6 @@ export async function getWorkspace(
     id: response.data?.node.id,
     isOrganization: response.data?.node.isOrganization,
     isTest: response.data?.node.isTest,
+    retentionLimit: response.data?.node.retentionLimit ?? Number.POSITIVE_INFINITY,
   };
 }

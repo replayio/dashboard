@@ -21,6 +21,7 @@ export type IconType =
   | "failed-test"
   | "flaky-test"
   | "folder"
+  | "info"
   | "legal"
   | "loading-spinner"
   | "logout"
@@ -130,6 +131,10 @@ export function Icon({
     case "folder":
       path =
         "M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z";
+      break;
+    case "info":
+      path =
+        "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-6h2zm0-8h-2V7h2z";
       break;
     case "legal":
       path =

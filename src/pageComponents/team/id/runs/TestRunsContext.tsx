@@ -3,23 +3,23 @@ import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
 import {
+  DEFAULT_DATE_RANGE_FILTER,
+  DateRange,
+  getDateForDateRange,
+} from "@/pageComponents/team/constants";
+import {
   Branch,
   DEFAULT_BRANCH_FILTER,
-  DEFAULT_DATE_RANGE_FILTER,
   DEFAULT_RUN_STATUS_FILTER,
   DEFAULT_TEST_STATUS_FILTER,
-  DateRange,
   RunStatus,
   TestStatus,
 } from "@/pageComponents/team/id/runs/constants";
 import { setCookieValueClient } from "@/utils/cookie";
-import { getRelativeDate } from "@/utils/date";
 import { filterTest, filterTestRun } from "@/utils/test-suites";
 import { useRouter } from "next/navigation";
 import {
-  Dispatch,
   PropsWithChildren,
-  SetStateAction,
   createContext,
   useCallback,
   useEffect,
@@ -42,6 +42,7 @@ export const RunsViewContext = createContext<
     isLoadingTestRuns: boolean;
     isLoadingTests: boolean;
     isPending: boolean;
+    retentionLimit: number;
     selectedTestRunId: string | undefined;
     selectedTestId: string | undefined;
     selectTest: (id: string) => void;
@@ -57,11 +58,13 @@ export function ContextRoot({
   defaultTestId,
   defaultTestRunId,
   filters,
+  retentionLimit,
   workspaceId,
 }: PropsWithChildren & {
   filters: Partial<Filters> | null;
   defaultTestId: string | null;
   defaultTestRunId: string | null;
+  retentionLimit: number;
   workspaceId: string;
 }) {
   const [state, setState] = useState<Filters>({
@@ -137,32 +140,20 @@ export function ContextRoot({
     [setState]
   );
 
-  let startDate: Date;
-  switch (state.runsDateRange) {
-    case "day":
-      startDate = getRelativeDate({ daysAgo: 1 });
-      break;
-    case "hour":
-      startDate = getRelativeDate({ hoursAgo: 1 });
-      break;
-    case "week":
-    default:
-      startDate = getRelativeDate({ daysAgo: 7 });
-      break;
-  }
+  const startDate = getDateForDateRange(state.runsDateRange);
 
   const { isLoading: isLoadingTestRuns, testRuns } = useTestSuiteTestRuns(workspaceId, startDate);
 
   const filteredTestRuns = useMemo(() => {
     return testRuns?.filter(testRun =>
       filterTestRun(testRun, {
-        afterDate: getRelativeDate({ daysAgo: 6 }),
+        afterDate: startDate,
         branch: runsBranch,
         status: runsStatus,
         text: runsFilterText,
       })
     );
-  }, [runsBranch, runsFilterText, runsStatus, testRuns]);
+  }, [runsBranch, runsFilterText, runsStatus, startDate, testRuns]);
 
   const { isLoading: isLoadingTests, tests } = useTestSuiteTests(workspaceId, selectedTestRunId);
 
@@ -182,6 +173,7 @@ export function ContextRoot({
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
+      retentionLimit,
       runsBranch,
       runsDateRange,
       runsFilterText,
@@ -202,6 +194,7 @@ export function ContextRoot({
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
+      retentionLimit,
       runsDateRange,
       runsBranch,
       runsFilterText,

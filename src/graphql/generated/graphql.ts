@@ -2,23 +2,15 @@
 import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
   [_ in K]?: never;
 };
 export type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
-    };
+  | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -8755,7 +8747,6 @@ export type Organizations = {
   identity_providers?: Maybe<Scalars["jsonb"]["output"]>;
   logo?: Maybe<Scalars["String"]["output"]>;
   logo_format?: Maybe<Scalars["String"]["output"]>;
-  motd?: Maybe<Scalars["String"]["output"]>;
   name: Scalars["String"]["output"];
   /** An array relationship */
   subs: Array<Workspaces_Subscription>;
@@ -8879,7 +8870,6 @@ export type Organizations_Bool_Exp = {
   identity_providers?: InputMaybe<Jsonb_Comparison_Exp>;
   logo?: InputMaybe<String_Comparison_Exp>;
   logo_format?: InputMaybe<String_Comparison_Exp>;
-  motd?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   subs?: InputMaybe<Workspaces_Subscription_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -8928,7 +8918,6 @@ export type Organizations_Insert_Input = {
   identity_providers?: InputMaybe<Scalars["jsonb"]["input"]>;
   logo?: InputMaybe<Scalars["String"]["input"]>;
   logo_format?: InputMaybe<Scalars["String"]["input"]>;
-  motd?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   subs?: InputMaybe<Workspaces_Subscription_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
@@ -8947,7 +8936,6 @@ export type Organizations_Max_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   logo?: Maybe<Scalars["String"]["output"]>;
   logo_format?: Maybe<Scalars["String"]["output"]>;
-  motd?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
@@ -8962,7 +8950,6 @@ export type Organizations_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   logo?: InputMaybe<Order_By>;
   logo_format?: InputMaybe<Order_By>;
-  motd?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -8978,7 +8965,6 @@ export type Organizations_Min_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   logo?: Maybe<Scalars["String"]["output"]>;
   logo_format?: Maybe<Scalars["String"]["output"]>;
-  motd?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
   user_id?: Maybe<Scalars["uuid"]["output"]>;
@@ -8993,7 +8979,6 @@ export type Organizations_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   logo?: InputMaybe<Order_By>;
   logo_format?: InputMaybe<Order_By>;
-  motd?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -9034,7 +9019,6 @@ export type Organizations_Order_By = {
   identity_providers?: InputMaybe<Order_By>;
   logo?: InputMaybe<Order_By>;
   logo_format?: InputMaybe<Order_By>;
-  motd?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   subs_aggregate?: InputMaybe<Workspaces_Subscription_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -9080,8 +9064,6 @@ export enum Organizations_Select_Column {
   /** column name */
   LogoFormat = "logo_format",
   /** column name */
-  Motd = "motd",
-  /** column name */
   Name = "name",
   /** column name */
   UpdatedAt = "updated_at",
@@ -9102,7 +9084,6 @@ export type Organizations_Set_Input = {
   identity_providers?: InputMaybe<Scalars["jsonb"]["input"]>;
   logo?: InputMaybe<Scalars["String"]["input"]>;
   logo_format?: InputMaybe<Scalars["String"]["input"]>;
-  motd?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -9132,8 +9113,6 @@ export enum Organizations_Update_Column {
   Logo = "logo",
   /** column name */
   LogoFormat = "logo_format",
-  /** column name */
-  Motd = "motd",
   /** column name */
   Name = "name",
   /** column name */
@@ -25002,10 +24981,7 @@ export type AcceptPendingWorkspaceInvitationMutationVariables = Exact<{
 
 export type AcceptPendingWorkspaceInvitationMutation = {
   __typename?: "mutation_root";
-  acceptWorkspaceMembership: {
-    __typename?: "AcceptWorkspaceMembership";
-    success?: boolean | null;
-  };
+  acceptWorkspaceMembership: { __typename?: "AcceptWorkspaceMembership"; success?: boolean | null };
 };
 
 export type CreateUserApiKeyMutationVariables = Exact<{
@@ -25063,10 +25039,7 @@ export type DeclinePendingWorkspaceInvitationMutationVariables = Exact<{
 
 export type DeclinePendingWorkspaceInvitationMutation = {
   __typename?: "mutation_root";
-  rejectWorkspaceMembership: {
-    __typename?: "RejectWorkspaceMembership";
-    success?: boolean | null;
-  };
+  rejectWorkspaceMembership: { __typename?: "RejectWorkspaceMembership"; success?: boolean | null };
 };
 
 export type DeleteUserApiKeyMutationVariables = Exact<{
@@ -25075,10 +25048,7 @@ export type DeleteUserApiKeyMutationVariables = Exact<{
 
 export type DeleteUserApiKeyMutation = {
   __typename?: "mutation_root";
-  deleteUserAPIKey: {
-    __typename?: "DeleteUserAPIKey";
-    success?: boolean | null;
-  };
+  deleteUserAPIKey: { __typename?: "DeleteUserAPIKey"; success?: boolean | null };
 };
 
 export type DeleteWorkspaceMutationVariables = Exact<{
@@ -25097,10 +25067,7 @@ export type DeleteWorkspaceApiKeyMutationVariables = Exact<{
 
 export type DeleteWorkspaceApiKeyMutation = {
   __typename?: "mutation_root";
-  deleteWorkspaceAPIKey: {
-    __typename?: "DeleteWorkspaceAPIKey";
-    success?: boolean | null;
-  };
+  deleteWorkspaceAPIKey: { __typename?: "DeleteWorkspaceAPIKey"; success?: boolean | null };
 };
 
 export type FulfillAuthRequestMutationVariables = Exact<{
@@ -25136,11 +25103,33 @@ export type GetUserQuery = {
     email: string;
     internal: boolean;
     nags: Array<string>;
-    user: {
-      __typename?: "User";
-      name?: string | null;
-      picture?: string | null;
-      id: string;
+    user: { __typename?: "User"; name?: string | null; picture?: string | null; id: string };
+  } | null;
+};
+
+export type GetPendingWorkspacesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetPendingWorkspacesQuery = {
+  __typename?: "query_root";
+  viewer?: {
+    __typename?: "AuthenticatedUser";
+    workspaceInvitations: {
+      __typename?: "UserWorkspaceInvitationConnection";
+      edges: Array<{
+        __typename?: "UserWorkspaceInvitationEdge";
+        node: {
+          __typename?: "WorkspaceInvitation";
+          inviterEmail?: string | null;
+          workspace: {
+            __typename?: "Workspace";
+            id: string;
+            name: string;
+            recordingCount: number;
+            isOrganization: boolean;
+            isTest: boolean;
+          };
+        };
+      }>;
     };
   } | null;
 };
@@ -25151,11 +25140,7 @@ export type GetRecordingPhotoQueryVariables = Exact<{
 
 export type GetRecordingPhotoQuery = {
   __typename?: "query_root";
-  recording?: {
-    __typename?: "Recording";
-    thumbnail?: string | null;
-    uuid: any;
-  } | null;
+  recording?: { __typename?: "Recording"; thumbnail?: string | null; uuid: any } | null;
 };
 
 export type GetWorkspaceMemberRolesQueryVariables = Exact<{
@@ -25276,6 +25261,7 @@ export type GetWorkspaceQuery = {
         id: string;
         isOrganization: boolean;
         isTest: boolean;
+        retentionLimit?: number | null;
       }
     | null;
 };
@@ -25303,10 +25289,7 @@ export type InviteWorkspaceMemberMutationVariables = Exact<{
 
 export type InviteWorkspaceMemberMutation = {
   __typename?: "mutation_root";
-  addWorkspaceMember: {
-    __typename?: "AddWorkspaceMember";
-    success?: boolean | null;
-  };
+  addWorkspaceMember: { __typename?: "AddWorkspaceMember"; success?: boolean | null };
 };
 
 export type ActivateWorkspaceSubscriptionMutationVariables = Exact<{
@@ -25339,10 +25322,7 @@ export type AddCollaboratorMutationVariables = Exact<{
 
 export type AddCollaboratorMutation = {
   __typename?: "mutation_root";
-  addRecordingCollaborator: {
-    __typename?: "AddRecordingCollaborator";
-    success?: boolean | null;
-  };
+  addRecordingCollaborator: { __typename?: "AddRecordingCollaborator"; success?: boolean | null };
 };
 
 export type ClaimTeamInvitationCodeMutationVariables = Exact<{
@@ -25422,9 +25402,7 @@ export type GetWorkspaceApiKeysQuery = {
     | null;
 };
 
-export type GetNonPendingWorkspacesQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type GetNonPendingWorkspacesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetNonPendingWorkspacesQuery = {
   __typename?: "query_root";
@@ -25442,44 +25420,13 @@ export type GetNonPendingWorkspacesQuery = {
           isOrganization: boolean;
           isTest: boolean;
           name: string;
-          settings?: {
-            __typename?: "WorkspaceSettings";
-            features?: any | null;
-          } | null;
+          retentionLimit?: number | null;
+          settings?: { __typename?: "WorkspaceSettings"; features?: any | null } | null;
           subscription?: {
             __typename?: "WorkspaceSubscription";
             id: string;
             plan?: { __typename?: "Plan"; id: string; key: string } | null;
           } | null;
-        };
-      }>;
-    };
-  } | null;
-};
-
-export type GetPendingWorkspacesQueryVariables = Exact<{
-  [key: string]: never;
-}>;
-
-export type GetPendingWorkspacesQuery = {
-  __typename?: "query_root";
-  viewer?: {
-    __typename?: "AuthenticatedUser";
-    workspaceInvitations: {
-      __typename?: "UserWorkspaceInvitationConnection";
-      edges: Array<{
-        __typename?: "UserWorkspaceInvitationEdge";
-        node: {
-          __typename?: "WorkspaceInvitation";
-          inviterEmail?: string | null;
-          workspace: {
-            __typename?: "Workspace";
-            id: string;
-            name: string;
-            recordingCount: number;
-            isOrganization: boolean;
-            isTest: boolean;
-          };
         };
       }>;
     };
@@ -25557,20 +25504,12 @@ export type GetOwnerAndCollaboratorsQuery = {
           | {
               __typename?: "RecordingPendingUserCollaborator";
               id: string;
-              user: {
-                __typename?: "User";
-                name?: string | null;
-                picture?: string | null;
-              };
+              user: { __typename?: "User"; name?: string | null; picture?: string | null };
             }
           | {
               __typename?: "RecordingUserCollaborator";
               id: string;
-              user: {
-                __typename?: "User";
-                name?: string | null;
-                picture?: string | null;
-              };
+              user: { __typename?: "User"; name?: string | null; picture?: string | null };
             };
       }>;
     } | null;
@@ -25581,11 +25520,7 @@ export type GetOwnerAndCollaboratorsQuery = {
         node: {
           __typename?: "RecordingCollaboratorRequest";
           id: string;
-          user: {
-            __typename?: "User";
-            name?: string | null;
-            picture?: string | null;
-          };
+          user: { __typename?: "User"; name?: string | null; picture?: string | null };
         };
       }>;
     } | null;
@@ -25715,10 +25650,7 @@ export type UpdateUserPreferencesMutationVariables = Exact<{
 
 export type UpdateUserPreferencesMutation = {
   __typename?: "mutation_root";
-  updateUserPreferences: {
-    __typename?: "UpdateUserPreferences";
-    success?: boolean | null;
-  };
+  updateUserPreferences: { __typename?: "UpdateUserPreferences"; success?: boolean | null };
 };
 
 export type UpdateWorkspaceMemberRolesMutationVariables = Exact<{
@@ -25728,10 +25660,7 @@ export type UpdateWorkspaceMemberRolesMutationVariables = Exact<{
 
 export type UpdateWorkspaceMemberRolesMutation = {
   __typename?: "mutation_root";
-  updateWorkspaceMemberRole: {
-    __typename?: "UpdateWorkspaceMemberRole";
-    success?: boolean | null;
-  };
+  updateWorkspaceMemberRole: { __typename?: "UpdateWorkspaceMemberRole"; success?: boolean | null };
 };
 
 export type UpdateWorkspacePreferencesMutationVariables = Exact<{
@@ -25742,10 +25671,7 @@ export type UpdateWorkspacePreferencesMutationVariables = Exact<{
 
 export type UpdateWorkspacePreferencesMutation = {
   __typename?: "mutation_root";
-  updateWorkspaceSettings: {
-    __typename?: "UpdateWorkspaceSettings";
-    success?: boolean | null;
-  };
+  updateWorkspaceSettings: { __typename?: "UpdateWorkspaceSettings"; success?: boolean | null };
 };
 
 export type GetWorkspaceRecordingsQueryVariables = Exact<{
@@ -25815,18 +25741,9 @@ export type GetWorkspaceSubscriptionQuery = {
             id: string;
             type: string;
             default: boolean;
-            card: {
-              __typename?: "PaymentMethodCard";
-              brand: string;
-              last4: string;
-            };
+            card: { __typename?: "PaymentMethodCard"; brand: string; last4: string };
           }> | null;
-          plan?: {
-            __typename?: "Plan";
-            id: string;
-            key: string;
-            name: string;
-          } | null;
+          plan?: { __typename?: "Plan"; id: string; key: string; name: string } | null;
         } | null;
       }
     | null;
@@ -25925,10 +25842,7 @@ export type RemoveUserFromWorkspaceMutationVariables = Exact<{
 
 export type RemoveUserFromWorkspaceMutation = {
   __typename?: "mutation_root";
-  removeWorkspaceMember: {
-    __typename?: "RemoveWorkspaceMember";
-    success?: boolean | null;
-  };
+  removeWorkspaceMember: { __typename?: "RemoveWorkspaceMember"; success?: boolean | null };
 };
 
 export const AcceptPendingWorkspaceInvitationDocument = {
@@ -25941,10 +25855,7 @@ export const AcceptPendingWorkspaceInvitationDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -25967,10 +25878,7 @@ export const AcceptPendingWorkspaceInvitationDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                   ],
                 },
@@ -25999,34 +25907,22 @@ export const CreateUserApiKeyDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "label" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "label" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "scopes" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "scopes" } },
           type: {
             kind: "NonNullType",
             type: {
               kind: "ListType",
               type: {
                 kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "String" },
-                },
+                type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
               },
             },
           },
@@ -26048,18 +25944,12 @@ export const CreateUserApiKeyDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "label" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "label" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "label" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "scopes" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "scopes" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "scopes" } },
                     },
                   ],
                 },
@@ -26101,24 +25991,15 @@ export const CreateNewWorkspaceDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "name" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "planKey" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "planKey" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
       ],
@@ -26138,18 +26019,12 @@ export const CreateNewWorkspaceDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "name" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "name" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "name" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "planKey" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "planKey" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "planKey" } },
                     },
                   ],
                 },
@@ -26166,18 +26041,9 @@ export const CreateNewWorkspaceDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "invitationCode" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "domain" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "isDomainLimitedCode" },
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "invitationCode" } },
+                      { kind: "Field", name: { kind: "Name", value: "domain" } },
+                      { kind: "Field", name: { kind: "Name", value: "isDomainLimitedCode" } },
                     ],
                   },
                 },
@@ -26199,10 +26065,7 @@ export const CreateWorkspaceApiKeyDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -26210,34 +26073,22 @@ export const CreateWorkspaceApiKeyDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "label" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "label" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "scopes" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "scopes" } },
           type: {
             kind: "NonNullType",
             type: {
               kind: "ListType",
               type: {
                 kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "String" },
-                },
+                type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
               },
             },
           },
@@ -26259,26 +26110,17 @@ export const CreateWorkspaceApiKeyDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "label" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "label" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "label" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "scopes" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "scopes" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "scopes" } },
                     },
                   ],
                 },
@@ -26317,10 +26159,7 @@ export const DeclinePendingWorkspaceInvitationDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -26343,10 +26182,7 @@ export const DeclinePendingWorkspaceInvitationDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                   ],
                 },
@@ -26398,10 +26234,7 @@ export const DeleteUserApiKeyDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "id" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
                     },
                   ],
                 },
@@ -26427,10 +26260,7 @@ export const DeleteWorkspaceDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -26438,16 +26268,10 @@ export const DeleteWorkspaceDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "shouldDeleteRecordings" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "shouldDeleteRecordings" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "Boolean" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } },
           },
         },
       ],
@@ -26467,10 +26291,7 @@ export const DeleteWorkspaceDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                     {
                       kind: "ObjectField",
@@ -26527,10 +26348,7 @@ export const DeleteWorkspaceApiKeyDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "id" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
                     },
                   ],
                 },
@@ -26556,16 +26374,10 @@ export const FulfillAuthRequestDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "secret" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "secret" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
@@ -26573,24 +26385,15 @@ export const FulfillAuthRequestDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "token" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "token" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
       ],
@@ -26610,26 +26413,17 @@ export const FulfillAuthRequestDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "secret" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "secret" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "secret" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "id" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "token" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "token" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "token" } },
                     },
                   ],
                 },
@@ -26658,16 +26452,10 @@ export const GetAuthConnectionDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "email" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "email" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
       ],
@@ -26687,10 +26475,7 @@ export const GetAuthConnectionDocument = {
                     {
                       kind: "Argument",
                       name: { kind: "Name", value: "email" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "email" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "email" } },
                     },
                   ],
                 },
@@ -26728,10 +26513,7 @@ export const GetUserDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "name" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "picture" },
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "picture" } },
                       { kind: "Field", name: { kind: "Name", value: "id" } },
                     ],
                   },
@@ -26744,6 +26526,78 @@ export const GetUserDocument = {
     },
   ],
 } as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;
+export const GetPendingWorkspacesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetPendingWorkspaces" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "viewer" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "workspaceInvitations" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "edges" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "node" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "workspace" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
+                                        { kind: "Field", name: { kind: "Name", value: "name" } },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "recordingCount" },
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "isOrganization" },
+                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "isTest" } },
+                                      ],
+                                    },
+                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "inviterEmail" } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetPendingWorkspacesQuery, GetPendingWorkspacesQueryVariables>;
 export const GetRecordingPhotoDocument = {
   kind: "Document",
   definitions: [
@@ -26754,10 +26608,7 @@ export const GetRecordingPhotoDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "recordingId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "UUID" } },
@@ -26774,10 +26625,7 @@ export const GetRecordingPhotoDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "uuid" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "recordingId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
               },
             ],
             selectionSet: {
@@ -26803,10 +26651,7 @@ export const GetWorkspaceMemberRolesDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -26823,10 +26668,7 @@ export const GetWorkspaceMemberRolesDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -26834,10 +26676,7 @@ export const GetWorkspaceMemberRolesDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -26864,50 +26703,32 @@ export const GetWorkspaceMemberRolesDocument = {
                                           kind: "InlineFragment",
                                           typeCondition: {
                                             kind: "NamedType",
-                                            name: {
-                                              kind: "Name",
-                                              value: "WorkspaceUserMember",
-                                            },
+                                            name: { kind: "Name", value: "WorkspaceUserMember" },
                                           },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "__typename",
-                                                },
+                                                name: { kind: "Name", value: "__typename" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "roles",
-                                                },
+                                                name: { kind: "Name", value: "roles" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "user",
-                                                },
+                                                name: { kind: "Name", value: "user" },
                                                 selectionSet: {
                                                   kind: "SelectionSet",
                                                   selections: [
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "id",
-                                                      },
+                                                      name: { kind: "Name", value: "id" },
                                                     },
                                                   ],
                                                 },
@@ -26945,10 +26766,7 @@ export const GetWorkspaceMembersDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -26965,10 +26783,7 @@ export const GetWorkspaceMembersDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -26976,10 +26791,7 @@ export const GetWorkspaceMembersDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -27016,38 +26828,23 @@ export const GetWorkspaceMembersDocument = {
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "__typename",
-                                                },
+                                                name: { kind: "Name", value: "__typename" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "roles",
-                                                },
+                                                name: { kind: "Name", value: "roles" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "email",
-                                                },
+                                                name: { kind: "Name", value: "email" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "createdAt",
-                                                },
+                                                name: { kind: "Name", value: "createdAt" },
                                               },
                                             ],
                                           },
@@ -27066,54 +26863,33 @@ export const GetWorkspaceMembersDocument = {
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "__typename",
-                                                },
+                                                name: { kind: "Name", value: "__typename" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "roles",
-                                                },
+                                                name: { kind: "Name", value: "roles" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "user",
-                                                },
+                                                name: { kind: "Name", value: "user" },
                                                 selectionSet: {
                                                   kind: "SelectionSet",
                                                   selections: [
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "id",
-                                                      },
+                                                      name: { kind: "Name", value: "id" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "name",
-                                                      },
+                                                      name: { kind: "Name", value: "name" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "picture",
-                                                      },
+                                                      name: { kind: "Name", value: "picture" },
                                                     },
                                                   ],
                                                 },
@@ -27125,64 +26901,40 @@ export const GetWorkspaceMembersDocument = {
                                           kind: "InlineFragment",
                                           typeCondition: {
                                             kind: "NamedType",
-                                            name: {
-                                              kind: "Name",
-                                              value: "WorkspaceUserMember",
-                                            },
+                                            name: { kind: "Name", value: "WorkspaceUserMember" },
                                           },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "__typename",
-                                                },
+                                                name: { kind: "Name", value: "__typename" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "roles",
-                                                },
+                                                name: { kind: "Name", value: "roles" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "user",
-                                                },
+                                                name: { kind: "Name", value: "user" },
                                                 selectionSet: {
                                                   kind: "SelectionSet",
                                                   selections: [
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "id",
-                                                      },
+                                                      name: { kind: "Name", value: "id" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "name",
-                                                      },
+                                                      name: { kind: "Name", value: "name" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "picture",
-                                                      },
+                                                      name: { kind: "Name", value: "picture" },
                                                     },
                                                   ],
                                                 },
@@ -27220,10 +26972,7 @@ export const GetWorkspaceSubscriptionStatusDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -27240,10 +26989,7 @@ export const GetWorkspaceSubscriptionStatusDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -27251,10 +26997,7 @@ export const GetWorkspaceSubscriptionStatusDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -27265,14 +27008,8 @@ export const GetWorkspaceSubscriptionStatusDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "id" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "status" },
-                            },
+                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                            { kind: "Field", name: { kind: "Name", value: "status" } },
                           ],
                         },
                       },
@@ -27300,10 +27037,7 @@ export const GetWorkspaceDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -27320,10 +27054,7 @@ export const GetWorkspaceDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -27331,22 +27062,14 @@ export const GetWorkspaceDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "isOrganization" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "isTest" },
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "isOrganization" } },
+                      { kind: "Field", name: { kind: "Name", value: "isTest" } },
+                      { kind: "Field", name: { kind: "Name", value: "retentionLimit" } },
                     ],
                   },
                 },
@@ -27371,18 +27094,12 @@ export const InitAutRequestDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "key" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "source" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "source" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           defaultValue: { kind: "StringValue", value: "browser", block: false },
         },
@@ -27403,18 +27120,12 @@ export const InitAutRequestDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "key" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "key" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "key" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "source" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "source" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "source" } },
                     },
                   ],
                 },
@@ -27444,24 +27155,15 @@ export const InviteWorkspaceMemberDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "email" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "email" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -27469,18 +27171,12 @@ export const InviteWorkspaceMemberDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "roles" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "roles" } },
           type: {
             kind: "ListType",
             type: {
               kind: "NonNullType",
-              type: {
-                kind: "NamedType",
-                name: { kind: "Name", value: "String" },
-              },
+              type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
             },
           },
         },
@@ -27501,26 +27197,17 @@ export const InviteWorkspaceMemberDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "email" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "email" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "email" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "roles" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "roles" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "roles" } },
                     },
                   ],
                 },
@@ -27546,10 +27233,7 @@ export const ActivateWorkspaceSubscriptionDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -27557,30 +27241,18 @@ export const ActivateWorkspaceSubscriptionDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "planKey" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "planKey" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "paymentMethodBillingId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "paymentMethodBillingId" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
       ],
@@ -27600,10 +27272,7 @@ export const ActivateWorkspaceSubscriptionDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                     {
                       kind: "ObjectField",
@@ -27635,18 +27304,12 @@ export const ActivateWorkspaceSubscriptionDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "planKey" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "planKey" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "planKey" } },
                     },
                   ],
                 },
@@ -27662,14 +27325,8 @@ export const ActivateWorkspaceSubscriptionDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "effectiveUntil" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "status" },
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "effectiveUntil" } },
+                      { kind: "Field", name: { kind: "Name", value: "status" } },
                     ],
                   },
                 },
@@ -27694,24 +27351,15 @@ export const AddCollaboratorDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "email" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "email" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "recordingId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -27734,18 +27382,12 @@ export const AddCollaboratorDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "email" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "email" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "email" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "recordingId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "recordingId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
                     },
                   ],
                 },
@@ -27794,10 +27436,7 @@ export const ClaimTeamInvitationCodeDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "code" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "code" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "code" } },
                     },
                   ],
                 },
@@ -27829,10 +27468,7 @@ export const DeleteRecordingDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "recordingId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -27855,10 +27491,7 @@ export const DeleteRecordingDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "recordingId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
                     },
                   ],
                 },
@@ -27884,10 +27517,7 @@ export const DeleteCollaboratorDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "collaborationId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "collaborationId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -27910,10 +27540,7 @@ export const DeleteCollaboratorDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "collaborationId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "collaborationId" } },
                     },
                   ],
                 },
@@ -27952,23 +27579,11 @@ export const GetUserSettingsDocument = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "createdAt" },
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "createdAt" } },
                       { kind: "Field", name: { kind: "Name", value: "label" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "scopes" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "recordingCount" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "maxRecordings" },
-                      },
+                      { kind: "Field", name: { kind: "Name", value: "scopes" } },
+                      { kind: "Field", name: { kind: "Name", value: "recordingCount" } },
+                      { kind: "Field", name: { kind: "Name", value: "maxRecordings" } },
                     ],
                   },
                 },
@@ -27990,10 +27605,7 @@ export const GetWorkspaceApiKeysDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -28010,10 +27622,7 @@ export const GetWorkspaceApiKeysDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -28021,10 +27630,7 @@ export const GetWorkspaceApiKeysDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -28035,30 +27641,12 @@ export const GetWorkspaceApiKeysDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "id" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "createdAt" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "label" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "scopes" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "recordingCount" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "maxRecordings" },
-                            },
+                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                            { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                            { kind: "Field", name: { kind: "Name", value: "label" } },
+                            { kind: "Field", name: { kind: "Name", value: "scopes" } },
+                            { kind: "Field", name: { kind: "Name", value: "recordingCount" } },
+                            { kind: "Field", name: { kind: "Name", value: "maxRecordings" } },
                           ],
                         },
                       },
@@ -28109,36 +27697,22 @@ export const GetNonPendingWorkspacesDocument = {
                                 selections: [
                                   {
                                     kind: "Field",
-                                    name: {
-                                      kind: "Name",
-                                      value: "hasPaymentMethod",
-                                    },
+                                    name: { kind: "Name", value: "hasPaymentMethod" },
+                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "id" } },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "invitationCode" },
                                   },
                                   {
                                     kind: "Field",
-                                    name: { kind: "Name", value: "id" },
+                                    name: { kind: "Name", value: "isOrganization" },
                                   },
+                                  { kind: "Field", name: { kind: "Name", value: "isTest" } },
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                   {
                                     kind: "Field",
-                                    name: {
-                                      kind: "Name",
-                                      value: "invitationCode",
-                                    },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: {
-                                      kind: "Name",
-                                      value: "isOrganization",
-                                    },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "isTest" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "name" },
+                                    name: { kind: "Name", value: "retentionLimit" },
                                   },
                                   {
                                     kind: "Field",
@@ -28148,27 +27722,18 @@ export const GetNonPendingWorkspacesDocument = {
                                       selections: [
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "features",
-                                          },
+                                          name: { kind: "Name", value: "features" },
                                         },
                                       ],
                                     },
                                   },
                                   {
                                     kind: "Field",
-                                    name: {
-                                      kind: "Name",
-                                      value: "subscription",
-                                    },
+                                    name: { kind: "Name", value: "subscription" },
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
                                         {
                                           kind: "Field",
                                           name: { kind: "Name", value: "plan" },
@@ -28177,17 +27742,11 @@ export const GetNonPendingWorkspacesDocument = {
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "key",
-                                                },
+                                                name: { kind: "Name", value: "key" },
                                               },
                                             ],
                                           },
@@ -28212,102 +27771,6 @@ export const GetNonPendingWorkspacesDocument = {
     },
   ],
 } as unknown as DocumentNode<GetNonPendingWorkspacesQuery, GetNonPendingWorkspacesQueryVariables>;
-export const GetPendingWorkspacesDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetPendingWorkspaces" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "viewer" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "workspaceInvitations" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "edges" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "node" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "workspace" },
-                                    selectionSet: {
-                                      kind: "SelectionSet",
-                                      selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "name" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "recordingCount",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "isOrganization",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "isTest",
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: {
-                                      kind: "Name",
-                                      value: "inviterEmail",
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetPendingWorkspacesQuery, GetPendingWorkspacesQueryVariables>;
 export const GetPersonalRecordingsDocument = {
   kind: "Document",
   definitions: [
@@ -28318,10 +27781,7 @@ export const GetPersonalRecordingsDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "filter" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "filter" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
       ],
@@ -28341,10 +27801,7 @@ export const GetPersonalRecordingsDocument = {
                     {
                       kind: "Argument",
                       name: { kind: "Name", value: "filter" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "filter" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "filter" } },
                     },
                   ],
                   selectionSet: {
@@ -28362,81 +27819,42 @@ export const GetPersonalRecordingsDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "buildId" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "duration" },
-                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "buildId" } },
+                                  { kind: "Field", name: { kind: "Name", value: "duration" } },
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "comments" },
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
                                       ],
                                     },
                                   },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "createdAt" },
-                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "createdAt" } },
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "owner" },
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "name" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "picture",
-                                          },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
+                                        { kind: "Field", name: { kind: "Name", value: "name" } },
+                                        { kind: "Field", name: { kind: "Name", value: "picture" } },
                                       ],
                                     },
                                   },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "private" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "title" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "url" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "uuid" },
-                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "private" } },
+                                  { kind: "Field", name: { kind: "Name", value: "title" } },
+                                  { kind: "Field", name: { kind: "Name", value: "url" } },
+                                  { kind: "Field", name: { kind: "Name", value: "uuid" } },
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "workspace" },
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
                                       ],
                                     },
                                   },
@@ -28467,10 +27885,7 @@ export const PrepareWorkspacePaymentMethodDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -28493,10 +27908,7 @@ export const PrepareWorkspacePaymentMethodDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                   ],
                 },
@@ -28506,10 +27918,7 @@ export const PrepareWorkspacePaymentMethodDocument = {
               kind: "SelectionSet",
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "success" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "paymentSecret" },
-                },
+                { kind: "Field", name: { kind: "Name", value: "paymentSecret" } },
               ],
             },
           },
@@ -28531,10 +27940,7 @@ export const GetOwnerAndCollaboratorsDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "recordingId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "UUID" } },
@@ -28551,10 +27957,7 @@ export const GetOwnerAndCollaboratorsDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "uuid" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "recordingId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "recordingId" } },
               },
             ],
             selectionSet: {
@@ -28591,23 +27994,11 @@ export const GetOwnerAndCollaboratorsDocument = {
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
+                                        { kind: "Field", name: { kind: "Name", value: "email" } },
                                         {
                                           kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "email",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "createdAt",
-                                          },
+                                          name: { kind: "Name", value: "createdAt" },
                                         },
                                       ],
                                     },
@@ -28624,10 +28015,7 @@ export const GetOwnerAndCollaboratorsDocument = {
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
                                         {
                                           kind: "Field",
                                           name: { kind: "Name", value: "user" },
@@ -28636,17 +28024,11 @@ export const GetOwnerAndCollaboratorsDocument = {
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "name",
-                                                },
+                                                name: { kind: "Name", value: "name" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "picture",
-                                                },
+                                                name: { kind: "Name", value: "picture" },
                                               },
                                             ],
                                           },
@@ -28658,18 +28040,12 @@ export const GetOwnerAndCollaboratorsDocument = {
                                     kind: "InlineFragment",
                                     typeCondition: {
                                       kind: "NamedType",
-                                      name: {
-                                        kind: "Name",
-                                        value: "RecordingUserCollaborator",
-                                      },
+                                      name: { kind: "Name", value: "RecordingUserCollaborator" },
                                     },
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
                                         {
                                           kind: "Field",
                                           name: { kind: "Name", value: "user" },
@@ -28678,17 +28054,11 @@ export const GetOwnerAndCollaboratorsDocument = {
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "name",
-                                                },
+                                                name: { kind: "Name", value: "name" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "picture",
-                                                },
+                                                name: { kind: "Name", value: "picture" },
                                               },
                                             ],
                                           },
@@ -28727,18 +28097,12 @@ export const GetOwnerAndCollaboratorsDocument = {
                                     kind: "InlineFragment",
                                     typeCondition: {
                                       kind: "NamedType",
-                                      name: {
-                                        kind: "Name",
-                                        value: "RecordingCollaboratorRequest",
-                                      },
+                                      name: { kind: "Name", value: "RecordingCollaboratorRequest" },
                                     },
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
                                         {
                                           kind: "Field",
                                           name: { kind: "Name", value: "user" },
@@ -28747,17 +28111,11 @@ export const GetOwnerAndCollaboratorsDocument = {
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "name",
-                                                },
+                                                name: { kind: "Name", value: "name" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "picture",
-                                                },
+                                                name: { kind: "Name", value: "picture" },
                                               },
                                             ],
                                           },
@@ -28792,10 +28150,7 @@ export const RemovePaymentMethodDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -28803,16 +28158,10 @@ export const RemovePaymentMethodDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "paymentMethodId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "paymentMethodId" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
       ],
@@ -28832,18 +28181,12 @@ export const RemovePaymentMethodDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "paymentMethodId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "paymentMethodId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "paymentMethodId" } },
                     },
                   ],
                 },
@@ -28869,10 +28212,7 @@ export const GetTestsRunsForWorkspaceDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -28880,18 +28220,12 @@ export const GetTestsRunsForWorkspaceDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "startTime" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "endTime" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
       ],
@@ -28905,10 +28239,7 @@ export const GetTestsRunsForWorkspaceDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -28916,10 +28247,7 @@ export const GetTestsRunsForWorkspaceDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -28969,56 +28297,32 @@ export const GetTestsRunsForWorkspaceDocument = {
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
+                                        { kind: "Field", name: { kind: "Name", value: "date" } },
+                                        { kind: "Field", name: { kind: "Name", value: "mode" } },
                                         {
                                           kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "date" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "mode" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "results",
-                                          },
+                                          name: { kind: "Name", value: "results" },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "counts",
-                                                },
+                                                name: { kind: "Name", value: "counts" },
                                                 selectionSet: {
                                                   kind: "SelectionSet",
                                                   selections: [
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "failed",
-                                                      },
+                                                      name: { kind: "Name", value: "failed" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "flaky",
-                                                      },
+                                                      name: { kind: "Name", value: "flaky" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "passed",
-                                                      },
+                                                      name: { kind: "Name", value: "passed" },
                                                     },
                                                   ],
                                                 },
@@ -29028,82 +28332,49 @@ export const GetTestsRunsForWorkspaceDocument = {
                                         },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "source",
-                                          },
+                                          name: { kind: "Name", value: "source" },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "commitId",
-                                                },
+                                                name: { kind: "Name", value: "commitId" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "commitTitle",
-                                                },
+                                                name: { kind: "Name", value: "commitTitle" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "groupLabel",
-                                                },
+                                                name: { kind: "Name", value: "groupLabel" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "isPrimaryBranch",
-                                                },
+                                                name: { kind: "Name", value: "isPrimaryBranch" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "branchName",
-                                                },
+                                                name: { kind: "Name", value: "branchName" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "prNumber",
-                                                },
+                                                name: { kind: "Name", value: "prNumber" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "prTitle",
-                                                },
+                                                name: { kind: "Name", value: "prTitle" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "repository",
-                                                },
+                                                name: { kind: "Name", value: "repository" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "triggerUrl",
-                                                },
+                                                name: { kind: "Name", value: "triggerUrl" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "user",
-                                                },
+                                                name: { kind: "Name", value: "user" },
                                               },
                                             ],
                                           },
@@ -29138,10 +28409,7 @@ export const GetTestsDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -29152,10 +28420,7 @@ export const GetTestsDocument = {
           variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           },
         },
       ],
@@ -29169,10 +28434,7 @@ export const GetTestsDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -29180,10 +28442,7 @@ export const GetTestsDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -29195,10 +28454,7 @@ export const GetTestsDocument = {
                           {
                             kind: "Argument",
                             name: { kind: "Name", value: "id" },
-                            value: {
-                              kind: "Variable",
-                              name: { kind: "Name", value: "id" },
-                            },
+                            value: { kind: "Variable", name: { kind: "Name", value: "id" } },
                           },
                         ],
                         selectionSet: {
@@ -29218,21 +28474,12 @@ export const GetTestsDocument = {
                                       selections: [
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "tests",
-                                          },
+                                          name: { kind: "Name", value: "tests" },
                                           arguments: [
                                             {
                                               kind: "Argument",
-                                              name: {
-                                                kind: "Name",
-                                                value: "includeNonRecorded",
-                                              },
-                                              value: {
-                                                kind: "BooleanValue",
-                                                value: true,
-                                              },
+                                              name: { kind: "Name", value: "includeNonRecorded" },
+                                              value: { kind: "BooleanValue", value: true },
                                             },
                                           ],
                                           selectionSet: {
@@ -29240,75 +28487,45 @@ export const GetTestsDocument = {
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "testId",
-                                                },
+                                                name: { kind: "Name", value: "testId" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "title",
-                                                },
+                                                name: { kind: "Name", value: "title" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "scope",
-                                                },
+                                                name: { kind: "Name", value: "scope" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "sourcePath",
-                                                },
+                                                name: { kind: "Name", value: "sourcePath" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "result",
-                                                },
+                                                name: { kind: "Name", value: "result" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "errors",
-                                                },
+                                                name: { kind: "Name", value: "errors" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "durationMs",
-                                                },
+                                                name: { kind: "Name", value: "durationMs" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "executions",
-                                                },
+                                                name: { kind: "Name", value: "executions" },
                                                 selectionSet: {
                                                   kind: "SelectionSet",
                                                   selections: [
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "result",
-                                                      },
+                                                      name: { kind: "Name", value: "result" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "recordings",
-                                                      },
+                                                      name: { kind: "Name", value: "recordings" },
                                                       selectionSet: {
                                                         kind: "SelectionSet",
                                                         selections: [
@@ -29321,10 +28538,7 @@ export const GetTestsDocument = {
                                                           },
                                                           {
                                                             kind: "Field",
-                                                            name: {
-                                                              kind: "Name",
-                                                              value: "uuid",
-                                                            },
+                                                            name: { kind: "Name", value: "uuid" },
                                                           },
                                                           {
                                                             kind: "Field",
@@ -29417,16 +28631,10 @@ export const UpdateUserPreferencesDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "preferences" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "preferences" } },
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "JSONObject" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "JSONObject" } },
           },
         },
       ],
@@ -29446,10 +28654,7 @@ export const UpdateUserPreferencesDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "preferences" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "preferences" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "preferences" } },
                     },
                   ],
                 },
@@ -29483,20 +28688,14 @@ export const UpdateWorkspaceMemberRolesDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "roles" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "roles" } },
           type: {
             kind: "NonNullType",
             type: {
               kind: "ListType",
               type: {
                 kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "String" },
-                },
+                type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
               },
             },
           },
@@ -29518,18 +28717,12 @@ export const UpdateWorkspaceMemberRolesDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "id" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "id" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "roles" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "roles" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "roles" } },
                     },
                   ],
                 },
@@ -29558,10 +28751,7 @@ export const UpdateWorkspacePreferencesDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -29574,14 +28764,8 @@ export const UpdateWorkspacePreferencesDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "features" },
-          },
-          type: {
-            kind: "NamedType",
-            name: { kind: "Name", value: "JSONObject" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "features" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "JSONObject" } },
         },
       ],
       selectionSet: {
@@ -29600,26 +28784,17 @@ export const UpdateWorkspacePreferencesDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "workspaceId" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "workspaceId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "name" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "name" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "name" } },
                     },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "features" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "features" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "features" } },
                     },
                   ],
                 },
@@ -29656,10 +28831,7 @@ export const GetWorkspaceRecordingsDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "filter" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "filter" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
       ],
@@ -29673,10 +28845,7 @@ export const GetWorkspaceRecordingsDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "id" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } },
               },
             ],
             selectionSet: {
@@ -29684,10 +28853,7 @@ export const GetWorkspaceRecordingsDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -29699,10 +28865,7 @@ export const GetWorkspaceRecordingsDocument = {
                           {
                             kind: "Argument",
                             name: { kind: "Name", value: "filter" },
-                            value: {
-                              kind: "Variable",
-                              name: { kind: "Name", value: "filter" },
-                            },
+                            value: { kind: "Variable", name: { kind: "Name", value: "filter" } },
                           },
                         ],
                         selectionSet: {
@@ -29720,123 +28883,66 @@ export const GetWorkspaceRecordingsDocument = {
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
+                                        { kind: "Field", name: { kind: "Name", value: "buildId" } },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "buildId",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "comments",
-                                          },
+                                          name: { kind: "Name", value: "comments" },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                             ],
                                           },
                                         },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "createdAt",
-                                          },
+                                          name: { kind: "Name", value: "createdAt" },
                                         },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "duration",
-                                          },
+                                          name: { kind: "Name", value: "duration" },
                                         },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "metadata",
-                                          },
+                                          name: { kind: "Name", value: "metadata" },
                                         },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "owner",
-                                          },
+                                          name: { kind: "Name", value: "owner" },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "name",
-                                                },
+                                                name: { kind: "Name", value: "name" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "picture",
-                                                },
+                                                name: { kind: "Name", value: "picture" },
                                               },
                                             ],
                                           },
                                         },
+                                        { kind: "Field", name: { kind: "Name", value: "private" } },
+                                        { kind: "Field", name: { kind: "Name", value: "title" } },
+                                        { kind: "Field", name: { kind: "Name", value: "url" } },
+                                        { kind: "Field", name: { kind: "Name", value: "uuid" } },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "private",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "title",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "url" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "uuid" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "workspace",
-                                          },
+                                          name: { kind: "Name", value: "workspace" },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "id",
-                                                },
+                                                name: { kind: "Name", value: "id" },
                                               },
                                             ],
                                           },
@@ -29871,10 +28977,7 @@ export const GetWorkspaceSubscriptionDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -29891,10 +28994,7 @@ export const GetWorkspaceSubscriptionDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -29902,10 +29002,7 @@ export const GetWorkspaceSubscriptionDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -29916,68 +29013,29 @@ export const GetWorkspaceSubscriptionDocument = {
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "id" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "effectiveFrom" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "effectiveUntil" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "status" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "trialEnds" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "seatCount" },
-                            },
+                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                            { kind: "Field", name: { kind: "Name", value: "effectiveFrom" } },
+                            { kind: "Field", name: { kind: "Name", value: "effectiveUntil" } },
+                            { kind: "Field", name: { kind: "Name", value: "status" } },
+                            { kind: "Field", name: { kind: "Name", value: "trialEnds" } },
+                            { kind: "Field", name: { kind: "Name", value: "seatCount" } },
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "paymentMethods" },
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "id" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "type" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "default" },
-                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "id" } },
+                                  { kind: "Field", name: { kind: "Name", value: "type" } },
+                                  { kind: "Field", name: { kind: "Name", value: "default" } },
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "card" },
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "brand",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "last4",
-                                          },
-                                        },
+                                        { kind: "Field", name: { kind: "Name", value: "brand" } },
+                                        { kind: "Field", name: { kind: "Name", value: "last4" } },
                                       ],
                                     },
                                   },
@@ -29990,18 +29048,9 @@ export const GetWorkspaceSubscriptionDocument = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "id" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "key" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "name" },
-                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "id" } },
+                                  { kind: "Field", name: { kind: "Name", value: "key" } },
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
                                 ],
                               },
                             },
@@ -30029,10 +29078,7 @@ export const GetWorkspaceTestExecutionsDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -30040,26 +29086,17 @@ export const GetWorkspaceTestExecutionsDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "testId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "testId" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "startTime" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "endTime" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
       ],
@@ -30073,10 +29110,7 @@ export const GetWorkspaceTestExecutionsDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -30084,10 +29118,7 @@ export const GetWorkspaceTestExecutionsDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -30147,112 +29178,67 @@ export const GetWorkspaceTestExecutionsDocument = {
                                       selections: [
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "executions",
-                                          },
+                                          name: { kind: "Name", value: "executions" },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "testRunId",
-                                                },
+                                                name: { kind: "Name", value: "testRunId" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "errors",
-                                                },
+                                                name: { kind: "Name", value: "errors" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "createdAt",
-                                                },
+                                                name: { kind: "Name", value: "createdAt" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "commitTitle",
-                                                },
+                                                name: { kind: "Name", value: "commitTitle" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "commitAuthor",
-                                                },
+                                                name: { kind: "Name", value: "commitAuthor" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "result",
-                                                },
+                                                name: { kind: "Name", value: "result" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "recordings",
-                                                },
+                                                name: { kind: "Name", value: "recordings" },
                                                 selectionSet: {
                                                   kind: "SelectionSet",
                                                   selections: [
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "buildId",
-                                                      },
+                                                      name: { kind: "Name", value: "buildId" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "id",
-                                                      },
+                                                      name: { kind: "Name", value: "id" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "uuid",
-                                                      },
+                                                      name: { kind: "Name", value: "uuid" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "title",
-                                                      },
+                                                      name: { kind: "Name", value: "title" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "isProcessed",
-                                                      },
+                                                      name: { kind: "Name", value: "isProcessed" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "duration",
-                                                      },
+                                                      name: { kind: "Name", value: "duration" },
                                                     },
                                                     {
                                                       kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "createdAt",
-                                                      },
+                                                      name: { kind: "Name", value: "createdAt" },
                                                     },
                                                   ],
                                                 },
@@ -30293,10 +29279,7 @@ export const GetWorkspaceTestsDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "workspaceId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -30304,18 +29287,12 @@ export const GetWorkspaceTestsDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "startTime" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "startTime" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "endTime" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "endTime" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
       ],
@@ -30329,10 +29306,7 @@ export const GetWorkspaceTestsDocument = {
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "workspaceId" },
-                },
+                value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
               },
             ],
             selectionSet: {
@@ -30340,10 +29314,7 @@ export const GetWorkspaceTestsDocument = {
               selections: [
                 {
                   kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Workspace" },
-                  },
+                  typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Workspace" } },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
@@ -30393,84 +29364,42 @@ export const GetWorkspaceTestsDocument = {
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
+                                        { kind: "Field", name: { kind: "Name", value: "testId" } },
+                                        { kind: "Field", name: { kind: "Name", value: "title" } },
+                                        { kind: "Field", name: { kind: "Name", value: "scope" } },
                                         {
                                           kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "testId",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "title",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "scope",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "stats",
-                                          },
+                                          name: { kind: "Name", value: "stats" },
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "passed",
-                                                },
+                                                name: { kind: "Name", value: "passed" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "failed",
-                                                },
+                                                name: { kind: "Name", value: "failed" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "flaky",
-                                                },
+                                                name: { kind: "Name", value: "flaky" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "skipped",
-                                                },
+                                                name: { kind: "Name", value: "skipped" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "unknown",
-                                                },
+                                                name: { kind: "Name", value: "unknown" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "failureRate",
-                                                },
+                                                name: { kind: "Name", value: "failureRate" },
                                               },
                                               {
                                                 kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "flakyRate",
-                                                },
+                                                name: { kind: "Name", value: "flakyRate" },
                                               },
                                             ],
                                           },
@@ -30505,10 +29434,7 @@ export const RemoveUserFromWorkspaceDocument = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "membershipId" },
-          },
+          variable: { kind: "Variable", name: { kind: "Name", value: "membershipId" } },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
@@ -30531,10 +29457,7 @@ export const RemoveUserFromWorkspaceDocument = {
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "id" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "membershipId" },
-                      },
+                      value: { kind: "Variable", name: { kind: "Name", value: "membershipId" } },
                     },
                   ],
                 },
