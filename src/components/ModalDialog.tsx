@@ -5,13 +5,11 @@ import { createPortal } from "react-dom";
 
 export function ModalDialog({
   children,
-  dialogClassName = "",
   onDismiss,
   renderInline = false,
   title,
   ...rest
 }: PropsWithChildren & {
-  dialogClassName?: string;
   onDismiss: () => void;
   renderInline?: boolean;
   title?: ReactNode;
