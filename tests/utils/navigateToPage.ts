@@ -31,7 +31,12 @@ export async function navigateToPage({
   }
 
   const url = new URL(`${host}/${pathname}`);
-  url.searchParams.set("e2e", "1");
+  if (!pathname.startsWith("recording")) {
+    // we don't want to set the e2e param for devtools URLs because that would instruct
+    // the devtools app to use an apiKey from the URL instead of a token from the
+    // dashboard app, which would break the login-logout-devtools test
+    url.searchParams.set("e2e", "1");
+  }
   if (apiKey) {
     url.searchParams.set("apiKey", apiKey);
   }
