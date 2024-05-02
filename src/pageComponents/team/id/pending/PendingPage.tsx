@@ -1,11 +1,8 @@
-import { Button } from "@/components/Button";
-import { SessionContext } from "@/components/SessionContext";
-import { acceptPendingWorkspaceInvitation } from "@/graphql/queries/acceptPendingWorkspaceInvitation";
-import { declinePendingWorkspaceInvitation } from "@/graphql/queries/declinePendingWorkspaceInvitation";
 import { PendingWorkspace } from "@/graphql/types";
-import { useConfirmDialog } from "@/hooks/useConfirmDialog";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { FakeRecordingRow } from "@/pageComponents/team/id/pending/FakeRecordingRow";
+import { PendingInvitationModal } from "@/pageComponents/team/id/pending/PendingInvitationModal";
+
+const fakeRecordingRows = Array.from({ length: 20 }, (_, i) => i);
 
 export function PendingPage({
   isTest,
@@ -14,54 +11,18 @@ export function PendingPage({
   isTest: boolean;
   workspace: PendingWorkspace;
 }) {
-  const { accessToken } = useContext(SessionContext);
-
-  const router = useRouter();
-
-  const { confirmationDialog, showConfirmationDialog } = useConfirmDialog(
-    async (confirmed: boolean) => {
-      if (confirmed) {
-        const success = await declinePendingWorkspaceInvitation(accessToken, workspace.id);
-        if (success) {
-          router.push("/team/me/recordings");
-        }
-      }
-    },
-    {
-      confirmButtonLabel: "Decline invitation",
-      message: "Are you sure you want to decline this invitation?",
-      title: "Confirm",
-    }
-  );
-
-  const acceptInvitation = async () => {
-    const success = await acceptPendingWorkspaceInvitation(accessToken, workspace.id);
-    if (success) {
-      router.push(isTest ? `/team/${workspace.id}/runs` : `/team/${workspace.id}/recordings`);
-    }
-  };
-
   return (
-    <div className="bg-slate-800 text-white m-2 p-2 rounded overflow-auto flex flex-col gap-2 relative">
-      <div className="flex flex-col space-y-1">
-        <div>
-          You were invited to <strong>{workspace.name}</strong> workspace
-          {workspace.inviterEmail ? (
-            <>
-              {" "}
-              by <a href={`mailto:${workspace.inviterEmail}`}>{workspace.inviterEmail}</a>
-            </>
-          ) : null}
-          .
+    <div className="w-full h-full relative">
+      <div className="flex flex-col gap-2 overflow-auto overflow-hidden h-full p-2">
+        <div className="overflow-auto flex flex-col gap-2 grow">
+          <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px grow relative">
+            {fakeRecordingRows.map((_, index) => (
+              <FakeRecordingRow key={index} />
+            ))}
+          </div>
         </div>
       </div>
-      <div className="flex flex-row space-x-2 text-base">
-        <Button onClick={acceptInvitation}>Accept</Button>
-        <Button color="secondary" onClick={showConfirmationDialog}>
-          Decline
-        </Button>
-      </div>
-      {confirmationDialog}
+      <PendingInvitationModal isTest={isTest} workspace={workspace} />
     </div>
   );
 }
