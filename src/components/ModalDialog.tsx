@@ -6,19 +6,21 @@ import { createPortal } from "react-dom";
 export function ModalDialog({
   children,
   onDismiss,
+  renderInline = false,
   title,
   ...rest
 }: PropsWithChildren & {
   onDismiss: () => void;
-  title: ReactNode;
+  renderInline?: boolean;
+  title?: ReactNode;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useModalDismissSignal(modalRef, onDismiss);
+  useModalDismissSignal(modalRef, onDismiss, !renderInline);
 
   const dialog = (
     <div
-      className="backdrop-blur overflow-y-auto cursor-default fixed top-0 left-0 w-full h-full z-40 flex justify-center items-center bg-black/50"
+      className="backdrop-blur overflow-y-auto cursor-default absolute top-0 left-0 w-full h-full z-40 flex justify-center items-center bg-black/50"
       data-test-name="ModalDialog"
       {...rest}
     >
@@ -27,20 +29,26 @@ export function ModalDialog({
         onClick={stopPropagation}
         ref={modalRef}
       >
-        <div className="text-xl font-bold">{title}</div>
-        <IconButton
-          autoFocus
-          className="absolute top-3 right-3"
-          data-test-nam="ModalDialog-CloseButton"
-          iconType="close"
-          onClick={onDismiss}
-        />
+        {title && (
+          <>
+            <div className="text-xl font-bold">{title}</div>
+            <IconButton
+              autoFocus
+              className="absolute top-3 right-3"
+              data-test-nam="ModalDialog-CloseButton"
+              iconType="close"
+              onClick={onDismiss}
+            />
+          </>
+        )}
         {children}
       </div>
     </div>
   );
 
-  return typeof document !== "undefined" ? createPortal(dialog, document.body) : dialog;
+  return renderInline === false && typeof document !== "undefined"
+    ? createPortal(dialog, document.body)
+    : dialog;
 }
 
 function stopPropagation(event: MouseEvent) {

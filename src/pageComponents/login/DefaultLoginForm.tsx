@@ -3,8 +3,6 @@ import { Message } from "@/components/Message";
 import { GoogleLogo } from "@/pageComponents/login/GoogleLogo";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
 
-const defaultConnection = "google-oauth2";
-
 export function DefaultLoginForm({
   onLogin,
   onSSOLogin,

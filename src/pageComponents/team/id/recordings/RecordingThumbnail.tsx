@@ -25,7 +25,7 @@ function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
   const target = getRecordingTarget(buildId);
 
   useEffect(() => {
-    if (accessToken == null) {
+    if (accessToken == null || target === RecordingTarget.unknown) {
       return;
     }
 
@@ -47,7 +47,7 @@ function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
     return () => {
       observer.disconnect();
     };
-  }, [accessToken, recordingId]);
+  }, [accessToken, recordingId, target]);
 
   if (thumbnail) {
     return (

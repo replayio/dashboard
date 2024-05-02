@@ -1,3 +1,4 @@
+import { PendingWorkspace, Workspace } from "@/graphql/types";
 import { getRelativeDate } from "@/utils/date";
 
 export function isDateWithinRetentionLimits(
@@ -12,4 +13,10 @@ export function isDateWithinRetentionLimits(
   const time = date.getTime();
 
   return time >= minTime;
+}
+
+export function isPendingWorkspace(
+  workspace: PendingWorkspace | Workspace
+): workspace is PendingWorkspace {
+  return "inviterEmail" in workspace;
 }
