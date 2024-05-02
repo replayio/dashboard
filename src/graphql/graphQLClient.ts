@@ -78,7 +78,7 @@ export function getGraphQLClient(accessToken?: string) {
       }),
       defaultOptions: {
         query: {
-          fetchPolicy: "cache-first",
+          fetchPolicy: "network-only",
         },
       },
       link: from([retryLink, httpLink]),
