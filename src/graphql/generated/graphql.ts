@@ -24984,6 +24984,15 @@ export type AcceptPendingWorkspaceInvitationMutation = {
   acceptWorkspaceMembership: { __typename?: "AcceptWorkspaceMembership"; success?: boolean | null };
 };
 
+export type CloseAuthRequestMutationVariables = Exact<{
+  key: Scalars["String"]["input"];
+}>;
+
+export type CloseAuthRequestMutation = {
+  __typename?: "mutation_root";
+  closeAuthRequest: { __typename?: "CloseAuthRequest"; success?: boolean | null; token: string };
+};
+
 export type CreateUserApiKeyMutationVariables = Exact<{
   label: Scalars["String"]["input"];
   scopes: Array<Scalars["String"]["input"]> | Scalars["String"]["input"];
@@ -25897,6 +25906,58 @@ export const AcceptPendingWorkspaceInvitationDocument = {
   AcceptPendingWorkspaceInvitationMutation,
   AcceptPendingWorkspaceInvitationMutationVariables
 >;
+export const CloseAuthRequestDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CloseAuthRequest" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "key" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "closeAuthRequest" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "key" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "key" } },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+                { kind: "Field", name: { kind: "Name", value: "token" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CloseAuthRequestMutation, CloseAuthRequestMutationVariables>;
 export const CreateUserApiKeyDocument = {
   kind: "Document",
   definitions: [
