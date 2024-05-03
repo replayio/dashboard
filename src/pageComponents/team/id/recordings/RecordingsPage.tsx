@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
@@ -69,8 +68,6 @@ export default function RecordingPage({
           }
           type="text"
         />
-
-   
 
         {showLaunchModal && <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />}
       </div>
