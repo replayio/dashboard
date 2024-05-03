@@ -57,8 +57,8 @@ export default function RecordingPage({
   };
 
   return (
-    <div className="flex flex-col gap-2 overflow-auto overflow-hidden h-full p-2">
-      <div className="flex flex-row items-center gap-2 justify-between">
+    <div className="flex flex-col h-full gap-2 p-2 overflow-auto overflow-hidden">
+      <div className="flex flex-row items-center justify-between gap-2">
         <Input
           data-test-id="filter-input"
           defaultValue={filter}
@@ -70,14 +70,12 @@ export default function RecordingPage({
           type="text"
         />
 
-        {globalThis.__IS_RECORD_REPLAY_RUNTIME__ || (
-          <Button onClick={() => setShowLaunchModal(true)}>Launch Replay</Button>
-        )}
+   
 
         {showLaunchModal && <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />}
       </div>
-      <div className="overflow-auto flex flex-col gap-2 grow">
-        <div className="overflow-auto bg-slate-900 text-white rounded flex flex-col gap-px grow relative">
+      <div className="flex flex-col gap-2 overflow-auto grow">
+        <div className="relative flex flex-col gap-px overflow-auto text-white rounded bg-slate-900 grow">
           {isLoading && <LoadingProgressBar />}
           {user &&
             workspaces &&
