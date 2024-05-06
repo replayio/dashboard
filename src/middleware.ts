@@ -88,6 +88,13 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     };
   }
 
+  const cookieStore = cookies();
+  const prevAccessTokenCookieRaw = cookieStore.get(COOKIES.accessToken);
+  let prevAccessTokenCookie: AccessTokenCookie | undefined;
+  if (prevAccessTokenCookieRaw) {
+    prevAccessTokenCookie = JSON.parse(prevAccessTokenCookieRaw.value);
+  }
+
   try {
     const { accessToken } = await getAccessToken(request, response);
     if (accessToken) {
@@ -105,7 +112,9 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
         cookieOptions.maxAge = timeUntilExpiration;
       }
 
-      setCookieValueServer(response, COOKIES.accessToken, data, cookieOptions);
+      if (data.token !== prevAccessTokenCookie?.token) {
+        setCookieValueServer(response, COOKIES.accessToken, data, cookieOptions);
+      }
 
       return data;
     }
@@ -122,18 +131,15 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
       token: apiKey,
     } satisfies AccessTokenCookie;
 
-    setCookieValueServer(response, COOKIES.accessToken, data);
+    if (data.token !== prevAccessTokenCookie?.token) {
+      setCookieValueServer(response, COOKIES.accessToken, data);
+    }
 
     return data;
   }
 
-  const cookieStore = cookies();
-  const accessTokenCookie = cookieStore.get(COOKIES.accessToken);
-  if (accessTokenCookie) {
-    const tokenWithSource: AccessTokenCookie = JSON.parse(accessTokenCookie.value);
-    if (typeof tokenWithSource === "object" && tokenWithSource.token) {
-      return tokenWithSource;
-    }
+  if (prevAccessTokenCookie?.token) {
+    return prevAccessTokenCookie;
   }
 
   return {
