@@ -11,7 +11,7 @@ import { useMemo } from "react";
 
 export function useWorkspaceTestExecutions(
   workspaceId: string,
-  testId: string,
+  testId: string | undefined,
   startDate?: Date,
   endDate?: Date
 ) {
@@ -64,7 +64,10 @@ export function useWorkspaceTestExecutions(
       startTime,
       testId,
       workspaceId,
-    }
+    },
+
+    // So this hook can be called conditionally
+    { skip: testId === undefined }
   );
 
   const executions = useMemo<TestSuiteTestExecution[] | undefined>(() => {

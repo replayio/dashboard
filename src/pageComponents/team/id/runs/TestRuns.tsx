@@ -2,19 +2,14 @@ import { DropDownMenu } from "@/components/DropDownMenu";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { DATE_RANGE_FILTERS } from "@/pageComponents/team/constants";
+import { CenterAlignedPrompt } from "@/pageComponents/team/id/runs/CenterAlignedPrompt";
 import { TestRunRow } from "@/pageComponents/team/id/runs/TestRunRow";
 import { TestRunStatsGraph } from "@/pageComponents/team/id/runs/TestRunStatsGraph";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { BRANCH_FILTERS, RUN_STATUS_FILTERS } from "@/pageComponents/team/id/runs/constants";
 import { useContext } from "react";
 
-export default function TestRuns({
-  selectedTestRunId,
-  selectTestRun,
-}: {
-  selectedTestRunId: string | undefined;
-  selectTestRun: (id: string) => void;
-}) {
+export default function TestRuns() {
   const {
     isLoadingTestRuns,
     isPending,
@@ -22,6 +17,9 @@ export default function TestRuns({
     runsDateRange,
     runsFilterText,
     runsStatus,
+    selectedTestRunId,
+    selectTestRun,
+    showTestRunsFilterMatchWarning,
     testRuns,
     updateFilters,
   } = useContext(RunsViewContext);
@@ -68,19 +66,23 @@ export default function TestRuns({
           type="text"
         />
       </div>
-      {testRuns != null ? <TestRunStatsGraph testRuns={testRuns} /> : null}
-      <div className="overflow-y-auto -mx-2">
-        {testRuns?.map(testRun => (
-          <TestRunRow
-            currentTestRunId={selectedTestRunId}
-            key={testRun.id}
-            selectTestRun={selectTestRun}
-            testRun={testRun}
-          />
-        ))}
-      </div>
+      {showTestRunsFilterMatchWarning ? (
+        <CenterAlignedPrompt>No test runs match the current filters.</CenterAlignedPrompt>
+      ) : testRuns ? (
+        <>
+          <TestRunStatsGraph testRuns={testRuns} />
+          <div className="overflow-y-auto -mx-2">
+            {testRuns.map(testRun => (
+              <TestRunRow
+                currentTestRunId={selectedTestRunId}
+                key={testRun.id}
+                selectTestRun={selectTestRun}
+                testRun={testRun}
+              />
+            ))}
+          </div>
+        </>
+      ) : null}
     </>
   );
 }
-
-function noop() {}

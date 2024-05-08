@@ -34,3 +34,11 @@ export function getRelativeDate({
 
   return date;
 }
+
+export function getStartOfDayUTC(date: Date) {
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth();
+  const day = date.getUTCDate();
+
+  return Date.UTC(year, month, day, 0, 0, 0, 0);
+}
