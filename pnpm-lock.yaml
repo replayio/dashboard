@@ -3378,7 +3378,7 @@ packages:
       "@playwright/test": 1.x
     dependencies:
       "@playwright/test": 1.43.1
-      "@replayio/replay": 0.22.3
+      "@replayio/replay": 0.22.4
       "@replayio/test-utils": 2.0.1
       debug: 4.3.4(supports-color@8.1.1)
       uuid: 8.3.2
@@ -3390,10 +3390,10 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@replayio/replay@0.22.3:
+  /@replayio/replay@0.22.4:
     resolution:
       {
-        integrity: sha512-KXUGYRQ5a8P+1xDEhCMpWvzEHYrCH2mG2ZdPxcZhXzYTOI5uf7+lRoaskhbju5pwF2SOEXJSOfCn27BKTCqCEg==,
+        integrity: sha512-E4JJicf1akAujdMbPMEOlDzlwRWoCevOzw4bXNVU6gxJSohl8Aqp18dNcWMBAW7zg+PJCYg1TY2hF8S0yJwDCQ==,
       }
     hasBin: true
     dependencies:
@@ -3442,7 +3442,7 @@ packages:
         integrity: sha512-+0RJyN4yS2dS7MbstIaaS+EomBEu3IcWFvkHPme1Pu4l+Bq+ozbl8FF23SRkpOm7J9R4ZCe+07BQpZP4YWlkuA==,
       }
     dependencies:
-      "@replayio/replay": 0.22.3
+      "@replayio/replay": 0.22.4
       debug: 4.3.4(supports-color@8.1.1)
       node-fetch: 2.7.0
       sha-1: 1.0.0
