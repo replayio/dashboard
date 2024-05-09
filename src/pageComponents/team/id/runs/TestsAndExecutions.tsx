@@ -1,5 +1,6 @@
 import { Icon } from "@/components/Icon";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
+import { CenterAlignedPrompt } from "@/pageComponents/team/id/runs/CenterAlignedPrompt";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import { TestExecutionRow } from "@/pageComponents/team/id/runs/TestExecutionRow";
 import { TestRunErrors } from "@/pageComponents/team/id/runs/TestRunErrors";
@@ -7,14 +8,27 @@ import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { isDateWithinRetentionLimits } from "@/utils/workspace";
 import { useContext } from "react";
 
-export function TestsAndExecutions({ selectedTestId }: { selectedTestId: string }) {
-  const { retentionLimit, selectedTestRunId, tests, testRuns } = useContext(RunsViewContext);
+export function TestsAndExecutions() {
+  const {
+    isLoadingTestRuns,
+    isLoadingTests,
+    retentionLimit,
+    selectedTestRunId,
+    selectedTestId,
+    showSelectTestPrompt,
+    tests,
+    testRuns,
+  } = useContext(RunsViewContext);
 
   const selectedTest = tests?.find(test => test.id === selectedTestId);
   const selectedTestRun = testRuns?.find(run => run.id === selectedTestRunId);
 
-  if (selectedTest == null || selectedTestRun == null) {
+  if (isLoadingTestRuns || isLoadingTests) {
     return <LoadingProgressBar />;
+  } else if (showSelectTestPrompt) {
+    return <CenterAlignedPrompt>Select a test to see its details here</CenterAlignedPrompt>;
+  } else if (selectedTestRun == null || selectedTest == null) {
+    return null;
   }
 
   const isWithinRetentionLimit = isDateWithinRetentionLimits(selectedTestRun.date, retentionLimit);

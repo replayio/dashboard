@@ -1,6 +1,7 @@
 import { COOKIES } from "@/constants";
+import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
-import { TestSuiteTestSummary } from "@/graphql/types";
+import { TestSuiteTestExecution, TestSuiteTestSummary } from "@/graphql/types";
 import {
   DEFAULT_DATE_RANGE_FILTER,
   DateRange,
@@ -8,6 +9,7 @@ import {
 } from "@/pageComponents/team/constants";
 import { DEFAULT_SORT_BY_FILTER, SortBy } from "@/pageComponents/team/id/tests/constants";
 import { setCookieValueClient } from "@/utils/cookie";
+import { getStartOfDayUTC } from "@/utils/date";
 import { useRouter } from "next/navigation";
 import {
   PropsWithChildren,
@@ -25,16 +27,24 @@ export type Filters = {
   sortBy: SortBy;
 };
 
+type Prompts = {
+  showSelectTestSummaryPrompt: boolean;
+  showTestSummariesFilterMatchWarning: boolean;
+};
+
 export const TestsViewContext = createContext<
-  Filters & {
-    isLoading: boolean;
-    isPending: boolean;
-    retentionLimit: number | null;
-    selectedTestSummaryId: string | undefined;
-    selectTestSummary: (id: string) => void;
-    testSummaries: TestSuiteTestSummary[] | undefined;
-    updateFilters: (value: Partial<Filters>) => void;
-  }
+  Filters &
+    Prompts & {
+      isLoadingTestExecutions: boolean;
+      isLoadingTestSummaries: boolean;
+      isPending: boolean;
+      retentionLimit: number | null;
+      selectedTestSummary: TestSuiteTestSummary | undefined;
+      selectTestSummary: (id: string) => void;
+      testExecutions: TestSuiteTestExecution[] | undefined;
+      testSummaries: TestSuiteTestSummary[] | undefined;
+      updateFilters: (value: Partial<Filters>) => void;
+    }
 >(null as any);
 
 export function ContextRoot({
@@ -99,9 +109,12 @@ export function ContextRoot({
     [setState]
   );
 
-  const startDate = getDateForDateRange(state.dateRange);
+  const startDate = useMemo(() => getDateForDateRange(state.dateRange), [state.dateRange]);
 
-  const { isLoading, testSummaries } = useWorkspaceTests(workspaceId, startDate);
+  const { isLoading: isLoadingTestSummaries, testSummaries } = useWorkspaceTests(
+    workspaceId,
+    startDate
+  );
 
   const filteredTestSummaries = useMemo(() => {
     let summaries = Array.from(testSummaries ?? []);
@@ -131,33 +144,68 @@ export function ContextRoot({
     return summaries;
   }, [filterText, sortBy, testSummaries]);
 
-  const filteredSelectedTestSummaryId = useMemo(
-    () => filteredTestSummaries.find(summary => summary.id === selectedTestSummaryId)?.id,
+  const selectedTestSummary = useMemo(
+    () => filteredTestSummaries.find(summary => summary.id === selectedTestSummaryId),
     [filteredTestSummaries, selectedTestSummaryId]
   );
+
+  // Don't even try fetching more than one week of executions; it's too slow
+  // Just let the GraphQL API return whatever its default is and we'll filter in memory
+  const { executions: testExecutions, isLoading: isLoadingTestExecutions } =
+    useWorkspaceTestExecutions(workspaceId, selectedTestSummary?.id);
+
+  const filteredExecutions = useMemo(() => {
+    if (!selectedTestSummary) {
+      return [];
+    }
+
+    return testExecutions?.filter(execution => {
+      const createdAt = new Date(execution.createdAt);
+      switch (state.dateRange) {
+        case "hour": {
+          return createdAt.getTime() >= startDate.getTime();
+        }
+        default: {
+          // GraphQL server seems to be filtering days at the start of the day, not the most recent partial day
+          return getStartOfDayUTC(createdAt) >= getStartOfDayUTC(startDate);
+        }
+      }
+    });
+  }, [selectedTestSummary, state.dateRange, startDate, testExecutions]);
+
+  const showSelectTestSummaryPrompt = !selectedTestSummary && !!filteredTestSummaries?.length;
+  const showTestSummariesFilterMatchWarning = !filteredTestSummaries?.length;
 
   const value = useMemo(
     () => ({
       dateRange,
       filterText,
-      isLoading,
+      isLoadingTestExecutions,
+      isLoadingTestSummaries,
       isPending,
       retentionLimit,
-      selectedTestSummaryId: filteredSelectedTestSummaryId,
+      selectedTestSummary,
       selectTestSummary,
+      showSelectTestSummaryPrompt,
+      showTestSummariesFilterMatchWarning,
       sortBy,
+      testExecutions: filteredExecutions,
       testSummaries: filteredTestSummaries,
       updateFilters,
     }),
     [
       dateRange,
-      filteredSelectedTestSummaryId,
+      filteredExecutions,
       filteredTestSummaries,
       filterText,
-      isLoading,
+      isLoadingTestExecutions,
+      isLoadingTestSummaries,
       isPending,
       retentionLimit,
+      selectedTestSummary,
       selectTestSummary,
+      showSelectTestSummaryPrompt,
+      showTestSummariesFilterMatchWarning,
       sortBy,
       updateFilters,
     ]
