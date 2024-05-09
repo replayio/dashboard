@@ -49,6 +49,13 @@ export function useWorkspaceTests(workspaceId: string, startDate: Date, endDate?
   const testSummaries = useMemo<TestSuiteTestSummary[] | undefined>(() => {
     if (data?.node && "tests" in data.node && data.node.tests?.edges) {
       return data.node.tests.edges.map(({ node }) => ({
+        // This field exists only to test certain functionality in e2e tests
+        // @ts-expect-error
+        __dateUsedForTestingOnly: node.__dateUsedForTestingOnly
+          ? // @ts-expect-error
+            new Date(node.__dateUsedForTestingOnly)
+          : undefined,
+
         id: node.testId,
         scope: node.scope,
         stats: {

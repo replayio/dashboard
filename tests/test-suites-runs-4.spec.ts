@@ -44,7 +44,6 @@ const mockGraphQLData: MockGraphQLData = {
   }),
   GetTests: mockGetTests([
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "flaky",
       title: "Flaky test",
     }),

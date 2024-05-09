@@ -19,11 +19,13 @@ export function mockGetWorkspaceTests(
         __typename: "TestsConnection",
         edges: partials.map(partial => {
           const {
+            __dateUsedForTestingOnly,
             id = getUID("test-summary-id"),
             scope = [],
             stats,
             title = "Fake test",
           } = partial;
+
           const {
             failed = 0,
             failureRate = 0,
@@ -38,6 +40,7 @@ export function mockGetWorkspaceTests(
             __typename: "TestsEdge",
             node: {
               __typename: "Tests",
+              __dateUsedForTestingOnly,
               testId: id,
               title: title,
               scope: scope,

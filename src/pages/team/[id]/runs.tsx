@@ -1,7 +1,7 @@
 import { COOKIES } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerSidePropsHelpers";
-import { ContextRoot, Filters } from "@/pageComponents/team/id/runs/TestRunsContext";
+import { ContextRoot, State } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { TestSuiteRunsPage } from "@/pageComponents/team/id/runs/TestSuiteRunsPage";
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
@@ -33,7 +33,7 @@ Page.Layout = TeamLayout;
 
 export async function getServerSideProps(context: GetServerSidePropsContext<any>) {
   const stringValue = context.req.cookies[COOKIES.testRunsFilters];
-  const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
+  const filters = stringValue ? (JSON.parse(stringValue) as Partial<State>) : null;
 
   const { isInvalid, isTest, pendingWorkspace, retentionLimit, workspaceId } =
     await getServerSideWorkspaceProps(context);

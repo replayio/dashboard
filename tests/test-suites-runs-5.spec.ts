@@ -92,12 +92,10 @@ test("test-suites-runs-5: should handle when filters hide a selected test run or
 const mockGraphQLData: MockGraphQLData = {
   GetTests: mockGetTests([
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "failed",
       title: "First test",
     }),
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "failed",
       title: "Second test",
     }),

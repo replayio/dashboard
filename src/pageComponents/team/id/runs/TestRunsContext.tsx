@@ -23,12 +23,17 @@ import {
   createContext,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   useTransition,
 } from "react";
 
-export type Filters = {
+export type State = {
+  canShowSelectedTestNotFoundWarning: boolean;
+  canShowSelectedTestRunNotFoundWarning: boolean;
+  initialTestIdFromURL: string | undefined;
+  initialTestRunIdFromURL: string | undefined;
   runsBranch: Branch;
   runsDateRange: DateRange;
   runsFilterText: string;
@@ -38,6 +43,8 @@ export type Filters = {
 };
 
 type Prompts = {
+  showInitialSelectedTestNotFoundWarning: boolean;
+  showInitialSelectedTestRunNotFoundWarning: boolean;
   showSelectTestRunPrompt: boolean;
   showSelectTestPrompt: boolean;
   showTestRunsFilterMatchWarning: boolean;
@@ -45,7 +52,7 @@ type Prompts = {
 };
 
 export const RunsViewContext = createContext<
-  Filters &
+  Omit<State, "canShowSelectedTestNotFoundWarning" | "canShowSelectedTestRunNotFoundWarning"> &
     Prompts & {
       isLoadingTestRuns: boolean;
       isLoadingTests: boolean;
@@ -59,7 +66,7 @@ export const RunsViewContext = createContext<
       selectTestRun: (id: string) => void;
       testRuns: TestRun[] | undefined;
       tests: TestSuiteTest[] | undefined;
-      updateFilters(value: Partial<Filters>): void;
+      updateFilters(value: Partial<State>): void;
     }
 >(null as any);
 
@@ -71,13 +78,17 @@ export function ContextRoot({
   retentionLimit,
   workspaceId,
 }: PropsWithChildren & {
-  filters: Partial<Filters> | null;
+  filters: Partial<State> | null;
   defaultTestId: string | null;
   defaultTestRunId: string | null;
   retentionLimit: number | null;
   workspaceId: string;
 }) {
-  const [state, setState] = useState<Filters>({
+  const [state, setState] = useState<State>({
+    canShowSelectedTestNotFoundWarning: true,
+    canShowSelectedTestRunNotFoundWarning: true,
+    initialTestIdFromURL: defaultTestId || undefined,
+    initialTestRunIdFromURL: defaultTestRunId || undefined,
     runsBranch: DEFAULT_BRANCH_FILTER,
     runsDateRange: DEFAULT_DATE_RANGE_FILTER,
     runsFilterText: "",
@@ -87,8 +98,18 @@ export function ContextRoot({
     ...filters,
   });
 
-  const { runsBranch, runsDateRange, runsFilterText, runsStatus, testsFilterText, testsStatus } =
-    state;
+  const {
+    canShowSelectedTestNotFoundWarning,
+    canShowSelectedTestRunNotFoundWarning,
+    initialTestIdFromURL,
+    initialTestRunIdFromURL,
+    runsBranch,
+    runsDateRange,
+    runsFilterText,
+    runsStatus,
+    testsFilterText,
+    testsStatus,
+  } = state;
 
   useEffect(() => {
     setCookieValueClient(COOKIES.testRunsFilters, {
@@ -101,6 +122,7 @@ export function ContextRoot({
 
   const [isPending, startTransition] = useTransition();
 
+  // TODO [PRO-381] Move setSelectedTestId and setSelectedTestRunId into State
   const [selectedTestRunId, setSelectedTestRunId] = useState<string | undefined>(
     defaultTestRunId || undefined
   );
@@ -119,6 +141,11 @@ export function ContextRoot({
         url.searchParams.set("testId", id);
 
         router.replace(url.toString());
+
+        setState(prevState => ({
+          ...prevState,
+          canShowSelectedTestNotFoundWarning: true,
+        }));
       });
     },
     [router]
@@ -134,12 +161,17 @@ export function ContextRoot({
       url.searchParams.set("testId", "");
 
       router.replace(url.toString());
+
+      setState(prevState => ({
+        ...prevState,
+        canShowSelectedTestRunNotFoundWarning: true,
+      }));
     },
     [router]
   );
 
   const updateFilters = useCallback(
-    (partialState: Partial<Filters>) => {
+    (partialState: Partial<State>) => {
       startTransition(() => {
         setState(prevState => ({
           ...prevState,
@@ -191,6 +223,28 @@ export function ContextRoot({
       ? filteredTests?.find(test => test.id === selectedTestId)
       : undefined;
 
+  useLayoutEffect(() => {
+    if (defaultTestRunId && state.canShowSelectedTestRunNotFoundWarning && selectedTestRun) {
+      setState(prevState => ({
+        ...prevState,
+        canShowSelectedTestRunNotFoundWarning: false,
+      }));
+    }
+    if (defaultTestId && state.canShowSelectedTestNotFoundWarning && selectedTest) {
+      setState(prevState => ({
+        ...prevState,
+        canShowSelectedTestNotFoundWarning: false,
+      }));
+    }
+  }, [defaultTestId, defaultTestRunId, selectedTest, selectedTestRun, state]);
+
+  const showInitialSelectedTestRunNotFoundWarning =
+    !isLoadingTestRuns &&
+    !!defaultTestRunId &&
+    !selectedTestRun &&
+    canShowSelectedTestRunNotFoundWarning;
+  const showInitialSelectedTestNotFoundWarning =
+    !isLoadingTests && !!defaultTestId && !selectedTest && canShowSelectedTestNotFoundWarning;
   const showSelectTestRunPrompt = !selectedTestRun && !!filteredTestRuns?.length;
   const showSelectTestPrompt = !!selectedTestRun && !selectedTest && !!filteredTests?.length;
   const showTestRunsFilterMatchWarning = !filteredTestRuns?.length;
@@ -199,6 +253,8 @@ export function ContextRoot({
 
   const value = useMemo(
     () => ({
+      initialTestIdFromURL,
+      initialTestRunIdFromURL,
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
@@ -213,6 +269,8 @@ export function ContextRoot({
       selectedTestId,
       selectTest,
       selectTestRun,
+      showInitialSelectedTestNotFoundWarning,
+      showInitialSelectedTestRunNotFoundWarning,
       showSelectTestRunPrompt,
       showSelectTestPrompt,
       showTestRunsFilterMatchWarning,
@@ -226,6 +284,8 @@ export function ContextRoot({
     [
       filteredTestRuns,
       filteredTests,
+      initialTestIdFromURL,
+      initialTestRunIdFromURL,
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
@@ -240,6 +300,8 @@ export function ContextRoot({
       selectedTestId,
       selectTest,
       selectTestRun,
+      showInitialSelectedTestNotFoundWarning,
+      showInitialSelectedTestRunNotFoundWarning,
       showSelectTestRunPrompt,
       showSelectTestPrompt,
       showTestRunsFilterMatchWarning,

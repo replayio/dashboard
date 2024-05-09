@@ -3,6 +3,7 @@ import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { DATE_RANGE_FILTERS } from "@/pageComponents/team/constants";
 import { CenterAlignedPrompt } from "@/pageComponents/team/id/tests/CenterAlignedPrompt";
+import { SelectionNotFoundWarning } from "@/pageComponents/team/id/tests/SelectionNotFoundWarning";
 import { TestSummaryRow } from "@/pageComponents/team/id/tests/TestSummaryRow";
 import { TestsViewContext } from "@/pageComponents/team/id/tests/TestsViewContext";
 import { SORT_BY_FILTERS } from "@/pageComponents/team/id/tests/constants";
@@ -16,6 +17,7 @@ export function TestSummaries() {
     isPending,
     selectedTestSummary,
     selectTestSummary,
+    showInitialSelectedTestSummaryNotFoundWarning,
     showTestSummariesFilterMatchWarning,
     sortBy,
     testSummaries,
@@ -58,6 +60,9 @@ export function TestSummaries() {
         <CenterAlignedPrompt>No results match the current filters.</CenterAlignedPrompt>
       ) : (
         <div className="overflow-y-auto -mx-2">
+          {showInitialSelectedTestSummaryNotFoundWarning && (
+            <SelectionNotFoundWarning name="test" />
+          )}
           {testSummaries?.map(test => (
             <TestSummaryRow
               currentTestSummaryId={selectedTestSummary?.id}

@@ -3,6 +3,7 @@ import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { DATE_RANGE_FILTERS } from "@/pageComponents/team/constants";
 import { CenterAlignedPrompt } from "@/pageComponents/team/id/runs/CenterAlignedPrompt";
+import { SelectionNotFoundWarning } from "@/pageComponents/team/id/runs/SelectionNotFoundWarning";
 import { TestRunRow } from "@/pageComponents/team/id/runs/TestRunRow";
 import { TestRunStatsGraph } from "@/pageComponents/team/id/runs/TestRunStatsGraph";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
@@ -19,6 +20,7 @@ export default function TestRuns() {
     runsStatus,
     selectedTestRunId,
     selectTestRun,
+    showInitialSelectedTestRunNotFoundWarning,
     showTestRunsFilterMatchWarning,
     testRuns,
     updateFilters,
@@ -71,6 +73,9 @@ export default function TestRuns() {
       ) : testRuns ? (
         <>
           <TestRunStatsGraph testRuns={testRuns} />
+          {showInitialSelectedTestRunNotFoundWarning && (
+            <SelectionNotFoundWarning name="test run" />
+          )}
           <div className="overflow-y-auto -mx-2">
             {testRuns.map(testRun => (
               <TestRunRow
