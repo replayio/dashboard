@@ -126,12 +126,10 @@ test("test-suites-runs-2: passed run in main branch with source", async ({ page 
 const mockGraphQLData: MockGraphQLData = {
   GetTests: mockGetTests([
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "First test",
     }),
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "Second test",
     }),

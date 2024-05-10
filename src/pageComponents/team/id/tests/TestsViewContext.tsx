@@ -2,6 +2,7 @@ import { COOKIES } from "@/constants";
 import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestExecution, TestSuiteTestSummary } from "@/graphql/types";
+import { useDeepLinkWarning } from "@/hooks/useDeepLinkWarning";
 import {
   DEFAULT_DATE_RANGE_FILTER,
   DateRange,
@@ -28,6 +29,8 @@ export type Filters = {
 };
 
 type Prompts = {
+  dismissDeepLinkWarning: () => void;
+  showDeepLinkWarning: boolean;
   showSelectTestSummaryPrompt: boolean;
   showTestSummariesFilterMatchWarning: boolean;
 };
@@ -173,12 +176,20 @@ export function ContextRoot({
     });
   }, [selectedTestSummary, state.dateRange, startDate, testExecutions]);
 
+  const { dismissWarning: dismissDeepLinkWarning, showWarning: showDeepLinkWarning } =
+    useDeepLinkWarning({
+      deepLinkReferenceFound: !defaultTestSummaryId || !!selectedTestSummary,
+      isLoading: isLoadingTestSummaries,
+      urlHasDeepLink: !!defaultTestSummaryId,
+    });
+
   const showSelectTestSummaryPrompt = !selectedTestSummary && !!filteredTestSummaries?.length;
   const showTestSummariesFilterMatchWarning = !filteredTestSummaries?.length;
 
   const value = useMemo(
     () => ({
       dateRange,
+      dismissDeepLinkWarning,
       filterText,
       isLoadingTestExecutions,
       isLoadingTestSummaries,
@@ -186,6 +197,7 @@ export function ContextRoot({
       retentionLimit,
       selectedTestSummary,
       selectTestSummary,
+      showDeepLinkWarning,
       showSelectTestSummaryPrompt,
       showTestSummariesFilterMatchWarning,
       sortBy,
@@ -195,6 +207,7 @@ export function ContextRoot({
     }),
     [
       dateRange,
+      dismissDeepLinkWarning,
       filteredExecutions,
       filteredTestSummaries,
       filterText,
@@ -204,6 +217,7 @@ export function ContextRoot({
       retentionLimit,
       selectedTestSummary,
       selectTestSummary,
+      showDeepLinkWarning,
       showSelectTestSummaryPrompt,
       showTestSummariesFilterMatchWarning,
       sortBy,

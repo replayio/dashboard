@@ -2,6 +2,7 @@ import { COOKIES } from "@/constants";
 import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
+import { useDeepLinkWarning } from "@/hooks/useDeepLinkWarning";
 import {
   DEFAULT_DATE_RANGE_FILTER,
   DateRange,
@@ -38,6 +39,8 @@ export type Filters = {
 };
 
 type Prompts = {
+  dismissDeepLinkWarning: () => void;
+  showDeepLinkWarning: boolean;
   showSelectTestRunPrompt: boolean;
   showSelectTestPrompt: boolean;
   showTestRunsFilterMatchWarning: boolean;
@@ -191,6 +194,14 @@ export function ContextRoot({
       ? filteredTests?.find(test => test.id === selectedTestId)
       : undefined;
 
+  const { dismissWarning: dismissDeepLinkWarning, showWarning: showDeepLinkWarning } =
+    useDeepLinkWarning({
+      deepLinkReferenceFound:
+        (!defaultTestRunId || !!selectedTestRun) && (!defaultTestId || !!selectedTest),
+      isLoading: isLoadingTestRuns || isLoadingTests,
+      urlHasDeepLink: !!defaultTestRunId || !!defaultTestId,
+    });
+
   const showSelectTestRunPrompt = !selectedTestRun && !!filteredTestRuns?.length;
   const showSelectTestPrompt = !!selectedTestRun && !selectedTest && !!filteredTests?.length;
   const showTestRunsFilterMatchWarning = !filteredTestRuns?.length;
@@ -199,6 +210,7 @@ export function ContextRoot({
 
   const value = useMemo(
     () => ({
+      dismissDeepLinkWarning,
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
@@ -213,6 +225,7 @@ export function ContextRoot({
       selectedTestId,
       selectTest,
       selectTestRun,
+      showDeepLinkWarning,
       showSelectTestRunPrompt,
       showSelectTestPrompt,
       showTestRunsFilterMatchWarning,
@@ -224,6 +237,7 @@ export function ContextRoot({
       updateFilters,
     }),
     [
+      dismissDeepLinkWarning,
       filteredTestRuns,
       filteredTests,
       isLoadingTestRuns,
@@ -240,6 +254,7 @@ export function ContextRoot({
       selectedTestId,
       selectTest,
       selectTestRun,
+      showDeepLinkWarning,
       showSelectTestRunPrompt,
       showSelectTestPrompt,
       showTestRunsFilterMatchWarning,

@@ -24,6 +24,7 @@ export function mockGetWorkspaceTests(
             stats,
             title = "Fake test",
           } = partial;
+
           const {
             failed = 0,
             failureRate = 0,

@@ -148,17 +148,14 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({ pa
 const mockGraphQLData: MockGraphQLData = {
   GetTests: mockGetTests([
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "First test",
     }),
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "Second test",
     }),
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "Third test",
     }),
@@ -169,7 +166,6 @@ const mockGraphQLData: MockGraphQLData = {
           recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
         },
       ],
-      sourcePath: undefined,
       status: "flaky",
       title: "Fourth test",
     }),
@@ -180,18 +176,15 @@ const mockGraphQLData: MockGraphQLData = {
           recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
         },
       ],
-      sourcePath: undefined,
       status: "flaky",
       title: "Fifth test",
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      sourcePath: undefined,
       status: "failed",
       title: "Sixth test",
     }),
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "Seventh test",
     }),
@@ -202,13 +195,11 @@ const mockGraphQLData: MockGraphQLData = {
           recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
         },
       ],
-      sourcePath: undefined,
       status: "flaky",
       title: "Eighth test",
     }),
     partialToTestSuiteTest({
       errors: ["This is an error message"],
-      sourcePath: undefined,
       status: "failed",
       title: "Ninth test",
     }),
