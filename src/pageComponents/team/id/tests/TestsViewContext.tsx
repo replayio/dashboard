@@ -2,6 +2,7 @@ import { COOKIES } from "@/constants";
 import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestExecution, TestSuiteTestSummary } from "@/graphql/types";
+import { useDeepLinkWarning } from "@/hooks/useDeepLinkWarning";
 import {
   DEFAULT_DATE_RANGE_FILTER,
   DateRange,
@@ -16,28 +17,26 @@ import {
   createContext,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useState,
   useTransition,
 } from "react";
 
-export type State = {
-  canShowInitialSelectedTestSummaryNotFoundWarning: boolean;
+export type Filters = {
   dateRange: DateRange;
   filterText: string;
-  initialTestSummaryIdFromURL: string | undefined;
   sortBy: SortBy;
 };
 
 type Prompts = {
-  showInitialSelectedTestSummaryNotFoundWarning: boolean;
+  dismissDeepLinkWarning: () => void;
+  showDeepLinkWarning: boolean;
   showSelectTestSummaryPrompt: boolean;
   showTestSummariesFilterMatchWarning: boolean;
 };
 
 export const TestsViewContext = createContext<
-  Omit<State, "canShowInitialSelectedTestSummaryNotFoundWarning"> &
+  Filters &
     Prompts & {
       isLoadingTestExecutions: boolean;
       isLoadingTestSummaries: boolean;
@@ -47,7 +46,7 @@ export const TestsViewContext = createContext<
       selectTestSummary: (id: string) => void;
       testExecutions: TestSuiteTestExecution[] | undefined;
       testSummaries: TestSuiteTestSummary[] | undefined;
-      updateFilters: (value: Partial<State>) => void;
+      updateFilters: (value: Partial<Filters>) => void;
     }
 >(null as any);
 
@@ -58,27 +57,19 @@ export function ContextRoot({
   retentionLimit,
   workspaceId,
 }: PropsWithChildren & {
-  filters: Partial<State> | null;
+  filters: Partial<Filters> | null;
   defaultTestSummaryId: string | null;
   retentionLimit: number | null;
   workspaceId: string;
 }) {
-  const [state, setState] = useState<State>({
+  const [state, setState] = useState<Filters>({
     dateRange: DEFAULT_DATE_RANGE_FILTER,
-    canShowInitialSelectedTestSummaryNotFoundWarning: true,
     filterText: "",
-    initialTestSummaryIdFromURL: defaultTestSummaryId || undefined,
     sortBy: DEFAULT_SORT_BY_FILTER,
     ...filters,
   });
 
-  const {
-    canShowInitialSelectedTestSummaryNotFoundWarning,
-    dateRange,
-    filterText,
-    initialTestSummaryIdFromURL,
-    sortBy,
-  } = state;
+  const { dateRange, filterText, sortBy } = state;
 
   useEffect(() => {
     setCookieValueClient(COOKIES.testsFilters, {
@@ -89,7 +80,6 @@ export function ContextRoot({
 
   const [isPending, startTransition] = useTransition();
 
-  // TODO [PRO-381] Move selectedTestSummaryId into State
   const [selectedTestSummaryId, setSelectedTestSummaryId] = useState<string | undefined>(
     defaultTestSummaryId || undefined
   );
@@ -111,7 +101,7 @@ export function ContextRoot({
   );
 
   const updateFilters = useCallback(
-    (partialState: Partial<State>) => {
+    (partialState: Partial<Filters>) => {
       startTransition(() => {
         setState(prevState => ({
           ...prevState,
@@ -133,15 +123,6 @@ export function ContextRoot({
     let summaries = Array.from(testSummaries ?? []);
 
     summaries = summaries.filter(test => {
-      if (test.__dateUsedForTestingOnly !== undefined) {
-        // Support e2e tests
-        const startOfDay = new Date(test.__dateUsedForTestingOnly);
-        startOfDay.setHours(0, 0, 0, 0);
-        if (startOfDay < startDate) {
-          return false;
-        }
-      }
-
       if (filterText) {
         if (!test.title.toLowerCase().includes(filterText.toLowerCase())) {
           return false;
@@ -164,7 +145,7 @@ export function ContextRoot({
     });
 
     return summaries;
-  }, [filterText, sortBy, startDate, testSummaries]);
+  }, [filterText, sortBy, testSummaries]);
 
   const selectedTestSummary = useMemo(
     () => filteredTestSummaries.find(summary => summary.id === selectedTestSummaryId),
@@ -195,39 +176,28 @@ export function ContextRoot({
     });
   }, [selectedTestSummary, state.dateRange, startDate, testExecutions]);
 
-  useLayoutEffect(() => {
-    if (
-      defaultTestSummaryId &&
-      state.canShowInitialSelectedTestSummaryNotFoundWarning &&
-      selectedTestSummary
-    ) {
-      setState(prevState => ({
-        ...prevState,
-        canShowInitialSelectedTestSummaryNotFoundWarning: false,
-      }));
-    }
-  }, [defaultTestSummaryId, selectedTestSummary, state]);
+  const { dismissWarning: dismissDeepLinkWarning, showWarning: showDeepLinkWarning } =
+    useDeepLinkWarning({
+      deepLinkReferenceFound: !defaultTestSummaryId || !!selectedTestSummary,
+      isLoading: isLoadingTestSummaries,
+      urlHasDeepLink: !!defaultTestSummaryId,
+    });
 
   const showSelectTestSummaryPrompt = !selectedTestSummary && !!filteredTestSummaries?.length;
   const showTestSummariesFilterMatchWarning = !filteredTestSummaries?.length;
 
-  const showInitialSelectedTestSummaryNotFoundWarning =
-    !isLoadingTestSummaries &&
-    !!defaultTestSummaryId &&
-    canShowInitialSelectedTestSummaryNotFoundWarning;
-
   const value = useMemo(
     () => ({
       dateRange,
+      dismissDeepLinkWarning,
       filterText,
-      initialTestSummaryIdFromURL,
       isLoadingTestExecutions,
       isLoadingTestSummaries,
       isPending,
       retentionLimit,
       selectedTestSummary,
       selectTestSummary,
-      showInitialSelectedTestSummaryNotFoundWarning,
+      showDeepLinkWarning,
       showSelectTestSummaryPrompt,
       showTestSummariesFilterMatchWarning,
       sortBy,
@@ -237,17 +207,17 @@ export function ContextRoot({
     }),
     [
       dateRange,
+      dismissDeepLinkWarning,
       filteredExecutions,
       filteredTestSummaries,
       filterText,
-      initialTestSummaryIdFromURL,
       isLoadingTestExecutions,
       isLoadingTestSummaries,
       isPending,
       retentionLimit,
       selectedTestSummary,
       selectTestSummary,
-      showInitialSelectedTestSummaryNotFoundWarning,
+      showDeepLinkWarning,
       showSelectTestSummaryPrompt,
       showTestSummariesFilterMatchWarning,
       sortBy,

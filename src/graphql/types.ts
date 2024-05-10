@@ -116,8 +116,6 @@ export type UserSettings = {
 };
 
 export type TestSuiteTestSummary = {
-  // This field exists only to test certain functionality in e2e tests
-  __dateUsedForTestingOnly?: Date;
   id: string;
   scope: string[];
   stats: {

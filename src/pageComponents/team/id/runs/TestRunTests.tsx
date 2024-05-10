@@ -7,7 +7,6 @@ import { TestStatusCapsule } from "@/components/TestStatusCapsule";
 import { TestSuiteTest } from "@/graphql/types";
 import { CenterAlignedPrompt } from "@/pageComponents/team/id/runs/CenterAlignedPrompt";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
-import { SelectionNotFoundWarning } from "@/pageComponents/team/id/runs/SelectionNotFoundWarning";
 import { TestRunTestRow } from "@/pageComponents/team/id/runs/TestRunTestRow";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { TEST_STATUS } from "@/pageComponents/team/id/runs/constants";
@@ -25,7 +24,6 @@ export function TestRunTests() {
     testsFilterText,
     testsStatus,
     tests,
-    showInitialSelectedTestNotFoundWarning,
     showSelectTestRunPrompt,
     showTestsFilterMatchWarning,
     updateFilters,
@@ -162,8 +160,6 @@ export function TestRunTests() {
           </div>
         </>
       )}
-
-      {showInitialSelectedTestNotFoundWarning && <SelectionNotFoundWarning name="test" />}
 
       {showTestsFilterMatchWarning ? (
         <CenterAlignedPrompt>No tests match the current filters.</CenterAlignedPrompt>

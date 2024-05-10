@@ -2,6 +2,7 @@ import { COOKIES } from "@/constants";
 import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
+import { useDeepLinkWarning } from "@/hooks/useDeepLinkWarning";
 import {
   DEFAULT_DATE_RANGE_FILTER,
   DateRange,
@@ -23,17 +24,12 @@ import {
   createContext,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useState,
   useTransition,
 } from "react";
 
-export type State = {
-  canShowSelectedTestNotFoundWarning: boolean;
-  canShowSelectedTestRunNotFoundWarning: boolean;
-  initialTestIdFromURL: string | undefined;
-  initialTestRunIdFromURL: string | undefined;
+export type Filters = {
   runsBranch: Branch;
   runsDateRange: DateRange;
   runsFilterText: string;
@@ -43,8 +39,8 @@ export type State = {
 };
 
 type Prompts = {
-  showInitialSelectedTestNotFoundWarning: boolean;
-  showInitialSelectedTestRunNotFoundWarning: boolean;
+  dismissDeepLinkWarning: () => void;
+  showDeepLinkWarning: boolean;
   showSelectTestRunPrompt: boolean;
   showSelectTestPrompt: boolean;
   showTestRunsFilterMatchWarning: boolean;
@@ -52,7 +48,7 @@ type Prompts = {
 };
 
 export const RunsViewContext = createContext<
-  Omit<State, "canShowSelectedTestNotFoundWarning" | "canShowSelectedTestRunNotFoundWarning"> &
+  Filters &
     Prompts & {
       isLoadingTestRuns: boolean;
       isLoadingTests: boolean;
@@ -66,7 +62,7 @@ export const RunsViewContext = createContext<
       selectTestRun: (id: string) => void;
       testRuns: TestRun[] | undefined;
       tests: TestSuiteTest[] | undefined;
-      updateFilters(value: Partial<State>): void;
+      updateFilters(value: Partial<Filters>): void;
     }
 >(null as any);
 
@@ -78,17 +74,13 @@ export function ContextRoot({
   retentionLimit,
   workspaceId,
 }: PropsWithChildren & {
-  filters: Partial<State> | null;
+  filters: Partial<Filters> | null;
   defaultTestId: string | null;
   defaultTestRunId: string | null;
   retentionLimit: number | null;
   workspaceId: string;
 }) {
-  const [state, setState] = useState<State>({
-    canShowSelectedTestNotFoundWarning: true,
-    canShowSelectedTestRunNotFoundWarning: true,
-    initialTestIdFromURL: defaultTestId || undefined,
-    initialTestRunIdFromURL: defaultTestRunId || undefined,
+  const [state, setState] = useState<Filters>({
     runsBranch: DEFAULT_BRANCH_FILTER,
     runsDateRange: DEFAULT_DATE_RANGE_FILTER,
     runsFilterText: "",
@@ -98,18 +90,8 @@ export function ContextRoot({
     ...filters,
   });
 
-  const {
-    canShowSelectedTestNotFoundWarning,
-    canShowSelectedTestRunNotFoundWarning,
-    initialTestIdFromURL,
-    initialTestRunIdFromURL,
-    runsBranch,
-    runsDateRange,
-    runsFilterText,
-    runsStatus,
-    testsFilterText,
-    testsStatus,
-  } = state;
+  const { runsBranch, runsDateRange, runsFilterText, runsStatus, testsFilterText, testsStatus } =
+    state;
 
   useEffect(() => {
     setCookieValueClient(COOKIES.testRunsFilters, {
@@ -122,7 +104,6 @@ export function ContextRoot({
 
   const [isPending, startTransition] = useTransition();
 
-  // TODO [PRO-381] Move setSelectedTestId and setSelectedTestRunId into State
   const [selectedTestRunId, setSelectedTestRunId] = useState<string | undefined>(
     defaultTestRunId || undefined
   );
@@ -141,11 +122,6 @@ export function ContextRoot({
         url.searchParams.set("testId", id);
 
         router.replace(url.toString());
-
-        setState(prevState => ({
-          ...prevState,
-          canShowSelectedTestNotFoundWarning: true,
-        }));
       });
     },
     [router]
@@ -161,17 +137,12 @@ export function ContextRoot({
       url.searchParams.set("testId", "");
 
       router.replace(url.toString());
-
-      setState(prevState => ({
-        ...prevState,
-        canShowSelectedTestRunNotFoundWarning: true,
-      }));
     },
     [router]
   );
 
   const updateFilters = useCallback(
-    (partialState: Partial<State>) => {
+    (partialState: Partial<Filters>) => {
       startTransition(() => {
         setState(prevState => ({
           ...prevState,
@@ -223,28 +194,14 @@ export function ContextRoot({
       ? filteredTests?.find(test => test.id === selectedTestId)
       : undefined;
 
-  useLayoutEffect(() => {
-    if (defaultTestRunId && state.canShowSelectedTestRunNotFoundWarning && selectedTestRun) {
-      setState(prevState => ({
-        ...prevState,
-        canShowSelectedTestRunNotFoundWarning: false,
-      }));
-    }
-    if (defaultTestId && state.canShowSelectedTestNotFoundWarning && selectedTest) {
-      setState(prevState => ({
-        ...prevState,
-        canShowSelectedTestNotFoundWarning: false,
-      }));
-    }
-  }, [defaultTestId, defaultTestRunId, selectedTest, selectedTestRun, state]);
+  const { dismissWarning: dismissDeepLinkWarning, showWarning: showDeepLinkWarning } =
+    useDeepLinkWarning({
+      deepLinkReferenceFound:
+        (!defaultTestRunId || !!selectedTestRun) && (!defaultTestId || !!selectedTest),
+      isLoading: isLoadingTestRuns || isLoadingTests,
+      urlHasDeepLink: !!defaultTestRunId || !!defaultTestId,
+    });
 
-  const showInitialSelectedTestRunNotFoundWarning =
-    !isLoadingTestRuns &&
-    !!defaultTestRunId &&
-    !selectedTestRun &&
-    canShowSelectedTestRunNotFoundWarning;
-  const showInitialSelectedTestNotFoundWarning =
-    !isLoadingTests && !!defaultTestId && !selectedTest && canShowSelectedTestNotFoundWarning;
   const showSelectTestRunPrompt = !selectedTestRun && !!filteredTestRuns?.length;
   const showSelectTestPrompt = !!selectedTestRun && !selectedTest && !!filteredTests?.length;
   const showTestRunsFilterMatchWarning = !filteredTestRuns?.length;
@@ -253,8 +210,7 @@ export function ContextRoot({
 
   const value = useMemo(
     () => ({
-      initialTestIdFromURL,
-      initialTestRunIdFromURL,
+      dismissDeepLinkWarning,
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
@@ -269,8 +225,7 @@ export function ContextRoot({
       selectedTestId,
       selectTest,
       selectTestRun,
-      showInitialSelectedTestNotFoundWarning,
-      showInitialSelectedTestRunNotFoundWarning,
+      showDeepLinkWarning,
       showSelectTestRunPrompt,
       showSelectTestPrompt,
       showTestRunsFilterMatchWarning,
@@ -282,10 +237,9 @@ export function ContextRoot({
       updateFilters,
     }),
     [
+      dismissDeepLinkWarning,
       filteredTestRuns,
       filteredTests,
-      initialTestIdFromURL,
-      initialTestRunIdFromURL,
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
@@ -300,8 +254,7 @@ export function ContextRoot({
       selectedTestId,
       selectTest,
       selectTestRun,
-      showInitialSelectedTestNotFoundWarning,
-      showInitialSelectedTestRunNotFoundWarning,
+      showDeepLinkWarning,
       showSelectTestRunPrompt,
       showSelectTestPrompt,
       showTestRunsFilterMatchWarning,
