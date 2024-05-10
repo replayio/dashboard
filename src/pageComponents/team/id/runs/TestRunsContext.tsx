@@ -2,6 +2,7 @@ import { COOKIES } from "@/constants";
 import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
+import { useDeepLinkWarning } from "@/hooks/useDeepLinkWarning";
 import {
   DEFAULT_DATE_RANGE_FILTER,
   DateRange,
@@ -37,20 +38,32 @@ export type Filters = {
   testsStatus: TestStatus;
 };
 
+type Prompts = {
+  dismissDeepLinkWarning: () => void;
+  showDeepLinkWarning: boolean;
+  showSelectTestRunPrompt: boolean;
+  showSelectTestPrompt: boolean;
+  showTestRunsFilterMatchWarning: boolean;
+  showTestsFilterMatchWarning: boolean;
+};
+
 export const RunsViewContext = createContext<
-  Filters & {
-    isLoadingTestRuns: boolean;
-    isLoadingTests: boolean;
-    isPending: boolean;
-    retentionLimit: number | null;
-    selectedTestRunId: string | undefined;
-    selectedTestId: string | undefined;
-    selectTest: (id: string) => void;
-    selectTestRun: (id: string) => void;
-    testRuns: TestRun[] | undefined;
-    tests: TestSuiteTest[] | undefined;
-    updateFilters(value: Partial<Filters>): void;
-  }
+  Filters &
+    Prompts & {
+      isLoadingTestRuns: boolean;
+      isLoadingTests: boolean;
+      isPending: boolean;
+      retentionLimit: number | null;
+      selectedTest: TestSuiteTest | undefined;
+      selectedTestRun: TestRun | undefined;
+      selectedTestRunId: string | undefined;
+      selectedTestId: string | undefined;
+      selectTest: (id: string) => void;
+      selectTestRun: (id: string) => void;
+      testRuns: TestRun[] | undefined;
+      tests: TestSuiteTest[] | undefined;
+      updateFilters(value: Partial<Filters>): void;
+    }
 >(null as any);
 
 export function ContextRoot({
@@ -155,9 +168,17 @@ export function ContextRoot({
     );
   }, [runsBranch, runsFilterText, runsStatus, startDate, testRuns]);
 
+  const selectedTestRun = selectedTestRunId
+    ? filteredTestRuns?.find(testRun => testRun.id === selectedTestRunId)
+    : undefined;
+
   const { isLoading: isLoadingTests, tests } = useTestSuiteTests(workspaceId, selectedTestRunId);
 
   const filteredTests = useMemo(() => {
+    if (!selectedTestRun) {
+      return [];
+    }
+
     return tests
       ?.filter(test =>
         filterTest(test, {
@@ -166,10 +187,30 @@ export function ContextRoot({
         })
       )
       .sort((a, b) => a.title.localeCompare(b.title));
-  }, [tests, testsFilterText, testsStatus]);
+  }, [tests, selectedTestRun, testsFilterText, testsStatus]);
+
+  const selectedTest =
+    selectedTestRun && selectedTestId
+      ? filteredTests?.find(test => test.id === selectedTestId)
+      : undefined;
+
+  const { dismissWarning: dismissDeepLinkWarning, showWarning: showDeepLinkWarning } =
+    useDeepLinkWarning({
+      deepLinkReferenceFound:
+        (!defaultTestRunId || !!selectedTestRun) && (!defaultTestId || !!selectedTest),
+      isLoading: isLoadingTestRuns || isLoadingTests,
+      urlHasDeepLink: !!defaultTestRunId || !!defaultTestId,
+    });
+
+  const showSelectTestRunPrompt = !selectedTestRun && !!filteredTestRuns?.length;
+  const showSelectTestPrompt = !!selectedTestRun && !selectedTest && !!filteredTests?.length;
+  const showTestRunsFilterMatchWarning = !filteredTestRuns?.length;
+  const showTestsFilterMatchWarning =
+    !!selectedTestRun && !filteredTests?.length && !!tests?.length;
 
   const value = useMemo(
     () => ({
+      dismissDeepLinkWarning,
       isLoadingTestRuns,
       isLoadingTests,
       isPending,
@@ -178,10 +219,17 @@ export function ContextRoot({
       runsDateRange,
       runsFilterText,
       runsStatus,
+      selectedTest,
+      selectedTestRun,
       selectedTestRunId,
       selectedTestId,
       selectTest,
       selectTestRun,
+      showDeepLinkWarning,
+      showSelectTestRunPrompt,
+      showSelectTestPrompt,
+      showTestRunsFilterMatchWarning,
+      showTestsFilterMatchWarning,
       testsFilterText,
       testRuns: filteredTestRuns,
       tests: filteredTests,
@@ -189,6 +237,7 @@ export function ContextRoot({
       updateFilters,
     }),
     [
+      dismissDeepLinkWarning,
       filteredTestRuns,
       filteredTests,
       isLoadingTestRuns,
@@ -199,10 +248,17 @@ export function ContextRoot({
       runsBranch,
       runsFilterText,
       runsStatus,
+      selectedTest,
+      selectedTestRun,
       selectedTestRunId,
       selectedTestId,
       selectTest,
       selectTestRun,
+      showDeepLinkWarning,
+      showSelectTestRunPrompt,
+      showSelectTestPrompt,
+      showTestRunsFilterMatchWarning,
+      showTestsFilterMatchWarning,
       testsFilterText,
       testsStatus,
       updateFilters,

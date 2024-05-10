@@ -24,3 +24,8 @@ export const URLS = {
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : process.env.APP_URL!,
 };
+
+export const TEST_USER_3 = {
+  email: "frontende2e3@replay.io",
+  password: process.env.TEST_USER_3_PASSWORD!,
+};

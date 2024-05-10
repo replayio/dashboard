@@ -87,6 +87,9 @@ jobs:
           RECORD_REPLAY_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs.testRunId }}
           REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
           TEST_USER_API_KEY: ${{ secrets.TEST_USER_API_KEY }}
+          TEST_USER_3_PASSWORD: ${{ secrets.TEST_USER_3_PASSWORD }}
+          AUTH0_ISSUER_BASE_URL: https://webreplay.us.auth0.com
+          AUTH0_CLIENT_ID: 4FvFnJJW4XlnUyrXQF8zOLw6vNAH1MAo
       - uses: actions/upload-artifact@v4
         if: always()
         with:

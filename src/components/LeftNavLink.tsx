@@ -1,6 +1,6 @@
 import { Icon, IconType } from "@/components/Icon";
 import Link from "next/link";
-import { HTMLAttributes, ReactNode } from "react";
+import { HTMLAttributes, ReactNode, useLayoutEffect } from "react";
 
 export function LeftNavLink({
   href,
@@ -15,6 +15,16 @@ export function LeftNavLink({
   label: ReactNode;
 }) {
   const Component = isActive ? "div" : Link;
+
+  // Scroll into view on mount
+  useLayoutEffect(() => {
+    if (isActive) {
+      const element = document.querySelector(`[data-is-active="true"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: "instant", block: "center" });
+      }
+    }
+  }, [isActive]);
 
   return (
     <Component

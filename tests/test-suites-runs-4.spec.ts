@@ -44,15 +44,16 @@ const mockGraphQLData: MockGraphQLData = {
   }),
   GetTests: mockGetTests([
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "flaky",
       title: "Flaky test",
     }),
   ]),
-  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
-    branchName: "temp",
-    commitTitle: "Test run that's older than the retention limit",
-    date: getRelativeDate({ daysAgo: 14 }),
-    numFlaky: 1,
-  }),
+  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace([
+    {
+      branchName: "temp",
+      commitTitle: "Test run that's older than the retention limit",
+      date: getRelativeDate({ daysAgo: 14 }),
+      numFlaky: 1,
+    },
+  ]),
 };

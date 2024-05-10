@@ -8,5 +8,5 @@ test("authentication: should require authentication to view the library", async 
     pathname: "/",
   });
 
-  await expect(page.getByText("Sign in with Google")).toBeVisible();
+  await expect(page.getByText("Continue with Google")).toBeVisible();
 });

@@ -19,7 +19,7 @@ export function TestSummaryRow({
   if (showFlakyRate) {
     if (testSummary.stats.flakyRate > 0) {
       icon = (
-        <div className="flex items-center justify-center bg-yellow-500 text-black w-full h-6 rounded-md shrink-0 text-xs">
+        <div className="flex items-center justify-center bg-yellow-400 text-black w-full h-6 rounded-md shrink-0 text-xs">
           {Math.ceil(testSummary.stats.flakyRate * 100)}%
         </div>
       );

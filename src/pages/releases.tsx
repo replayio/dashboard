@@ -41,6 +41,9 @@ function ReleasesTable({ releases }: { releases: Release[] }) {
           <tr data-test-name="release-row" data-test-type={release.runtime} key={release.buildId}>
             <td className="min-w-24">{release.runtime}</td>
             <td className="min-w-20">{release.platform}</td>
+            <td className="min-w-20">
+              {release.architecture == null ? "unknown" : release.architecture}
+            </td>
             <td className="truncate">{release.buildId}</td>
             <td className="min-w-28">{format(new Date(release.time), "MMM d, y")}</td>
             <td className="min-w-24">

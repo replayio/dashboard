@@ -22,7 +22,7 @@ export default function Page({
       retentionLimit={retentionLimit}
       workspaceId={workspaceId}
     >
-      <TestSuiteTestsPage workspaceId={workspaceId!} />
+      <TestSuiteTestsPage />
     </ContextRoot>
   );
 }

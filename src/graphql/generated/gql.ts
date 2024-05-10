@@ -15,6 +15,8 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
 const documents = {
   "\n      mutation AcceptPendingWorkspaceInvitation($workspaceId: ID!) {\n        acceptWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    ":
     types.AcceptPendingWorkspaceInvitationDocument,
+  "\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: {key: $key}) {\n          success\n          token\n        }\n      }\n    ":
+    types.CloseAuthRequestDocument,
   "\n      mutation CreateUserAPIKey($label: String!, $scopes: [String!]!) {\n        createUserAPIKey(input: { label: $label, scopes: $scopes }) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    ":
     types.CreateUserApiKeyDocument,
   "\n      mutation CreateNewWorkspace($name: String!, $planKey: String!) {\n        createWorkspace(input: { name: $name, planKey: $planKey }) {\n          success\n          workspace {\n            id\n            invitationCode\n            domain\n            isDomainLimitedCode\n          }\n        }\n      }\n    ":
@@ -117,6 +119,12 @@ export function graphql(source: string): unknown;
 export function graphql(
   source: "\n      mutation AcceptPendingWorkspaceInvitation($workspaceId: ID!) {\n        acceptWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    "
 ): (typeof documents)["\n      mutation AcceptPendingWorkspaceInvitation($workspaceId: ID!) {\n        acceptWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: {key: $key}) {\n          success\n          token\n        }\n      }\n    "
+): (typeof documents)["\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: {key: $key}) {\n          success\n          token\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

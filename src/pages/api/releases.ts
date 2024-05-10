@@ -2,6 +2,7 @@ import { URLS } from "@/constants";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export type Release = {
+  architecture: string | null;
   buildId: string;
   buildFile: string;
   platform: string;

@@ -126,27 +126,27 @@ test("test-suites-runs-2: passed run in main branch with source", async ({ page 
 const mockGraphQLData: MockGraphQLData = {
   GetTests: mockGetTests([
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "First test",
     }),
     partialToTestSuiteTest({
-      sourcePath: undefined,
       status: "passed",
       title: "Second test",
     }),
   ]),
-  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace({
-    branchName: "main",
-    commitTitle: "Successful run in main branch",
-    isPrimaryBranch: true,
-    numFailed: 0,
-    numFlaky: 0,
-    numPassed: 2,
-    prNumber: null,
-    prTitle: null,
-    repository: null,
-    triggerUrl: "https://fake-trigger-url.com",
-    user: "test-user-trigger",
-  }),
+  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace([
+    {
+      branchName: "main",
+      commitTitle: "Successful run in main branch",
+      isPrimaryBranch: true,
+      numFailed: 0,
+      numFlaky: 0,
+      numPassed: 2,
+      prNumber: null,
+      prTitle: null,
+      repository: null,
+      triggerUrl: "https://fake-trigger-url.com",
+      user: "test-user-trigger",
+    },
+  ]),
 };
