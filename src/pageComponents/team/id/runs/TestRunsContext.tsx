@@ -1,4 +1,4 @@
-import { COOKIES } from "@/constants";
+import { COOKIES, SEARCH_PARAMS } from "@/constants";
 import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
 import { useTestSuiteTests } from "@/graphql/queries/useTestSuiteTests";
 import { TestRun, TestSuiteTest } from "@/graphql/types";
@@ -126,7 +126,7 @@ export function ContextRoot({
 
         const url = (mutableURLRef.current =
           mutableURLRef.current ?? new URL(window.location.href));
-        url.searchParams.set("testId", id);
+        url.searchParams.set(SEARCH_PARAMS.testId, id);
 
         router.replace(url.toString());
       });
@@ -140,8 +140,8 @@ export function ContextRoot({
       setSelectedTestId(undefined);
 
       const url = (mutableURLRef.current = mutableURLRef.current ?? new URL(window.location.href));
-      url.searchParams.set("testRunId", id);
-      url.searchParams.set("testId", "");
+      url.searchParams.set(SEARCH_PARAMS.testRunId, id);
+      url.searchParams.set(SEARCH_PARAMS.testId, "");
 
       router.replace(url.toString());
     },

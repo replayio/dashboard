@@ -1,4 +1,4 @@
-import { COOKIES } from "@/constants";
+import { COOKIES, SEARCH_PARAMS } from "@/constants";
 import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestExecution, TestSuiteTestSummary } from "@/graphql/types";
@@ -92,7 +92,7 @@ export function ContextRoot({
         setSelectedTestSummaryId(id);
 
         const url = new URL(window.location.href);
-        url.searchParams.set("testSummaryId", id);
+        url.searchParams.set(SEARCH_PARAMS.testSummaryId, id);
 
         router.replace(url.toString());
       });

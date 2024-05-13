@@ -4,6 +4,7 @@ import assert from "assert";
 import chalk from "chalk";
 import { MockGraphQLData } from "../mocks/types";
 import { debugPrint } from "./debugPrint";
+import { SEARCH_PARAMS } from "@/constants";
 
 export async function navigateToPage({
   apiKey,
@@ -35,13 +36,13 @@ export async function navigateToPage({
     // we don't want to set the e2e param for devtools URLs because that would instruct
     // the devtools app to use an apiKey from the URL instead of a token from the
     // dashboard app, which would break the login-logout-devtools test
-    url.searchParams.set("e2e", "1");
+    url.searchParams.set(SEARCH_PARAMS.e2eFlag, "1");
   }
   if (apiKey) {
-    url.searchParams.set("apiKey", apiKey);
+    url.searchParams.set(SEARCH_PARAMS.accessToken, apiKey);
   }
   if (mockGraphQLData) {
-    url.searchParams.set("mockGraphQLData", compress(mockGraphQLData));
+    url.searchParams.set(SEARCH_PARAMS.mockGraphQLData, compress(mockGraphQLData));
   }
 
   await debugPrint(page, `Navigating to ${chalk.blueBright(url)}`, "navigateToPage");

@@ -1,4 +1,4 @@
-import { COOKIES, HEADERS } from "@/constants";
+import { COOKIES, HEADERS, SEARCH_PARAMS } from "@/constants";
 import { getAccessToken } from "@auth0/nextjs-auth0/edge";
 import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
     case "/org/new": {
       const redirectURL = new URL(request.url);
       redirectURL.pathname = "/team/new/standard";
-      redirectURL.searchParams.set("type", "org");
+      redirectURL.searchParams.set(SEARCH_PARAMS.type, "org");
 
       return NextResponse.redirect(redirectURL);
     }
@@ -60,7 +60,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const url = new URL(request.nextUrl);
-  const mockGraphQLData = url.searchParams.get("mockGraphQLData");
+  const mockGraphQLData = url.searchParams.get(SEARCH_PARAMS.mockGraphQLData);
   if (mockGraphQLData) {
     setCookieValueServer(response, COOKIES.mockGraphQLData, mockGraphQLData);
 
@@ -123,7 +123,7 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
   }
 
   const url = new URL(request.nextUrl);
-  const apiKey = url.searchParams.get("apiKey");
+  const apiKey = url.searchParams.get(SEARCH_PARAMS.accessToken);
   if (apiKey) {
     // e2e tests and Support login flow
     const data = {
@@ -180,7 +180,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
     pathname.startsWith("/user")
   ) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
+    loginUrl.searchParams.set(SEARCH_PARAMS.returnTo, request.nextUrl.pathname);
 
     throw loginUrl;
   }

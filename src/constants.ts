@@ -16,6 +16,17 @@ export const HEADERS = {
   userAgent: "x-user-agent",
 };
 
+export const SEARCH_PARAMS = {
+  accessToken: "apiKey",
+  e2eFlag: "e2e",
+  mockGraphQLData: "mockGraphQLData",
+  returnTo: "returnTo",
+  testId: "testId",
+  testRunId: "testRunId",
+  testSummaryId: "testSummaryId",
+  type: "type",
+};
+
 export const LOCAL_STORAGE = {};
 
 export const URLS = {
