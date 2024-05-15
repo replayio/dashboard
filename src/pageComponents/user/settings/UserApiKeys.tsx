@@ -13,7 +13,6 @@ export function UserApiKeys() {
 
   return (
     <ApiKeys
-      allowEditScopes={false}
       apiKeys={apiKeys}
       createKey={createApiKey}
       deleteKey={deleteApiKey}

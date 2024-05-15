@@ -11,11 +11,9 @@ export function WorkspaceApiKeys({ workspaceId }: { workspaceId: string }) {
 
   return (
     <ApiKeys
-      allowEditScopes={true}
       apiKeys={apiKeys}
       createKey={(label: string, scopes: ApiKeyScope[]) => createApiKey(workspaceId, label, scopes)}
       deleteKey={deleteApiKey}
-      scopes={["admin:all", "write:sourcemap"]}
     />
   );
 }
