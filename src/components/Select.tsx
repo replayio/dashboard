@@ -2,7 +2,7 @@ import { DropDownTrigger } from "@/components/DropDownTrigger";
 import assert from "assert";
 import { InputHTMLAttributes } from "react";
 
-type Option = {
+export type Option = {
   label: string;
 };
 

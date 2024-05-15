@@ -1,32 +1,35 @@
 import { Icon } from "@/components/Icon";
+import { LeftNavLink } from "@/components/LeftNavLink";
 import { ReplayLogo } from "@/components/ReplayLogo";
-import { CreateTeamButton } from "@/pageComponents/team/layout/CreateTeamButton";
+import { MyLibraryNavLink } from "@/components/layout/MyLibraryLink";
 import { CurrentUser } from "@/pageComponents/team/layout/CurrentUser";
 import Link from "next/link";
-import { PropsWithChildren, useContext } from "react";
-import { SessionContext } from "./SessionContext";
+import { PropsWithChildren } from "react";
 
 export function LeftNav({
   backLink,
   children,
+  showCreateTeamLink = false,
 }: PropsWithChildren<{
   backLink?: {
     href: string;
     label: string;
   };
+  showCreateTeamLink?: boolean;
 }>) {
-  const { user } = useContext(SessionContext);
-
   return (
     <div className="flex flex-col gap-2 h-full text-white overflow-auto shrink-0 p-2 pr-0 w-32 md:w-72">
       <div className="flex flex-row items-center gap-2 p-2 bg-slate-950 rounded">
         <ReplayLogo className="max-h-6 max-w-6" />
         <div className="text-xl font-bold">Replay</div>
       </div>
-      <nav className="flex flex-col overflow-auto bg-slate-800 rounded grow relative">
+      <nav className="flex flex-col overflow-auto bg-slate-800 rounded shrink-0 relative p-1">
+        <MyLibraryNavLink />
+      </nav>
+      <nav className="flex flex-col overflow-auto bg-slate-800 rounded grow relative p-1">
         {backLink && (
           <Link
-            className="px-2 py-1 flex flex-row items-center text-lg text-white hover:text-sky-400 overflow-auto truncate whitespace-nowrap"
+            className="px-2 py-1 flex flex-row items-center text-lg text-white hover:text-sky-400 overflow-auto truncate whitespace-nowrap shrink-0"
             data-test-id="LeftNavLink-BackLink"
             href={backLink.href}
             title={backLink.label}
@@ -37,7 +40,11 @@ export function LeftNav({
         )}
         {children}
       </nav>
-      {!backLink && <CreateTeamButton isInternalUser={user.isInternal == true} />}
+      {showCreateTeamLink && (
+        <nav className="flex flex-col overflow-auto bg-slate-800 rounded shrink-0 relative p-1">
+          <LeftNavLink href="/team/new" iconType="create" isActive={false} label="Create team" />
+        </nav>
+      )}
       <CurrentUser />
     </div>
   );

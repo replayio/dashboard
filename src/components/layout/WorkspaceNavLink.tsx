@@ -3,7 +3,7 @@ import { LeftNavLink } from "@/components/LeftNavLink";
 import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import { useParams } from "next/navigation";
 
-export function TeamDefaultNavLink({
+export function WorkspaceNavLink({
   id,
   isTest,
   name,
@@ -13,10 +13,11 @@ export function TeamDefaultNavLink({
   name: string;
 }) {
   const params = useParams();
-  const currentId = params?.id ?? "me";
+  const currentId = params?.id
+    ? decodeURIComponent(Array.isArray(params?.id) ? params?.id[0] ?? "" : params?.id)
+    : null;
 
-  const isActive =
-    id === decodeURIComponent(Array.isArray(currentId) ? currentId[0] ?? "" : currentId);
+  const isActive = id === currentId;
 
   useIsomorphicLayoutEffect(() => {
     if (isActive) {
@@ -28,9 +29,7 @@ export function TeamDefaultNavLink({
   }, [id, isActive]);
 
   let iconType: IconType;
-  if (id === "me") {
-    iconType = "my-library";
-  } else if (isTest) {
+  if (isTest) {
     iconType = "test-suite";
   } else {
     iconType = "folder";

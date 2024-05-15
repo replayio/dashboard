@@ -19,7 +19,7 @@ const documents = {
     types.CreateUserApiKeyDocument,
   "\n      mutation CreateNewWorkspace($name: String!, $planKey: String!) {\n        createWorkspace(input: { name: $name, planKey: $planKey }) {\n          success\n          workspace {\n            id\n            invitationCode\n            domain\n            isDomainLimitedCode\n          }\n        }\n      }\n    ":
     types.CreateNewWorkspaceDocument,
-  "\n      mutation CreateWorkspaceAPIKey($workspaceId: ID!, $label: String!, $scopes: [String!]!) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    ":
+  "\n      mutation CreateWorkspaceAPIKey(\n        $workspaceId: ID!\n        $label: String!\n        $scopes: [String!]!\n        $apiKey: String\n      ) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes, apiKey: $apiKey }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    ":
     types.CreateWorkspaceApiKeyDocument,
   "\n      mutation DeleteUserAPIKey($id: ID!) {\n        deleteUserAPIKey(input: { id: $id }) {\n          success\n        }\n      }\n    ":
     types.DeleteUserApiKeyDocument,
@@ -129,8 +129,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n      mutation CreateWorkspaceAPIKey($workspaceId: ID!, $label: String!, $scopes: [String!]!) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "
-): (typeof documents)["\n      mutation CreateWorkspaceAPIKey($workspaceId: ID!, $label: String!, $scopes: [String!]!) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "];
+  source: "\n      mutation CreateWorkspaceAPIKey(\n        $workspaceId: ID!\n        $label: String!\n        $scopes: [String!]!\n        $apiKey: String\n      ) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes, apiKey: $apiKey }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "
+): (typeof documents)["\n      mutation CreateWorkspaceAPIKey(\n        $workspaceId: ID!\n        $label: String!\n        $scopes: [String!]!\n        $apiKey: String\n      ) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes, apiKey: $apiKey }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -2,7 +2,7 @@ import { IconType } from "@/components/Icon";
 import { LeftNavLink } from "@/components/LeftNavLink";
 import { usePathname } from "next/navigation";
 
-export function SettingsNavLink({
+export function UserSettingsNavLink({
   iconType,
   label,
   route,
