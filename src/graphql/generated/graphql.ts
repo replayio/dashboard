@@ -25315,37 +25315,6 @@ export type GetWorkspaceApiKeysQuery = {
     | null;
 };
 
-export type GetNonPendingWorkspacesQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetNonPendingWorkspacesQuery = {
-  __typename?: "query_root";
-  viewer?: {
-    __typename?: "AuthenticatedUser";
-    workspaces: {
-      __typename?: "UserWorkspaceConnection";
-      edges: Array<{
-        __typename?: "UserWorkspaceEdge";
-        node: {
-          __typename?: "Workspace";
-          hasPaymentMethod: boolean;
-          id: string;
-          invitationCode?: string | null;
-          isOrganization: boolean;
-          isTest: boolean;
-          name: string;
-          retentionLimit?: number | null;
-          settings?: { __typename?: "WorkspaceSettings"; features?: any | null } | null;
-          subscription?: {
-            __typename?: "WorkspaceSubscription";
-            id: string;
-            plan?: { __typename?: "Plan"; id: string; key: string } | null;
-          } | null;
-        };
-      }>;
-    };
-  } | null;
-};
-
 export type GetPersonalRecordingsQueryVariables = Exact<{
   filter?: InputMaybe<Scalars["String"]["input"]>;
 }>;
@@ -25747,6 +25716,37 @@ export type GetWorkspaceTestsQuery = {
         } | null;
       }
     | null;
+};
+
+export type GetWorkspacesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetWorkspacesQuery = {
+  __typename?: "query_root";
+  viewer?: {
+    __typename?: "AuthenticatedUser";
+    workspaces: {
+      __typename?: "UserWorkspaceConnection";
+      edges: Array<{
+        __typename?: "UserWorkspaceEdge";
+        node: {
+          __typename?: "Workspace";
+          hasPaymentMethod: boolean;
+          id: string;
+          invitationCode?: string | null;
+          isOrganization: boolean;
+          isTest: boolean;
+          name: string;
+          retentionLimit?: number | null;
+          settings?: { __typename?: "WorkspaceSettings"; features?: any | null } | null;
+          subscription?: {
+            __typename?: "WorkspaceSubscription";
+            id: string;
+            plan?: { __typename?: "Plan"; id: string; key: string } | null;
+          } | null;
+        };
+      }>;
+    };
+  } | null;
 };
 
 export type RemoveUserFromWorkspaceMutationVariables = Exact<{
@@ -27367,116 +27367,6 @@ export const GetWorkspaceApiKeysDocument = {
     },
   ],
 } as unknown as DocumentNode<GetWorkspaceApiKeysQuery, GetWorkspaceApiKeysQueryVariables>;
-export const GetNonPendingWorkspacesDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetNonPendingWorkspaces" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "viewer" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "workspaces" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "edges" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "node" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "hasPaymentMethod" },
-                                  },
-                                  { kind: "Field", name: { kind: "Name", value: "id" } },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "invitationCode" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "isOrganization" },
-                                  },
-                                  { kind: "Field", name: { kind: "Name", value: "isTest" } },
-                                  { kind: "Field", name: { kind: "Name", value: "name" } },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "retentionLimit" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "settings" },
-                                    selectionSet: {
-                                      kind: "SelectionSet",
-                                      selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "features" },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "subscription" },
-                                    selectionSet: {
-                                      kind: "SelectionSet",
-                                      selections: [
-                                        { kind: "Field", name: { kind: "Name", value: "id" } },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "plan" },
-                                          selectionSet: {
-                                            kind: "SelectionSet",
-                                            selections: [
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "id" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "key" },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetNonPendingWorkspacesQuery, GetNonPendingWorkspacesQueryVariables>;
 export const GetPersonalRecordingsDocument = {
   kind: "Document",
   definitions: [
@@ -29130,6 +29020,116 @@ export const GetWorkspaceTestsDocument = {
     },
   ],
 } as unknown as DocumentNode<GetWorkspaceTestsQuery, GetWorkspaceTestsQueryVariables>;
+export const GetWorkspacesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetWorkspaces" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "viewer" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "workspaces" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "edges" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "node" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "hasPaymentMethod" },
+                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "id" } },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "invitationCode" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "isOrganization" },
+                                  },
+                                  { kind: "Field", name: { kind: "Name", value: "isTest" } },
+                                  { kind: "Field", name: { kind: "Name", value: "name" } },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "retentionLimit" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "settings" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "features" },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "subscription" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        { kind: "Field", name: { kind: "Name", value: "id" } },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "plan" },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "id" },
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "key" },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetWorkspacesQuery, GetWorkspacesQueryVariables>;
 export const RemoveUserFromWorkspaceDocument = {
   kind: "Document",
   definitions: [

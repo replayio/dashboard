@@ -33,7 +33,7 @@ export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: 
     `,
     {
       client,
-      refetchQueries: ["GetNonPendingWorkspaces"],
+      refetchQueries: ["GetWorkspaces"],
     }
   );
 

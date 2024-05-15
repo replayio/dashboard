@@ -1,12 +1,12 @@
-import { GetNonPendingWorkspacesQuery } from "@/graphql/generated/graphql";
+import { GetWorkspacesQuery } from "@/graphql/generated/graphql";
 import { Workspace } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
-export function useNonPendingWorkspaces() {
-  const { data, error, isLoading, refetch } = useGraphQLQuery<GetNonPendingWorkspacesQuery>(gql`
-    query GetNonPendingWorkspaces {
+export function useWorkspaces() {
+  const { data, error, isLoading, refetch } = useGraphQLQuery<GetWorkspacesQuery>(gql`
+    query GetWorkspaces {
       viewer {
         workspaces {
           edges {

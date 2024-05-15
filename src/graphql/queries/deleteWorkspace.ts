@@ -29,7 +29,7 @@ export function useDeleteWorkspace() {
     `,
     {
       client,
-      refetchQueries: ["GetNonPendingWorkspaces"],
+      refetchQueries: ["GetWorkspaces"],
     }
   );
 

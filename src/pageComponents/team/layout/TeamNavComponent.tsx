@@ -1,13 +1,13 @@
 import { LeftNav } from "@/components/LeftNav";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
-import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { Workspace } from "@/graphql/types";
 import { TeamDefaultNav } from "@/pageComponents/team/layout/TeamDefaultNav";
 import { TeamWorkspaceNav } from "@/pageComponents/team/layout/TeamWorkspaceNav";
 import { usePathname } from "next/navigation";
 
 export function TeamNavComponent() {
-  const { workspaces } = useNonPendingWorkspaces();
+  const { workspaces } = useWorkspaces();
 
   const pathname = usePathname();
   const workspaceId =
