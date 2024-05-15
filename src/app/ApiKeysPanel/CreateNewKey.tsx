@@ -6,9 +6,11 @@ import { ApiKeyScope } from "@/graphql/types";
 import { useState } from "react";
 
 export function CreateNewKey({
+  allowEditScopes,
   createKey,
   scopes,
 }: {
+  allowEditScopes: boolean;
   createKey: (label: string, scopes: ApiKeyScope[]) => Promise<string>;
   scopes: ApiKeyScope[];
 }) {
@@ -32,15 +34,19 @@ export function CreateNewKey({
       if (label) {
         setIsPending(true);
 
-        const selectedScopes: ApiKeyScope[] = [];
-        if (admin) {
-          selectedScopes.push("admin:all");
-        }
-        if (writeSourcemaps) {
-          selectedScopes.push("write:sourcemap");
+        const selectedScopes: Set<ApiKeyScope> = new Set();
+        if (allowEditScopes) {
+          if (admin) {
+            selectedScopes.add("admin:all");
+          }
+          if (writeSourcemaps) {
+            selectedScopes.add("write:sourcemap");
+          }
+        } else {
+          scopes.forEach(scope => selectedScopes.add(scope));
         }
 
-        const keyValue = await createKey(label, selectedScopes);
+        const keyValue = await createKey(label, Array.from(selectedScopes));
 
         setKeyValue(keyValue);
 
@@ -65,7 +71,7 @@ export function CreateNewKey({
             Add
           </Button>
         </div>
-        {!keyValue && scopes.length > 1 && (
+        {allowEditScopes && (
           <div className="flex flex-row items-center gap-4">
             {scopes.includes("admin:all") && (
               <Checkbox
