@@ -379,6 +379,29 @@ export type CreateRecordingInput = {
   secret: Scalars["String"]["input"];
 };
 
+export type CreateRootCauseCategory = {
+  __typename?: "CreateRootCauseCategory";
+  category: RootCauseCategory;
+  success?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+export type CreateRootCauseCategoryDiscrepancies = {
+  __typename?: "CreateRootCauseCategoryDiscrepancies";
+  discrepancies: Array<RootCauseAnalysisCategoryDiscrepancy>;
+  success?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+export type CreateRootCauseCategoryDiscrepanciesInput = {
+  categoryId: Scalars["String"]["input"];
+  discrepancies: Array<RootCauseAnalysisDiscrepancyInput>;
+  workspaceId: Scalars["String"]["input"];
+};
+
+export type CreateRootCauseCategoryInput = {
+  name: Scalars["String"]["input"];
+  workspaceId: Scalars["String"]["input"];
+};
+
 export type CreateUserApiKey = {
   __typename?: "CreateUserAPIKey";
   key: WorkspaceApiKey;
@@ -405,6 +428,7 @@ export type CreateWorkspaceApiKey = {
 };
 
 export type CreateWorkspaceApiKeyInput = {
+  apiKey?: InputMaybe<Scalars["String"]["input"]>;
   label: Scalars["String"]["input"];
   scopes: Array<Scalars["String"]["input"]>;
   workspaceId: Scalars["ID"]["input"];
@@ -460,6 +484,26 @@ export type DeleteRecording = {
 
 export type DeleteRecordingInput = {
   id: Scalars["ID"]["input"];
+};
+
+export type DeleteRootCauseCategory = {
+  __typename?: "DeleteRootCauseCategory";
+  success?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+export type DeleteRootCauseCategoryDiscrepancy = {
+  __typename?: "DeleteRootCauseCategoryDiscrepancy";
+  success?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+export type DeleteRootCauseCategoryDiscrepancyInput = {
+  discrepancyId: Scalars["String"]["input"];
+  workspaceId: Scalars["String"]["input"];
+};
+
+export type DeleteRootCauseCategoryInput = {
+  categoryId: Scalars["String"]["input"];
+  workspaceId: Scalars["String"]["input"];
 };
 
 export type DeleteTestRecording = {
@@ -627,6 +671,8 @@ export type Mutation = {
   completeTestRunShard: CompleteTestRunShard;
   createPlan: CreatePlan;
   createRecording: CreateRecording;
+  createRootCauseCategory: CreateRootCauseCategory;
+  createRootCauseCategoryDiscrepancies: CreateRootCauseCategoryDiscrepancies;
   createUserAPIKey: CreateUserApiKey;
   createWorkspace: CreateWorkspace;
   createWorkspaceAPIKey: CreateWorkspaceApiKey;
@@ -635,6 +681,8 @@ export type Mutation = {
   deleteExpiredRecording: DeleteExpiredRecording;
   deletePoint: DeletePoint;
   deleteRecording: DeleteRecording;
+  deleteRootCauseCategory: DeleteRootCauseCategory;
+  deleteRootCauseCategoryDiscrepancy: DeleteRootCauseCategoryDiscrepancy;
   deleteTestRecording: DeleteTestRecording;
   deleteUserAPIKey: DeleteUserApiKey;
   deleteWorkspace: DeleteWorkspace;
@@ -666,6 +714,7 @@ export type Mutation = {
   updateRecordingResolution: UpdateRecordingResolution;
   updateRecordingTitle: UpdateRecordingTitle;
   updateRecordingWorkspace: UpdateRecordingWorkspace;
+  updateRootCauseCategory: UpdateRootCauseCategory;
   updateSubscriptionStatus: UpdateSubscriptionStatus;
   updateUserDefaultWorkspace: UpdateUserDefaultWorkspace;
   updateUserPreferences: UpdateUserPreferences;
@@ -745,6 +794,14 @@ export type MutationCreateRecordingArgs = {
   input: CreateRecordingInput;
 };
 
+export type MutationCreateRootCauseCategoryArgs = {
+  input: CreateRootCauseCategoryInput;
+};
+
+export type MutationCreateRootCauseCategoryDiscrepanciesArgs = {
+  input: CreateRootCauseCategoryDiscrepanciesInput;
+};
+
 export type MutationCreateUserApiKeyArgs = {
   input: CreateUserApiKeyInput;
 };
@@ -775,6 +832,14 @@ export type MutationDeletePointArgs = {
 
 export type MutationDeleteRecordingArgs = {
   input: DeleteRecordingInput;
+};
+
+export type MutationDeleteRootCauseCategoryArgs = {
+  input: DeleteRootCauseCategoryInput;
+};
+
+export type MutationDeleteRootCauseCategoryDiscrepancyArgs = {
+  input: DeleteRootCauseCategoryDiscrepancyInput;
 };
 
 export type MutationDeleteTestRecordingArgs = {
@@ -899,6 +964,10 @@ export type MutationUpdateRecordingTitleArgs = {
 
 export type MutationUpdateRecordingWorkspaceArgs = {
   input: UpdateRecordingWorkspaceInput;
+};
+
+export type MutationUpdateRootCauseCategoryArgs = {
+  input: UpdateRootCauseCategoryInput;
 };
 
 export type MutationUpdateSubscriptionStatusArgs = {
@@ -1201,6 +1270,73 @@ export type RootCauseAnalysis = Node & {
   result?: Maybe<Scalars["JSONObject"]["output"]>;
   updatedAt: Scalars["DateTime"]["output"];
   version?: Maybe<Scalars["Int"]["output"]>;
+};
+
+export type RootCauseAnalysisCategoryDiscrepancy = {
+  __typename?: "RootCauseAnalysisCategoryDiscrepancy";
+  createdAt: Scalars["DateTime"]["output"];
+  eventKind: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  key: Scalars["String"]["output"];
+  kind: Scalars["String"]["output"];
+};
+
+export type RootCauseAnalysisDiscrepancyInput = {
+  eventKind: Scalars["String"]["input"];
+  key: Scalars["String"]["input"];
+  kind: Scalars["String"]["input"];
+};
+
+export type RootCauseAnalysisRun = {
+  __typename?: "RootCauseAnalysisRun";
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["ID"]["output"];
+  metadata: Scalars["JSONObject"]["output"];
+  result: Scalars["String"]["output"];
+  testEntries: Array<RootCauseAnalysisTestEntry>;
+};
+
+export type RootCauseAnalysisRunConnection = {
+  __typename?: "RootCauseAnalysisRunConnection";
+  edges: Array<RootCauseAnalysisRunEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars["Int"]["output"];
+};
+
+export type RootCauseAnalysisRunEdge = {
+  __typename?: "RootCauseAnalysisRunEdge";
+  cursor: Scalars["String"]["output"];
+  node: RootCauseAnalysisRun;
+};
+
+export type RootCauseAnalysisRunsFilterInput = {
+  status?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type RootCauseAnalysisTestDiscrepancy = {
+  __typename?: "RootCauseAnalysisTestDiscrepancy";
+  createdAt: Scalars["DateTime"]["output"];
+  eventKind: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  key: Scalars["String"]["output"];
+  kind: Scalars["String"]["output"];
+};
+
+export type RootCauseAnalysisTestEntry = {
+  __typename?: "RootCauseAnalysisTestEntry";
+  createdAt: Scalars["DateTime"]["output"];
+  discrepancies: Array<RootCauseAnalysisTestDiscrepancy>;
+  id: Scalars["ID"]["output"];
+  resultMetadata: Scalars["JSONObject"]["output"];
+};
+
+export type RootCauseCategory = {
+  __typename?: "RootCauseCategory";
+  createdAt: Scalars["DateTime"]["output"];
+  discrepancies: Array<RootCauseAnalysisCategoryDiscrepancy>;
+  id: Scalars["ID"]["output"];
+  matchingFailurePercentage: Scalars["Float"]["output"];
+  name: Scalars["String"]["output"];
 };
 
 export type SampleInput = {
@@ -1604,6 +1740,18 @@ export type UpdateRecordingWorkspaceInput = {
   workspaceId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
+export type UpdateRootCauseCategory = {
+  __typename?: "UpdateRootCauseCategory";
+  category: RootCauseCategory;
+  success?: Maybe<Scalars["Boolean"]["output"]>;
+};
+
+export type UpdateRootCauseCategoryInput = {
+  categoryId: Scalars["String"]["input"];
+  name: Scalars["String"]["input"];
+  workspaceId: Scalars["String"]["input"];
+};
+
 export type UpdateSubscriptionStatus = {
   __typename?: "UpdateSubscriptionStatus";
   subscription?: Maybe<WorkspaceSubscription>;
@@ -1794,6 +1942,8 @@ export type Workspace = Node & {
   recordingCount: Scalars["Int"]["output"];
   recordings?: Maybe<WorkspaceRecordingConnection>;
   retentionLimit?: Maybe<Scalars["Int"]["output"]>;
+  rootCauseAnalysisCategories: Array<RootCauseCategory>;
+  rootCauseAnalysisRuns?: Maybe<RootCauseAnalysisRunConnection>;
   settings?: Maybe<WorkspaceSettings>;
   subscription?: Maybe<WorkspaceSubscription>;
   testRuns?: Maybe<TestRunConnection>;
@@ -1812,6 +1962,14 @@ export type WorkspaceRecordingsArgs = {
   after?: InputMaybe<Scalars["String"]["input"]>;
   before?: InputMaybe<Scalars["String"]["input"]>;
   filter?: InputMaybe<Scalars["String"]["input"]>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  last?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type WorkspaceRootCauseAnalysisRunsArgs = {
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  before?: InputMaybe<Scalars["String"]["input"]>;
+  filter?: InputMaybe<RootCauseAnalysisRunsFilterInput>;
   first?: InputMaybe<Scalars["Int"]["input"]>;
   last?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -5717,6 +5875,8 @@ export type Mutation_Root = {
   completeTestRunShard: CompleteTestRunShard;
   createPlan: CreatePlan;
   createRecording: CreateRecording;
+  createRootCauseCategory: CreateRootCauseCategory;
+  createRootCauseCategoryDiscrepancies: CreateRootCauseCategoryDiscrepancies;
   createUserAPIKey: CreateUserApiKey;
   createWorkspace: CreateWorkspace;
   createWorkspaceAPIKey: CreateWorkspaceApiKey;
@@ -5725,6 +5885,8 @@ export type Mutation_Root = {
   deleteExpiredRecording: DeleteExpiredRecording;
   deletePoint: DeletePoint;
   deleteRecording: DeleteRecording;
+  deleteRootCauseCategory: DeleteRootCauseCategory;
+  deleteRootCauseCategoryDiscrepancy: DeleteRootCauseCategoryDiscrepancy;
   deleteTestRecording: DeleteTestRecording;
   deleteUserAPIKey: DeleteUserApiKey;
   deleteWorkspace: DeleteWorkspace;
@@ -6162,6 +6324,7 @@ export type Mutation_Root = {
   updateRecordingResolution: UpdateRecordingResolution;
   updateRecordingTitle: UpdateRecordingTitle;
   updateRecordingWorkspace: UpdateRecordingWorkspace;
+  updateRootCauseCategory: UpdateRootCauseCategory;
   updateSubscriptionStatus: UpdateSubscriptionStatus;
   updateUserDefaultWorkspace: UpdateUserDefaultWorkspace;
   updateUserPreferences: UpdateUserPreferences;
@@ -6466,6 +6629,16 @@ export type Mutation_RootCreateRecordingArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootCreateRootCauseCategoryArgs = {
+  input: CreateRootCauseCategoryInput;
+};
+
+/** mutation root */
+export type Mutation_RootCreateRootCauseCategoryDiscrepanciesArgs = {
+  input: CreateRootCauseCategoryDiscrepanciesInput;
+};
+
+/** mutation root */
 export type Mutation_RootCreateUserApiKeyArgs = {
   input: CreateUserApiKeyInput;
 };
@@ -6503,6 +6676,16 @@ export type Mutation_RootDeletePointArgs = {
 /** mutation root */
 export type Mutation_RootDeleteRecordingArgs = {
   input: DeleteRecordingInput;
+};
+
+/** mutation root */
+export type Mutation_RootDeleteRootCauseCategoryArgs = {
+  input: DeleteRootCauseCategoryInput;
+};
+
+/** mutation root */
+export type Mutation_RootDeleteRootCauseCategoryDiscrepancyArgs = {
+  input: DeleteRootCauseCategoryDiscrepancyInput;
 };
 
 /** mutation root */
@@ -6775,6 +6958,7 @@ export type Mutation_RootDelete_ReleasesArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Releases_By_PkArgs = {
+  architecture: Scalars["String"]["input"];
   build_id: Scalars["String"]["input"];
 };
 
@@ -7792,6 +7976,11 @@ export type Mutation_RootUpdateRecordingWorkspaceArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootUpdateRootCauseCategoryArgs = {
+  input: UpdateRootCauseCategoryInput;
+};
+
+/** mutation root */
 export type Mutation_RootUpdateSubscriptionStatusArgs = {
   input: UpdateSubscriptionStatusInput;
 };
@@ -8336,7 +8525,6 @@ export type Mutation_RootUpdate_Root_Cause_Analysis_Test_EntriesArgs = {
   _delete_at_path?: InputMaybe<Root_Cause_Analysis_Test_Entries_Delete_At_Path_Input>;
   _delete_elem?: InputMaybe<Root_Cause_Analysis_Test_Entries_Delete_Elem_Input>;
   _delete_key?: InputMaybe<Root_Cause_Analysis_Test_Entries_Delete_Key_Input>;
-  _inc?: InputMaybe<Root_Cause_Analysis_Test_Entries_Inc_Input>;
   _prepend?: InputMaybe<Root_Cause_Analysis_Test_Entries_Prepend_Input>;
   _set?: InputMaybe<Root_Cause_Analysis_Test_Entries_Set_Input>;
   where: Root_Cause_Analysis_Test_Entries_Bool_Exp;
@@ -8348,7 +8536,6 @@ export type Mutation_RootUpdate_Root_Cause_Analysis_Test_Entries_By_PkArgs = {
   _delete_at_path?: InputMaybe<Root_Cause_Analysis_Test_Entries_Delete_At_Path_Input>;
   _delete_elem?: InputMaybe<Root_Cause_Analysis_Test_Entries_Delete_Elem_Input>;
   _delete_key?: InputMaybe<Root_Cause_Analysis_Test_Entries_Delete_Key_Input>;
-  _inc?: InputMaybe<Root_Cause_Analysis_Test_Entries_Inc_Input>;
   _prepend?: InputMaybe<Root_Cause_Analysis_Test_Entries_Prepend_Input>;
   _set?: InputMaybe<Root_Cause_Analysis_Test_Entries_Set_Input>;
   pk_columns: Root_Cause_Analysis_Test_Entries_Pk_Columns_Input;
@@ -10686,6 +10873,7 @@ export type Query_RootReleases_AggregateArgs = {
 
 /** query root */
 export type Query_RootReleases_By_PkArgs = {
+  architecture: Scalars["String"]["input"];
   build_id: Scalars["String"]["input"];
 };
 
@@ -14111,6 +14299,7 @@ export type Recordings_Variance_Order_By = {
 /** columns and relationships of "release_build_files" */
 export type Release_Build_Files = {
   __typename?: "release_build_files";
+  architecture?: Maybe<Scalars["String"]["output"]>;
   build_id: Scalars["String"]["output"];
   file_name: Scalars["String"]["output"];
   id: Scalars["uuid"]["output"];
@@ -14155,6 +14344,7 @@ export type Release_Build_Files_Bool_Exp = {
   _and?: InputMaybe<Array<InputMaybe<Release_Build_Files_Bool_Exp>>>;
   _not?: InputMaybe<Release_Build_Files_Bool_Exp>;
   _or?: InputMaybe<Array<InputMaybe<Release_Build_Files_Bool_Exp>>>;
+  architecture?: InputMaybe<String_Comparison_Exp>;
   build_id?: InputMaybe<String_Comparison_Exp>;
   file_name?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -14170,6 +14360,7 @@ export enum Release_Build_Files_Constraint {
 
 /** input type for inserting data into table "release_build_files" */
 export type Release_Build_Files_Insert_Input = {
+  architecture?: InputMaybe<Scalars["String"]["input"]>;
   build_id?: InputMaybe<Scalars["String"]["input"]>;
   file_name?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -14178,6 +14369,7 @@ export type Release_Build_Files_Insert_Input = {
 /** aggregate max on columns */
 export type Release_Build_Files_Max_Fields = {
   __typename?: "release_build_files_max_fields";
+  architecture?: Maybe<Scalars["String"]["output"]>;
   build_id?: Maybe<Scalars["String"]["output"]>;
   file_name?: Maybe<Scalars["String"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -14185,6 +14377,7 @@ export type Release_Build_Files_Max_Fields = {
 
 /** order by max() on columns of table "release_build_files" */
 export type Release_Build_Files_Max_Order_By = {
+  architecture?: InputMaybe<Order_By>;
   build_id?: InputMaybe<Order_By>;
   file_name?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -14193,6 +14386,7 @@ export type Release_Build_Files_Max_Order_By = {
 /** aggregate min on columns */
 export type Release_Build_Files_Min_Fields = {
   __typename?: "release_build_files_min_fields";
+  architecture?: Maybe<Scalars["String"]["output"]>;
   build_id?: Maybe<Scalars["String"]["output"]>;
   file_name?: Maybe<Scalars["String"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -14200,6 +14394,7 @@ export type Release_Build_Files_Min_Fields = {
 
 /** order by min() on columns of table "release_build_files" */
 export type Release_Build_Files_Min_Order_By = {
+  architecture?: InputMaybe<Order_By>;
   build_id?: InputMaybe<Order_By>;
   file_name?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -14229,6 +14424,7 @@ export type Release_Build_Files_On_Conflict = {
 
 /** ordering options when selecting data from "release_build_files" */
 export type Release_Build_Files_Order_By = {
+  architecture?: InputMaybe<Order_By>;
   build_id?: InputMaybe<Order_By>;
   file_name?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -14242,6 +14438,8 @@ export type Release_Build_Files_Pk_Columns_Input = {
 /** select columns of table "release_build_files" */
 export enum Release_Build_Files_Select_Column {
   /** column name */
+  Architecture = "architecture",
+  /** column name */
   BuildId = "build_id",
   /** column name */
   FileName = "file_name",
@@ -14251,6 +14449,7 @@ export enum Release_Build_Files_Select_Column {
 
 /** input type for updating data in table "release_build_files" */
 export type Release_Build_Files_Set_Input = {
+  architecture?: InputMaybe<Scalars["String"]["input"]>;
   build_id?: InputMaybe<Scalars["String"]["input"]>;
   file_name?: InputMaybe<Scalars["String"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -14258,6 +14457,8 @@ export type Release_Build_Files_Set_Input = {
 
 /** update columns of table "release_build_files" */
 export enum Release_Build_Files_Update_Column {
+  /** column name */
+  Architecture = "architecture",
   /** column name */
   BuildId = "build_id",
   /** column name */
@@ -14269,6 +14470,7 @@ export enum Release_Build_Files_Update_Column {
 /** columns and relationships of "releases" */
 export type Releases = {
   __typename?: "releases";
+  architecture: Scalars["String"]["output"];
   build_file: Scalars["String"]["output"];
   build_id: Scalars["String"]["output"];
   created_at: Scalars["timestamp"]["output"];
@@ -14319,6 +14521,7 @@ export type Releases_Bool_Exp = {
   _and?: InputMaybe<Array<InputMaybe<Releases_Bool_Exp>>>;
   _not?: InputMaybe<Releases_Bool_Exp>;
   _or?: InputMaybe<Array<InputMaybe<Releases_Bool_Exp>>>;
+  architecture?: InputMaybe<String_Comparison_Exp>;
   build_file?: InputMaybe<String_Comparison_Exp>;
   build_id?: InputMaybe<String_Comparison_Exp>;
   created_at?: InputMaybe<Timestamp_Comparison_Exp>;
@@ -14333,11 +14536,14 @@ export type Releases_Bool_Exp = {
 /** unique or primary key constraints on table "releases" */
 export enum Releases_Constraint {
   /** unique or primary key constraint */
+  ReleasesBuildIdArchitectureKey = "releases_build_id_architecture_key",
+  /** unique or primary key constraint */
   ReleasesPkey = "releases_pkey",
 }
 
 /** input type for inserting data into table "releases" */
 export type Releases_Insert_Input = {
+  architecture?: InputMaybe<Scalars["String"]["input"]>;
   build_file?: InputMaybe<Scalars["String"]["input"]>;
   build_id?: InputMaybe<Scalars["String"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -14352,6 +14558,7 @@ export type Releases_Insert_Input = {
 /** aggregate max on columns */
 export type Releases_Max_Fields = {
   __typename?: "releases_max_fields";
+  architecture?: Maybe<Scalars["String"]["output"]>;
   build_file?: Maybe<Scalars["String"]["output"]>;
   build_id?: Maybe<Scalars["String"]["output"]>;
   created_at?: Maybe<Scalars["timestamp"]["output"]>;
@@ -14365,6 +14572,7 @@ export type Releases_Max_Fields = {
 
 /** order by max() on columns of table "releases" */
 export type Releases_Max_Order_By = {
+  architecture?: InputMaybe<Order_By>;
   build_file?: InputMaybe<Order_By>;
   build_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -14379,6 +14587,7 @@ export type Releases_Max_Order_By = {
 /** aggregate min on columns */
 export type Releases_Min_Fields = {
   __typename?: "releases_min_fields";
+  architecture?: Maybe<Scalars["String"]["output"]>;
   build_file?: Maybe<Scalars["String"]["output"]>;
   build_id?: Maybe<Scalars["String"]["output"]>;
   created_at?: Maybe<Scalars["timestamp"]["output"]>;
@@ -14392,6 +14601,7 @@ export type Releases_Min_Fields = {
 
 /** order by min() on columns of table "releases" */
 export type Releases_Min_Order_By = {
+  architecture?: InputMaybe<Order_By>;
   build_file?: InputMaybe<Order_By>;
   build_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -14427,6 +14637,7 @@ export type Releases_On_Conflict = {
 
 /** ordering options when selecting data from "releases" */
 export type Releases_Order_By = {
+  architecture?: InputMaybe<Order_By>;
   build_file?: InputMaybe<Order_By>;
   build_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
@@ -14440,11 +14651,14 @@ export type Releases_Order_By = {
 
 /** primary key columns input for table: "releases" */
 export type Releases_Pk_Columns_Input = {
+  architecture: Scalars["String"]["input"];
   build_id: Scalars["String"]["input"];
 };
 
 /** select columns of table "releases" */
 export enum Releases_Select_Column {
+  /** column name */
+  Architecture = "architecture",
   /** column name */
   BuildFile = "build_file",
   /** column name */
@@ -14467,6 +14681,7 @@ export enum Releases_Select_Column {
 
 /** input type for updating data in table "releases" */
 export type Releases_Set_Input = {
+  architecture?: InputMaybe<Scalars["String"]["input"]>;
   build_file?: InputMaybe<Scalars["String"]["input"]>;
   build_id?: InputMaybe<Scalars["String"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -14480,6 +14695,8 @@ export type Releases_Set_Input = {
 
 /** update columns of table "releases" */
 export enum Releases_Update_Column {
+  /** column name */
+  Architecture = "architecture",
   /** column name */
   BuildFile = "build_file",
   /** column name */
@@ -14936,8 +15153,6 @@ export type Root_Cause_Analysis_Discrepancies_Bool_Exp = {
 
 /** unique or primary key constraints on table "root_cause_analysis_discrepancies" */
 export enum Root_Cause_Analysis_Discrepancies_Constraint {
-  /** unique or primary key constraint */
-  RootCauseAnalysisDiscrepanciesIdxKindEventKey = "root_cause_analysis_discrepancies_idx_kind_event_key",
   /** unique or primary key constraint */
   RootCauseAnalysisDiscrepanciesPkey = "root_cause_analysis_discrepancies_pkey",
 }
@@ -15657,19 +15872,13 @@ export type Root_Cause_Analysis_Test_Entries = {
   __typename?: "root_cause_analysis_test_entries";
   analysis_run_id: Scalars["uuid"]["output"];
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
-  failed_recording_id: Scalars["uuid"]["output"];
-  failed_test_attempt: Scalars["Int"]["output"];
-  failed_test_id: Scalars["Int"]["output"];
-  frame_data: Scalars["jsonb"]["output"];
   id: Scalars["uuid"]["output"];
-  success_recording_id: Scalars["uuid"]["output"];
-  success_test_attempt: Scalars["Int"]["output"];
-  success_test_id: Scalars["Int"]["output"];
+  result_metadata: Scalars["jsonb"]["output"];
   workspace_id: Scalars["uuid"]["output"];
 };
 
 /** columns and relationships of "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_EntriesFrame_DataArgs = {
+export type Root_Cause_Analysis_Test_EntriesResult_MetadataArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -15683,17 +15892,9 @@ export type Root_Cause_Analysis_Test_Entries_Aggregate = {
 /** aggregate fields of "root_cause_analysis_test_entries" */
 export type Root_Cause_Analysis_Test_Entries_Aggregate_Fields = {
   __typename?: "root_cause_analysis_test_entries_aggregate_fields";
-  avg?: Maybe<Root_Cause_Analysis_Test_Entries_Avg_Fields>;
   count?: Maybe<Scalars["Int"]["output"]>;
   max?: Maybe<Root_Cause_Analysis_Test_Entries_Max_Fields>;
   min?: Maybe<Root_Cause_Analysis_Test_Entries_Min_Fields>;
-  stddev?: Maybe<Root_Cause_Analysis_Test_Entries_Stddev_Fields>;
-  stddev_pop?: Maybe<Root_Cause_Analysis_Test_Entries_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Root_Cause_Analysis_Test_Entries_Stddev_Samp_Fields>;
-  sum?: Maybe<Root_Cause_Analysis_Test_Entries_Sum_Fields>;
-  var_pop?: Maybe<Root_Cause_Analysis_Test_Entries_Var_Pop_Fields>;
-  var_samp?: Maybe<Root_Cause_Analysis_Test_Entries_Var_Samp_Fields>;
-  variance?: Maybe<Root_Cause_Analysis_Test_Entries_Variance_Fields>;
 };
 
 /** aggregate fields of "root_cause_analysis_test_entries" */
@@ -15704,45 +15905,20 @@ export type Root_Cause_Analysis_Test_Entries_Aggregate_FieldsCountArgs = {
 
 /** order by aggregate values of table "root_cause_analysis_test_entries" */
 export type Root_Cause_Analysis_Test_Entries_Aggregate_Order_By = {
-  avg?: InputMaybe<Root_Cause_Analysis_Test_Entries_Avg_Order_By>;
   count?: InputMaybe<Order_By>;
   max?: InputMaybe<Root_Cause_Analysis_Test_Entries_Max_Order_By>;
   min?: InputMaybe<Root_Cause_Analysis_Test_Entries_Min_Order_By>;
-  stddev?: InputMaybe<Root_Cause_Analysis_Test_Entries_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Root_Cause_Analysis_Test_Entries_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Root_Cause_Analysis_Test_Entries_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Root_Cause_Analysis_Test_Entries_Sum_Order_By>;
-  var_pop?: InputMaybe<Root_Cause_Analysis_Test_Entries_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Root_Cause_Analysis_Test_Entries_Var_Samp_Order_By>;
-  variance?: InputMaybe<Root_Cause_Analysis_Test_Entries_Variance_Order_By>;
 };
 
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Root_Cause_Analysis_Test_Entries_Append_Input = {
-  frame_data?: InputMaybe<Scalars["jsonb"]["input"]>;
+  result_metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
 };
 
 /** input type for inserting array relation for remote table "root_cause_analysis_test_entries" */
 export type Root_Cause_Analysis_Test_Entries_Arr_Rel_Insert_Input = {
   data: Array<Root_Cause_Analysis_Test_Entries_Insert_Input>;
   on_conflict?: InputMaybe<Root_Cause_Analysis_Test_Entries_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Root_Cause_Analysis_Test_Entries_Avg_Fields = {
-  __typename?: "root_cause_analysis_test_entries_avg_fields";
-  failed_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Float"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  success_test_id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** order by avg() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Avg_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "root_cause_analysis_test_entries". All fields are combined with a logical 'AND'. */
@@ -15752,14 +15928,8 @@ export type Root_Cause_Analysis_Test_Entries_Bool_Exp = {
   _or?: InputMaybe<Array<InputMaybe<Root_Cause_Analysis_Test_Entries_Bool_Exp>>>;
   analysis_run_id?: InputMaybe<Uuid_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  failed_recording_id?: InputMaybe<Uuid_Comparison_Exp>;
-  failed_test_attempt?: InputMaybe<Int_Comparison_Exp>;
-  failed_test_id?: InputMaybe<Int_Comparison_Exp>;
-  frame_data?: InputMaybe<Jsonb_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  success_recording_id?: InputMaybe<Uuid_Comparison_Exp>;
-  success_test_attempt?: InputMaybe<Int_Comparison_Exp>;
-  success_test_id?: InputMaybe<Int_Comparison_Exp>;
+  result_metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   workspace_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -15771,39 +15941,25 @@ export enum Root_Cause_Analysis_Test_Entries_Constraint {
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Root_Cause_Analysis_Test_Entries_Delete_At_Path_Input = {
-  frame_data?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  result_metadata?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
 export type Root_Cause_Analysis_Test_Entries_Delete_Elem_Input = {
-  frame_data?: InputMaybe<Scalars["Int"]["input"]>;
+  result_metadata?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export type Root_Cause_Analysis_Test_Entries_Delete_Key_Input = {
-  frame_data?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** input type for incrementing integer column in table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Inc_Input = {
-  failed_test_attempt?: InputMaybe<Scalars["Int"]["input"]>;
-  failed_test_id?: InputMaybe<Scalars["Int"]["input"]>;
-  success_test_attempt?: InputMaybe<Scalars["Int"]["input"]>;
-  success_test_id?: InputMaybe<Scalars["Int"]["input"]>;
+  result_metadata?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** input type for inserting data into table "root_cause_analysis_test_entries" */
 export type Root_Cause_Analysis_Test_Entries_Insert_Input = {
   analysis_run_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
-  failed_recording_id?: InputMaybe<Scalars["uuid"]["input"]>;
-  failed_test_attempt?: InputMaybe<Scalars["Int"]["input"]>;
-  failed_test_id?: InputMaybe<Scalars["Int"]["input"]>;
-  frame_data?: InputMaybe<Scalars["jsonb"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
-  success_recording_id?: InputMaybe<Scalars["uuid"]["input"]>;
-  success_test_attempt?: InputMaybe<Scalars["Int"]["input"]>;
-  success_test_id?: InputMaybe<Scalars["Int"]["input"]>;
+  result_metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
   workspace_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -15812,13 +15968,7 @@ export type Root_Cause_Analysis_Test_Entries_Max_Fields = {
   __typename?: "root_cause_analysis_test_entries_max_fields";
   analysis_run_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
-  failed_recording_id?: Maybe<Scalars["uuid"]["output"]>;
-  failed_test_attempt?: Maybe<Scalars["Int"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
-  success_recording_id?: Maybe<Scalars["uuid"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Int"]["output"]>;
-  success_test_id?: Maybe<Scalars["Int"]["output"]>;
   workspace_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -15826,13 +15976,7 @@ export type Root_Cause_Analysis_Test_Entries_Max_Fields = {
 export type Root_Cause_Analysis_Test_Entries_Max_Order_By = {
   analysis_run_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
-  failed_recording_id?: InputMaybe<Order_By>;
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  success_recording_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
 };
 
@@ -15841,13 +15985,7 @@ export type Root_Cause_Analysis_Test_Entries_Min_Fields = {
   __typename?: "root_cause_analysis_test_entries_min_fields";
   analysis_run_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
-  failed_recording_id?: Maybe<Scalars["uuid"]["output"]>;
-  failed_test_attempt?: Maybe<Scalars["Int"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Int"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
-  success_recording_id?: Maybe<Scalars["uuid"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Int"]["output"]>;
-  success_test_id?: Maybe<Scalars["Int"]["output"]>;
   workspace_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -15855,13 +15993,7 @@ export type Root_Cause_Analysis_Test_Entries_Min_Fields = {
 export type Root_Cause_Analysis_Test_Entries_Min_Order_By = {
   analysis_run_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
-  failed_recording_id?: InputMaybe<Order_By>;
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  success_recording_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
 };
 
@@ -15891,14 +16023,8 @@ export type Root_Cause_Analysis_Test_Entries_On_Conflict = {
 export type Root_Cause_Analysis_Test_Entries_Order_By = {
   analysis_run_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
-  failed_recording_id?: InputMaybe<Order_By>;
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  frame_data?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  success_recording_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
+  result_metadata?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
 };
 
@@ -15909,7 +16035,7 @@ export type Root_Cause_Analysis_Test_Entries_Pk_Columns_Input = {
 
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export type Root_Cause_Analysis_Test_Entries_Prepend_Input = {
-  frame_data?: InputMaybe<Scalars["jsonb"]["input"]>;
+  result_metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
 };
 
 /** select columns of table "root_cause_analysis_test_entries" */
@@ -15919,21 +16045,9 @@ export enum Root_Cause_Analysis_Test_Entries_Select_Column {
   /** column name */
   CreatedAt = "created_at",
   /** column name */
-  FailedRecordingId = "failed_recording_id",
-  /** column name */
-  FailedTestAttempt = "failed_test_attempt",
-  /** column name */
-  FailedTestId = "failed_test_id",
-  /** column name */
-  FrameData = "frame_data",
-  /** column name */
   Id = "id",
   /** column name */
-  SuccessRecordingId = "success_recording_id",
-  /** column name */
-  SuccessTestAttempt = "success_test_attempt",
-  /** column name */
-  SuccessTestId = "success_test_id",
+  ResultMetadata = "result_metadata",
   /** column name */
   WorkspaceId = "workspace_id",
 }
@@ -15942,83 +16056,9 @@ export enum Root_Cause_Analysis_Test_Entries_Select_Column {
 export type Root_Cause_Analysis_Test_Entries_Set_Input = {
   analysis_run_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
-  failed_recording_id?: InputMaybe<Scalars["uuid"]["input"]>;
-  failed_test_attempt?: InputMaybe<Scalars["Int"]["input"]>;
-  failed_test_id?: InputMaybe<Scalars["Int"]["input"]>;
-  frame_data?: InputMaybe<Scalars["jsonb"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
-  success_recording_id?: InputMaybe<Scalars["uuid"]["input"]>;
-  success_test_attempt?: InputMaybe<Scalars["Int"]["input"]>;
-  success_test_id?: InputMaybe<Scalars["Int"]["input"]>;
+  result_metadata?: InputMaybe<Scalars["jsonb"]["input"]>;
   workspace_id?: InputMaybe<Scalars["uuid"]["input"]>;
-};
-
-/** aggregate stddev on columns */
-export type Root_Cause_Analysis_Test_Entries_Stddev_Fields = {
-  __typename?: "root_cause_analysis_test_entries_stddev_fields";
-  failed_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Float"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  success_test_id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** order by stddev() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Stddev_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Root_Cause_Analysis_Test_Entries_Stddev_Pop_Fields = {
-  __typename?: "root_cause_analysis_test_entries_stddev_pop_fields";
-  failed_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Float"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  success_test_id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** order by stddev_pop() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Stddev_Pop_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Root_Cause_Analysis_Test_Entries_Stddev_Samp_Fields = {
-  __typename?: "root_cause_analysis_test_entries_stddev_samp_fields";
-  failed_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Float"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  success_test_id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** order by stddev_samp() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Stddev_Samp_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Root_Cause_Analysis_Test_Entries_Sum_Fields = {
-  __typename?: "root_cause_analysis_test_entries_sum_fields";
-  failed_test_attempt?: Maybe<Scalars["Int"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Int"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Int"]["output"]>;
-  success_test_id?: Maybe<Scalars["Int"]["output"]>;
-};
-
-/** order by sum() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Sum_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "root_cause_analysis_test_entries" */
@@ -16028,75 +16068,12 @@ export enum Root_Cause_Analysis_Test_Entries_Update_Column {
   /** column name */
   CreatedAt = "created_at",
   /** column name */
-  FailedRecordingId = "failed_recording_id",
-  /** column name */
-  FailedTestAttempt = "failed_test_attempt",
-  /** column name */
-  FailedTestId = "failed_test_id",
-  /** column name */
-  FrameData = "frame_data",
-  /** column name */
   Id = "id",
   /** column name */
-  SuccessRecordingId = "success_recording_id",
-  /** column name */
-  SuccessTestAttempt = "success_test_attempt",
-  /** column name */
-  SuccessTestId = "success_test_id",
+  ResultMetadata = "result_metadata",
   /** column name */
   WorkspaceId = "workspace_id",
 }
-
-/** aggregate var_pop on columns */
-export type Root_Cause_Analysis_Test_Entries_Var_Pop_Fields = {
-  __typename?: "root_cause_analysis_test_entries_var_pop_fields";
-  failed_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Float"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  success_test_id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** order by var_pop() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Var_Pop_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Root_Cause_Analysis_Test_Entries_Var_Samp_Fields = {
-  __typename?: "root_cause_analysis_test_entries_var_samp_fields";
-  failed_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Float"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  success_test_id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** order by var_samp() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Var_Samp_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Root_Cause_Analysis_Test_Entries_Variance_Fields = {
-  __typename?: "root_cause_analysis_test_entries_variance_fields";
-  failed_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  failed_test_id?: Maybe<Scalars["Float"]["output"]>;
-  success_test_attempt?: Maybe<Scalars["Float"]["output"]>;
-  success_test_id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** order by variance() on columns of table "root_cause_analysis_test_entries" */
-export type Root_Cause_Analysis_Test_Entries_Variance_Order_By = {
-  failed_test_attempt?: InputMaybe<Order_By>;
-  failed_test_id?: InputMaybe<Order_By>;
-  success_test_attempt?: InputMaybe<Order_By>;
-  success_test_id?: InputMaybe<Order_By>;
-};
 
 /** columns and relationships of "runtime_crash_report_sessions" */
 export type Runtime_Crash_Report_Sessions = {
@@ -18535,6 +18512,7 @@ export type Subscription_RootReleases_AggregateArgs = {
 
 /** subscription root */
 export type Subscription_RootReleases_By_PkArgs = {
+  architecture: Scalars["String"]["input"];
   build_id: Scalars["String"]["input"];
 };
 
@@ -19196,7 +19174,6 @@ export type Test_Run_Metrics = {
   source_path: Scalars["String"]["output"];
   source_title: Scalars["String"]["output"];
   test_key: Scalars["String"]["output"];
-  test_run_id: Scalars["uuid"]["output"];
   workspace_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -19289,7 +19266,6 @@ export type Test_Run_Metrics_Bool_Exp = {
   source_path?: InputMaybe<String_Comparison_Exp>;
   source_title?: InputMaybe<String_Comparison_Exp>;
   test_key?: InputMaybe<String_Comparison_Exp>;
-  test_run_id?: InputMaybe<Uuid_Comparison_Exp>;
   workspace_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -19334,7 +19310,6 @@ export type Test_Run_Metrics_Insert_Input = {
   source_path?: InputMaybe<Scalars["String"]["input"]>;
   source_title?: InputMaybe<Scalars["String"]["input"]>;
   test_key?: InputMaybe<Scalars["String"]["input"]>;
-  test_run_id?: InputMaybe<Scalars["uuid"]["input"]>;
   workspace_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -19352,7 +19327,6 @@ export type Test_Run_Metrics_Max_Fields = {
   source_path?: Maybe<Scalars["String"]["output"]>;
   source_title?: Maybe<Scalars["String"]["output"]>;
   test_key?: Maybe<Scalars["String"]["output"]>;
-  test_run_id?: Maybe<Scalars["uuid"]["output"]>;
   workspace_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -19369,7 +19343,6 @@ export type Test_Run_Metrics_Max_Order_By = {
   source_path?: InputMaybe<Order_By>;
   source_title?: InputMaybe<Order_By>;
   test_key?: InputMaybe<Order_By>;
-  test_run_id?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
 };
 
@@ -19387,7 +19360,6 @@ export type Test_Run_Metrics_Min_Fields = {
   source_path?: Maybe<Scalars["String"]["output"]>;
   source_title?: Maybe<Scalars["String"]["output"]>;
   test_key?: Maybe<Scalars["String"]["output"]>;
-  test_run_id?: Maybe<Scalars["uuid"]["output"]>;
   workspace_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
@@ -19404,7 +19376,6 @@ export type Test_Run_Metrics_Min_Order_By = {
   source_path?: InputMaybe<Order_By>;
   source_title?: InputMaybe<Order_By>;
   test_key?: InputMaybe<Order_By>;
-  test_run_id?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
 };
 
@@ -19445,7 +19416,6 @@ export type Test_Run_Metrics_Order_By = {
   source_path?: InputMaybe<Order_By>;
   source_title?: InputMaybe<Order_By>;
   test_key?: InputMaybe<Order_By>;
-  test_run_id?: InputMaybe<Order_By>;
   workspace_id?: InputMaybe<Order_By>;
 };
 
@@ -19488,8 +19458,6 @@ export enum Test_Run_Metrics_Select_Column {
   /** column name */
   TestKey = "test_key",
   /** column name */
-  TestRunId = "test_run_id",
-  /** column name */
   WorkspaceId = "workspace_id",
 }
 
@@ -19508,7 +19476,6 @@ export type Test_Run_Metrics_Set_Input = {
   source_path?: InputMaybe<Scalars["String"]["input"]>;
   source_title?: InputMaybe<Scalars["String"]["input"]>;
   test_key?: InputMaybe<Scalars["String"]["input"]>;
-  test_run_id?: InputMaybe<Scalars["uuid"]["input"]>;
   workspace_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
@@ -19584,8 +19551,6 @@ export enum Test_Run_Metrics_Update_Column {
   SourceTitle = "source_title",
   /** column name */
   TestKey = "test_key",
-  /** column name */
-  TestRunId = "test_run_id",
   /** column name */
   WorkspaceId = "workspace_id",
 }
@@ -24975,15 +24940,6 @@ export type Workspaces_Variance_Order_By = {
   use_recordings_in_stress_testing_sampled?: InputMaybe<Order_By>;
 };
 
-export type AcceptPendingWorkspaceInvitationMutationVariables = Exact<{
-  workspaceId: Scalars["ID"]["input"];
-}>;
-
-export type AcceptPendingWorkspaceInvitationMutation = {
-  __typename?: "mutation_root";
-  acceptWorkspaceMembership: { __typename?: "AcceptWorkspaceMembership"; success?: boolean | null };
-};
-
 export type CloseAuthRequestMutationVariables = Exact<{
   key: Scalars["String"]["input"];
 }>;
@@ -25040,15 +24996,6 @@ export type CreateWorkspaceApiKeyMutation = {
     keyValue: string;
     key: { __typename?: "WorkspaceAPIKey"; id: string; label: string };
   };
-};
-
-export type DeclinePendingWorkspaceInvitationMutationVariables = Exact<{
-  workspaceId: Scalars["ID"]["input"];
-}>;
-
-export type DeclinePendingWorkspaceInvitationMutation = {
-  __typename?: "mutation_root";
-  rejectWorkspaceMembership: { __typename?: "RejectWorkspaceMembership"; success?: boolean | null };
 };
 
 export type DeleteUserApiKeyMutationVariables = Exact<{
@@ -25116,33 +25063,6 @@ export type GetUserQuery = {
   } | null;
 };
 
-export type GetPendingWorkspacesQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetPendingWorkspacesQuery = {
-  __typename?: "query_root";
-  viewer?: {
-    __typename?: "AuthenticatedUser";
-    workspaceInvitations: {
-      __typename?: "UserWorkspaceInvitationConnection";
-      edges: Array<{
-        __typename?: "UserWorkspaceInvitationEdge";
-        node: {
-          __typename?: "WorkspaceInvitation";
-          inviterEmail?: string | null;
-          workspace: {
-            __typename?: "Workspace";
-            id: string;
-            name: string;
-            recordingCount: number;
-            isOrganization: boolean;
-            isTest: boolean;
-          };
-        };
-      }>;
-    };
-  } | null;
-};
-
 export type GetRecordingPhotoQueryVariables = Exact<{
   recordingId: Scalars["UUID"]["input"];
 }>;
@@ -25200,24 +25120,8 @@ export type GetWorkspaceMembersQuery = {
           edges: Array<{
             __typename?: "WorkspaceMemberEdge";
             node:
-              | {
-                  __typename: "WorkspacePendingEmailMember";
-                  id: string;
-                  roles: Array<string>;
-                  email: string;
-                  createdAt: any;
-                }
-              | {
-                  __typename: "WorkspacePendingUserMember";
-                  id: string;
-                  roles: Array<string>;
-                  user: {
-                    __typename?: "User";
-                    id: string;
-                    name?: string | null;
-                    picture?: string | null;
-                  };
-                }
+              | { __typename?: "WorkspacePendingEmailMember" }
+              | { __typename?: "WorkspacePendingUserMember" }
               | {
                   __typename: "WorkspaceUserMember";
                   id: string;
@@ -25854,58 +25758,6 @@ export type RemoveUserFromWorkspaceMutation = {
   removeWorkspaceMember: { __typename?: "RemoveWorkspaceMember"; success?: boolean | null };
 };
 
-export const AcceptPendingWorkspaceInvitationDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "AcceptPendingWorkspaceInvitation" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "acceptWorkspaceMembership" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "input" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "id" },
-                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "Field", name: { kind: "Name", value: "success" } }],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  AcceptPendingWorkspaceInvitationMutation,
-  AcceptPendingWorkspaceInvitationMutationVariables
->;
 export const CloseAuthRequestDocument = {
   kind: "Document",
   definitions: [
@@ -26210,58 +26062,6 @@ export const CreateWorkspaceApiKeyDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateWorkspaceApiKeyMutation, CreateWorkspaceApiKeyMutationVariables>;
-export const DeclinePendingWorkspaceInvitationDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "DeclinePendingWorkspaceInvitation" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "rejectWorkspaceMembership" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "input" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "id" },
-                      value: { kind: "Variable", name: { kind: "Name", value: "workspaceId" } },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [{ kind: "Field", name: { kind: "Name", value: "success" } }],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  DeclinePendingWorkspaceInvitationMutation,
-  DeclinePendingWorkspaceInvitationMutationVariables
->;
 export const DeleteUserApiKeyDocument = {
   kind: "Document",
   definitions: [
@@ -26587,78 +26387,6 @@ export const GetUserDocument = {
     },
   ],
 } as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;
-export const GetPendingWorkspacesDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetPendingWorkspaces" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "viewer" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "workspaceInvitations" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "edges" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "node" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "workspace" },
-                                    selectionSet: {
-                                      kind: "SelectionSet",
-                                      selections: [
-                                        { kind: "Field", name: { kind: "Name", value: "id" } },
-                                        { kind: "Field", name: { kind: "Name", value: "name" } },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "recordingCount" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "isOrganization" },
-                                        },
-                                        { kind: "Field", name: { kind: "Name", value: "isTest" } },
-                                      ],
-                                    },
-                                  },
-                                  { kind: "Field", name: { kind: "Name", value: "inviterEmail" } },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetPendingWorkspacesQuery, GetPendingWorkspacesQueryVariables>;
 export const GetRecordingPhotoDocument = {
   kind: "Document",
   definitions: [
@@ -26875,89 +26603,6 @@ export const GetWorkspaceMembersDocument = {
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
-                                        {
-                                          kind: "InlineFragment",
-                                          typeCondition: {
-                                            kind: "NamedType",
-                                            name: {
-                                              kind: "Name",
-                                              value: "WorkspacePendingEmailMember",
-                                            },
-                                          },
-                                          selectionSet: {
-                                            kind: "SelectionSet",
-                                            selections: [
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "__typename" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "id" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "roles" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "email" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "createdAt" },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: "InlineFragment",
-                                          typeCondition: {
-                                            kind: "NamedType",
-                                            name: {
-                                              kind: "Name",
-                                              value: "WorkspacePendingUserMember",
-                                            },
-                                          },
-                                          selectionSet: {
-                                            kind: "SelectionSet",
-                                            selections: [
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "__typename" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "id" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "roles" },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "user" },
-                                                selectionSet: {
-                                                  kind: "SelectionSet",
-                                                  selections: [
-                                                    {
-                                                      kind: "Field",
-                                                      name: { kind: "Name", value: "id" },
-                                                    },
-                                                    {
-                                                      kind: "Field",
-                                                      name: { kind: "Name", value: "name" },
-                                                    },
-                                                    {
-                                                      kind: "Field",
-                                                      name: { kind: "Name", value: "picture" },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
                                         {
                                           kind: "InlineFragment",
                                           typeCondition: {

@@ -93,7 +93,6 @@ export type TestSuiteTestRecording = {
 
 export type WorkspaceMember = {
   id: string;
-  isPending: boolean;
   membershipId: string;
   name: string;
   picture: string | null;
@@ -175,14 +174,6 @@ export type Workspace = {
   retentionLimitDays: number | null;
   settings: WorkspaceSettings | null;
   subscriptionPlanKey: string | null;
-};
-
-export type PendingWorkspace = {
-  id: string;
-  inviterEmail: string | null;
-  isOrganization: boolean;
-  isTest: boolean;
-  name: string;
 };
 
 export enum WorkspaceSubscriptionStatus {

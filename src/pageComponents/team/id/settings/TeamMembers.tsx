@@ -1,10 +1,8 @@
 import { SessionContext } from "@/components/SessionContext";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
-import { WorkspaceMember } from "@/graphql/types";
 import { InvitationLink } from "@/pageComponents/team/id/settings/InvitationLink";
 import { InviteTeamMember } from "@/pageComponents/team/id/settings/InviteTeamMember";
 import { TeamMemberRow } from "@/pageComponents/team/id/settings/TeamMemberRow";
-import { getPrimaryRole } from "@/utils/user";
 import { useContext, useMemo } from "react";
 
 export function TeamMembers({
@@ -21,19 +19,8 @@ export function TeamMembers({
   const member = members?.find(({ id }) => id === user?.id);
   const currentUserIsAdmin = member?.roles.includes("admin") == true;
 
-  // Alpha sort, but with pending members at the top (so they're clearly visible)
   const sortedMembers = useMemo(() => {
-    return (
-      members?.sort((a, b) => {
-        if (a.isPending && !b.isPending) {
-          return -1;
-        } else if (!a.isPending && b.isPending) {
-          return 1;
-        } else {
-          return a.name.localeCompare(b.name);
-        }
-      }) ?? []
-    );
+    return members?.sort((a, b) => a.name.localeCompare(b.name)) ?? [];
   }, [members]);
 
   return (

@@ -70,9 +70,7 @@ export function TeamMemberRow({
         </>
       )}
       <div className="flex items-center justify-center rounded-full w-8 h-8 overflow-hidden shrink-0 bg-slate-500">
-        {member.isPending ? (
-          <Icon className="w-6 h-6 text-slate-300" type="email" />
-        ) : member.picture ? (
+        {member.picture ? (
           <img
             alt={`${member.name} avatar`}
             className="w-full h-full"
@@ -96,14 +94,6 @@ export function TeamMemberRow({
       >
         {getPrimaryRole(member.roles).label}
       </div>
-      {member.isPending && (
-        <div
-          className="shrink-0 text-xs bg-yellow-300 text-black px-1 rounded-sm"
-          data-test-name="TeamMembers-PendingInvitation"
-        >
-          (pending)
-        </div>
-      )}
     </div>
   );
 }
