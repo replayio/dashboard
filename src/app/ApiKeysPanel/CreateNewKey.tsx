@@ -10,7 +10,7 @@ export function CreateNewKey({
   scopes,
 }: {
   createKey: (label: string, scopes: ApiKeyScope[]) => Promise<string>;
-  scopes: ApiKeyScope[];
+  scopes?: ApiKeyScope[];
 }) {
   const [label, setLabel] = useState("");
   const [isPending, setIsPending] = useState(false);
@@ -32,15 +32,17 @@ export function CreateNewKey({
       if (label) {
         setIsPending(true);
 
-        const selectedScopes: ApiKeyScope[] = [];
-        if (admin) {
-          selectedScopes.push("admin:all");
-        }
-        if (writeSourcemaps) {
-          selectedScopes.push("write:sourcemap");
+        const selectedScopes: Set<ApiKeyScope> = new Set(scopes);
+        if (!scopes) {
+          if (admin) {
+            selectedScopes.add("admin:all");
+          }
+          if (writeSourcemaps) {
+            selectedScopes.add("write:sourcemap");
+          }
         }
 
-        const keyValue = await createKey(label, selectedScopes);
+        const keyValue = await createKey(label, Array.from(selectedScopes));
 
         setKeyValue(keyValue);
 
@@ -65,23 +67,18 @@ export function CreateNewKey({
             Add
           </Button>
         </div>
-        {!keyValue && scopes.length > 1 && (
+        {!scopes && (
           <div className="flex flex-row items-center gap-4">
-            {scopes.includes("admin:all") && (
-              <Checkbox
-                checked={admin}
-                label="Create recordings"
-                onChange={newChecked => setAdmin(newChecked)}
-              />
-            )}
-
-            {scopes.includes("write:sourcemap") && (
-              <Checkbox
-                checked={writeSourcemaps}
-                label="Upload source maps"
-                onChange={newChecked => setWriteSourcemaps(newChecked)}
-              />
-            )}
+            <Checkbox
+              checked={admin}
+              label="Create recordings"
+              onChange={newChecked => setAdmin(newChecked)}
+            />
+            <Checkbox
+              checked={writeSourcemaps}
+              label="Upload source maps"
+              onChange={newChecked => setWriteSourcemaps(newChecked)}
+            />
           </div>
         )}
       </div>
