@@ -24987,6 +24987,7 @@ export type CreateWorkspaceApiKeyMutationVariables = Exact<{
   workspaceId: Scalars["ID"]["input"];
   label: Scalars["String"]["input"];
   scopes: Array<Scalars["String"]["input"]> | Scalars["String"]["input"];
+  apiKey?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type CreateWorkspaceApiKeyMutation = {
@@ -26006,6 +26007,11 @@ export const CreateWorkspaceApiKeyDocument = {
             },
           },
         },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "apiKey" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -26034,6 +26040,11 @@ export const CreateWorkspaceApiKeyDocument = {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "scopes" },
                       value: { kind: "Variable", name: { kind: "Name", value: "scopes" } },
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "apiKey" },
+                      value: { kind: "Variable", name: { kind: "Name", value: "apiKey" } },
                     },
                   ],
                 },

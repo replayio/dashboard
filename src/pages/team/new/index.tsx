@@ -29,6 +29,10 @@ export default function Page({ type }: InferGetServerSidePropsType<typeof getSer
     }
   );
 
+  const goBack = () => {
+    router.push("/team/me/recordings");
+  };
+
   const createTeam = async () => {
     if (name.trim()) {
       setIsPending(true);
@@ -37,7 +41,7 @@ export default function Page({ type }: InferGetServerSidePropsType<typeof getSer
   };
 
   return (
-    <Message className={`${isOrg ? "" : "min-h-[330px]"} max-w-[400px] justify-between p-6`}>
+    <Message className={`${isOrg ? "" : "min-h-[300px]"} max-w-[400px] justify-between p-6`}>
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
           <ReplayLogo />
@@ -63,8 +67,11 @@ export default function Page({ type }: InferGetServerSidePropsType<typeof getSer
           </div>
         )}
       </div>
-      <div>
-        <Button className="text-center" disabled={isPending} onClick={createTeam}>
+      <div className="flex flex-row gap-2 items-center">
+        <Button variant="outline" onClick={goBack}>
+          Go back
+        </Button>
+        <Button disabled={isPending} onClick={createTeam}>
           Create {isOrg ? "an organization" : "a team"}
         </Button>
       </div>

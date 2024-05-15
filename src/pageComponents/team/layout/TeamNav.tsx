@@ -1,10 +1,26 @@
 import { LeftNav } from "@/components/LeftNav";
 import { LeftNavLink } from "@/components/LeftNavLink";
+import { DefaultNav } from "@/components/layout/DefaultNav";
+import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { Workspace } from "@/graphql/types";
 import { usePathname } from "next/navigation";
 
-export function TeamWorkspaceNav({ workspace }: { workspace: Workspace }) {
+export function TeamNav() {
+  const { workspaces } = useWorkspaces();
+
+  let workspace: Workspace | undefined = undefined;
+
   const pathname = usePathname();
+  if (pathname && pathname.startsWith("/team/")) {
+    const workspaceId = pathname.split("/")[2];
+    if (workspaceId) {
+      workspace = workspaces?.find(({ id }) => id === workspaceId);
+    }
+  }
+
+  if (!workspace) {
+    return <DefaultNav />;
+  }
 
   return (
     <LeftNav
