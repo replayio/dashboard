@@ -1,12 +1,10 @@
-import { GetNonPendingWorkspacesQuery } from "@/graphql/generated/graphql";
+import { GetWorkspacesQuery } from "@/graphql/generated/graphql";
 import { Workspace } from "@/graphql/types";
 import { DeepPartial } from "@apollo/client/utilities";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 import { getUID } from "./getUID";
 
-export function mockGetNonPendingWorkspaces(
-  partialWorkspaces: DeepPartial<Workspace>[]
-): GetNonPendingWorkspacesQuery {
+export function mockGetWorkspaces(partialWorkspaces: DeepPartial<Workspace>[]): GetWorkspacesQuery {
   return {
     viewer: {
       __typename: "AuthenticatedUser",

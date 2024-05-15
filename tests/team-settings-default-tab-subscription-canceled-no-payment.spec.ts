@@ -1,6 +1,6 @@
 import { getRelativeDate } from "@/utils/date";
 import { expect, test } from "@playwright/test";
-import { mockGetNonPendingWorkspaces } from "tests/mocks/utils/mockGetNonPendingWorkspaces";
+import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { mockGetUser } from "tests/mocks/utils/mockGetUser";
 import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembers";
 import { mockGetWorkspaceSubscription } from "tests/mocks/utils/mockGetWorkspaceSubscription";
@@ -41,7 +41,7 @@ const mockWorkspaceSubscription = mockGetWorkspaceSubscription({
 
 const mockGraphQLData: MockGraphQLData = {
   GetUser: mockGetUser(),
-  GetNonPendingWorkspaces: mockGetNonPendingWorkspaces([
+  GetWorkspaces: mockGetWorkspaces([
     {
       hasPaymentMethod: false,
     },

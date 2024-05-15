@@ -2,7 +2,7 @@ import Checkbox from "@/components/Checkbox";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { TextArea } from "@/components/TextArea";
-import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { useUpdateWorkspacePreferences } from "@/graphql/queries/useUpdateWorkspacePreferences";
 import { WorkspaceSettings } from "@/graphql/types";
 import useDebouncedState from "@/hooks/useDebouncedState";
@@ -15,7 +15,7 @@ import { getDefaultPermissionBitmask } from "@/utils/user";
 import assert from "assert";
 
 export function Organization({ workspaceId }: { workspaceId: string }) {
-  const { workspaces } = useNonPendingWorkspaces();
+  const { workspaces } = useWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
   assert(workspace != null, `Workspace not found "${workspaceId}"`);
 
