@@ -5,7 +5,6 @@ import {
 import { WorkspaceRecordingCollaborator } from "@/graphql/types";
 import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
-import { assert } from "console";
 import { useMemo } from "react";
 
 export function useRecordingCollaborators(recordingId: string) {
