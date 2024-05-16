@@ -4,36 +4,38 @@ import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
-export function useWorkspaces() {
-  const { data, error, isLoading, refetch } = useGraphQLQuery<GetWorkspacesQuery>(gql`
-    query GetWorkspaces {
-      viewer {
-        workspaces {
-          edges {
-            node {
-              hasPaymentMethod
+export const QUERY = gql`
+  query GetWorkspaces {
+    viewer {
+      workspaces {
+        edges {
+          node {
+            hasPaymentMethod
+            id
+            invitationCode
+            isOrganization
+            isTest
+            name
+            retentionLimit
+            settings {
+              features
+            }
+            subscription {
               id
-              invitationCode
-              isOrganization
-              isTest
-              name
-              retentionLimit
-              settings {
-                features
-              }
-              subscription {
+              plan {
                 id
-                plan {
-                  id
-                  key
-                }
+                key
               }
             }
           }
         }
       }
     }
-  `);
+  }
+`;
+
+export function useWorkspaces() {
+  const { data, error, isLoading, refetch } = useGraphQLQuery<GetWorkspacesQuery>(QUERY);
 
   const workspaces = useMemo<Workspace[] | undefined>(() => {
     if (data) {

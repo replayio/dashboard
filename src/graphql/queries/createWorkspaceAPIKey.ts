@@ -57,9 +57,7 @@ export function useCreateWorkspaceAPIKey() {
       variables: { apiKey, label, scopes, workspaceId },
     });
 
-    assert(response?.data?.createWorkspaceAPIKey != null, "Workspace API key creation failed");
-
-    return response.data.createWorkspaceAPIKey.keyValue;
+    return response.data?.createWorkspaceAPIKey.keyValue;
   };
 
   return { createApiKey, error, loading };

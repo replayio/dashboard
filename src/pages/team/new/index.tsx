@@ -8,26 +8,25 @@ import assert from "assert";
 import { getPlanKey } from "@/utils/test-suites";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import SelectTeamType from "@/pageComponents/team/layout/SelectTeamType";
+import { SessionContext } from "@/components/SessionContext";
+import Checkbox from "@/components/Checkbox";
 
 export default function Page({ type }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { user } = useContext(SessionContext);
+
+  const isInternalUser = user?.isInternal;
   const isOrg = type === "org";
 
   const [isPending, setIsPending] = useState(false);
+  const [bypassTrial, setBypassTrial] = useState(false);
   const [name, setName] = useState("");
   const [teamType, setTeamType] = useState<"testsuite" | "standard">("testsuite");
 
   const router = useRouter();
 
-  const { createWorkspace, error } = useCreateWorkspace(
-    id => {
-      router.replace(`/team/${id}/recordings`);
-    },
-    () => {
-      setIsPending(false);
-    }
-  );
+  const { createWorkspace, error } = useCreateWorkspace();
 
   const goBack = () => {
     router.push("/team/me/recordings");
@@ -36,7 +35,14 @@ export default function Page({ type }: InferGetServerSidePropsType<typeof getSer
   const createTeam = async () => {
     if (name.trim()) {
       setIsPending(true);
-      createWorkspace(name, getPlanKey({ isOrg, teamType }));
+
+      const id = await createWorkspace(
+        name,
+        getPlanKey({ isInternal: isInternalUser && bypassTrial, isOrg, teamType: "standard" })
+      );
+      if (id) {
+        router.replace(`/team/${id}/recordings`);
+      }
     }
   };
 
@@ -58,6 +64,18 @@ export default function Page({ type }: InferGetServerSidePropsType<typeof getSer
           />
         </div>
         {!isOrg && <SelectTeamType setTeamType={setTeamType} teamType={teamType} />}
+        {isInternalUser && (
+          <Checkbox
+            checked={bypassTrial}
+            disabled={isPending}
+            label={
+              <>
+                Bypass trial <small className="text-yellow-300">(internal only)</small>
+              </>
+            }
+            onChange={value => setBypassTrial(value)}
+          />
+        )}
         {error && (
           <div
             className="bg-rose-400 text-rose-900 px-2 py-1 rounded font-bold inline-block"

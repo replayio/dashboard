@@ -3,13 +3,16 @@ import Checkbox from "@/components/Checkbox";
 import { ClickToCopyString } from "@/components/ClickToCopyString";
 import { Input } from "@/components/Input";
 import { ApiKeyScope } from "@/graphql/types";
+import { ApolloError } from "@apollo/client";
 import { useState } from "react";
 
 export function CreateNewKey({
   createKey,
+  createKeyError,
   scopes,
 }: {
-  createKey: (label: string, scopes: ApiKeyScope[]) => Promise<string>;
+  createKey: (label: string, scopes: ApiKeyScope[]) => Promise<string | undefined>;
+  createKeyError: ApolloError | undefined;
   scopes?: ApiKeyScope[];
 }) {
   const [label, setLabel] = useState("");
@@ -43,11 +46,12 @@ export function CreateNewKey({
         }
 
         const keyValue = await createKey(label, Array.from(selectedScopes));
-
-        setKeyValue(keyValue);
+        if (keyValue) {
+          setKeyValue(keyValue);
+          setLabel("");
+        }
 
         setIsPending(false);
-        setLabel("");
       }
     };
 
@@ -81,6 +85,7 @@ export function CreateNewKey({
             />
           </div>
         )}
+        {createKeyError && <div className="text-red-500">{createKeyError.message}</div>}
       </div>
     );
   }
