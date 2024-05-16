@@ -37,6 +37,7 @@ export function Select<Type extends Option>({
         }}
         value={value?.label}
       >
+        {value === undefined && <option value=""></option>}
         {options.map(({ label }) => (
           <option key={label} value={label}>
             {label}

@@ -4,11 +4,12 @@ import {
   CreateNewWorkspaceMutationVariables,
 } from "@/graphql/generated/graphql";
 import { getGraphQLClient } from "@/graphql/graphQLClient";
+import { QUERY } from "@/graphql/queries/useWorkspaces";
 import { gql, useMutation } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
-export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: () => void) {
+export function useCreateWorkspace() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
@@ -33,7 +34,10 @@ export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: 
     `,
     {
       client,
-      refetchQueries: ["GetWorkspaces"],
+      // This syntax is required to ensure Apollo refetches Workspaces after creation
+      // See github.com/apollographql/apollo-client/issues/5419#issuecomment-598065442
+      refetchQueries: [{ query: QUERY, variables: {} }],
+      awaitRefetchQueries: true,
     }
   );
 
@@ -47,9 +51,7 @@ export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: 
     });
 
     if (result.data?.createWorkspace?.workspace?.id) {
-      onCompleted(result.data?.createWorkspace?.workspace?.id);
-    } else {
-      onFailed();
+      return result.data?.createWorkspace?.workspace?.id;
     }
   };
 
