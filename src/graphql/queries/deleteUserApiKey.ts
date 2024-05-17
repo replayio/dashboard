@@ -3,8 +3,8 @@ import {
   DeleteUserApiKeyMutation,
   DeleteUserApiKeyMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
-import { gql, useMutation } from "@apollo/client";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
@@ -12,12 +12,11 @@ export function useDeleteUserAPIKey() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [deleteApiKeyMutation, { loading, error }] = useMutation<
-    DeleteUserApiKeyMutation,
-    DeleteUserApiKeyMutationVariables
-  >(
+  const {
+    mutate: deleteApiKeyMutation,
+    error,
+    isLoading,
+  } = useGraphQLMutation<DeleteUserApiKeyMutation, DeleteUserApiKeyMutationVariables>(
     gql`
       mutation DeleteUserAPIKey($id: ID!) {
         deleteUserAPIKey(input: { id: $id }) {
@@ -26,7 +25,6 @@ export function useDeleteUserAPIKey() {
       }
     `,
     {
-      client,
       refetchQueries: ["GetUserSettings"],
     }
   );
@@ -37,5 +35,5 @@ export function useDeleteUserAPIKey() {
 
   const deleteApiKey = (id: string) => deleteApiKeyMutation({ variables: { id } });
 
-  return { deleteApiKey, error, loading };
+  return { deleteApiKey, error, loading: isLoading };
 }

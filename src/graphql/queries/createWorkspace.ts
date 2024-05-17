@@ -3,9 +3,9 @@ import {
   CreateNewWorkspaceMutation,
   CreateNewWorkspaceMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { QUERY } from "@/graphql/queries/useWorkspaces";
-import { gql, useMutation } from "@apollo/client";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
@@ -13,12 +13,11 @@ export function useCreateWorkspace() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [createWorkspaceMutation, { loading, error }] = useMutation<
-    CreateNewWorkspaceMutation,
-    CreateNewWorkspaceMutationVariables
-  >(
+  const {
+    mutate: createWorkspaceMutation,
+    error,
+    isLoading,
+  } = useGraphQLMutation<CreateNewWorkspaceMutation, CreateNewWorkspaceMutationVariables>(
     gql`
       mutation CreateNewWorkspace($name: String!, $planKey: String!) {
         createWorkspace(input: { name: $name, planKey: $planKey }) {
@@ -33,7 +32,6 @@ export function useCreateWorkspace() {
       }
     `,
     {
-      client,
       // This syntax is required to ensure Apollo refetches Workspaces after creation
       // See github.com/apollographql/apollo-client/issues/5419#issuecomment-598065442
       refetchQueries: [{ query: QUERY, variables: {} }],
@@ -55,5 +53,5 @@ export function useCreateWorkspace() {
     }
   };
 
-  return { createWorkspace, error, loading };
+  return { createWorkspace, error, loading: isLoading };
 }

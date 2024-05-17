@@ -1,8 +1,6 @@
 import {
   CloseAuthRequestMutation,
   CloseAuthRequestMutationVariables,
-  GetUserQuery,
-  GetUserQueryVariables,
 } from "@/graphql/generated/graphql";
 import { graphQLFetch } from "@/graphql/graphQLFetch";
 import { gql } from "@apollo/client";

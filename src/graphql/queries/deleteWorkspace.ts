@@ -3,8 +3,8 @@ import {
   DeleteWorkspaceMutation,
   DeleteWorkspaceMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
-import { gql, useMutation } from "@apollo/client";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
@@ -12,12 +12,11 @@ export function useDeleteWorkspace() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [deleteWorkspaceMutation, { loading, error }] = useMutation<
-    DeleteWorkspaceMutation,
-    DeleteWorkspaceMutationVariables
-  >(
+  const {
+    mutate: deleteWorkspaceMutation,
+    error,
+    isLoading,
+  } = useGraphQLMutation<DeleteWorkspaceMutation, DeleteWorkspaceMutationVariables>(
     gql`
       mutation DeleteWorkspace($workspaceId: ID!, $shouldDeleteRecordings: Boolean!) {
         deleteWorkspace(
@@ -28,7 +27,6 @@ export function useDeleteWorkspace() {
       }
     `,
     {
-      client,
       refetchQueries: ["GetWorkspaces"],
     }
   );
@@ -38,5 +36,5 @@ export function useDeleteWorkspace() {
       variables: { shouldDeleteRecordings: true, workspaceId },
     });
 
-  return { deleteWorkspace, error, loading };
+  return { deleteWorkspace, error, loading: isLoading };
 }
