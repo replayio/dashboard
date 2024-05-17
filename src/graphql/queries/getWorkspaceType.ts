@@ -1,8 +1,7 @@
 import { GetWorkspaceQuery, GetWorkspaceQueryVariables } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
+import { graphQLFetch } from "@/graphql/graphQLFetch";
 import { gql } from "@apollo/client";
 import assert from "assert";
-import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
 import { MockGraphQLData } from "tests/mocks/types";
 
 const QUERY = gql`
@@ -28,24 +27,13 @@ export async function getWorkspace(
   isTest: boolean;
   retentionLimit: number | null;
 }> {
-  const graphQLClient = getGraphQLClient(accessToken);
-
-  const mockResponse = mockGraphQLData
-    ? getMockGraphQLResponse<GetWorkspaceQuery>(mockGraphQLData, QUERY)
-    : undefined;
-  if (mockResponse?.data?.node?.__typename === "Workspace") {
-    return {
-      id: mockResponse.data.node.id,
-      isOrganization: mockResponse.data.node.isOrganization,
-      isTest: mockResponse.data.node.isTest,
-      retentionLimit: mockResponse.data.node.retentionLimit ?? null,
-    };
-  }
-
-  const response = await graphQLClient.query<GetWorkspaceQuery, GetWorkspaceQueryVariables>({
+  const response = await graphQLFetch<GetWorkspaceQuery, GetWorkspaceQueryVariables>({
+    accessToken,
+    mockGraphQLData,
     query: QUERY,
     variables: { workspaceId },
   });
+
   assert(
     response.data?.node != null && "id" in response.data?.node,
     `Workspace not found for id "${workspaceId}"`
