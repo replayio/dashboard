@@ -26,8 +26,10 @@ export function getGraphQLClient(accessToken?: string) {
   if (graphQLClient == null || graphQLClientAccessToken !== accessToken) {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "Replay-Client-Id": clientId,
     };
+    if (typeof window !== "undefined") {
+      headers["Replay-Client-"] = clientId;
+    }
     if (accessToken) {
       headers["Authorization"] = `Bearer ${accessToken}`;
     }
