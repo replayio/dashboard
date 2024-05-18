@@ -1,5 +1,5 @@
 import { GetWorkspaceQuery, GetWorkspaceQueryVariables } from "@/graphql/generated/graphql";
-import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { gql } from "@apollo/client";
 import assert from "assert";
 import { MockGraphQLData } from "tests/mocks/types";
@@ -27,7 +27,7 @@ export async function getWorkspace(
   isTest: boolean;
   retentionLimit: number | null;
 }> {
-  const response = await graphQLFetch<GetWorkspaceQuery, GetWorkspaceQueryVariables>({
+  const response = await graphQLQuery<GetWorkspaceQuery, GetWorkspaceQueryVariables>({
     accessToken,
     mockGraphQLData,
     query: QUERY,

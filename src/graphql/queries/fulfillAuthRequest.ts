@@ -2,11 +2,11 @@ import {
   FulfillAuthRequestMutation,
   FulfillAuthRequestMutationVariables,
 } from "@/graphql/generated/graphql";
-import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { gql } from "@apollo/client";
 
 export async function fulfillAuthRequest(id: string, token: string) {
-  const { data, errors } = await graphQLFetch<
+  const { data, errors } = await graphQLQuery<
     FulfillAuthRequestMutation,
     FulfillAuthRequestMutationVariables
   >({

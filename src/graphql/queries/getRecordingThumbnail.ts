@@ -2,7 +2,7 @@ import {
   GetRecordingPhotoQuery,
   GetRecordingPhotoQueryVariables,
 } from "@/graphql/generated/graphql";
-import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { gql } from "@apollo/client";
 import { MockGraphQLData } from "tests/mocks/types";
 
@@ -20,7 +20,7 @@ export async function getRecordingThumbnailClient(
   recordingId: string,
   mockGraphQLData: MockGraphQLData | null
 ): Promise<string | null> {
-  const response = await graphQLFetch<GetRecordingPhotoQuery, GetRecordingPhotoQueryVariables>({
+  const response = await graphQLQuery<GetRecordingPhotoQuery, GetRecordingPhotoQueryVariables>({
     accessToken,
     mockGraphQLData,
     query: QUERY,
