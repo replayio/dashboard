@@ -14,7 +14,7 @@ export default function Page({
         <>          
           <div className="mb-3 text-2xl font-semibold text-left">Windows is not supported</div>
           <div className="text-lg text-left">
-            <p>We're working on a Chromium-based browser for Windows, because this version is currently experiencing a 40% crash rate. We apologize for the inconvenience.
+            <p>We&apos;re working on a Chromium-based browser for Windows, because this version is currently experiencing a 40% crash rate. We apologize for the inconvenience.
               </p>
               <p>
                 <ExternalLink href="https://docs.replay.io/replay-runtimes/replay-firefox">Learn more</ExternalLink></p>
@@ -27,7 +27,7 @@ export default function Page({
           <p>
           This browser runs on Gecko, which we no longer support. 
           </p>
-          <p>We're working on a Chromium-based browser, but in the meantime our <ExternalLink href="https://docs.replay.io/quickstart">quickstart guide</ExternalLink> can help you get started with our command line tool.                   </p>
+          <p>We&apos;re working on a Chromium-based browser, but in the meantime our <ExternalLink href="https://docs.replay.io/quickstart">quickstart guide</ExternalLink> can help you get started with our command line tool.                   </p>
         </div>
       </>
       )}
