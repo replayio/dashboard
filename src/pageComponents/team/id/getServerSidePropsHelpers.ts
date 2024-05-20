@@ -1,4 +1,4 @@
-import { COOKIES, HEADERS } from "@/constants";
+import { Cookies, HEADERS } from "@/constants";
 import { getWorkspace } from "@/graphql/queries/getWorkspaceType";
 import { decompress } from "@/utils/compression";
 import { getCookieValueServer } from "@/utils/cookie";
@@ -15,7 +15,7 @@ export async function getServerSideWorkspaceProps({
   const workspaceId = params.id;
   const accessToken = req?.headers?.[HEADERS.accessToken] as string;
 
-  const mockGraphQLDataCompressed = getCookieValueServer(req.cookies, COOKIES.mockGraphQLData);
+  const mockGraphQLDataCompressed = getCookieValueServer(req.cookies, Cookies.mockGraphQLData);
   const mockGraphQLData = mockGraphQLDataCompressed
     ? decompress<MockGraphQLData>(mockGraphQLDataCompressed)
     : null;

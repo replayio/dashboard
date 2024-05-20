@@ -1,5 +1,6 @@
 import { URLS } from "@/constants";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "@/pages/types";
+import { NextApiResponse } from "next";
 
 export type Release = {
   architecture: string | null;

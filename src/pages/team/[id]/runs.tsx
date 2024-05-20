@@ -1,4 +1,4 @@
-import { COOKIES } from "@/constants";
+import { Cookies } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerSidePropsHelpers";
 import { ContextRoot, Filters } from "@/pageComponents/team/id/runs/TestRunsContext";
@@ -6,7 +6,6 @@ import { TestSuiteRunsPage } from "@/pageComponents/team/id/runs/TestSuiteRunsPa
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-
 export default function Page({
   filters,
   retentionLimit,
@@ -32,7 +31,7 @@ export default function Page({
 Page.Layout = TeamLayout;
 
 export async function getServerSideProps(context: GetServerSidePropsContext<any>) {
-  const stringValue = context.req.cookies[COOKIES.testRunsFilters];
+  const stringValue = context.req.cookies[Cookies.testRunsFilters];
   const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
 
   const { isInvalid, isTest, retentionLimit, workspaceId } =

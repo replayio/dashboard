@@ -1,4 +1,4 @@
-import { COOKIES } from "@/constants";
+import { Cookies } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerSidePropsHelpers";
 import { TestSuiteTestsPage } from "@/pageComponents/team/id/tests/TestSuiteTestsPage";
@@ -30,7 +30,7 @@ export default function Page({
 Page.Layout = TeamLayout;
 
 export async function getServerSideProps(context: GetServerSidePropsContext<any>) {
-  const stringValue = context.req.cookies[COOKIES.testsFilters];
+  const stringValue = context.req.cookies[Cookies.testsFilters];
   const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
 
   const { isInvalid, isTest, retentionLimit, workspaceId } =

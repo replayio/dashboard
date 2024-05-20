@@ -1,4 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "@/pages/types";
+import { NextApiResponse } from "next";
 
 const { FORM_CARRY_TOKEN } = process.env;
 

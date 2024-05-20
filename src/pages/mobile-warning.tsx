@@ -1,6 +1,6 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { ReplayLogo } from "@/components/ReplayLogo";
-import { COOKIES } from "@/constants";
+import { Cookies } from "@/constants";
 import { setCookieValueClient } from "@/utils/cookie";
 import { useRouter } from "next/navigation";
 
@@ -8,7 +8,7 @@ export default function Page() {
   const router = useRouter();
 
   const onClick = () => {
-    setCookieValueClient(COOKIES.mobileWarningDismissed, true);
+    setCookieValueClient(Cookies.mobileWarningDismissed, true);
     router.replace("/");
   };
 

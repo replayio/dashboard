@@ -1,4 +1,4 @@
-import { COOKIES, SEARCH_PARAMS } from "@/constants";
+import { Cookies, SEARCH_PARAMS } from "@/constants";
 import { useWorkspaceTestExecutions } from "@/graphql/queries/useWorkspaceTestExecutions";
 import { useWorkspaceTests } from "@/graphql/queries/useWorkspaceTests";
 import { TestSuiteTestExecution, TestSuiteTestSummary } from "@/graphql/types";
@@ -72,7 +72,7 @@ export function ContextRoot({
   const { dateRange, filterText, sortBy } = state;
 
   useEffect(() => {
-    setCookieValueClient(COOKIES.testsFilters, {
+    setCookieValueClient(Cookies.testsFilters, {
       dateRange,
       sortBy,
     });

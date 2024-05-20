@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button";
 import { SessionContext } from "@/components/SessionContext";
-import { COOKIES } from "@/constants";
+import { Cookies } from "@/constants";
 import { deleteCookieValueClient } from "@/utils/cookie";
 import { setAccessTokenInBrowserPrefs } from "@/utils/replayBrowser";
 import { useContext, useState } from "react";
@@ -14,7 +14,7 @@ export function Account() {
     setIsPending(true);
 
     setAccessTokenInBrowserPrefs(null);
-    deleteCookieValueClient(COOKIES.accessToken);
+    deleteCookieValueClient(Cookies.accessToken);
 
     window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);
   };

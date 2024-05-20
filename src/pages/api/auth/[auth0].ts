@@ -1,7 +1,8 @@
-import { COOKIES } from "@/constants";
+import { Cookies } from "@/constants";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { handleAuth, handleCallback, handleLogin, handleLogout } from "@auth0/nextjs-auth0";
 import cookie from "cookie";
+// eslint-disable-next-line no-restricted-imports
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default handleAuth({
@@ -35,7 +36,7 @@ export default handleAuth({
       res.redirect(`/browser/error?${searchParams.toString()}`);
     } else {
       return handleCallback(req, res, {
-        redirectUri: req.cookies[COOKIES.authReturnTo],
+        redirectUri: req.cookies[Cookies.authReturnTo],
       });
     }
   },
@@ -52,7 +53,7 @@ function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse) {
   // We store it in a cookie so that it's available when the callback handler is called.
   res.setHeader(
     "Set-Cookie",
-    cookie.serialize(COOKIES.authReturnTo, returnTo, {
+    cookie.serialize(Cookies.authReturnTo, returnTo, {
       secure: origin.startsWith("https://"),
       httpOnly: true,
       path: "/",

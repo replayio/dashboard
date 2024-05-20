@@ -1,4 +1,4 @@
-import { COOKIES, HEADERS, SEARCH_PARAMS } from "@/constants";
+import { Cookies, HEADERS, SEARCH_PARAMS } from "@/constants";
 import { getAccessToken } from "@auth0/nextjs-auth0/edge";
 import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
     case "/": {
       // Redirect them to the most recently viewed path
       const cookieStore = cookies();
-      const cookie = cookieStore.get(COOKIES.defaultPathname);
+      const cookie = cookieStore.get(Cookies.defaultPathname);
 
       const redirectURL = new URL(request.url);
       redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/home";
@@ -62,12 +62,12 @@ export async function middleware(request: NextRequest) {
   const url = new URL(request.nextUrl);
   const mockGraphQLData = url.searchParams.get(SEARCH_PARAMS.mockGraphQLData);
   if (mockGraphQLData) {
-    setCookieValueServer(response, COOKIES.mockGraphQLData, mockGraphQLData);
+    setCookieValueServer(response, Cookies.mockGraphQLData, mockGraphQLData);
 
     response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData);
   } else {
     const cookieStore = cookies();
-    const mockGraphQLData = cookieStore.get(COOKIES.mockGraphQLData);
+    const mockGraphQLData = cookieStore.get(Cookies.mockGraphQLData);
     if (mockGraphQLData) {
       response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData.value);
     }
@@ -89,7 +89,7 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
   }
 
   const cookieStore = cookies();
-  const prevAccessTokenCookieRaw = cookieStore.get(COOKIES.accessToken);
+  const prevAccessTokenCookieRaw = cookieStore.get(Cookies.accessToken);
   let prevAccessTokenCookie: AccessTokenCookie | undefined;
   if (prevAccessTokenCookieRaw) {
     prevAccessTokenCookie = JSON.parse(prevAccessTokenCookieRaw.value);
@@ -113,7 +113,7 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
       }
 
       if (data.token !== prevAccessTokenCookie?.token) {
-        setCookieValueServer(response, COOKIES.accessToken, data, cookieOptions);
+        setCookieValueServer(response, Cookies.accessToken, data, cookieOptions);
       }
 
       return data;
@@ -132,7 +132,7 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     } satisfies AccessTokenCookie;
 
     if (data.token !== prevAccessTokenCookie?.token) {
-      setCookieValueServer(response, COOKIES.accessToken, data);
+      setCookieValueServer(response, Cookies.accessToken, data);
     }
 
     return data;
@@ -160,7 +160,7 @@ async function redirectIfMobile(request: NextRequest) {
       // show them a message that it has not been optimized for mobile
       // If they have already confirmed this message (detectable via a cookie) then let them through
       const cookieStore = cookies();
-      const cookie = cookieStore.get(COOKIES.mobileWarningDismissed);
+      const cookie = cookieStore.get(Cookies.mobileWarningDismissed);
       if (cookie == null && request.nextUrl.pathname !== "/mobile-warning") {
         throw new URL("/mobile-warning", request.url);
       }

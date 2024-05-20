@@ -1,7 +1,7 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
-import { COOKIES, HEADERS } from "@/constants";
+import { Cookies, HEADERS } from "@/constants";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { User } from "@/graphql/types";
 import { decompress } from "@/utils/compression";
@@ -65,7 +65,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
   componentDidMount(): void {
     if (global.__IS_RECORD_REPLAY_RUNTIME__ && !this.accessToken) {
       listenForAccessToken(token => {
-        setCookieValueClient(COOKIES.accessToken, {
+        setCookieValueClient(Cookies.accessToken, {
           token,
           source: "external",
         } satisfies AccessTokenCookie);

@@ -1,12 +1,19 @@
-import { COOKIES, URLS } from "@/constants";
-import cookie from "cookie";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
-import { initAuthRequest } from "@/graphql/queries/initAuthRequest";
+import { Cookies, URLS } from "@/constants";
 import { fulfillAuthRequest } from "@/graphql/queries/fulfillAuthRequest";
+import { initAuthRequest } from "@/graphql/queries/initAuthRequest";
+import { NextApiRequest } from "@/pages/types";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
+import cookie from "cookie";
+import type { NextApiResponse } from "next";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest<{
+    key: string;
+    source?: string;
+  }>,
+  res: NextApiResponse
+) {
   const key = getValueFromArrayOrString(req.query.key);
   const source = getValueFromArrayOrString(req.query.source) || "browser";
 
@@ -16,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.setHeader(
         "Set-Cookie",
-        cookie.serialize(COOKIES.browserAuth, id, {
+        cookie.serialize(Cookies.browserAuth, id, {
           secure: URLS.app.startsWith("https://"),
           httpOnly: true,
           path: "/",
@@ -27,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.redirect("/login?returnTo=/api/browser/auth");
     } else {
-      const browserAuth = req.cookies[COOKIES.browserAuth];
+      const browserAuth = req.cookies[Cookies.browserAuth];
 
       if (!browserAuth) {
         res.statusCode = 400;
