@@ -38,7 +38,7 @@ export default function Page({ type }: InferGetServerSidePropsType<typeof getSer
 
       const id = await createWorkspace(
         name,
-        getPlanKey({ isInternal: isInternalUser && bypassTrial, isOrg, teamType: "standard" })
+        getPlanKey({ isInternal: isInternalUser && bypassTrial, isOrg, teamType })
       );
       if (id) {
         router.replace(`/team/${id}/recordings`);
