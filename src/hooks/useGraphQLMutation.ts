@@ -4,6 +4,7 @@ import { getGraphQLClient } from "@/graphql/graphQLClient";
 import {
   ApolloError,
   DocumentNode,
+  FetchResult,
   MutationFunction,
   MutationHookOptions,
   OperationVariables,
@@ -11,6 +12,7 @@ import {
   useMutation,
 } from "@apollo/client";
 import assert from "assert";
+import { GraphQLError } from "graphql";
 import { useContext } from "react";
 import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
 
@@ -36,15 +38,11 @@ export function useGraphQLMutation<Query, Variables extends OperationVariables =
   // Support e2e tests
   const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;
   if (mockResponse) {
-    const mutate = async () => {
+    const mutate: MutationFunction<Query, Variables> = async () => {
       return {
-        called: true,
-        client: undefined as any,
         data: mockResponse.data,
-        error: mockResponse.error,
-        loading: mockResponse.loading,
-        reset: undefined as any,
-      };
+        errors: mockResponse.error ? [mockResponse.error as any as GraphQLError] : [],
+      } satisfies FetchResult<Query>;
     };
 
     return {
