@@ -19,14 +19,12 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
 
   const form = page.locator('[data-test-id="CreateTestSuitesTeam"]');
   const continueButton = page.locator('[data-test-id="CreateTeam-Continue-Button"]');
-  const goBackButton = page.locator('[data-test-id="CreateTeam-GoBack-Button"]');
 
   const multiStepForm = page.locator('[data-test-name="MultiStepForm"]');
   const step1 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-1"]');
   const step2 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-2"]');
   const step3 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-3"]');
 
-  await expect(goBackButton).not.toBeVisible();
   await expect(continueButton.isEnabled()).resolves.toBeFalsy();
 
   {
@@ -39,7 +37,7 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
     await page.locator('[data-test-id="CreateTestSuiteTeam-TeamName-Input"]').fill("Example");
     await page
       .locator('[data-test-id="CreateTestSuiteTeam-TestRunner-Select"]')
-      .selectOption({ label: "Playwright" });
+      .selectOption({ label: "Cypress" });
     await page
       .locator('[data-test-id="CreateTestSuiteTeam-PackageManager-Select"]')
       .selectOption({ label: "pnpm" });
@@ -55,43 +53,8 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
     await expect(step2.getAttribute("data-test-state")).resolves.toBe("current");
     await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
 
-    await expect(form.textContent()).resolves.toContain("pnpm add --save-dev @replayio/playwright");
+    await expect(form.textContent()).resolves.toContain("pnpm add --save-dev @replayio/cypress");
 
-    await expect(goBackButton.isEnabled()).resolves.toBeTruthy();
-    await goBackButton.click();
-  }
-
-  {
-    // Step 1: Go back and change test runner and package manager
-
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("current");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("incomplete");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
-
-    await page
-      .locator('[data-test-id="CreateTestSuiteTeam-TestRunner-Select"]')
-      .selectOption({ label: "Cypress" });
-    await page
-      .locator('[data-test-id="CreateTestSuiteTeam-PackageManager-Select"]')
-      .selectOption({ label: "Yarn" });
-
-    await expect(continueButton.isEnabled()).resolves.toBeTruthy();
-    await continueButton.click();
-  }
-
-  {
-    // Step 2: Test runner configuration
-
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("current");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
-
-    await expect(form.textContent()).resolves.toContain("yarn add --dev @replayio/cypress");
-
-    const apiKey = await page.locator('[data-test-name="CopyCode"]').textContent();
-    expect(apiKey?.startsWith("rwk_")).toBe(true);
-
-    await expect(continueButton.isEnabled()).resolves.toBeTruthy();
     await continueButton.click();
   }
 

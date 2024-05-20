@@ -19,12 +19,18 @@ export function FormStep1({
   defaultPackageManager,
   defaultTeamName,
   defaultTestRunner,
+  errorMessage,
   onContinue,
 }: {
-  onContinue: (teamName: string, packageManager: PackageManager, testRunner: TestRunner) => void;
+  onContinue: (
+    teamName: string,
+    packageManager: PackageManager,
+    testRunner: TestRunner
+  ) => Promise<boolean>;
   defaultPackageManager?: PackageManager;
   defaultTeamName?: string;
   defaultTestRunner?: TestRunner;
+  errorMessage: string | undefined;
 }) {
   const [state, setState] = useState<{
     packageManager: PackageManagerOption;
@@ -37,6 +43,8 @@ export function FormStep1({
     teamName: defaultTeamName ?? "",
     testRunner: TEST_RUNNER_OPTIONS.find(option => option.type === defaultTestRunner),
   });
+
+  const [isPending, setIsPending] = useState(false);
 
   const { packageManager, teamName, testRunner } = state;
 
@@ -99,18 +107,27 @@ export function FormStep1({
           />
         </div>
       </Group>
+      {errorMessage && (
+        <div className="text-red-500" data-test-id="CreateTeam-Error" role="alert">
+          {errorMessage}
+        </div>
+      )}
       <Button
         className="self-start"
         data-test-id="CreateTeam-Continue-Button"
-        disabled={!isValid}
-        onClick={() => {
+        disabled={!isValid || isPending}
+        onClick={async () => {
           assert(testRunner);
 
-          onContinue(teamName, packageManager.type, testRunner.type);
+          setIsPending(true);
+          const success = await onContinue(teamName, packageManager.type, testRunner.type);
+          if (!success) {
+            setIsPending(false);
+          }
         }}
         size="large"
       >
-        Continue
+        {isPending ? "Saving..." : "Continue"}
       </Button>
     </>
   );
