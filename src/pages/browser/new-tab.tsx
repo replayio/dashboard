@@ -1,7 +1,6 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { ExternalLink } from "@/components/ExternalLink";
 import { HEADERS } from "@/constants";
-import { Hoverboard } from "@replayio/overboard";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
 export default function Page({
@@ -10,24 +9,27 @@ export default function Page({
   const isWindows = userAgent.includes("Windows");
 
   return (
-    <div className="flex flex-col gap-4 items-center text-center">
-      <div className="w-36 h-36">
-        <Hoverboard />
-      </div>
-      {isWindows ? (
-        <>
-          <div className="font-bold">Replay on Windows is in beta</div>
-          <div className="text-sm">
-            We are hoping to release a new Chrome-based browser in a couple of months which will be
-            more reliable. Please{" "}
-            <ExternalLink href="https://www.replay.io/contact">contact us</ExternalLink> with any
-            feedback.
+    <div className="flex flex-col gap-4 p-6 mx-auto text-center bg-black rounded-lg shadow-lg w-96">
+      {!isWindows ? (
+        <>          
+          <div className="mb-3 text-2xl font-semibold text-left">Windows is not supported</div>
+          <div className="text-lg text-left">
+            <p>We're working on a Chromium-based browser for Windows, because this version is currently experiencing a 40% crash rate. We apologize for the inconvenience.
+              </p>
+              <p>
+                <ExternalLink href="https://docs.replay.io/replay-runtimes/replay-firefox">Learn more</ExternalLink></p>
           </div>
         </>
       ) : (
-        <div>
-          Please navigate to the page you want to record, then press the blue record button.
+        <>          
+        <div className="mb-3 text-2xl font-semibold text-left">Deprecated browser</div>
+        <div className="text-lg text-left">
+          <p>
+          This browser runs on Gecko, which we no longer support. 
+          </p>
+          <p>We're working on a Chromium-based browser, but in the meantime our <ExternalLink href="https://docs.replay.io/quickstart">quickstart guide</ExternalLink> can help you get started with our command line tool.                   </p>
         </div>
+      </>
       )}
     </div>
   );
