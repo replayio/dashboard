@@ -5,7 +5,7 @@ export function UserSettingsNav() {
   return (
     <LeftNav
       backLink={{
-        href: "/team/me/recordings",
+        href: "/home",
         label: "Settings",
       }}
     >

@@ -41,7 +41,7 @@ export function DefaultNav() {
   }
 
   return (
-    <LeftNav showCreateTeamLink>
+    <LeftNav>
       {sortedWorkspaces.map(workspace => (
         <WorkspaceNavLink
           id={workspace.id}
