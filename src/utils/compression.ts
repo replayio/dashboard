@@ -2,7 +2,7 @@ import {
   compress as compressJSON,
   decompress as decompressJSON,
   trimUndefinedRecursively,
-} from "compress-json/dist/index.js";
+} from "compress-json";
 
 export function compress<Type extends Object>(data: Type): string {
   if (!data) {
