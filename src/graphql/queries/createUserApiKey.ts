@@ -48,5 +48,5 @@ export function useCreateUserAPIKey() {
     return response.data.createUserAPIKey.keyValue;
   };
 
-  return { createApiKey, error, loading: isLoading };
+  return { createApiKey, error, isLoading };
 }

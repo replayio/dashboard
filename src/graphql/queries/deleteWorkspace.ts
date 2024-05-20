@@ -36,5 +36,5 @@ export function useDeleteWorkspace() {
       variables: { shouldDeleteRecordings: true, workspaceId },
     });
 
-  return { deleteWorkspace, error, loading: isLoading };
+  return { deleteWorkspace, error, isLoading };
 }
