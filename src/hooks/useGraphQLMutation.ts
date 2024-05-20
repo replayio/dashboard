@@ -1,8 +1,10 @@
+import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import { SessionContext } from "@/components/SessionContext";
 import { getGraphQLClient } from "@/graphql/graphQLClient";
 import {
   ApolloError,
   DocumentNode,
+  FetchResult,
   MutationFunction,
   MutationHookOptions,
   OperationVariables,
@@ -10,7 +12,9 @@ import {
   useMutation,
 } from "@apollo/client";
 import assert from "assert";
+import { GraphQLError } from "graphql";
 import { useContext } from "react";
+import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
 
 export function useGraphQLMutation<Query, Variables extends OperationVariables = {}>(
   query: DocumentNode | TypedDocumentNode<Query, Variables>,
@@ -20,6 +24,7 @@ export function useGraphQLMutation<Query, Variables extends OperationVariables =
   isLoading: boolean;
   mutate: MutationFunction<Query, Variables>;
 } {
+  const { mockGraphQLData } = useContext(EndToEndTestContext);
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
@@ -29,6 +34,23 @@ export function useGraphQLMutation<Query, Variables extends OperationVariables =
     client,
     ...options,
   });
+
+  // Support e2e tests
+  const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;
+  if (mockResponse) {
+    const mutate: MutationFunction<Query, Variables> = async () => {
+      return {
+        data: mockResponse.data,
+        errors: mockResponse.error ? [mockResponse.error as any as GraphQLError] : [],
+      } satisfies FetchResult<Query>;
+    };
+
+    return {
+      error: mockResponse.error,
+      isLoading: mockResponse.loading,
+      mutate,
+    };
+  }
 
   return { error, isLoading, mutate };
 }

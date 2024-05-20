@@ -5,7 +5,7 @@ import { DocumentNode } from "graphql";
 import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
 import { MockGraphQLData } from "tests/mocks/types";
 
-export async function graphQLFetch<Query, Variables extends OperationVariables = {}>({
+export async function graphQLQuery<Query, Variables extends OperationVariables = {}>({
   accessToken,
   mockGraphQLData,
   query,

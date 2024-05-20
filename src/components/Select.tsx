@@ -13,6 +13,7 @@ export function Select<Type extends Option>({
   options,
   placeholder,
   value,
+  ...rest
 }: Omit<InputHTMLAttributes<HTMLSelectElement>, "onChange" | "value"> & {
   className?: string;
   onChange: (value: Type) => void;
@@ -36,6 +37,7 @@ export function Select<Type extends Option>({
           onChange(option);
         }}
         value={value?.label}
+        {...rest}
       >
         {value === undefined && <option value=""></option>}
         {options.map(({ label }) => (

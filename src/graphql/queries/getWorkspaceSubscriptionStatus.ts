@@ -2,7 +2,7 @@ import {
   GetWorkspaceSubscriptionStatusQuery,
   GetWorkspaceSubscriptionStatusQueryVariables,
 } from "@/graphql/generated/graphql";
-import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { WorkspaceSubscriptionStatus } from "@/graphql/types";
 import { gql } from "@apollo/client";
 import { MockGraphQLData } from "tests/mocks/types";
@@ -12,7 +12,7 @@ export async function getWorkspaceSubscriptionStatus(
   accessToken: string,
   mockGraphQLData: MockGraphQLData | null
 ): Promise<WorkspaceSubscriptionStatus> {
-  const { data, errors } = await graphQLFetch<
+  const { data, errors } = await graphQLQuery<
     GetWorkspaceSubscriptionStatusQuery,
     GetWorkspaceSubscriptionStatusQueryVariables
   >({
