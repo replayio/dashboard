@@ -32,6 +32,7 @@
     "@stripe/stripe-js": "^3.0.10",
     "base-x": "^4.0.0",
     "chalk": "^4",
+    "classnames": "^2.5.1",
     "compress-json": "^3.0.3",
     "cookie": "^0.6.0",
     "date-fns": "^3.3.1",
