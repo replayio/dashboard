@@ -2,8 +2,9 @@ import {
   GetRecordingPhotoQuery,
   GetRecordingPhotoQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { gql } from "@apollo/client";
+import { MockGraphQLData } from "tests/mocks/types";
 
 const QUERY = gql`
   query GetRecordingPhoto($recordingId: UUID!) {
@@ -16,14 +17,12 @@ const QUERY = gql`
 
 export async function getRecordingThumbnailClient(
   accessToken: string,
-  recordingId: string
+  recordingId: string,
+  mockGraphQLData: MockGraphQLData | null
 ): Promise<string | null> {
-  const graphQLClient = getGraphQLClient(accessToken);
-
-  const response = await graphQLClient.query<
-    GetRecordingPhotoQuery,
-    GetRecordingPhotoQueryVariables
-  >({
+  const response = await graphQLQuery<GetRecordingPhotoQuery, GetRecordingPhotoQueryVariables>({
+    accessToken,
+    mockGraphQLData,
     query: QUERY,
     variables: { recordingId },
   });

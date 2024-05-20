@@ -1,14 +1,12 @@
 import {
   CloseAuthRequestMutation,
   CloseAuthRequestMutationVariables,
-  GetUserQuery,
-  GetUserQueryVariables,
 } from "@/graphql/generated/graphql";
-import { graphQLFetch } from "@/graphql/graphQLFetch";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { gql } from "@apollo/client";
 
 export async function closeAuthRequest(key: string) {
-  const { data, errors } = await graphQLFetch<
+  const { data, errors } = await graphQLQuery<
     CloseAuthRequestMutation,
     CloseAuthRequestMutationVariables
   >({

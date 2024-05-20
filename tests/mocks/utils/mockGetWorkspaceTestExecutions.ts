@@ -1,6 +1,7 @@
 import { GetWorkspaceTestExecutionsQuery } from "@/graphql/generated/graphql";
 import { TestSuiteTestExecution } from "@/graphql/types";
 import { getRelativeDate } from "@/utils/date";
+import { MockGraphQLResponse } from "tests/mocks/types";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 import { getUID } from "./getUID";
 import { partialToTestSuiteTestExecutionRecording } from "./partialToTestSuiteTestExecutionRecording";
@@ -12,52 +13,54 @@ export function mockGetWorkspaceTestExecutions(
     }
   >[],
   workspaceId: string = DEFAULT_WORKSPACE_ID
-): GetWorkspaceTestExecutionsQuery {
+): MockGraphQLResponse<GetWorkspaceTestExecutionsQuery> {
   return {
-    node: {
-      __typename: "Workspace",
-      id: workspaceId,
-      tests: {
-        __typename: "TestsConnection",
-        edges: partials.map(partial => {
-          const {
-            commitAuthor = "fake-user",
-            commitTitle = "Test commit title",
-            createdAt = getRelativeDate({ minutesAgo: 1 }),
-            errors = [],
-            id = getUID("test-execution-id"),
-            recordings = [partialToTestSuiteTestExecutionRecording()],
-            status = "passed",
-          } = partial;
+    data: {
+      node: {
+        __typename: "Workspace",
+        id: workspaceId,
+        tests: {
+          __typename: "TestsConnection",
+          edges: partials.map(partial => {
+            const {
+              commitAuthor = "fake-user",
+              commitTitle = "Test commit title",
+              createdAt = getRelativeDate({ minutesAgo: 1 }),
+              errors = [],
+              id = getUID("test-execution-id"),
+              recordings = [partialToTestSuiteTestExecutionRecording()],
+              status = "passed",
+            } = partial;
 
-          return {
-            __typename: "TestsEdge",
-            node: {
-              __typename: "Tests",
-              executions: [
-                {
-                  __typename: "TestExecution",
-                  testRunId: id,
-                  errors: errors,
-                  createdAt: createdAt.toISOString(),
-                  commitTitle,
-                  commitAuthor,
-                  result: status,
-                  recordings: recordings.map(recording => ({
-                    __typename: "Recording",
-                    buildId: recording.buildId,
-                    id: recording.id,
-                    uuid: recording.id,
-                    title: recording.title,
-                    isProcessed: recording.isProcessed,
-                    duration: recording.duration,
-                    createdAt: recording.createdAt.toISOString(),
-                  })),
-                },
-              ],
-            },
-          };
-        }),
+            return {
+              __typename: "TestsEdge",
+              node: {
+                __typename: "Tests",
+                executions: [
+                  {
+                    __typename: "TestExecution",
+                    testRunId: id,
+                    errors: errors,
+                    createdAt: createdAt.toISOString(),
+                    commitTitle,
+                    commitAuthor,
+                    result: status,
+                    recordings: recordings.map(recording => ({
+                      __typename: "Recording",
+                      buildId: recording.buildId,
+                      id: recording.id,
+                      uuid: recording.id,
+                      title: recording.title,
+                      isProcessed: recording.isProcessed,
+                      duration: recording.duration,
+                      createdAt: recording.createdAt.toISOString(),
+                    })),
+                  },
+                ],
+              },
+            };
+          }),
+        },
       },
     },
   };

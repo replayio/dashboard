@@ -13,18 +13,14 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-  "\n      mutation AcceptPendingWorkspaceInvitation($workspaceId: ID!) {\n        acceptWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    ":
-    types.AcceptPendingWorkspaceInvitationDocument,
-  "\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: {key: $key}) {\n          success\n          token\n        }\n      }\n    ":
+  "\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: { key: $key }) {\n          success\n          token\n        }\n      }\n    ":
     types.CloseAuthRequestDocument,
   "\n      mutation CreateUserAPIKey($label: String!, $scopes: [String!]!) {\n        createUserAPIKey(input: { label: $label, scopes: $scopes }) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    ":
     types.CreateUserApiKeyDocument,
   "\n      mutation CreateNewWorkspace($name: String!, $planKey: String!) {\n        createWorkspace(input: { name: $name, planKey: $planKey }) {\n          success\n          workspace {\n            id\n            invitationCode\n            domain\n            isDomainLimitedCode\n          }\n        }\n      }\n    ":
     types.CreateNewWorkspaceDocument,
-  "\n      mutation CreateWorkspaceAPIKey($workspaceId: ID!, $label: String!, $scopes: [String!]!) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    ":
+  "\n      mutation CreateWorkspaceAPIKey(\n        $workspaceId: ID!\n        $label: String!\n        $scopes: [String!]!\n        $apiKey: String\n      ) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes, apiKey: $apiKey }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    ":
     types.CreateWorkspaceApiKeyDocument,
-  "\n      mutation DeclinePendingWorkspaceInvitation($workspaceId: ID!) {\n        rejectWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    ":
-    types.DeclinePendingWorkspaceInvitationDocument,
   "\n      mutation DeleteUserAPIKey($id: ID!) {\n        deleteUserAPIKey(input: { id: $id }) {\n          success\n        }\n      }\n    ":
     types.DeleteUserApiKeyDocument,
   "\n      mutation DeleteWorkspace($workspaceId: ID!, $shouldDeleteRecordings: Boolean!) {\n        deleteWorkspace(\n          input: { workspaceId: $workspaceId, shouldDeleteRecordings: $shouldDeleteRecordings }\n        ) {\n          success\n        }\n      }\n    ":
@@ -37,13 +33,11 @@ const documents = {
     types.GetAuthConnectionDocument,
   "\n      query GetUser {\n        viewer {\n          email\n          internal\n          nags\n          user {\n            name\n            picture\n            id\n          }\n        }\n      }\n    ":
     types.GetUserDocument,
-  "\n  query GetPendingWorkspaces {\n    viewer {\n      workspaceInvitations {\n        edges {\n          node {\n            workspace {\n              id\n              name\n              recordingCount\n              isOrganization\n              isTest\n            }\n            inviterEmail\n          }\n        }\n      }\n    }\n  }\n":
-    types.GetPendingWorkspacesDocument,
   "\n  query GetRecordingPhoto($recordingId: UUID!) {\n    recording(uuid: $recordingId) {\n      thumbnail\n      uuid\n    }\n  }\n":
     types.GetRecordingPhotoDocument,
   "\n      query GetWorkspaceMemberRoles($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            members {\n              edges {\n                node {\n                  ... on WorkspaceUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    ":
     types.GetWorkspaceMemberRolesDocument,
-  "\n      query GetWorkspaceMembers($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            members {\n              edges {\n                node {\n                  ... on WorkspacePendingEmailMember {\n                    __typename\n                    id\n                    roles\n                    email\n                    createdAt\n                  }\n                  ... on WorkspacePendingUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                  ... on WorkspaceUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    ":
+  "\n      query GetWorkspaceMembers($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            members {\n              edges {\n                node {\n                  ... on WorkspaceUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    ":
     types.GetWorkspaceMembersDocument,
   "\n      query GetWorkspaceSubscriptionStatus($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            subscription {\n              id\n              status\n            }\n          }\n        }\n      }\n    ":
     types.GetWorkspaceSubscriptionStatusDocument,
@@ -67,8 +61,6 @@ const documents = {
     types.GetUserSettingsDocument,
   "\n      query GetWorkspaceApiKeys($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            apiKeys {\n              id\n              createdAt\n              label\n              scopes\n              recordingCount\n              maxRecordings\n            }\n          }\n        }\n      }\n    ":
     types.GetWorkspaceApiKeysDocument,
-  "\n    query GetNonPendingWorkspaces {\n      viewer {\n        workspaces {\n          edges {\n            node {\n              hasPaymentMethod\n              id\n              invitationCode\n              isOrganization\n              isTest\n              name\n              retentionLimit\n              settings {\n                features\n              }\n              subscription {\n                id\n                plan {\n                  id\n                  key\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  ":
-    types.GetNonPendingWorkspacesDocument,
   "\n      query GetPersonalRecordings($filter: String) {\n        viewer {\n          recordings(filter: $filter) {\n            edges {\n              node {\n                buildId\n                duration\n                comments {\n                  id\n                }\n                createdAt\n                owner {\n                  id\n                  name\n                  picture\n                }\n                private\n                title\n                url\n                uuid\n                workspace {\n                  id\n                }\n              }\n            }\n          }\n        }\n      }\n    ":
     types.GetPersonalRecordingsDocument,
   "\n      mutation PrepareWorkspacePaymentMethod($workspaceId: ID!) {\n        prepareWorkspacePaymentMethod(input: { workspaceId: $workspaceId }) {\n          success\n          paymentSecret\n        }\n      }\n    ":
@@ -95,6 +87,8 @@ const documents = {
     types.GetWorkspaceTestExecutionsDocument,
   "\n      query GetWorkspaceTests($workspaceId: ID!, $startTime: String, $endTime: String) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            tests(filter: { startTime: $startTime, endTime: $endTime }) {\n              edges {\n                node {\n                  testId\n                  title\n                  scope\n                  stats {\n                    passed\n                    failed\n                    flaky\n                    skipped\n                    unknown\n                    failureRate\n                    flakyRate\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    ":
     types.GetWorkspaceTestsDocument,
+  "\n  query GetWorkspaces {\n    viewer {\n      workspaces {\n        edges {\n          node {\n            hasPaymentMethod\n            id\n            invitationCode\n            isOrganization\n            isTest\n            name\n            retentionLimit\n            settings {\n              features\n            }\n            subscription {\n              id\n              plan {\n                id\n                key\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n":
+    types.GetWorkspacesDocument,
   "\n      mutation RemoveUserFromWorkspace($membershipId: ID!) {\n        removeWorkspaceMember(input: { id: $membershipId }) {\n          success\n        }\n      }\n    ":
     types.RemoveUserFromWorkspaceDocument,
 };
@@ -117,14 +111,8 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n      mutation AcceptPendingWorkspaceInvitation($workspaceId: ID!) {\n        acceptWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    "
-): (typeof documents)["\n      mutation AcceptPendingWorkspaceInvitation($workspaceId: ID!) {\n        acceptWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: {key: $key}) {\n          success\n          token\n        }\n      }\n    "
-): (typeof documents)["\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: {key: $key}) {\n          success\n          token\n        }\n      }\n    "];
+  source: "\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: { key: $key }) {\n          success\n          token\n        }\n      }\n    "
+): (typeof documents)["\n      mutation CloseAuthRequest($key: String!) {\n        closeAuthRequest(input: { key: $key }) {\n          success\n          token\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -141,14 +129,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n      mutation CreateWorkspaceAPIKey($workspaceId: ID!, $label: String!, $scopes: [String!]!) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "
-): (typeof documents)["\n      mutation CreateWorkspaceAPIKey($workspaceId: ID!, $label: String!, $scopes: [String!]!) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "\n      mutation DeclinePendingWorkspaceInvitation($workspaceId: ID!) {\n        rejectWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    "
-): (typeof documents)["\n      mutation DeclinePendingWorkspaceInvitation($workspaceId: ID!) {\n        rejectWorkspaceMembership(input: { id: $workspaceId }) {\n          success\n        }\n      }\n    "];
+  source: "\n      mutation CreateWorkspaceAPIKey(\n        $workspaceId: ID!\n        $label: String!\n        $scopes: [String!]!\n        $apiKey: String\n      ) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes, apiKey: $apiKey }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "
+): (typeof documents)["\n      mutation CreateWorkspaceAPIKey(\n        $workspaceId: ID!\n        $label: String!\n        $scopes: [String!]!\n        $apiKey: String\n      ) {\n        createWorkspaceAPIKey(\n          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes, apiKey: $apiKey }\n        ) {\n          key {\n            id\n            label\n          }\n          keyValue\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -189,12 +171,6 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  query GetPendingWorkspaces {\n    viewer {\n      workspaceInvitations {\n        edges {\n          node {\n            workspace {\n              id\n              name\n              recordingCount\n              isOrganization\n              isTest\n            }\n            inviterEmail\n          }\n        }\n      }\n    }\n  }\n"
-): (typeof documents)["\n  query GetPendingWorkspaces {\n    viewer {\n      workspaceInvitations {\n        edges {\n          node {\n            workspace {\n              id\n              name\n              recordingCount\n              isOrganization\n              isTest\n            }\n            inviterEmail\n          }\n        }\n      }\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
   source: "\n  query GetRecordingPhoto($recordingId: UUID!) {\n    recording(uuid: $recordingId) {\n      thumbnail\n      uuid\n    }\n  }\n"
 ): (typeof documents)["\n  query GetRecordingPhoto($recordingId: UUID!) {\n    recording(uuid: $recordingId) {\n      thumbnail\n      uuid\n    }\n  }\n"];
 /**
@@ -207,8 +183,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n      query GetWorkspaceMembers($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            members {\n              edges {\n                node {\n                  ... on WorkspacePendingEmailMember {\n                    __typename\n                    id\n                    roles\n                    email\n                    createdAt\n                  }\n                  ... on WorkspacePendingUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                  ... on WorkspaceUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    "
-): (typeof documents)["\n      query GetWorkspaceMembers($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            members {\n              edges {\n                node {\n                  ... on WorkspacePendingEmailMember {\n                    __typename\n                    id\n                    roles\n                    email\n                    createdAt\n                  }\n                  ... on WorkspacePendingUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                  ... on WorkspaceUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    "];
+  source: "\n      query GetWorkspaceMembers($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            members {\n              edges {\n                node {\n                  ... on WorkspaceUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    "
+): (typeof documents)["\n      query GetWorkspaceMembers($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            members {\n              edges {\n                node {\n                  ... on WorkspaceUserMember {\n                    __typename\n                    id\n                    roles\n                    user {\n                      id\n                      name\n                      picture\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -275,12 +251,6 @@ export function graphql(
 export function graphql(
   source: "\n      query GetWorkspaceApiKeys($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            apiKeys {\n              id\n              createdAt\n              label\n              scopes\n              recordingCount\n              maxRecordings\n            }\n          }\n        }\n      }\n    "
 ): (typeof documents)["\n      query GetWorkspaceApiKeys($workspaceId: ID!) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            apiKeys {\n              id\n              createdAt\n              label\n              scopes\n              recordingCount\n              maxRecordings\n            }\n          }\n        }\n      }\n    "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "\n    query GetNonPendingWorkspaces {\n      viewer {\n        workspaces {\n          edges {\n            node {\n              hasPaymentMethod\n              id\n              invitationCode\n              isOrganization\n              isTest\n              name\n              retentionLimit\n              settings {\n                features\n              }\n              subscription {\n                id\n                plan {\n                  id\n                  key\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  "
-): (typeof documents)["\n    query GetNonPendingWorkspaces {\n      viewer {\n        workspaces {\n          edges {\n            node {\n              hasPaymentMethod\n              id\n              invitationCode\n              isOrganization\n              isTest\n              name\n              retentionLimit\n              settings {\n                features\n              }\n              subscription {\n                id\n                plan {\n                  id\n                  key\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -359,6 +329,12 @@ export function graphql(
 export function graphql(
   source: "\n      query GetWorkspaceTests($workspaceId: ID!, $startTime: String, $endTime: String) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            tests(filter: { startTime: $startTime, endTime: $endTime }) {\n              edges {\n                node {\n                  testId\n                  title\n                  scope\n                  stats {\n                    passed\n                    failed\n                    flaky\n                    skipped\n                    unknown\n                    failureRate\n                    flakyRate\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    "
 ): (typeof documents)["\n      query GetWorkspaceTests($workspaceId: ID!, $startTime: String, $endTime: String) {\n        node(id: $workspaceId) {\n          ... on Workspace {\n            id\n            tests(filter: { startTime: $startTime, endTime: $endTime }) {\n              edges {\n                node {\n                  testId\n                  title\n                  scope\n                  stats {\n                    passed\n                    failed\n                    flaky\n                    skipped\n                    unknown\n                    failureRate\n                    flakyRate\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n  query GetWorkspaces {\n    viewer {\n      workspaces {\n        edges {\n          node {\n            hasPaymentMethod\n            id\n            invitationCode\n            isOrganization\n            isTest\n            name\n            retentionLimit\n            settings {\n              features\n            }\n            subscription {\n              id\n              plan {\n                id\n                key\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"
+): (typeof documents)["\n  query GetWorkspaces {\n    viewer {\n      workspaces {\n        edges {\n          node {\n            hasPaymentMethod\n            id\n            invitationCode\n            isOrganization\n            isTest\n            name\n            retentionLimit\n            settings {\n              features\n            }\n            subscription {\n              id\n              plan {\n                id\n                key\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

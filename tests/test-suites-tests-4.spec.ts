@@ -12,6 +12,7 @@ import { getRecordingRow } from "./utils/getRecordingRow";
 import { getTestExecutionRow } from "./utils/getTestExecutionRow";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
+import exp from "constants";
 
 test("test-suites-tests-4: should respect workspace retention limits", async ({ page }) => {
   await navigateToPage({
@@ -26,11 +27,13 @@ test("test-suites-tests-4: should respect workspace retention limits", async ({ 
 
   const executionRows = getTestExecutionRow(page);
   const recordingRows = getRecordingRow(page, { isWithinRetentionLimit: true });
+  const expiredRecordingRows = getRecordingRow(page, { isWithinRetentionLimit: false });
   const retentionMessage = page.locator('[data-test-name="TestExecution-RetentionMessage"]');
 
   // The past week has 1 test execution with 1 recording
   await expect(executionRows).toHaveCount(1);
   await expect(recordingRows).toHaveCount(1);
+  await expect(expiredRecordingRows).toHaveCount(0);
   await expect(retentionMessage).not.toBeVisible();
 
   await openContextMenu(page, "Tests-DateRangeFilter");
@@ -39,7 +42,8 @@ test("test-suites-tests-4: should respect workspace retention limits", async ({ 
   // The past 2 weeks has 2 test executions with 2 recordings
   // It also shows a warning about results that are potentially not included
   await expect(executionRows).toHaveCount(2);
-  await expect(recordingRows).toHaveCount(2);
+  await expect(recordingRows).toHaveCount(1);
+  await expect(expiredRecordingRows).toHaveCount(1);
   await expect(retentionMessage).toBeVisible();
 
   await openContextMenu(page, "Tests-DateRangeFilter");
@@ -48,14 +52,14 @@ test("test-suites-tests-4: should respect workspace retention limits", async ({ 
   // The past month has 3 test executions with 2 recordings
   // It also shows a warning about results that are potentially not included
   await expect(executionRows).toHaveCount(3);
-  await expect(recordingRows).toHaveCount(2);
-  await expect(getRecordingRow(page, { isWithinRetentionLimit: false })).toHaveCount(1);
-
+  await expect(recordingRows).toHaveCount(1);
+  await expect(expiredRecordingRows).toHaveCount(2);
   await expect(retentionMessage).toBeVisible();
 });
 
 const mockGraphQLData: MockGraphQLData = {
   GetWorkspace: mockGetWorkspace({
+    isTest: true,
     retentionLimitDays: 7,
   }),
   GetWorkspaceTestExecutions: mockGetWorkspaceTestExecutions([

@@ -3,21 +3,21 @@ import {
   CreateNewWorkspaceMutation,
   CreateNewWorkspaceMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
-import { gql, useMutation } from "@apollo/client";
+import { QUERY } from "@/graphql/queries/useWorkspaces";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
-export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: () => void) {
+export function useCreateWorkspace() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [createWorkspaceMutation, { loading, error }] = useMutation<
-    CreateNewWorkspaceMutation,
-    CreateNewWorkspaceMutationVariables
-  >(
+  const {
+    mutate: createWorkspaceMutation,
+    error,
+    isLoading,
+  } = useGraphQLMutation<CreateNewWorkspaceMutation, CreateNewWorkspaceMutationVariables>(
     gql`
       mutation CreateNewWorkspace($name: String!, $planKey: String!) {
         createWorkspace(input: { name: $name, planKey: $planKey }) {
@@ -32,8 +32,10 @@ export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: 
       }
     `,
     {
-      client,
-      refetchQueries: ["GetNonPendingWorkspaces"],
+      // This syntax is required to ensure Apollo refetches Workspaces after creation
+      // See github.com/apollographql/apollo-client/issues/5419#issuecomment-598065442
+      refetchQueries: [{ query: QUERY, variables: {} }],
+      awaitRefetchQueries: true,
     }
   );
 
@@ -47,11 +49,9 @@ export function useCreateWorkspace(onCompleted: (id: string) => void, onFailed: 
     });
 
     if (result.data?.createWorkspace?.workspace?.id) {
-      onCompleted(result.data?.createWorkspace?.workspace?.id);
-    } else {
-      onFailed();
+      return result.data?.createWorkspace?.workspace?.id;
     }
   };
 
-  return { createWorkspace, error, loading };
+  return { createWorkspace, error, isLoading };
 }

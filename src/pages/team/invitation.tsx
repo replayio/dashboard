@@ -1,4 +1,5 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
+import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Message } from "@/components/Message";
 import { SessionContext } from "@/components/SessionContext";
@@ -9,12 +10,13 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
 export default function Page({ code }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { mockGraphQLData } = useContext(EndToEndTestContext);
   const { accessToken } = useContext(SessionContext);
   const router = useRouter();
 
   const { claimInvitation, error, isLoading } = useClaimTeamInvitationCode(
     async (workspaceId: string) => {
-      const { isTest } = await getWorkspace(accessToken, workspaceId);
+      const { isTest } = await getWorkspace(accessToken, workspaceId, mockGraphQLData);
 
       router.replace(isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`);
     }

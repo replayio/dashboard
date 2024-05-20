@@ -3,21 +3,24 @@ import Checkbox from "@/components/Checkbox";
 import { ClickToCopyString } from "@/components/ClickToCopyString";
 import { Input } from "@/components/Input";
 import { ApiKeyScope } from "@/graphql/types";
+import { ApolloError } from "@apollo/client";
 import { useState } from "react";
 
 export function CreateNewKey({
   createKey,
+  createKeyError,
   scopes,
 }: {
-  createKey: (label: string, scopes: ApiKeyScope[]) => Promise<string>;
-  scopes: ApiKeyScope[];
+  createKey: (label: string, scopes: ApiKeyScope[]) => Promise<string | undefined>;
+  createKeyError: ApolloError | undefined;
+  scopes?: ApiKeyScope[];
 }) {
   const [label, setLabel] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [keyValue, setKeyValue] = useState("");
 
-  const [admin, setAdmin] = useState(false);
-  const [writeSourcemaps, setWriteSourcemaps] = useState(false);
+  const [admin, setAdmin] = useState(true);
+  const [writeSourcemaps, setWriteSourcemaps] = useState(true);
 
   if (keyValue) {
     return (
@@ -32,20 +35,23 @@ export function CreateNewKey({
       if (label) {
         setIsPending(true);
 
-        const selectedScopes: ApiKeyScope[] = [];
-        if (admin) {
-          selectedScopes.push("admin:all");
-        }
-        if (writeSourcemaps) {
-          selectedScopes.push("write:sourcemap");
+        const selectedScopes: Set<ApiKeyScope> = new Set(scopes);
+        if (!scopes) {
+          if (admin) {
+            selectedScopes.add("admin:all");
+          }
+          if (writeSourcemaps) {
+            selectedScopes.add("write:sourcemap");
+          }
         }
 
-        const keyValue = await createKey(label, selectedScopes);
-
-        setKeyValue(keyValue);
+        const keyValue = await createKey(label, Array.from(selectedScopes));
+        if (keyValue) {
+          setKeyValue(keyValue);
+          setLabel("");
+        }
 
         setIsPending(false);
-        setLabel("");
       }
     };
 
@@ -65,25 +71,21 @@ export function CreateNewKey({
             Add
           </Button>
         </div>
-        {!keyValue && scopes.length > 1 && (
+        {!scopes && (
           <div className="flex flex-row items-center gap-4">
-            {scopes.includes("admin:all") && (
-              <Checkbox
-                checked={admin}
-                label="Create recordings"
-                onChange={newChecked => setAdmin(newChecked)}
-              />
-            )}
-
-            {scopes.includes("write:sourcemap") && (
-              <Checkbox
-                checked={writeSourcemaps}
-                label="Upload source maps"
-                onChange={newChecked => setWriteSourcemaps(newChecked)}
-              />
-            )}
+            <Checkbox
+              checked={admin}
+              label="Create recordings"
+              onChange={newChecked => setAdmin(newChecked)}
+            />
+            <Checkbox
+              checked={writeSourcemaps}
+              label="Upload source maps"
+              onChange={newChecked => setWriteSourcemaps(newChecked)}
+            />
           </div>
         )}
+        {createKeyError && <div className="text-red-500">{createKeyError.message}</div>}
       </div>
     );
   }

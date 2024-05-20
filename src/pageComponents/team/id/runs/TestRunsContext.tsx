@@ -25,6 +25,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useTransition,
 } from "react";
@@ -113,12 +114,18 @@ export function ContextRoot({
 
   const router = useRouter();
 
+  // Next's router syncs our state to the URL asynchronously
+  // Storing a copy in this ref avoids potential timing concerns if selectTest is called before the update
+  // For more details see PRO-425
+  const mutableURLRef = useRef<URL | undefined>();
+
   const selectTest = useCallback(
     (id: string) => {
       startTransition(() => {
         setSelectedTestId(id);
 
-        const url = new URL(window.location.href);
+        const url = (mutableURLRef.current =
+          mutableURLRef.current ?? new URL(window.location.href));
         url.searchParams.set("testId", id);
 
         router.replace(url.toString());
@@ -132,7 +139,7 @@ export function ContextRoot({
       setSelectedTestRunId(id);
       setSelectedTestId(undefined);
 
-      const url = new URL(window.location.href);
+      const url = (mutableURLRef.current = mutableURLRef.current ?? new URL(window.location.href));
       url.searchParams.set("testRunId", id);
       url.searchParams.set("testId", "");
 

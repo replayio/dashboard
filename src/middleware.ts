@@ -39,13 +39,13 @@ export async function middleware(request: NextRequest) {
       const cookie = cookieStore.get(COOKIES.defaultPathname);
 
       const redirectURL = new URL(request.url);
-      redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/team/me/recordings";
+      redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/home";
 
       return NextResponse.redirect(redirectURL);
     }
     case "/org/new": {
       const redirectURL = new URL(request.url);
-      redirectURL.pathname = "/team/new";
+      redirectURL.pathname = "/team/new/standard";
       redirectURL.searchParams.set("type", "org");
 
       return NextResponse.redirect(redirectURL);
@@ -174,6 +174,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
 
   if (
     pathname === "/" ||
+    pathname === "/home" ||
     pathname.startsWith("/org") ||
     pathname.startsWith("/team") ||
     pathname.startsWith("/user")

@@ -6,15 +6,15 @@ import { ApiKeyScope } from "@/graphql/types";
 
 export function WorkspaceApiKeys({ workspaceId }: { workspaceId: string }) {
   const { apiKeys } = useGetWorkspaceApiKeys(workspaceId);
-  const { createApiKey } = useCreateWorkspaceAPIKey();
+  const { createApiKey, error } = useCreateWorkspaceAPIKey();
   const { deleteApiKey } = useDeleteWorkspaceAPIKey();
 
   return (
     <ApiKeys
       apiKeys={apiKeys}
       createKey={(label: string, scopes: ApiKeyScope[]) => createApiKey(workspaceId, label, scopes)}
+      createKeyError={error}
       deleteKey={deleteApiKey}
-      scopes={["admin:all", "write:sourcemap"]}
     />
   );
 }

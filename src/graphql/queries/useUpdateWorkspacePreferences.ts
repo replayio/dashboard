@@ -26,7 +26,7 @@ export function useUpdateWorkspacePreferences(onCompleted: (success: boolean) =>
       }
     `,
     {
-      refetchQueries: ["GetNonPendingWorkspaces"],
+      refetchQueries: ["GetWorkspaces"],
       onCompleted: data => {
         onCompleted(data.updateWorkspaceSettings.success == true);
       },

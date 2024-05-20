@@ -1,3 +1,4 @@
+import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import { Icon } from "@/components/Icon";
 import { SessionContext } from "@/components/SessionContext";
 import { getRecordingThumbnailClient } from "@/graphql/queries/getRecordingThumbnail";
@@ -16,6 +17,7 @@ export function RecordingThumbnail(props: Props) {
 }
 
 function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
+  const { mockGraphQLData } = useContext(EndToEndTestContext);
   const { accessToken } = useContext(SessionContext);
 
   const [thumbnail, setThumbnail] = useState<string | null>(null);
@@ -34,7 +36,7 @@ function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          getRecordingThumbnailClient(accessToken, recordingId).then(thumbnail => {
+          getRecordingThumbnailClient(accessToken, recordingId, mockGraphQLData).then(thumbnail => {
             setThumbnail(thumbnail);
           });
 
@@ -47,7 +49,7 @@ function RecordingThumbnailSuspends({ buildId, recordingId }: Props) {
     return () => {
       observer.disconnect();
     };
-  }, [accessToken, recordingId, target]);
+  }, [accessToken, mockGraphQLData, recordingId, target]);
 
   if (thumbnail) {
     return (
