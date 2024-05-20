@@ -32,9 +32,6 @@ export function FormStep2({
       case "cypress": {
         return <CypressInstructions apiKey={apiKey} packageManager={packageManager} />;
       }
-      case "jest": {
-        return <JestInstructions packageManager={packageManager} />;
-      }
       case "playwright": {
         return <PlaywrightInstructions apiKey={apiKey} packageManager={packageManager} />;
       }
@@ -106,17 +103,6 @@ export function CypressInstructions({
           <strong className="text-yellow-400">(it will only be shown once!)</strong>
         </div>
         <CopyCode text={apiKey} />
-      </Group>
-    </>
-  );
-}
-
-export function JestInstructions({ packageManager }: { packageManager: PackageManager }) {
-  return (
-    <>
-      <Group>
-        <div>1. Install replay-node</div>
-        <Code>{getInstallCommand(packageManager, "@replayio/node", { global: true })}</Code>
       </Group>
     </>
   );

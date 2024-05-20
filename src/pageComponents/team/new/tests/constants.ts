@@ -1,6 +1,6 @@
 import { Option } from "@/components/Select";
 
-export type TestRunner = "cypress" | "jest" | "playwright";
+export type TestRunner = "cypress" | "playwright";
 export type TestRunnerOption = Option & {
   type: TestRunner;
 };
@@ -8,15 +8,11 @@ const Cypress: TestRunnerOption = {
   label: "Cypress",
   type: "cypress",
 };
-const Jest: TestRunnerOption = {
-  label: "Jest",
-  type: "jest",
-};
 const Playwright: TestRunnerOption = {
   label: "Playwright",
   type: "playwright",
 };
-export const TEST_RUNNER_OPTIONS: TestRunnerOption[] = [Cypress, Jest, Playwright];
+export const TEST_RUNNER_OPTIONS: TestRunnerOption[] = [Cypress, Playwright];
 
 export type PackageManager = "npm" | "pnpm" | "yarn";
 export type PackageManagerOption = Option & {

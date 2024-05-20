@@ -18,10 +18,6 @@ export function FormStep3({
       instructions = <CypressInstructions />;
       break;
     }
-    case "jest": {
-      instructions = <JestInstructions packageManager={packageManager} />;
-      break;
-    }
     case "playwright": {
       instructions = <PlaywrightInstructions />;
       break;
@@ -48,21 +44,6 @@ export function CypressInstructions() {
     <Group>
       <strong>5. Run cypress as you normally would</strong>
       <Code>npx cypress run --browser replay-chromium</Code>
-    </Group>
-  );
-}
-
-export function JestInstructions({ packageManager }: { packageManager: PackageManager }) {
-  return (
-    <Group>
-      <strong>2. Record your tests with Replay Node</strong>
-      <div>
-        For example, to record all of the tests included by the &quot;test&quot; script in your
-        package.json:
-      </div>
-      <Code>replay-node --exec {packageManager} run test</Code>
-      <div>To filter which test files are run:</div>
-      <Code>replay-node --exec {packageManager} run test -- specific.test.ts</Code>
     </Group>
   );
 }
