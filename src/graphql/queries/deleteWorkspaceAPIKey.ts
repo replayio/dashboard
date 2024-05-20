@@ -35,5 +35,5 @@ export function useDeleteWorkspaceAPIKey() {
 
   const deleteApiKey = (id: string) => deleteApiKeyMutation({ variables: { id } });
 
-  return { deleteApiKey, error, loading: isLoading };
+  return { deleteApiKey, error, isLoading };
 }

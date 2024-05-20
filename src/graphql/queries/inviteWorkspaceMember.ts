@@ -33,5 +33,5 @@ export function useInviteWorkspaceMember(onCompleted: () => void) {
   const inviteWorkspaceMember = (workspaceId: string, email: string) =>
     inviteWorkspaceMemberMutation({ variables: { email, workspaceId } });
 
-  return { inviteWorkspaceMember, error, loading: isLoading };
+  return { inviteWorkspaceMember, error, isLoading };
 }

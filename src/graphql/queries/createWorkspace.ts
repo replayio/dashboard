@@ -53,5 +53,5 @@ export function useCreateWorkspace() {
     }
   };
 
-  return { createWorkspace, error, loading: isLoading };
+  return { createWorkspace, error, isLoading };
 }
