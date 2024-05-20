@@ -1,5 +1,6 @@
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { ExternalLink } from "@/components/ExternalLink";
+import { Message } from "@/components/Message";
 import { HEADERS } from "@/constants";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
@@ -9,27 +10,37 @@ export default function Page({
   const isWindows = userAgent.includes("Windows");
 
   return (
-    <div className="flex flex-col gap-4 p-6 mx-auto text-center bg-black rounded-lg shadow-lg w-96">
+    <Message className="max-w-prose">
       {isWindows ? (
-        <>          
-          <div className="mb-3 text-2xl font-semibold text-left">Replay Firefox for Windows is experimental</div>
-          <div className="text-lg text-left">
-            <p>
-            This browser has a 40% replaying failure rate and is in an experimental and unsupported status. When we resume working on Windows support, we&apos;ll be prioritizing Replay Chromium for Windows with the goal of releasing a performant and reliable browser. We apologize for the inconvenience and thank you for your patience. <ExternalLink href="https://docs.replay.io/time-travel-intro/what-is-time-travel">Time travel</ExternalLink> is an incredibly difficult problem to get right, but we&apos;re committed to making it universally available.
-            </p>         
+        <>
+          <div className="text-2xl font-semibold text-left nowrap">
+            Replay Firefox for Windows is experimental
           </div>
-        </>        
+          <div className="text-lg text-left">
+            This browser has a 40% replaying failure rate and is in an experimental and unsupported
+            status. When we resume working on Windows support, we&apos;ll be prioritizing Replay
+            Chromium for Windows with the goal of releasing a performant and reliable browser. We
+            apologize for the inconvenience and thank you for your patience.{" "}
+            <ExternalLink href="https://docs.replay.io/time-travel-intro/what-is-time-travel">
+              Time travel
+            </ExternalLink>{" "}
+            is an incredibly difficult problem to get right, but we&apos;re committed to making it
+            universally available.
+          </div>
+        </>
       ) : (
-        <>          
-          <div className="mb-3 text-2xl font-semibold text-left">Replay Firefox is no longer supported</div>
-        <div className="text-lg text-left">
-          <p>
-          Check out our <ExternalLink href="https://docs.replay.io/quickstart">Quickstart Guide</ExternalLink> to start using Replay Chromium.
-          </p>
-        </div>
+        <>
+          <div className="text-2xl font-semibold text-left nowrap">
+            Replay Firefox is no longer supported
+          </div>
+          <div className="text-lg text-left">
+            Check out our{" "}
+            <ExternalLink href="https://docs.replay.io/quickstart">Quickstart Guide</ExternalLink>{" "}
+            to start using Replay Chromium.
+          </div>
         </>
       )}
-    </div>
+    </Message>
   );
 }
 
