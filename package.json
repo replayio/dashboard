@@ -45,6 +45,8 @@
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.13",
     "react-resizable-panels": "^2.0.19",
+    "react-virtualized-auto-sizer": "^1.0.24",
+    "react-window": "^1.8.10",
     "use-context-menu": "^0.4.13",
     "uuid": "^9.0.1"
   },
