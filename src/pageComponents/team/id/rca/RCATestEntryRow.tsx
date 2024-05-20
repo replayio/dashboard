@@ -27,7 +27,7 @@ export function RCATestEntryRow({
           "border-blue-400 border-2": selected,
         }
       )}
-      data-test-name="RCATestEntry"
+      data-test-name="RCATestEntryRow"
       onClick={onClick}
     >
       <div className="flex flex-row items-center gap-2 w-full truncate">

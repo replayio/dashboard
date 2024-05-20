@@ -5,6 +5,7 @@ import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { RCATestEntryRow } from "@/pageComponents/team/id/rca/RCATestEntryRow";
+import { RCATestEntryDetails } from "@/pageComponents/team/id/rca/RCATestEntryDetails";
 import { useContext, useState } from "react";
 import { SessionContext } from "@/components/SessionContext";
 
@@ -13,7 +14,7 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
   const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
-  const [selectedTestEntry, setSelectedTestEntry] = useState<string | null>(null);
+  const [selectedTestEntryId, setSelectedTestEntryId] = useState<string | null>(null);
 
   const { user } = useContext(SessionContext);
 
@@ -24,16 +25,28 @@ export default function Page({
       key={entry.id}
       analysisTestEntry={entry}
       user={user}
-      onClick={() => setSelectedTestEntry(entry.id)}
-      selected={selectedTestEntry === entry.id}
+      onClick={() => setSelectedTestEntryId(entry.id)}
+      selected={selectedTestEntryId === entry.id}
     />
   ));
 
+  const selectedTestEntry = rcaTestEntries.find(entry => entry.id === selectedTestEntryId);
+
   return (
-    <div>
+    <div className="w-full m-2">
       <h1 className="text-xl font-bold">Root Cause Analysis</h1>
-      <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
-      {renderedEntries}
+      <div className="flex flex-column w-full">
+        <div className="grow basis-3/5 m-2">
+          <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
+          {renderedEntries}
+        </div>
+        <div className="basis-2/5 m-2">
+          <h3 className="text-lg font-bold">Test Analysis Details</h3>
+          {selectedTestEntry && (
+            <RCATestEntryDetails analysisTestEntry={selectedTestEntry} user={user} />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

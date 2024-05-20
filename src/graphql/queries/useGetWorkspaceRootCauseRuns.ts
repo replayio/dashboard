@@ -276,7 +276,7 @@ export interface RootCauseAnalysisTestResult {
   additionalSuccessRuns: TestRunInfo[];
 
   // Discrepancies found while analyzing the failure.
-  discrepancies: AnyDiscrepancy[];
+  // discrepancies: AnyDiscrepancy[];
 
   // Frame data for the failing run.
   failingFrames: FormattedFrame[];
@@ -335,6 +335,10 @@ interface GetWorkspaceRootCauseRunsQuery {
 interface GetWorkspaceRootCauseRunsQueryVariables {
   workspaceId: string;
 }
+
+// TODO Update backend to allow filtering on status / creation date, and do ordering
+// TOOD Update backend to allow fetching an individual test entry by ID
+// TODO stop fetching all discrepancies up front, and only fetch when an entry is selected
 
 export function useWorkspaceRootCauseRuns(workspaceId: string) {
   const {
