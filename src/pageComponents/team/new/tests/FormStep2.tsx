@@ -8,21 +8,15 @@ import { useMemo, useState } from "react";
 
 export function FormStep2({
   apiKey,
-  errorMessage,
   onContinue,
-  onGoBack,
   packageManager,
   testRunner,
 }: {
   apiKey: string;
-  errorMessage: string | undefined;
-  onContinue: () => Promise<boolean>;
-  onGoBack: () => void;
+  onContinue: () => void;
   packageManager: PackageManager;
   testRunner: TestRunner;
 }) {
-  const [isPending, setIsPending] = useState(false);
-
   const instructions = useMemo(() => {
     if (!packageManager || !testRunner) {
       return null;
@@ -41,37 +35,14 @@ export function FormStep2({
   return (
     <>
       {instructions}
-      {errorMessage && (
-        <div className="text-red-500" data-test-id="CreateTeam-Error" role="alert">
-          {errorMessage}
-        </div>
-      )}
-      <div className="flex flex-row gap-2">
-        <Button
-          data-test-id="CreateTeam-GoBack-Button"
-          disabled={isPending}
-          onClick={onGoBack}
-          size="large"
-          variant="outline"
-        >
-          Go back
-        </Button>
-        <Button
-          className="self-start"
-          disabled={isPending}
-          data-test-id="CreateTeam-Continue-Button"
-          onClick={async () => {
-            setIsPending(true);
-            const success = await onContinue();
-            if (!success) {
-              setIsPending(false);
-            }
-          }}
-          size="large"
-        >
-          {isPending ? "Saving..." : "Continue"}
-        </Button>
-      </div>
+      <Button
+        className="self-start"
+        data-test-id="CreateTeam-Continue-Button"
+        onClick={onContinue}
+        size="large"
+      >
+        Continue
+      </Button>
     </>
   );
 }
@@ -102,7 +73,7 @@ export function CypressInstructions({
           4. Copy this API key to your .env file;{" "}
           <strong className="text-yellow-400">(it will only be shown once!)</strong>
         </div>
-        <CopyCode text={apiKey} />
+        <CopyCode text={`REPLAY_API_KEY=${apiKey}`} />
       </Group>
     </>
   );
@@ -132,7 +103,7 @@ export function PlaywrightInstructions({
           3. Copy this API key to your .env file;{" "}
           <strong className="text-yellow-400">(it will only be shown once!)</strong>
         </div>
-        <CopyCode text={apiKey} />
+        <CopyCode text={`REPLAY_API_KEY=${apiKey}`} />
       </Group>
     </>
   );

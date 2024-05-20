@@ -42,14 +42,6 @@ test("create-test-suites-team-fails: shows mutation error message", async ({ pag
 
     await expect(continueButton.isEnabled()).resolves.toBeTruthy();
     await continueButton.click();
-  }
-
-  {
-    // Step 2: Test runner configuration
-
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("current");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
 
     const error = page.locator('[data-test-id="CreateTeam-Error"]');
     await expect(error.textContent()).resolves.toContain("Failed to create workspace");

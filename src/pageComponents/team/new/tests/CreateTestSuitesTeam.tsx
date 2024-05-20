@@ -21,6 +21,7 @@ type StateStep1 = {
   step: 1;
   teamName: string | null;
   testRunner: TestRunner | null;
+  workspaceId: string | null;
 };
 
 type StateStep2 = {
@@ -29,7 +30,7 @@ type StateStep2 = {
   step: 2;
   teamName: string;
   testRunner: TestRunner;
-  workspaceId: string | undefined;
+  workspaceId: string;
 };
 
 type StateStep3 = Omit<StateStep2, "step"> & {
@@ -46,6 +47,7 @@ export function CreateTestSuitesTeam() {
     step: 1,
     teamName: null,
     testRunner: null,
+    workspaceId: null,
   });
 
   const router = useRouter();
@@ -61,30 +63,6 @@ export function CreateTestSuitesTeam() {
           defaultPackageManager={state.packageManager || undefined}
           defaultTeamName={state.teamName || undefined}
           defaultTestRunner={state.testRunner || undefined}
-          onContinue={(
-            teamName: string,
-            packageManager: PackageManager,
-            testRunner: TestRunner
-          ) => {
-            assert(state.step === 1);
-
-            setState({
-              ...state,
-              packageManager,
-              step: 2,
-              teamName,
-              testRunner,
-              workspaceId: undefined,
-            });
-          }}
-        />
-      );
-      break;
-    }
-    case 2: {
-      form = (
-        <FormStep2
-          apiKey={state.apiKey}
           errorMessage={
             createWorkspaceError
               ? createWorkspaceError.message
@@ -92,13 +70,17 @@ export function CreateTestSuitesTeam() {
                 ? createApiKeyError.message
                 : undefined
           }
-          onContinue={async () => {
-            assert(state.step === 2);
+          onContinue={async (
+            teamName: string,
+            packageManager: PackageManager,
+            testRunner: TestRunner
+          ) => {
+            assert(state.step === 1);
 
-            let workspaceId = state.workspaceId;
+            let workspaceId;
             if (!workspaceId) {
               workspaceId = await createWorkspace(
-                state.teamName,
+                teamName,
                 getPlanKey({ isOrg: false, teamType: "testsuite" })
               );
 
@@ -109,17 +91,17 @@ export function CreateTestSuitesTeam() {
 
               setState({
                 ...state,
-                step: 2,
+                step: 1,
                 workspaceId,
               });
             }
 
-            switch (state.testRunner) {
+            switch (testRunner) {
               case "cypress":
               case "playwright":
                 const apiKey = await createApiKey(
                   workspaceId,
-                  state.testRunner,
+                  testRunner,
                   ["admin:all"],
                   state.apiKey
                 );
@@ -133,16 +115,30 @@ export function CreateTestSuitesTeam() {
 
             setState({
               ...state,
-              step: 3,
+              packageManager,
+              step: 2,
+              teamName,
+              testRunner,
               workspaceId,
             });
 
             return true;
           }}
-          onGoBack={() => {
+        />
+      );
+      break;
+    }
+    case 2: {
+      form = (
+        <FormStep2
+          apiKey={state.apiKey}
+          onContinue={() => {
             assert(state.step === 2);
 
-            setState({ ...state, step: 1 });
+            setState({
+              ...state,
+              step: 3,
+            });
           }}
           packageManager={state.packageManager}
           testRunner={state.testRunner}
@@ -169,7 +165,7 @@ export function CreateTestSuitesTeam() {
   return (
     <div className="flex flex-row h-screen w-screen" data-test-id="CreateTestSuitesTeam">
       <div className="grow flex flex-row justify-center w-full overflow-auto p-8">
-        <div className="flex flex-col center-items gap-6 max-w-xl w-[500px]">
+        <div className="flex flex-col center-items gap-6 w-[535px]">
           <Link className="flex flex-row items-center text-xl text-white" href="/home">
             <Icon className="w-4 h-4" type="back-arrow" /> Back to library
           </Link>

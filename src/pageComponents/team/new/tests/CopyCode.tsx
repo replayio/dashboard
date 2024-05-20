@@ -29,7 +29,7 @@ export function CopyCode({ text }: { text: string }) {
     if (state === "copied") {
       const id = setTimeout(() => {
         setState(undefined);
-      }, 5_000);
+      }, 2_500);
       return () => {
         clearTimeout(id);
       };
@@ -45,13 +45,14 @@ export function CopyCode({ text }: { text: string }) {
       onMouseLeave={onMouse}
     >
       <Code className="w-full hover:text-blue-400 cursor-pointer">{text}</Code>
-      <div className="absolute top-1 right-1 pointer-events-none flex flex-row gap-1 items-center text-xs">
+      <div className="absolute top-1 right-1 pointer-events-none flex flex-row items-center text-xs">
         {state === "copied" ? (
-          <span className="text-blue-400">Copied</span>
+          <span className="bg-slate-950 px-1 round text-blue-400">Copied</span>
         ) : state === "hover" ? (
-          "Copy"
-        ) : null}
-        <Icon className="w-5 h-5" type="copy" />
+          <div className="bg-slate-950 px-1 round">Copy</div>
+        ) : (
+          <Icon className="w-5 h-5" type="copy" />
+        )}
       </div>
     </div>
   );
