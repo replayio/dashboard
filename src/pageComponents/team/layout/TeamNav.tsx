@@ -43,6 +43,12 @@ export function TeamNav() {
             isActive={!!pathname?.endsWith("tests")}
             label="Tests"
           />
+          <LeftNavLink
+            href={`/team/${workspace.id}/rca`}
+            iconType="menu-tests"
+            isActive={!!pathname?.endsWith("rca")}
+            label="Root Cause Analysis"
+          />
         </>
       ) : (
         <LeftNavLink
