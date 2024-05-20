@@ -3,6 +3,8 @@ import { Icon } from "@/components/Icon";
 import { RCATestEntry } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
+import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
+import { getURL } from "@/utils/recording";
 
 export function RCATestEntryDetails({
   user,
@@ -23,6 +25,12 @@ export function RCATestEntryDetails({
     );
   });
 
+  const { recordingId } = resultMetadata.failedRun.id;
+  // TODO Fake build ID! We don't have the real recording data atm. Just assume it's Chromium
+  const buildId = "chromium";
+
+  const recordingHref = getURL(recordingId, buildId);
+
   return (
     <div
       className={classnames(
@@ -32,6 +40,12 @@ export function RCATestEntryDetails({
     >
       <h4 className="text-md font-bold">Test Name</h4>
       <div> {resultMetadata.title}</div>
+      <h4 className="text-md font-bold">Recording</h4>
+      <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">
+        <a href={recordingHref}>
+          <RecordingThumbnail buildId={buildId} recordingId={recordingId} />
+        </a>
+      </div>
       <h4 className="text-md font-bold">Discrepancies</h4>
       <div className="flex flex-col overflow-y-auto">{renderedDiscrepances}</div>
     </div>

@@ -18,6 +18,8 @@ interface RCADiscrepancy {
   kind: string;
   eventKind: string;
   key: string;
+  // TODO Need to expose this via GraphQL
+  // event: AnyDiscrepancy["event"];
 }
 
 // Kinds of discrepancies that can happen in a test failure.
