@@ -1,3 +1,4 @@
+import classnames from "classnames";
 import { Icon } from "@/components/Icon";
 import { RCATestEntry } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
@@ -8,16 +9,26 @@ import Link from "next/link";
 export function RCATestEntryRow({
   user,
   analysisTestEntry,
+  onClick,
+  selected,
 }: {
   analysisTestEntry: RCATestEntry;
   user: User;
+  onClick: () => void;
+  selected: boolean;
 }) {
   const { resultMetadata } = analysisTestEntry;
 
   return (
     <div
-      className="flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
+      className={classnames(
+        "flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white",
+        {
+          "border-blue-400 border-2": selected,
+        }
+      )}
       data-test-name="RCATestEntry"
+      onClick={onClick}
     >
       <div className="flex flex-row items-center gap-2 w-full truncate">
         <div className="flex flex-col grow gap-1 truncate">

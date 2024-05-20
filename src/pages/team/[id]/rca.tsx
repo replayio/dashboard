@@ -5,7 +5,7 @@ import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { RCATestEntryRow } from "@/pageComponents/team/id/rca/RCATestEntryRow";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SessionContext } from "@/components/SessionContext";
 
 export default function Page({
@@ -13,13 +13,20 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
   const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
+  const [selectedTestEntry, setSelectedTestEntry] = useState<string | null>(null);
 
   const { user } = useContext(SessionContext);
 
   console.log("RCA test results: ", rcaTestEntries);
 
   const renderedEntries = rcaTestEntries.map(entry => (
-    <RCATestEntryRow key={entry.id} analysisTestEntry={entry} user={user} />
+    <RCATestEntryRow
+      key={entry.id}
+      analysisTestEntry={entry}
+      user={user}
+      onClick={() => setSelectedTestEntry(entry.id)}
+      selected={selectedTestEntry === entry.id}
+    />
   ));
 
   return (
