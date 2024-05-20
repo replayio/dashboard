@@ -9,21 +9,21 @@ export default function Page({
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
-  const { isLoading, runs: rcaRuns } = useWorkspaceRootCauseRuns(workspaceId);
+  const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
 
-  console.log("RCA runs: ", rcaRuns);
+  console.log("RCA test results: ", rcaTestEntries);
 
-  const renderedRuns = rcaRuns.map(run => (
-    <li key={run.id}>
-      {run.id}: {run.result}
+  const renderedEntries = rcaTestEntries.map(entry => (
+    <li key={entry.id}>
+      {entry.createdAt}: {entry.resultMetadata.title}
     </li>
   ));
 
   return (
     <div>
-      <h1>Root Cause Analysis Page Here: {workspaceId}</h1>
-      <h3>Runs</h3>
-      <ul>{renderedRuns}</ul>
+      <h1 className="text-xl font-bold">Root Cause Analysis</h1>
+      <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
+      <ul>{renderedEntries}</ul>
     </div>
   );
 }
