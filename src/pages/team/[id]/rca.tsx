@@ -4,6 +4,9 @@ import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerS
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { RCATestEntryRow } from "@/pageComponents/team/id/rca/RCATestEntryRow";
+import { useContext } from "react";
+import { SessionContext } from "@/components/SessionContext";
 
 export default function Page({
   workspaceId,
@@ -11,19 +14,19 @@ export default function Page({
   useSyncDefaultWorkspace();
   const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
 
+  const { user } = useContext(SessionContext);
+
   console.log("RCA test results: ", rcaTestEntries);
 
   const renderedEntries = rcaTestEntries.map(entry => (
-    <li key={entry.id}>
-      {entry.createdAt}: {entry.resultMetadata.title}
-    </li>
+    <RCATestEntryRow key={entry.id} analysisTestEntry={entry} user={user} />
   ));
 
   return (
     <div>
       <h1 className="text-xl font-bold">Root Cause Analysis</h1>
       <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
-      <ul>{renderedEntries}</ul>
+      {renderedEntries}
     </div>
   );
 }

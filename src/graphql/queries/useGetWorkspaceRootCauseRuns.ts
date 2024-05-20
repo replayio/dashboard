@@ -306,14 +306,14 @@ export interface FormattedFrame {
   exceptions?: Exception[];
 }
 
-interface RCATestEntry {
+export interface RCATestEntry {
   id: string;
   createdAt: string;
   resultMetadata: RootCauseAnalysisTestResult;
   discrepancies: Array<RCADiscrepancy>;
 }
 
-interface RCARun {
+export interface RCARun {
   id: string;
   createdAt: string;
   metadata: Record<string, unknown>;
