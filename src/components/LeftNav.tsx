@@ -1,6 +1,6 @@
 import { Icon } from "@/components/Icon";
-import { LeftNavLink } from "@/components/LeftNavLink";
 import { ReplayLogo } from "@/components/ReplayLogo";
+import { HomeNavLink } from "@/components/layout/HomeNavLink";
 import { MyLibraryNavLink } from "@/components/layout/MyLibraryLink";
 import { CurrentUser } from "@/pageComponents/team/layout/CurrentUser";
 import Link from "next/link";
@@ -9,13 +9,11 @@ import { PropsWithChildren } from "react";
 export function LeftNav({
   backLink,
   children,
-  showCreateTeamLink = false,
 }: PropsWithChildren<{
   backLink?: {
     href: string;
     label: string;
   };
-  showCreateTeamLink?: boolean;
 }>) {
   return (
     <div className="flex flex-col gap-2 h-full text-white overflow-auto shrink-0 p-2 pr-0 w-32 md:w-72">
@@ -24,6 +22,7 @@ export function LeftNav({
         <div className="text-xl font-bold">Replay</div>
       </div>
       <nav className="flex flex-col overflow-auto bg-slate-800 rounded shrink-0 relative p-1">
+        <HomeNavLink />
         <MyLibraryNavLink />
       </nav>
       <nav className="flex flex-col overflow-auto bg-slate-800 rounded grow relative p-1">
@@ -40,11 +39,6 @@ export function LeftNav({
         )}
         {children}
       </nav>
-      {showCreateTeamLink && (
-        <nav className="flex flex-col overflow-auto bg-slate-800 rounded shrink-0 relative p-1">
-          <LeftNavLink href="/team/new" iconType="create" isActive={false} label="Create team" />
-        </nav>
-      )}
       <CurrentUser />
     </div>
   );

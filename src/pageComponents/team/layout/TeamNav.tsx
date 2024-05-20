@@ -25,7 +25,7 @@ export function TeamNav() {
   return (
     <LeftNav
       backLink={{
-        href: "/team/me/recordings",
+        href: "/home",
         label: workspace.name,
       }}
     >
