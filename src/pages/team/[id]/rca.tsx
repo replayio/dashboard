@@ -33,14 +33,13 @@ export default function Page({
   const selectedTestEntry = rcaTestEntries.find(entry => entry.id === selectedTestEntryId);
 
   return (
-    <div className="w-full m-2">
-      <h1 className="text-xl font-bold">Root Cause Analysis</h1>
+    <div className="w-full p-2">
       <div className="flex flex-column w-full">
-        <div className="grow basis-3/5 m-2">
+        <div className="grow basis-3/5 p-2">
           <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
           {renderedEntries}
         </div>
-        <div className="basis-2/5 m-2">
+        <div className="basis-2/5 p-2">
           <h3 className="text-lg font-bold">Test Analysis Details</h3>
           {selectedTestEntry && (
             <RCATestEntryDetails analysisTestEntry={selectedTestEntry} user={user} />

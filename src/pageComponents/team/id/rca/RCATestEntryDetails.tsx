@@ -34,7 +34,7 @@ export function RCATestEntryDetails({
   return (
     <div
       className={classnames(
-        "flex flex-col items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
+        "flex flex-col items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white max-h-[90svh]"
       )}
       data-test-name="RCATestEntryDetails"
     >
@@ -47,7 +47,7 @@ export function RCATestEntryDetails({
         </a>
       </div>
       <h4 className="text-md font-bold">Discrepancies</h4>
-      <div className="flex flex-col overflow-y-auto">{renderedDiscrepances}</div>
+      <div className="flex flex-col grow overflow-y-auto ">{renderedDiscrepances}</div>
     </div>
   );
 }
