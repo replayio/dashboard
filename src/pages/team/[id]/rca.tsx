@@ -1,7 +1,6 @@
-import { useWorkspaceRecordings } from "@/graphql/queries/useWorkspaceRecordings";
+import { useWorkspaceRootCauseRuns } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerSidePropsHelpers";
-import RecordingPage from "@/pageComponents/team/id/recordings/RecordingsPage";
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
@@ -10,8 +9,23 @@ export default function Page({
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
+  const { isLoading, runs: rcaRuns } = useWorkspaceRootCauseRuns(workspaceId);
 
-  return <div>Root Cause Analysis Page Here</div>;
+  console.log("RCA runs: ", rcaRuns);
+
+  const renderedRuns = rcaRuns.map(run => (
+    <li key={run.id}>
+      {run.id}: {run.result}
+    </li>
+  ));
+
+  return (
+    <div>
+      <h1>Root Cause Analysis Page Here: {workspaceId}</h1>
+      <h3>Runs</h3>
+      <ul>{renderedRuns}</ul>
+    </div>
+  );
 }
 
 Page.Layout = TeamLayout;
