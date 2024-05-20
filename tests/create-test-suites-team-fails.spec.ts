@@ -38,7 +38,7 @@ test("create-test-suites-team-fails: shows mutation error message", async ({ pag
       .selectOption({ label: "Playwright" });
     await page
       .locator('[data-test-id="CreateTestSuiteTeam-PackageManager-Select"]')
-      .selectOption({ label: "PNPM" });
+      .selectOption({ label: "pnpm" });
 
     await expect(continueButton.isEnabled()).resolves.toBeTruthy();
     await continueButton.click();

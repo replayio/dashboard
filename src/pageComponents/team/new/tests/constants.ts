@@ -27,7 +27,7 @@ const NPM: PackageManagerOption = {
   type: "npm",
 };
 const PNPM: PackageManagerOption = {
-  label: "PNPM",
+  label: "pnpm",
   type: "pnpm",
 };
 const Yarn: PackageManagerOption = {

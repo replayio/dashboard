@@ -42,7 +42,7 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
       .selectOption({ label: "Playwright" });
     await page
       .locator('[data-test-id="CreateTestSuiteTeam-PackageManager-Select"]')
-      .selectOption({ label: "PNPM" });
+      .selectOption({ label: "pnpm" });
 
     await expect(continueButton.isEnabled()).resolves.toBeTruthy();
     await continueButton.click();
