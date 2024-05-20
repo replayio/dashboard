@@ -3,9 +3,9 @@ import {
   CreateWorkspaceApiKeyMutation,
   CreateWorkspaceApiKeyMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { ApiKeyScope } from "@/graphql/types";
-import { gql, useMutation } from "@apollo/client";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
@@ -13,12 +13,11 @@ export function useCreateWorkspaceAPIKey() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [createApiKeyMutation, { loading, error }] = useMutation<
-    CreateWorkspaceApiKeyMutation,
-    CreateWorkspaceApiKeyMutationVariables
-  >(
+  const {
+    mutate: createApiKeyMutation,
+    isLoading: loading,
+    error,
+  } = useGraphQLMutation<CreateWorkspaceApiKeyMutation, CreateWorkspaceApiKeyMutationVariables>(
     gql`
       mutation CreateWorkspaceAPIKey(
         $workspaceId: ID!
@@ -38,7 +37,6 @@ export function useCreateWorkspaceAPIKey() {
       }
     `,
     {
-      client,
       refetchQueries: ["GetWorkspaceApiKeys"],
     }
   );

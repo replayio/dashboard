@@ -40,6 +40,7 @@ test("test-suites-runs-4: should respect workspace retention limits", async ({ p
 
 const mockGraphQLData: MockGraphQLData = {
   GetWorkspace: mockGetWorkspace({
+    isTest: true,
     retentionLimitDays: 7,
   }),
   GetTests: mockGetTests([
