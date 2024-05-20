@@ -1,6 +1,6 @@
 import { getRelativeDate } from "@/utils/date";
 import { expect, test } from "@playwright/test";
-import { mockGetNonPendingWorkspaces } from "tests/mocks/utils/mockGetNonPendingWorkspaces";
+import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { mockGetUser } from "tests/mocks/utils/mockGetUser";
 import { mockGetWorkspaceSubscription } from "tests/mocks/utils/mockGetWorkspaceSubscription";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
@@ -32,7 +32,7 @@ test("team-settings-billing-subscription-active-no-card: should show option to a
 
 const mockGraphQLData: MockGraphQLData = {
   GetUser: mockGetUser(),
-  GetNonPendingWorkspaces: mockGetNonPendingWorkspaces([
+  GetWorkspaces: mockGetWorkspaces([
     {
       hasPaymentMethod: false,
     },

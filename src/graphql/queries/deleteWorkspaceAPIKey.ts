@@ -3,8 +3,8 @@ import {
   DeleteWorkspaceApiKeyMutation,
   DeleteWorkspaceApiKeyMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
-import { gql, useMutation } from "@apollo/client";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
@@ -12,12 +12,11 @@ export function useDeleteWorkspaceAPIKey() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [deleteApiKeyMutation, { loading, error }] = useMutation<
-    DeleteWorkspaceApiKeyMutation,
-    DeleteWorkspaceApiKeyMutationVariables
-  >(
+  const {
+    mutate: deleteApiKeyMutation,
+    error,
+    isLoading,
+  } = useGraphQLMutation<DeleteWorkspaceApiKeyMutation, DeleteWorkspaceApiKeyMutationVariables>(
     gql`
       mutation DeleteWorkspaceAPIKey($id: ID!) {
         deleteWorkspaceAPIKey(input: { id: $id }) {
@@ -26,7 +25,6 @@ export function useDeleteWorkspaceAPIKey() {
       }
     `,
     {
-      client,
       refetchQueries: ["GetWorkspaceApiKeys"],
     }
   );
@@ -37,5 +35,5 @@ export function useDeleteWorkspaceAPIKey() {
 
   const deleteApiKey = (id: string) => deleteApiKeyMutation({ variables: { id } });
 
-  return { deleteApiKey, error, loading };
+  return { deleteApiKey, error, isLoading };
 }

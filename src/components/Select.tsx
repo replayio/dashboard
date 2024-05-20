@@ -2,7 +2,7 @@ import { DropDownTrigger } from "@/components/DropDownTrigger";
 import assert from "assert";
 import { InputHTMLAttributes } from "react";
 
-type Option = {
+export type Option = {
   label: string;
 };
 
@@ -13,6 +13,7 @@ export function Select<Type extends Option>({
   options,
   placeholder,
   value,
+  ...rest
 }: Omit<InputHTMLAttributes<HTMLSelectElement>, "onChange" | "value"> & {
   className?: string;
   onChange: (value: Type) => void;
@@ -36,7 +37,9 @@ export function Select<Type extends Option>({
           onChange(option);
         }}
         value={value?.label}
+        {...rest}
       >
+        {value === undefined && <option value=""></option>}
         {options.map(({ label }) => (
           <option key={label} value={label}>
             {label}

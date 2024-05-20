@@ -3,9 +3,9 @@ import {
   CreateUserApiKeyMutation,
   CreateUserApiKeyMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { ApiKeyScope } from "@/graphql/types";
-import { gql, useMutation } from "@apollo/client";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
@@ -13,12 +13,11 @@ export function useCreateUserAPIKey() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [createApiKeyMutation, { loading, error }] = useMutation<
-    CreateUserApiKeyMutation,
-    CreateUserApiKeyMutationVariables
-  >(
+  const {
+    mutate: createApiKeyMutation,
+    error,
+    isLoading,
+  } = useGraphQLMutation<CreateUserApiKeyMutation, CreateUserApiKeyMutationVariables>(
     gql`
       mutation CreateUserAPIKey($label: String!, $scopes: [String!]!) {
         createUserAPIKey(input: { label: $label, scopes: $scopes }) {
@@ -31,7 +30,6 @@ export function useCreateUserAPIKey() {
       }
     `,
     {
-      client,
       refetchQueries: ["GetUserSettings"],
     }
   );
@@ -50,5 +48,5 @@ export function useCreateUserAPIKey() {
     return response.data.createUserAPIKey.keyValue;
   };
 
-  return { createApiKey, error, loading };
+  return { createApiKey, error, isLoading };
 }

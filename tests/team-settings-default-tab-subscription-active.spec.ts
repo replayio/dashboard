@@ -1,6 +1,6 @@
 import { getRelativeDate } from "@/utils/date";
 import { expect, test } from "@playwright/test";
-import { mockGetNonPendingWorkspaces } from "tests/mocks/utils/mockGetNonPendingWorkspaces";
+import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { mockGetUser } from "tests/mocks/utils/mockGetUser";
 import { mockGetWorkspaceSubscription } from "tests/mocks/utils/mockGetWorkspaceSubscription";
 import { getLeftNavLink } from "tests/utils/getLeftNavLink";
@@ -23,7 +23,7 @@ test("team-settings-default-tab-subscription-canceled: should show the billing t
 
 const mockGraphQLData: MockGraphQLData = {
   GetUser: mockGetUser(),
-  GetNonPendingWorkspaces: mockGetNonPendingWorkspaces([
+  GetWorkspaces: mockGetWorkspaces([
     {
       hasPaymentMethod: true,
     },

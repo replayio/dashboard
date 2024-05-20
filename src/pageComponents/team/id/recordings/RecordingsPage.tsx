@@ -2,7 +2,7 @@ import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { SessionContext } from "@/components/SessionContext";
-import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { WorkspaceRecording } from "@/graphql/types";
 import { LaunchReplayModal } from "@/pageComponents/team/id/recordings/LaunchReplayModal";
 import { RecordingRow } from "@/pageComponents/team/id/recordings/RecordingRow";
@@ -21,7 +21,7 @@ export default function RecordingPage({
   const [isPending, startTransition] = useTransition();
 
   const { user } = useContext(SessionContext);
-  const { workspaces } = useNonPendingWorkspaces();
+  const { workspaces } = useWorkspaces();
 
   const [filter, setFilter] = useState("");
   const [limit, setLimit] = useState(PAGE_SIZE);

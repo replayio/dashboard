@@ -1,4 +1,5 @@
 import cookie, { CookieSerializeOptions } from "cookie";
+import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { NextResponse } from "next/server";
 
 export function deleteCookieValueClient(name: string) {
@@ -8,6 +9,14 @@ export function deleteCookieValueClient(name: string) {
 export function getCookieValueClient<Type = string>(name: string): Type | null {
   const value = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() ?? null;
   return value !== null ? (JSON.parse(value) as Type) : null;
+}
+
+export function getCookieValueServer<Type = string>(
+  requestCookies: NextApiRequestCookies,
+  name: string
+): Type | null {
+  const value = requestCookies[name];
+  return value != null ? (JSON.parse(value) as Type) : null;
 }
 
 export function setCookieValueClient(name: string, value: any) {

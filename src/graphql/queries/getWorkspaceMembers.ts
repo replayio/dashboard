@@ -20,23 +20,6 @@ export function useGetWorkspaceMembers(workspaceId: string) {
             members {
               edges {
                 node {
-                  ... on WorkspacePendingEmailMember {
-                    __typename
-                    id
-                    roles
-                    email
-                    createdAt
-                  }
-                  ... on WorkspacePendingUserMember {
-                    __typename
-                    id
-                    roles
-                    user {
-                      id
-                      name
-                      picture
-                    }
-                  }
                   ... on WorkspaceUserMember {
                     __typename
                     id
@@ -66,19 +49,9 @@ export function useGetWorkspaceMembers(workspaceId: string) {
           if ("user" in node) {
             members.push({
               id: node.user.id,
-              isPending: node.__typename === "WorkspacePendingUserMember",
               membershipId: node.id,
               name: node.user.name ?? "User",
               picture: node.user.picture ?? null,
-              roles: node.roles,
-            });
-          } else {
-            members.push({
-              id: node.id,
-              isPending: true,
-              membershipId: node.id,
-              name: node.email,
-              picture: null,
               roles: node.roles,
             });
           }

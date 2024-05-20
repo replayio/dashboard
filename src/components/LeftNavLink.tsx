@@ -1,6 +1,7 @@
 import { Icon, IconType } from "@/components/Icon";
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import Link from "next/link";
-import { HTMLAttributes, ReactNode, useLayoutEffect } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 
 export function LeftNavLink({
   href,
@@ -17,7 +18,7 @@ export function LeftNavLink({
   const Component = isActive ? "div" : Link;
 
   // Scroll into view on mount
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (isActive) {
       const element = document.querySelector(`[data-is-active="true"]`);
       if (element) {
@@ -28,7 +29,7 @@ export function LeftNavLink({
 
   return (
     <Component
-      className={`flex flex-row gap-2 items-center text-white px-2 py-1 mx-1 transition rounded ${
+      className={`flex flex-row gap-2 items-center text-white px-2 py-1 transition rounded ${
         isActive ? "bg-sky-900 cursor-default" : "hover:text-sky-500"
       }`}
       data-is-active={isActive || undefined}

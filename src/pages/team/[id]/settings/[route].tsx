@@ -1,9 +1,9 @@
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { SessionContext } from "@/components/SessionContext";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
-import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { WorkspaceSettings } from "@/pageComponents/team/id/settings/WorkspaceSettings";
-import { SettingsLayout } from "@/pageComponents/team/id/settings/layout/SettingsLayout";
+import { TeamSettingsLayout } from "@/pageComponents/team/id/settings/layout/TeamSettingsLayout";
 import assert from "assert";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useContext } from "react";
@@ -16,7 +16,7 @@ export default function Page({
   const { user } = useContext(SessionContext);
   const { members } = useGetWorkspaceMembers(workspaceId);
 
-  const { workspaces } = useNonPendingWorkspaces();
+  const { workspaces } = useWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
   if (user == null || members == null || workspace == null) {
@@ -30,7 +30,7 @@ export default function Page({
   );
 }
 
-Page.Layout = SettingsLayout;
+Page.Layout = TeamSettingsLayout;
 
 export async function getServerSideProps({
   params,

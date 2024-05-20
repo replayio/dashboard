@@ -3,9 +3,9 @@ import {
   CreateWorkspaceApiKeyMutation,
   CreateWorkspaceApiKeyMutationVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import { ApiKeyScope } from "@/graphql/types";
-import { gql, useMutation } from "@apollo/client";
+import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
+import { gql } from "@apollo/client";
 import assert from "assert";
 import { useContext } from "react";
 
@@ -13,16 +13,20 @@ export function useCreateWorkspaceAPIKey() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const client = getGraphQLClient(accessToken);
-
-  const [createApiKeyMutation, { loading, error }] = useMutation<
-    CreateWorkspaceApiKeyMutation,
-    CreateWorkspaceApiKeyMutationVariables
-  >(
+  const {
+    mutate: createApiKeyMutation,
+    isLoading: loading,
+    error,
+  } = useGraphQLMutation<CreateWorkspaceApiKeyMutation, CreateWorkspaceApiKeyMutationVariables>(
     gql`
-      mutation CreateWorkspaceAPIKey($workspaceId: ID!, $label: String!, $scopes: [String!]!) {
+      mutation CreateWorkspaceAPIKey(
+        $workspaceId: ID!
+        $label: String!
+        $scopes: [String!]!
+        $apiKey: String
+      ) {
         createWorkspaceAPIKey(
-          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes }
+          input: { workspaceId: $workspaceId, label: $label, scopes: $scopes, apiKey: $apiKey }
         ) {
           key {
             id
@@ -33,7 +37,6 @@ export function useCreateWorkspaceAPIKey() {
       }
     `,
     {
-      client,
       refetchQueries: ["GetWorkspaceApiKeys"],
     }
   );
@@ -42,14 +45,17 @@ export function useCreateWorkspaceAPIKey() {
     console.error("Apollo error while creating a workspace API key", error);
   }
 
-  const createApiKey = async (workspaceId: string, label: string, scopes: ApiKeyScope[]) => {
+  const createApiKey = async (
+    workspaceId: string,
+    label: string,
+    scopes: ApiKeyScope[],
+    apiKey?: string
+  ) => {
     const response = await createApiKeyMutation({
-      variables: { label, scopes, workspaceId },
+      variables: { apiKey, label, scopes, workspaceId },
     });
 
-    assert(response?.data?.createWorkspaceAPIKey != null, "Workspace API key creation failed");
-
-    return response.data.createWorkspaceAPIKey.keyValue;
+    return response.data?.createWorkspaceAPIKey.keyValue;
   };
 
   return { createApiKey, error, loading };

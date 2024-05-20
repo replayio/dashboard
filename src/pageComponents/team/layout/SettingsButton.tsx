@@ -1,12 +1,12 @@
 import { IconButton } from "@/components/IconButton";
-import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function SettingsButton({ id }: { id: string }) {
   const pathname = usePathname();
 
-  const { workspaces } = useNonPendingWorkspaces();
+  const { workspaces } = useWorkspaces();
   const workspace = workspaces?.find(workspace => workspace.id === id);
 
   const isActive = pathname?.includes("settings");

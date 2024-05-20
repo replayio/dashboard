@@ -35,7 +35,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   const stringValue = context.req.cookies[COOKIES.testRunsFilters];
   const filters = stringValue ? (JSON.parse(stringValue) as Partial<Filters>) : null;
 
-  const { isInvalid, isTest, pendingWorkspace, retentionLimit, workspaceId } =
+  const { isInvalid, isTest, retentionLimit, workspaceId } =
     await getServerSideWorkspaceProps(context);
 
   const testId = (context.query.testId ?? null) as string | null;
@@ -45,11 +45,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
     return redirectWithState({
       context,
       pathname: "/team/me/recordings",
-    });
-  } else if (pendingWorkspace) {
-    return redirectWithState({
-      context,
-      pathname: `/team/${workspaceId}/pending`,
     });
   } else if (!isTest) {
     return redirectWithState({

@@ -8,13 +8,14 @@ export function UserApiKeys() {
   const {
     settings: { apiKeys },
   } = useGetUserSettings();
-  const { createApiKey } = useCreateUserAPIKey();
+  const { createApiKey, error } = useCreateUserAPIKey();
   const { deleteApiKey } = useDeleteUserAPIKey();
 
   return (
     <ApiKeys
       apiKeys={apiKeys}
       createKey={createApiKey}
+      createKeyError={error}
       deleteKey={deleteApiKey}
       scopes={["admin:all"]}
     />

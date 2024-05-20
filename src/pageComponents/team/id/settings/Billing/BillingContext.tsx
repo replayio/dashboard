@@ -1,4 +1,4 @@
-import { useNonPendingWorkspaces } from "@/graphql/queries/useNonPendingWorkspaces";
+import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { useWorkspaceSubscription } from "@/graphql/queries/useWorkspaceSubscription";
 import { Workspace, WorkspaceSubscription } from "@/graphql/types";
 import { Elements } from "@stripe/react-stripe-js";
@@ -28,7 +28,7 @@ export function BillingContextRoot({
   workspaceId: string;
 }) {
   const { refetch: refetchSubscription, subscription } = useWorkspaceSubscription(workspaceId);
-  const { refetch: refetchWorkspaces, workspaces } = useNonPendingWorkspaces();
+  const { refetch: refetchWorkspaces, workspaces } = useWorkspaces();
   const workspace = workspaces?.find(({ id }) => id === workspaceId);
 
   const stripePromise = useMemo(() => loadStripe(stripeKey), [stripeKey]);

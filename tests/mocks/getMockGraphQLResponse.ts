@@ -11,8 +11,8 @@ export function getMockGraphQLResponse<Query>(
     const value = mockGraphQLData[queryName];
     if (value) {
       const response = {
-        data: value as any,
-        error: undefined,
+        data: "data" in value ? value.data : undefined,
+        error: "error" in value ? value.error : undefined,
         loading: false,
         networkStatus: NetworkStatus.ready,
         refetch: async () => response,

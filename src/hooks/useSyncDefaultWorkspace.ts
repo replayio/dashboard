@@ -1,9 +1,9 @@
 import { COOKIES } from "@/constants";
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
 import { setCookieValueClient } from "@/utils/cookie";
-import { useEffect } from "react";
 
 export function useSyncDefaultWorkspace() {
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setCookieValueClient(COOKIES.defaultPathname, window.location.pathname);
   }, []);
 }

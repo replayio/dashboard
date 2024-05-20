@@ -1,7 +1,7 @@
-import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
-import { SettingsNavComponent } from "@/pageComponents/user/settings/SettingsNavComponent";
+import { DefaultLayout } from "@/components/layout/DefaultLayout";
+import { UserSettingsNav } from "@/pageComponents/user/settings/UserSettingsNav";
 import { PropsWithChildren } from "react";
 
 export function SettingsLayout({ children }: PropsWithChildren) {
-  return <TeamLayout NavComponent={SettingsNavComponent}>{children}</TeamLayout>;
+  return <DefaultLayout NavComponent={UserSettingsNav}>{children}</DefaultLayout>;
 }

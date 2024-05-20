@@ -7,7 +7,7 @@ export function Message({
 }: PropsWithChildren<{ className?: string }> & HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`bg-slate-800 text-white flex flex-col gap-4 items-center p-4 rounded-lg shadow ${className}`}
+      className={`bg-slate-800 text-white flex flex-col gap-4 items-center p-4 rounded-lg shadow-lg ${className}`}
       {...rest}
     >
       {children}

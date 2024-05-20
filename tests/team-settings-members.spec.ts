@@ -4,9 +4,7 @@ import { DEFAULT_WORKSPACE_ID, TEST_USER_PICTURES } from "./mocks/constants";
 import { MockGraphQLData } from "./mocks/types";
 import { navigateToPage } from "./utils/navigateToPage";
 
-test("team-settings-members: should label member roles and pending member invites", async ({
-  page,
-}) => {
+test("team-settings-members: should label member roles", async ({ page }) => {
   await navigateToPage({
     mockGraphQLData,
     page,
@@ -21,17 +19,12 @@ test("team-settings-members: should label member roles and pending member invite
   const developers = page
     .locator('[data-test-name="TeamMembers-MemberRow"]')
     .locator('[data-test-name="TeamMembers-Role-Developer"]');
-  await expect(developers).toHaveCount(3);
+  await expect(developers).toHaveCount(2);
 
   const viewers = page
     .locator('[data-test-name="TeamMembers-MemberRow"]')
     .locator('[data-test-name="TeamMembers-Role-Viewer"]');
   await expect(viewers).toHaveCount(2);
-
-  const pendingInvitations = page
-    .locator('[data-test-name="TeamMembers-MemberRow"]')
-    .locator('[data-test-name="TeamMembers-PendingInvitation"]');
-  await expect(pendingInvitations).toHaveCount(1);
 });
 
 const mockGraphQLData: MockGraphQLData = {
@@ -47,11 +40,6 @@ const mockGraphQLData: MockGraphQLData = {
     },
     {
       name: "Developer 1",
-      roles: ["debugger"],
-    },
-    {
-      isPending: true,
-      name: "Pending developer 1",
       roles: ["debugger"],
     },
     {
