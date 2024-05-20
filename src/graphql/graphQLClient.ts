@@ -28,7 +28,7 @@ export function getGraphQLClient(accessToken?: string) {
       "Content-Type": "application/json",
     };
     if (typeof window !== "undefined") {
-      headers["Replay-Client-"] = clientId;
+      headers["Replay-Client-Id"] = clientId;
     }
     if (accessToken) {
       headers["Authorization"] = `Bearer ${accessToken}`;
