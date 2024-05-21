@@ -149,12 +149,12 @@ export function CreateTestSuitesTeam() {
     case 3: {
       form = (
         <FormStep3
+          apiKey={state.apiKey}
           onContinue={() => {
             assert(state.step === 3);
 
             router.push(`/team/${state.workspaceId}`);
           }}
-          packageManager={state.packageManager}
           testRunner={state.testRunner}
         />
       );
@@ -165,7 +165,7 @@ export function CreateTestSuitesTeam() {
   return (
     <div className="flex flex-row h-screen w-screen" data-test-id="CreateTestSuitesTeam">
       <div className="grow flex flex-row justify-center w-full overflow-auto p-8">
-        <div className="flex flex-col center-items gap-6 w-[535px]">
+        <div className="flex flex-col center-items gap-6 w-[505px]">
           <Link className="flex flex-row items-center text-xl text-white" href="/home">
             <Icon className="w-4 h-4" type="back-arrow" /> Back to library
           </Link>

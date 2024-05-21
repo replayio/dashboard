@@ -1,10 +1,12 @@
 import { Button } from "@/components/Button";
+import { Callout } from "@/components/Callout";
 import { Code } from "@/components/Code";
+import { ExternalLink } from "@/components/ExternalLink";
 import { CopyCode } from "@/pageComponents/team/new/tests/CopyCode";
 import { Group } from "@/pageComponents/team/new/tests/Group";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { getInstallCommand } from "@/pageComponents/team/new/tests/getInstallCommand";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export function FormStep2({
   apiKey,
@@ -57,23 +59,17 @@ export function CypressInstructions({
   return (
     <>
       <Group>
-        <div>1. Install the @replayio/cypress package in your project</div>
+        <div>1. Install the @replayio/cypress package in your project.</div>
         <Code>{getInstallCommand(packageManager, "@replayio/cypress", { development: true })}</Code>
       </Group>
       <Group>
         <div>2. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
         <Code>{cypressConfigCode}</Code>
       </Group>
+      <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
-        <div>3. Import Replay to your support file</div>
+        <div>4. Import Replay to your support file.</div>
         <Code>{`require('@replayio/cypress/support');`}</Code>
-      </Group>
-      <Group>
-        <div>
-          4. Copy this API key to your .env file;{" "}
-          <strong className="text-yellow-400">(it will only be shown once!)</strong>
-        </div>
-        <CopyCode text={`REPLAY_API_KEY=${apiKey}`} />
       </Group>
     </>
   );
@@ -89,23 +85,39 @@ export function PlaywrightInstructions({
   return (
     <>
       <Group>
-        <div>1. Install the @replayio/playwright package in your project</div>
+        <div>1. Install the @replayio/playwright package in your project.</div>
         <Code>
           {getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
         </Code>
       </Group>
+      <SaveApiKey apiKey={apiKey} number={2} />
       <Group>
-        <div>2. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
+        <div>3. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
         <Code>{playwrightConfigCode}</Code>
       </Group>
-      <Group>
-        <div>
-          3. Copy this API key to your .env file;{" "}
-          <strong className="text-yellow-400">(it will only be shown once!)</strong>
-        </div>
-        <CopyCode text={`REPLAY_API_KEY=${apiKey}`} />
-      </Group>
     </>
+  );
+}
+
+function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
+  return (
+    <Group>
+      <div>{number}. Save the API key below before continuing.</div>
+      <CopyCode text={`REPLAY_API_KEY=${apiKey}`} />
+      <Callout
+        bodyText={
+          <div>
+            We&apos;ll only show it once. See our{" "}
+            <ExternalLink href="https://docs.replay.io/ci-workflows/generate-api-key#using-your-api-key">
+              &quot;Getting Started&quot; docs
+            </ExternalLink>{" "}
+            for more info.
+          </div>
+        }
+        headerText="Save the API key before continuing!"
+        type="warning"
+      />
+    </Group>
   );
 }
 
@@ -145,5 +157,6 @@ const config: PlaywrightTestConfig = {
     }
   ],
 };
+
 export default config;
 `.trim();
