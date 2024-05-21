@@ -1,7 +1,9 @@
+import withBundleAnalyzer from "@next/bundle-analyzer";
+
 const devtoolsURL = process.env.DEVTOOLS_URL || "https://replay-devtools.vercel.app";
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+let nextConfig = {
   productionBrowserSourceMaps: true,
   rewrites: async () => [
     {
@@ -10,5 +12,9 @@ const nextConfig = {
     },
   ],
 };
+
+if (process.env.ANALYZE === "true") {
+  nextConfig = withBundleAnalyzer(nextConfig);
+}
 
 export default nextConfig;
