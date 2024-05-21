@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { createReplayReporterConfig, devices as replayDevices } from "@replayio/playwright";
+import { devices as replayDevices, replayReporter } from "@replayio/playwright";
 import dotenv from "dotenv";
 import { resolve } from "path";
 
@@ -16,7 +16,7 @@ export default defineConfig({
   reporter: [
     process.env.CI ? (["dot"] as const) : (["line"] as const),
     process.env.RECORD
-      ? createReplayReporterConfig({
+      ? replayReporter({
           apiKey: process.env.REPLAY_API_KEY,
           upload: true,
         })
