@@ -4,8 +4,8 @@ on:
     branches: main
   pull_request:
 jobs:
-  trunk_check_runner:
-    name: Trunk Check runner
+  lint_and_formatting:
+    name: Linting and formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
