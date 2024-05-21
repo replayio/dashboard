@@ -19,8 +19,8 @@ export function CreateNewKey({
   const [isPending, setIsPending] = useState(false);
   const [keyValue, setKeyValue] = useState("");
 
-  const [admin, setAdmin] = useState(false);
-  const [writeSourcemaps, setWriteSourcemaps] = useState(false);
+  const [admin, setAdmin] = useState(true);
+  const [writeSourcemaps, setWriteSourcemaps] = useState(true);
 
   if (keyValue) {
     return (

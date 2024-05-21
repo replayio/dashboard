@@ -10,8 +10,8 @@ export default function Page({ releases }: InferGetServerSidePropsType<typeof ge
   const latestReleases = useMemo(() => {
     const latest: Record<string, Release> = {};
     for (const release of releases) {
-      const { runtime, platform } = release;
-      const key = `${runtime}-${platform}`;
+      const { runtime, platform, architecture } = release;
+      const key = `${runtime}-${platform}-${architecture}`;
       if (!latest[key]) {
         latest[key] = release;
       }

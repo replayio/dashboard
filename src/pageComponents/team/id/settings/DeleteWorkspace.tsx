@@ -18,7 +18,7 @@ export function DeleteWorkspace({ workspaceId }: { workspaceId: string }) {
 
       await deleteWorkspace(workspaceId);
 
-      router.replace("/team/me/recordings");
+      router.replace("/home");
     };
 
     return (
