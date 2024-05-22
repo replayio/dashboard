@@ -53,7 +53,7 @@
     "@graphql-typed-document-node/core": "^3.2.0",
     "@jest/globals": "^29.7.0",
     "@playwright/test": "1.44.0",
-    "@replayio/playwright": "3.0.0-alpha.12",
+    "@replayio/playwright": "3.0.0-alpha.14",
     "@testing-library/jest-dom": "^6.4.1",
     "@testing-library/react": "^14.2.1",
     "@types/cookie": "^0.6.0",
