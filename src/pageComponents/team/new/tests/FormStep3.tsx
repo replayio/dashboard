@@ -43,21 +43,39 @@ export function FormStep3({
 
 export function CypressInstructions({ apiKey }: { apiKey: string }) {
   return (
-    <Group>
-      <strong>5. Run cypress as you normally would</strong>
-      <Code>npx cypress run --browser replay-chromium</Code>
-      <ApiKeyCallout apiKey={apiKey} />
-    </Group>
+    <>
+      <div>Now you&apos;re ready to record your tests with Replay!</div>
+      <Group>
+        <Code>npx cypress run --browser replay-chromium</Code>
+        <ApiKeyCallout apiKey={apiKey} />
+      </Group>
+      <div>
+        We also recommend configuring your CI to record tests with Replay. Check out{" "}
+        <ExternalLink href="https://docs.replay.io/test-runners/cypress-io/github-actions">
+          our docs
+        </ExternalLink>{" "}
+        to see how.
+      </div>
+    </>
   );
 }
 
 export function PlaywrightInstructions({ apiKey }: { apiKey: string }) {
   return (
-    <Group>
-      <strong>4. Run playwright as you normally would</strong>
-      <Code>npx playwright test --project replay-chromium</Code>
-      <ApiKeyCallout apiKey={apiKey} />
-    </Group>
+    <>
+      <div>Now you&apos;re ready to record your tests with Replay!</div>
+      <Group>
+        <Code>npx playwright test --project replay-chromium</Code>
+        <ApiKeyCallout apiKey={apiKey} />
+      </Group>
+      <div>
+        We also recommend configuring your CI to record tests with Replay. Check out{" "}
+        <ExternalLink href="https://docs.replay.io/test-runners/playwright/github-actions">
+          our docs
+        </ExternalLink>{" "}
+        to see how.
+      </div>
+    </>
   );
 }
 

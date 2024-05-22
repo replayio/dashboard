@@ -63,12 +63,16 @@ export function CypressInstructions({
         <Code>{getInstallCommand(packageManager, "@replayio/cypress", { development: true })}</Code>
       </Group>
       <Group>
-        <div>2. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
+        <div>2. Install the Replay browser.</div>
+        <Code>npx replayio install</Code>
+      </Group>
+      <Group>
+        <div>3. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
         <Code>{cypressConfigCode}</Code>
       </Group>
-      <SaveApiKey apiKey={apiKey} number={3} />
+      <SaveApiKey apiKey={apiKey} number={4} />
       <Group>
-        <div>4. Import Replay to your support file.</div>
+        <div>5. Import Replay to your support file.</div>
         <Code>{`require('@replayio/cypress/support');`}</Code>
       </Group>
     </>
@@ -90,9 +94,13 @@ export function PlaywrightInstructions({
           {getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
         </Code>
       </Group>
-      <SaveApiKey apiKey={apiKey} number={2} />
       <Group>
-        <div>3. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
+        <div>2. Install the Replay browser.</div>
+        <Code>npx replayio install</Code>
+      </Group>
+      <SaveApiKey apiKey={apiKey} number={3} />
+      <Group>
+        <div>4. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
         <Code>{playwrightConfigCode}</Code>
       </Group>
     </>
@@ -123,7 +131,6 @@ function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
 
 const cypressConfigCode = `
 const { defineConfig } = require('cypress');
-// Add this line to require the replay plugin
 const { plugin: replayPlugin } = require('@replayio/cypress')
 
 module.exports = defineConfig({
@@ -142,7 +149,7 @@ module.exports = defineConfig({
 `.trim();
 
 const playwrightConfigCode = `
-import { PlaywrightTestConfig, devices } from "@playwright/test";
+import { PlaywrightTestConfig } from "@playwright/test";
 import { devices as replayDevices } from "@replayio/playwright";
 
 const config: PlaywrightTestConfig = {
