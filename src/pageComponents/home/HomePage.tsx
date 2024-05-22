@@ -1,21 +1,22 @@
 import { Block } from "@/pageComponents/home/Block";
+import styles from "./HomePage.module.css";
 
 export function HomePage() {
   return (
-    <div className="h-full flex items-start p-2 overflow-auto">
-      <div className="rounded bg-slate-800 p-4 pt-2 inline-flex flex-col gap-4 max-w-full">
-        <div className="text-2xl">Home</div>
-        <div className="inline-flex flex-row flex-wrap gap-4 max-w-full">
+    <div className={styles.container}>
+      <div className={styles.innerContainer}>
+        <div className={styles.header}>Home</div>
+        <div className={styles.blocksContainer}>
           <Block href="https://docs.replay.io/quickstart" title="Quickstart">
-            Create your own replay with{" "}
-            <code className="bg-slate-950 rounded px-2 py-1 text-white text-sm">
-              npx replayio@latest
+            Record your first replay with{" "}
+            <code className={styles.code}>
+              npx replayio record
             </code>
           </Block>
           <Block href="/team/new/standard" title="Add a new team">
             Set up a new team to store your replays in one place
           </Block>
-          <Block href="/team/new/tests" title="Test Suites">
+          <Block href="/team/new/tests" title="Create Test Suite">
             Use Replay to record Playwright or Cypress e2e tests
           </Block>
           <Block
