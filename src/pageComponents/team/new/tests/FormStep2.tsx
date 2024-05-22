@@ -63,12 +63,16 @@ export function CypressInstructions({
         <Code>{getInstallCommand(packageManager, "@replayio/cypress", { development: true })}</Code>
       </Group>
       <Group>
-        <div>2. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
+        <div>2. Install the Replay browser.</div>
+        <Code>npx replayio install</Code>
+      </Group>
+      <Group>
+        <div>3. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
         <Code>{cypressConfigCode}</Code>
       </Group>
-      <SaveApiKey apiKey={apiKey} number={3} />
+      <SaveApiKey apiKey={apiKey} number={4} />
       <Group>
-        <div>4. Import Replay to your support file.</div>
+        <div>5. Import Replay to your support file.</div>
         <Code>{`require('@replayio/cypress/support');`}</Code>
       </Group>
     </>
