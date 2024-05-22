@@ -1,7 +1,6 @@
 import { ExternalLink } from "@/components/ExternalLink";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
-import styles from './Block.module.css';
 
 export function Block({
   children,
@@ -12,12 +11,12 @@ export function Block({
 
   return (
     <Component
-      className={styles.block}
+    className="flex flex-col overflow-hidden text-white transition rounded-md cursor-pointer bg-slate-700 w-72 hover:bg-slate-600"
       href={href}
     >
-      <div className={styles.gradient} />
-      <div className={styles.content}>
-        <div className={styles.title}>{title}</div>
+      <div className="hidden w-full h-32 bg-gradient-to-br from-sky-500 to-pink-300 lg:block" />
+      <div className="flex flex-col flex-wrap gap-2 p-6">
+        <div className="text-xl">{title}</div>
         <div>{children}</div>
       </div>
     </Component>
