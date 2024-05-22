@@ -89,6 +89,16 @@ export function PlaywrightInstructions({
         <Code>
           {getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
         </Code>
+        <Callout
+          bodyText={
+            <div className="flex flex-col gap-2">
+              <div>You may also need to install Playwright dependencies to run tests locally:</div>
+              <Code className="text-xs">npx playwright install-deps chromium</Code>
+            </div>
+          }
+          headerText="Playwright dependencies"
+          type="info"
+        />
       </Group>
       <SaveApiKey apiKey={apiKey} number={2} />
       <Group>
@@ -123,7 +133,6 @@ function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
 
 const cypressConfigCode = `
 const { defineConfig } = require('cypress');
-// Add this line to require the replay plugin
 const { plugin: replayPlugin } = require('@replayio/cypress')
 
 module.exports = defineConfig({
@@ -142,7 +151,7 @@ module.exports = defineConfig({
 `.trim();
 
 const playwrightConfigCode = `
-import { PlaywrightTestConfig, devices } from "@playwright/test";
+import { PlaywrightTestConfig } from "@playwright/test";
 import { devices as replayDevices } from "@replayio/playwright";
 
 const config: PlaywrightTestConfig = {

@@ -191,4 +191,4 @@ export function CreateTestSuitesTeam() {
   );
 }
 
-const STEPS = ["Team Info", "Configuration", "Confirmation"];
+const STEPS = ["Team Info", "Configuration", "Run Tests"];
