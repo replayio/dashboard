@@ -89,20 +89,14 @@ export function PlaywrightInstructions({
         <Code>
           {getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
         </Code>
-        <Callout
-          bodyText={
-            <div className="flex flex-col gap-2">
-              <div>You may also need to install Playwright dependencies to run tests locally:</div>
-              <Code className="text-xs">npx playwright install-deps chromium</Code>
-            </div>
-          }
-          headerText="Playwright dependencies"
-          type="info"
-        />
       </Group>
-      <SaveApiKey apiKey={apiKey} number={2} />
       <Group>
-        <div>3. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
+        <div>2. Install the Replay browser.</div>
+        <Code>npx replayio install</Code>
+      </Group>
+      <SaveApiKey apiKey={apiKey} number={3} />
+      <Group>
+        <div>4. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
         <Code>{playwrightConfigCode}</Code>
       </Group>
     </>
