@@ -2,10 +2,10 @@ import { Block } from "@/pageComponents/home/Block";
 
 export function HomePage() {
   return (
-    <div className="flex items-center justify-center h-full p-2 overflow-auto">
-      <div className="flex flex-col gap-4 p-6 pt-2 bg-none shadow-lg w-[827px] rounded-xl lg:bg-slate-950">
-        <div className="pt-8 text-3xl font-medium lg:pt-2">Home</div>
-        <div className="flex flex-row flex-wrap gap-4">
+    <div className="flex items-start justify-center h-full p-2 overflow-auto lg:items-center">
+      <div className="flex flex-col gap-2 bg-none shadow-lg w-[827px] rounded-xl lg:bg-slate-950 lg:p-6 lg:gap-4">
+        <div className="text-2xl font-medium">Home</div>
+        <div className="flex flex-row flex-wrap gap-2 lg:gap-4">
           <Block href="https://docs.replay.io/quickstart" title="Quickstart">
             Record your first replay with{" "}
             <code className="p-1 text-sm text-white rounded bg-slate-800">npx replayio record</code>
