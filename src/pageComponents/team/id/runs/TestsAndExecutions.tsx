@@ -8,6 +8,17 @@ import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { isDateWithinRetentionLimits } from "@/utils/workspace";
 import { useContext } from "react";
 
+function TestExecutionMessage(props: { children: React.ReactNode; "data-test-name": string }) {
+  return (
+    <div
+      className="bg-slate-900 text-slate-300 p-2 rounded"
+      data-test-name={props["data-test-name"]}
+    >
+      {props.children}
+    </div>
+  );
+}
+
 export function TestsAndExecutions() {
   const {
     isLoadingTestRuns,
@@ -33,35 +44,35 @@ export function TestsAndExecutions() {
 
   const isWithinRetentionLimit = isDateWithinRetentionLimits(selectedTestRun.date, retentionLimit);
 
+  const recordings = selectedTest.executions.flatMap(execution => {
+    return execution.recordings.map(recording => (
+      <TestExecutionRow key={recording.id} recording={recording} status={execution.status} />
+    ));
+  });
+
   return (
     <>
       {isWithinRetentionLimit ? (
-        <div
-          className="bg-slate-900 text-white p-2 rounded"
-          data-test-id="TestExecution-Recordings"
-        >
-          <ExpandableSection label="Replays" openByDefault>
-            <div className="shrink-0 -mx-2">
-              {selectedTest.executions.flatMap((execution, index) => {
-                return execution.recordings.map(recording => (
-                  <TestExecutionRow
-                    key={recording.id}
-                    recording={recording}
-                    status={execution.status}
-                  />
-                ));
-              })}
-            </div>
-          </ExpandableSection>
-        </div>
+        recordings.length > 0 ? (
+          <div
+            className="bg-slate-900 text-white p-2 rounded"
+            data-test-id="TestExecution-Recordings"
+          >
+            <ExpandableSection label="Replays" openByDefault>
+              <div className="shrink-0 -mx-2">{recordings}</div>
+            </ExpandableSection>
+          </div>
+        ) : (
+          <TestExecutionMessage data-test-name="TestExecution-NoRecordingsMessage">
+            No Replay found. Either the test was not recorded or Replay browser may have crashed
+            before recording.
+          </TestExecutionMessage>
+        )
       ) : (
-        <div
-          className="bg-slate-900 text-slate-300 p-2 rounded"
-          data-test-name="TestExecution-RetentionMessage"
-        >
-          <Icon className="w-4 h-4 inline" type="info" /> The replays recorded during this test run
-          are no longer available because of workspace retention limits.
-        </div>
+        <TestExecutionMessage data-test-name="TestExecution-RetentionMessage">
+          The replays recorded during this test run are no longer available because of workspace
+          retention limits.
+        </TestExecutionMessage>
       )}
 
       <TestRunErrors test={selectedTest} />
