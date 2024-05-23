@@ -74,6 +74,25 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
   }
 
   {
+    // Users should be able to return to step 2 if they want to review the form
+
+    const backButton = page.locator('[data-test-id="CreateTeam-Back-Button"]');
+    await expect(backButton.isEnabled()).resolves.toBeTruthy();
+    await backButton.click();
+
+    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
+    await expect(step2.getAttribute("data-test-state")).resolves.toBe("current");
+    await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
+
+    await expect(continueButton.isEnabled()).resolves.toBeTruthy();
+    await continueButton.click();
+
+    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
+    await expect(step2.getAttribute("data-test-state")).resolves.toBe("complete");
+    await expect(step3.getAttribute("data-test-state")).resolves.toBe("current");
+  }
+
+  {
     // Continue to new workspace
 
     await expect(getLeftNavLink(page, "Runs").getAttribute("data-is-active")).resolves.toBe("true");
