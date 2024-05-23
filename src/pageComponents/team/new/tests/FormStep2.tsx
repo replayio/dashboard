@@ -2,11 +2,12 @@ import { Button } from "@/components/Button";
 import { Callout } from "@/components/Callout";
 import { Code } from "@/components/Code";
 import { ExternalLink } from "@/components/ExternalLink";
+import { TabContainer } from "@/components/TabContainer";
 import { CopyCode } from "@/pageComponents/team/new/tests/CopyCode";
 import { Group } from "@/pageComponents/team/new/tests/Group";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { getInstallCommand } from "@/pageComponents/team/new/tests/getInstallCommand";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export default function FormStep2({
   apiKey,
@@ -88,6 +89,8 @@ function PlaywrightInstructions({
   apiKey: string;
   packageManager: PackageManager;
 }) {
+  const [tab, setTab] = useState("typescript");
+
   return (
     <>
       <Group>
@@ -103,7 +106,16 @@ function PlaywrightInstructions({
       <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
         <div>4. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
-        <CopyCode code={playwrightConfigCode} />
+
+        <TabContainer tabs={["TypeScript", "ESM", "CJS"]}>
+          {(tab: string) => (
+            <CopyCode
+              code={
+                tab === "TypeScript" ? playwrightTS : tab === "ESM" ? playwrightESM : playwrightCJS
+              }
+            />
+          )}
+        </TabContainer>
       </Group>
     </>
   );
@@ -150,9 +162,45 @@ module.exports = defineConfig({
 });
 `.trim();
 
-const playwrightConfigCode = `
+const playwrightCJS = `
+const { devices } = require("@replayio/playwright");
+
+module.exports = {
+  reporter: [["@replayio/playwright/reporter", {
+    apiKey: process.env.REPLAY_API_KEY,
+    upload: true
+  }], ['line']],
+  projects: [{
+    name: "replay-chromium",
+    use: {
+      ...devices["Replay Chromium"]
+    }
+  }]
+};
+`.trim();
+
+const playwrightESM = `
+import { devices } from "@replayio/playwright";
+
+const config = {
+  reporter: [["@replayio/playwright/reporter", {
+    apiKey: process.env.REPLAY_API_KEY,
+    upload: true
+  }], ['line']],
+  projects: [{
+    name: "replay-chromium",
+    use: {
+      ...devices["Replay Chromium"]
+    }
+  }]
+};
+
+export default config;
+`.trim();
+
+const playwrightTS = `
 import { PlaywrightTestConfig } from "@playwright/test";
-import { devices as replayDevices } from "@replayio/playwright";
+import { devices } from "@replayio/playwright";
 
 const config: PlaywrightTestConfig = {
   reporter: [["@replayio/playwright/reporter", {
@@ -162,7 +210,7 @@ const config: PlaywrightTestConfig = {
   projects: [
     {
       name: "replay-chromium",
-      use: { ...replayDevices["Replay Chromium"] },
+      use: { ...devices["Replay Chromium"] },
     }
   ],
 };
