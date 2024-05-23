@@ -8,15 +8,11 @@ import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { isDateWithinRetentionLimits } from "@/utils/workspace";
 import { useContext } from "react";
 
-function TestExecutionMessage(props: { children: React.ReactNode; "data-test-name": string }) {
-  return (
-    <div
-      className="bg-slate-900 text-slate-300 p-2 rounded"
-      data-test-name={props["data-test-name"]}
-    >
-      {props.children}
-    </div>
-  );
+function TestExecutionMessage({
+  children,
+  ...rest
+}: ButtonHTMLAttributes<HTMLDivElement>) {
+  return <div {...rest} className="bg-slate-900 text-slate-300 p-2 rounded" />;
 }
 
 export function TestsAndExecutions() {
