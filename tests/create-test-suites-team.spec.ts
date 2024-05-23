@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { Page, expect, test } from "@playwright/test";
 import { MockGraphQLData } from "tests/mocks/types";
 import { getUID } from "tests/mocks/utils/getUID";
 import { mockCreateNewWorkspace } from "tests/mocks/utils/mockCreateNewWorkspace";
@@ -9,6 +9,7 @@ import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { mockWorkspaceRecordings } from "tests/mocks/utils/mockWorkspaceRecordings";
 import { getLeftNavLink } from "tests/utils/getLeftNavLink";
 import { navigateToPage } from "./utils/navigateToPage";
+import { waitUntil } from "tests/utils/waitUntil";
 
 test("create-test-suites-team: create a test suites workspace", async ({ page }) => {
   await navigateToPage({
@@ -20,19 +21,12 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
   const form = page.locator('[data-test-id="CreateTestSuitesTeam"]');
   const continueButton = page.locator('[data-test-id="CreateTeam-Continue-Button"]');
 
-  const multiStepForm = page.locator('[data-test-name="MultiStepForm"]');
-  const step1 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-1"]');
-  const step2 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-2"]');
-  const step3 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-3"]');
-
   await expect(continueButton.isEnabled()).resolves.toBeFalsy();
 
   {
     // Step 1: Team name, test runner, and package manager
 
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("current");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("incomplete");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
+    await waitUntilTestFormStep(page, 1);
 
     await page.locator('[data-test-id="CreateTestSuiteTeam-TeamName-Input"]').fill("Example");
     await page
@@ -49,9 +43,7 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
   {
     // Step 2: Test runner configuration
 
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("current");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
+    await waitUntilTestFormStep(page, 2);
 
     await expect(form.textContent()).resolves.toContain("pnpm add --save-dev @replayio/cypress");
 
@@ -61,9 +53,7 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
   {
     // Step 3: Confirmation
 
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("current");
+    await waitUntilTestFormStep(page, 3);
 
     await expect(form.textContent()).resolves.toContain(
       "npx cypress run --browser replay-chromium"
@@ -80,16 +70,12 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
     await expect(backButton.isEnabled()).resolves.toBeTruthy();
     await backButton.click();
 
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("current");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
+    await waitUntilTestFormStep(page, 2);
 
     await expect(continueButton.isEnabled()).resolves.toBeTruthy();
     await continueButton.click();
 
-    await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step2.getAttribute("data-test-state")).resolves.toBe("complete");
-    await expect(step3.getAttribute("data-test-state")).resolves.toBe("current");
+    await waitUntilTestFormStep(page, 3);
   }
 
   {
@@ -122,3 +108,38 @@ const mockGraphQLData: MockGraphQLData = {
     },
   ]),
 };
+
+export async function waitUntilTestFormStep(page: Page, currentStep: number) {
+  const multiStepForm = page.locator('[data-test-name="MultiStepForm"]');
+  const step1 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-1"]');
+  const step2 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-2"]');
+  const step3 = multiStepForm.locator('[data-test-name="MultiStepForm-Step-3"]');
+
+  await waitUntil(
+    async () => {
+      switch (currentStep) {
+        case 1: {
+          await expect(step1.getAttribute("data-test-state")).resolves.toBe("current");
+          await expect(step2.getAttribute("data-test-state")).resolves.toBe("incomplete");
+          await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
+          break;
+        }
+        case 2: {
+          await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
+          await expect(step2.getAttribute("data-test-state")).resolves.toBe("current");
+          await expect(step3.getAttribute("data-test-state")).resolves.toBe("incomplete");
+          break;
+        }
+        case 3: {
+          await expect(step1.getAttribute("data-test-state")).resolves.toBe("complete");
+          await expect(step2.getAttribute("data-test-state")).resolves.toBe("complete");
+          await expect(step3.getAttribute("data-test-state")).resolves.toBe("current");
+          break;
+        }
+      }
+    },
+    {
+      message: `Waiting for test step ${currentStep}`,
+    }
+  );
+}
