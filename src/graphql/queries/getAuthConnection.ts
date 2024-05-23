@@ -2,8 +2,7 @@ import {
   GetAuthConnectionQuery,
   GetAuthConnectionQueryVariables,
 } from "@/graphql/generated/graphql";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
-import { gql } from "@apollo/client";
+import { ApolloClient, gql, NormalizedCacheObject } from "@apollo/client";
 
 const QUERY = gql`
   query GetAuthConnection($email: String!) {
@@ -13,13 +12,11 @@ const QUERY = gql`
   }
 `;
 
-export async function getAuthConnection(email: string): Promise<string | null> {
-  const graphQLClient = getGraphQLClient();
-
-  const response = await graphQLClient.query<
-    GetAuthConnectionQuery,
-    GetAuthConnectionQueryVariables
-  >({
+export async function getAuthConnection(
+  client: ApolloClient<NormalizedCacheObject>,
+  email: string
+): Promise<string | null> {
+  const response = await client.query<GetAuthConnectionQuery, GetAuthConnectionQueryVariables>({
     query: QUERY,
     variables: { email },
   });

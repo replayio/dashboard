@@ -15,6 +15,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { MockGraphQLData } from "tests/mocks/types";
 import "use-context-menu/styles.css";
 import "../global.css";
+import { ApolloContextProvider } from "@/components/ApolloContext";
 
 type PageProps = {
   accessToken: string;
@@ -86,9 +87,11 @@ export default class MyApp extends App<AppProps<PageProps>> {
     let children = (
       <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
         <SessionContextProvider accessToken={accessToken} user={user}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <ApolloContextProvider accessToken={accessToken}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ApolloContextProvider>
         </SessionContextProvider>
       </EndToEndTestContextProvider>
     );
