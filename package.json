@@ -44,6 +44,7 @@
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.13",
     "react-resizable-panels": "^2.0.19",
+    "shiki": "^1.6.0",
     "use-context-menu": "^0.4.13",
     "uuid": "^9.0.1"
   },

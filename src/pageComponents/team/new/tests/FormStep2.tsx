@@ -8,7 +8,7 @@ import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/cons
 import { getInstallCommand } from "@/pageComponents/team/new/tests/getInstallCommand";
 import { useMemo } from "react";
 
-export function FormStep2({
+export default function FormStep2({
   apiKey,
   onContinue,
   packageManager,
@@ -49,7 +49,7 @@ export function FormStep2({
   );
 }
 
-export function CypressInstructions({
+function CypressInstructions({
   apiKey,
   packageManager,
 }: {
@@ -60,26 +60,28 @@ export function CypressInstructions({
     <>
       <Group>
         <div>1. Install the @replayio/cypress package in your project.</div>
-        <Code>{getInstallCommand(packageManager, "@replayio/cypress", { development: true })}</Code>
+        <CopyCode
+          code={getInstallCommand(packageManager, "@replayio/cypress", { development: true })}
+        />
       </Group>
       <Group>
         <div>2. Install the Replay browser.</div>
-        <Code>npx replayio install</Code>
+        <CopyCode code="npx replayio install" />
       </Group>
       <Group>
         <div>3. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
-        <Code>{cypressConfigCode}</Code>
+        <CopyCode code={cypressConfigCode} />
       </Group>
       <SaveApiKey apiKey={apiKey} number={4} />
       <Group>
         <div>5. Import Replay to your support file.</div>
-        <Code>{`require('@replayio/cypress/support');`}</Code>
+        <CopyCode code={`require('@replayio/cypress/support');`} />
       </Group>
     </>
   );
 }
 
-export function PlaywrightInstructions({
+function PlaywrightInstructions({
   apiKey,
   packageManager,
 }: {
@@ -90,18 +92,18 @@ export function PlaywrightInstructions({
     <>
       <Group>
         <div>1. Install the @replayio/playwright package in your project.</div>
-        <Code>
-          {getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
-        </Code>
+        <CopyCode
+          code={getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
+        />
       </Group>
       <Group>
         <div>2. Install the Replay browser.</div>
-        <Code>npx replayio install</Code>
+        <CopyCode code="npx replayio install" />
       </Group>
       <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
         <div>4. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
-        <Code>{playwrightConfigCode}</Code>
+        <CopyCode code={playwrightConfigCode} />
       </Group>
     </>
   );
@@ -111,7 +113,7 @@ function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
   return (
     <Group>
       <div>{number}. Save the API key below before continuing.</div>
-      <CopyCode text={`REPLAY_API_KEY=${apiKey}`} />
+      <CopyCode code={`REPLAY_API_KEY=${apiKey}`} />
       <Callout
         bodyText={
           <div>

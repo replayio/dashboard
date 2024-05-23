@@ -15,6 +15,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { MockGraphQLData } from "tests/mocks/types";
 import "use-context-menu/styles.css";
 import "../global.css";
+import "../shiki.css";
 
 type PageProps = {
   accessToken: string;
