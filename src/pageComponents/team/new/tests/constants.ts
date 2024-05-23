@@ -12,7 +12,7 @@ const Playwright: TestRunnerOption = {
   label: "Playwright",
   type: "playwright",
 };
-export const TEST_RUNNER_OPTIONS: TestRunnerOption[] = [Cypress, Playwright];
+export const TEST_RUNNER_OPTIONS: TestRunnerOption[] = [Playwright, Cypress];
 
 export type PackageManager = "npm" | "pnpm" | "yarn";
 export type PackageManagerOption = Option & {
