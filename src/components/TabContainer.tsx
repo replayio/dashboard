@@ -1,8 +1,6 @@
 import assert from "assert";
 import { ReactNode, useState } from "react";
 
-type TabType = { content: ReactNode; label: string };
-
 export function TabContainer({
   children,
   defaultTab,
@@ -19,7 +17,7 @@ export function TabContainer({
   return (
     <div className="flex flex-col">
       <ul className="flex flex-row text-sm bg-slate-800 rounded-t">
-        {tabs.map((tab, index) => (
+        {tabs.map(tab => (
           <Tab
             isActive={selectedTab === tab}
             key={tab}
