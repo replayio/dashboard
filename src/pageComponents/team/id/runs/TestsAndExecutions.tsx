@@ -6,13 +6,14 @@ import { TestExecutionRow } from "@/pageComponents/team/id/runs/TestExecutionRow
 import { TestRunErrors } from "@/pageComponents/team/id/runs/TestRunErrors";
 import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
 import { isDateWithinRetentionLimits } from "@/utils/workspace";
-import { useContext } from "react";
+import { ButtonHTMLAttributes, useContext } from "react";
 
-function TestExecutionMessage({
-  children,
-  ...rest
-}: ButtonHTMLAttributes<HTMLDivElement>) {
-  return <div {...rest} className="bg-slate-900 text-slate-300 p-2 rounded" />;
+function TestExecutionMessage({ children, ...rest }: ButtonHTMLAttributes<HTMLDivElement>) {
+  return (
+    <div {...rest} className="bg-slate-900 text-slate-300 p-2 rounded">
+      <Icon className="w-4 h-4 inline" type="info" /> {children}
+    </div>
+  );
 }
 
 export function TestsAndExecutions() {
