@@ -11,7 +11,7 @@ export function Block({
 
   return (
     <Component
-    className="flex flex-col w-64 overflow-hidden text-white transition rounded-md cursor-pointer bg-slate-700 hover:bg-slate-600"
+      className="flex flex-col w-64 overflow-hidden text-white transition rounded-md cursor-pointer bg-slate-700 hover:bg-slate-600"
       href={href}
     >
       <div className="hidden w-full h-32 bg-gradient-to-br from-sky-500 to-pink-300 lg:block short:hidden" />

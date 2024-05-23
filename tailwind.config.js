@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        'short': { 'raw': '(max-height: 600px)' },
+        short: { raw: "(max-height: 600px)" },
       },
       animation: {
         progress: "progress 1s infinite linear",
