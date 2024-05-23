@@ -150,6 +150,14 @@ export function CreateTestSuitesTeam() {
       form = (
         <FormStep3
           apiKey={state.apiKey}
+          onBack={() => {
+            assert(state.step === 3);
+
+            setState({
+              ...state,
+              step: 2,
+            });
+          }}
           onContinue={() => {
             assert(state.step === 3);
 
