@@ -7,10 +7,12 @@ import { TestRunner } from "@/pageComponents/team/new/tests/constants";
 
 export function FormStep3({
   apiKey,
+  onBack,
   onContinue,
   testRunner,
 }: {
   apiKey: string;
+  onBack: () => void;
   onContinue: () => void;
   testRunner: TestRunner;
 }) {
@@ -32,7 +34,7 @@ export function FormStep3({
       <div className="flex flex-row gap-2">
         <Button
           data-test-id="CreateTeam-Back-Button"
-          onClick={onContinue}
+          onClick={onBack}
           size="large"
           variant="outline"
         >
@@ -53,7 +55,6 @@ function CypressInstructions({ apiKey }: { apiKey: string }) {
       <Group>
         <Code>npx cypress run --browser replay-chromium</Code>
         <ApiKeyCallout apiKey={apiKey} />
-        <SupportInstructions />
       </Group>
       <CIInstructions href="https://docs.replay.io/test-runners/cypress-io/github-actions" />
     </>
@@ -67,7 +68,6 @@ function PlaywrightInstructions({ apiKey }: { apiKey: string }) {
       <Group>
         <Code>npx playwright test --project replay-chromium</Code>
         <ApiKeyCallout apiKey={apiKey} />
-        <SupportInstructions />
       </Group>
       <CIInstructions href="https://docs.replay.io/test-runners/playwright/github-actions" />
     </>
@@ -96,20 +96,5 @@ function CIInstructions({ href }: { href: string }) {
       We also recommend configuring your CI to record tests with Replay. Check out{" "}
       <ExternalLink href={href}>our docs</ExternalLink> to see how.
     </div>
-  );
-}
-
-function SupportInstructions() {
-  return (
-    <Callout
-      bodyText={
-        <div>
-          <ExternalLink href="https://www.replay.io/contact">Let us know</ExternalLink> and we can
-          help!
-        </div>
-      }
-      headerText="Something not working?"
-      type="info"
-    />
   );
 }
