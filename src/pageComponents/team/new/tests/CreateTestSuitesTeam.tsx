@@ -60,9 +60,9 @@ export function CreateTestSuitesTeam() {
     case 1: {
       form = (
         <FormStep1
-          defaultPackageManager={state.packageManager || undefined}
+          defaultPackageManager={state.packageManager || "npm"}
           defaultTeamName={state.teamName || undefined}
-          defaultTestRunner={state.testRunner || undefined}
+          defaultTestRunner={state.testRunner || "playwright"}
           errorMessage={
             createWorkspaceError
               ? createWorkspaceError.message
@@ -163,8 +163,8 @@ export function CreateTestSuitesTeam() {
   }
 
   return (
-    <div className="flex flex-row h-screen w-screen" data-test-id="CreateTestSuitesTeam">
-      <div className="grow flex flex-row justify-center w-full overflow-auto p-8">
+    <div className="flex flex-row w-screen h-screen" data-test-id="CreateTestSuitesTeam">
+      <div className="flex flex-row justify-center w-full p-8 overflow-auto grow">
         <div className="flex flex-col center-items gap-6 w-[505px]">
           <Link className="flex flex-row items-center text-xl text-white" href="/home">
             <Icon className="w-4 h-4" type="back-arrow" /> Back to library
