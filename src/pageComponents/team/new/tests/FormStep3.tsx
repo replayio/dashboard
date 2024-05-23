@@ -29,57 +29,52 @@ export function FormStep3({
   return (
     <>
       {instructions}
-      <Button
-        className="self-start"
-        data-test-id="CreateTeam-Continue-Button"
-        onClick={onContinue}
-        size="large"
-      >
-        Go to dashboard
-      </Button>
+      <div className="flex flex-row gap-2">
+        <Button
+          data-test-id="CreateTeam-Back-Button"
+          onClick={onContinue}
+          size="large"
+          variant="outline"
+        >
+          Go Back
+        </Button>
+        <Button data-test-id="CreateTeam-Continue-Button" onClick={onContinue} size="large">
+          Go to dashboard
+        </Button>
+      </div>
     </>
   );
 }
 
-export function CypressInstructions({ apiKey }: { apiKey: string }) {
+function CypressInstructions({ apiKey }: { apiKey: string }) {
   return (
     <>
       <div>Now you&apos;re ready to record your tests with Replay!</div>
       <Group>
         <Code>npx cypress run --browser replay-chromium</Code>
         <ApiKeyCallout apiKey={apiKey} />
+        <SupportInstructions />
       </Group>
-      <div>
-        We also recommend configuring your CI to record tests with Replay. Check out{" "}
-        <ExternalLink href="https://docs.replay.io/test-runners/cypress-io/github-actions">
-          our docs
-        </ExternalLink>{" "}
-        to see how.
-      </div>
+      <CIInstructions href="https://docs.replay.io/test-runners/cypress-io/github-actions" />
     </>
   );
 }
 
-export function PlaywrightInstructions({ apiKey }: { apiKey: string }) {
+function PlaywrightInstructions({ apiKey }: { apiKey: string }) {
   return (
     <>
       <div>Now you&apos;re ready to record your tests with Replay!</div>
       <Group>
         <Code>npx playwright test --project replay-chromium</Code>
         <ApiKeyCallout apiKey={apiKey} />
+        <SupportInstructions />
       </Group>
-      <div>
-        We also recommend configuring your CI to record tests with Replay. Check out{" "}
-        <ExternalLink href="https://docs.replay.io/test-runners/playwright/github-actions">
-          our docs
-        </ExternalLink>{" "}
-        to see how.
-      </div>
+      <CIInstructions href="https://docs.replay.io/test-runners/playwright/github-actions" />
     </>
   );
 }
 
-export function ApiKeyCallout({ apiKey }: { apiKey: string }) {
+function ApiKeyCallout({ apiKey }: { apiKey: string }) {
   return (
     <Callout
       bodyText={
@@ -90,6 +85,30 @@ export function ApiKeyCallout({ apiKey }: { apiKey: string }) {
         </div>
       }
       headerText="Your API key is needed to upload replays"
+      type="info"
+    />
+  );
+}
+
+function CIInstructions({ href }: { href: string }) {
+  return (
+    <div>
+      We also recommend configuring your CI to record tests with Replay. Check out{" "}
+      <ExternalLink href={href}>our docs</ExternalLink> to see how.
+    </div>
+  );
+}
+
+function SupportInstructions() {
+  return (
+    <Callout
+      bodyText={
+        <div>
+          <ExternalLink href="https://www.replay.io/contact">Let us know</ExternalLink> and we can
+          help!
+        </div>
+      }
+      headerText="Something not working?"
       type="info"
     />
   );
