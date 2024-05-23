@@ -11,7 +11,7 @@ export function getInstallCommand(
     case "npm": {
       const pieces: string[] = [packageManager, "install"];
       if (development) {
-        pieces.push("--dev");
+        pieces.push("--save-dev");
       }
       if (global) {
         pieces.push("--global");

@@ -2,9 +2,6 @@ import { Icon } from "@/components/Icon";
 import { MultiStepForm } from "@/components/MultiStepForm";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
 import { useCreateWorkspaceAPIKey } from "@/graphql/queries/createWorkspaceAPIKey";
-import { FormStep1 } from "@/pageComponents/team/new/tests/FormStep1";
-import { FormStep2 } from "@/pageComponents/team/new/tests/FormStep2";
-import { FormStep3 } from "@/pageComponents/team/new/tests/FormStep3";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { generateApiKey } from "@/pageComponents/team/new/tests/generateApiKey";
 import { getPlanKey } from "@/utils/test-suites";
@@ -12,8 +9,12 @@ import assert from "assert";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode, Suspense, lazy, startTransition, useCallback, useState } from "react";
 import image from "./test-suites-box.png";
+
+const FormStep1 = lazy(() => import("@/pageComponents/team/new/tests/FormStep1"));
+const FormStep2 = lazy(() => import("@/pageComponents/team/new/tests/FormStep2"));
+const FormStep3 = lazy(() => import("@/pageComponents/team/new/tests/FormStep3"));
 
 type StateStep1 = {
   apiKey: string;
@@ -41,7 +42,7 @@ type StateStep3 = Omit<StateStep2, "step"> & {
 type State = StateStep1 | StateStep2 | StateStep3;
 
 export function CreateTestSuitesTeam() {
-  const [state, setState] = useState<State>({
+  const [state, setStateUnsafe] = useState<State>({
     apiKey: generateApiKey(),
     packageManager: null,
     step: 1,
@@ -49,6 +50,12 @@ export function CreateTestSuitesTeam() {
     testRunner: null,
     workspaceId: null,
   });
+
+  const setStateWithTransition = useCallback((args: Parameters<typeof setStateUnsafe>[0]) => {
+    return startTransition(() => {
+      setStateUnsafe(args);
+    });
+  }, []);
 
   const router = useRouter();
 
@@ -60,9 +67,9 @@ export function CreateTestSuitesTeam() {
     case 1: {
       form = (
         <FormStep1
-          defaultPackageManager={state.packageManager || undefined}
+          defaultPackageManager={state.packageManager || "npm"}
           defaultTeamName={state.teamName || undefined}
-          defaultTestRunner={state.testRunner || undefined}
+          defaultTestRunner={state.testRunner || "playwright"}
           errorMessage={
             createWorkspaceError
               ? createWorkspaceError.message
@@ -89,7 +96,7 @@ export function CreateTestSuitesTeam() {
                 return false;
               }
 
-              setState({
+              setStateWithTransition({
                 ...state,
                 step: 1,
                 workspaceId,
@@ -113,7 +120,7 @@ export function CreateTestSuitesTeam() {
                 break;
             }
 
-            setState({
+            setStateWithTransition({
               ...state,
               packageManager,
               step: 2,
@@ -135,7 +142,7 @@ export function CreateTestSuitesTeam() {
           onContinue={() => {
             assert(state.step === 2);
 
-            setState({
+            setStateWithTransition({
               ...state,
               step: 3,
             });
@@ -150,6 +157,14 @@ export function CreateTestSuitesTeam() {
       form = (
         <FormStep3
           apiKey={state.apiKey}
+          onBack={() => {
+            assert(state.step === 3);
+
+            setStateWithTransition({
+              ...state,
+              step: 2,
+            });
+          }}
           onContinue={() => {
             assert(state.step === 3);
 
@@ -163,14 +178,14 @@ export function CreateTestSuitesTeam() {
   }
 
   return (
-    <div className="flex flex-row h-screen w-screen" data-test-id="CreateTestSuitesTeam">
-      <div className="grow flex flex-row justify-center w-full overflow-auto p-8">
+    <div className="flex flex-row w-screen h-screen" data-test-id="CreateTestSuitesTeam">
+      <div className="flex flex-row justify-center w-full p-8 overflow-auto grow">
         <div className="flex flex-col center-items gap-6 w-[505px]">
           <Link className="flex flex-row items-center text-xl text-white" href="/home">
             <Icon className="w-4 h-4" type="back-arrow" /> Back to library
           </Link>
           <MultiStepForm currentIndex={state.step - 1} steps={STEPS} />
-          {form}
+          <Suspense>{form}</Suspense>
         </div>
       </div>
       <div className="min-w-72 grow-0 shrink bg-[#ffc22c] flex flex-col justify-end overflow-hidden">

@@ -2,32 +2,28 @@ import { Block } from "@/pageComponents/home/Block";
 
 export function HomePage() {
   return (
-    <div className="h-full flex items-start p-2 overflow-auto">
-      <div className="rounded bg-slate-800 p-4 pt-2 inline-flex flex-col gap-4 max-w-full">
-        <div className="text-2xl">Home</div>
-        <div className="inline-flex flex-row flex-wrap gap-4 max-w-full">
-          <Block href="https://docs.replay.io/quickstart" title="Quickstart">
-            Create your own replay with{" "}
-            <code className="bg-slate-950 rounded px-2 py-1 text-white text-sm">
-              npx replayio@latest
-            </code>
-          </Block>
-          <Block href="/team/new/standard" title="Add a new team">
-            Set up a new team to store your replays in one place
-          </Block>
-          <Block href="/team/new/tests" title="Test Suites">
-            Use Replay to record Playwright or Cypress e2e tests
-          </Block>
-          <Block
-            href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
-            title="Replay Course"
-          >
-            Learn the steps to get rolling through our class on YouTube
-          </Block>
-          <Block href="https://www.replay.io/contact" title="Support">
-            Contact us on Discord or send us a note
-          </Block>
-        </div>
+    <div className="flex items-start justify-start h-full p-2 overflow-auto lg:justify-center lg:items-center">
+      <div className="grid grid-cols-1 gap-2 shadow-lg shadow-xl md:grid-cols-2 lg:grid-cols-3 bg-none rounded-xl lg:bg-slate-950 lg:p-6 lg:gap-4">
+        <div className="text-2xl font-medium col-span-full md:col-span-2 lg:col-span-3">Home</div>
+        <Block href="https://docs.replay.io/quickstart" title="Quickstart">
+          Record your first replay with{" "}
+          <code className="p-1 text-sm text-white rounded bg-slate-800">npx replayio record</code>
+        </Block>
+        <Block href="/team/new/standard" title="Add a new team">
+          Set up a new team to store your replays in one place
+        </Block>
+        <Block href="/team/new/tests" title="Create Test Suite">
+          Use Replay to record Playwright or Cypress e2e tests
+        </Block>
+        <Block
+          href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
+          title="Replay Course"
+        >
+          Learn the steps to get rolling through our class on YouTube
+        </Block>
+        <Block href="https://www.replay.io/contact" title="Support">
+          Contact us on Discord or send us a note
+        </Block>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ import {
 import assert from "assert";
 import { useState } from "react";
 
-export function FormStep1({
+export default function FormStep1({
   defaultPackageManager,
   defaultTeamName,
   defaultTestRunner,
