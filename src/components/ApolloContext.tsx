@@ -1,6 +1,7 @@
 import { URLS } from "@/constants";
 import { v4 as uuid } from "uuid";
 import {
+  ApolloCache,
   ApolloClient,
   InMemoryCache,
   NormalizedCacheObject,
@@ -17,6 +18,38 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export const ApolloContext = createContext<ApolloClient<NormalizedCacheObject>>(null as any);
+
+function createApolloCache() {
+  return new InMemoryCache({
+    typePolicies: {
+      AuthenticatedUser: {
+        merge: true,
+      },
+      Comment: {
+        fields: {
+          replies: {
+            merge: false,
+          },
+        },
+      },
+      Query: {
+        fields: {
+          viewer: {
+            merge: true,
+          },
+        },
+      },
+      Recording: {
+        keyFields: ["uuid"],
+        fields: {
+          comments: {
+            merge: false,
+          },
+        },
+      },
+    },
+  });
+}
 
 function createApolloLink(accessToken: string) {
   const headers: Record<string, string> = {
@@ -46,38 +79,10 @@ function createApolloLink(accessToken: string) {
   return from([retryLink, httpLink]);
 }
 
-function createApolloClient(accessToken: string) {
+function createApolloClient(cache: ReturnType<typeof createApolloCache>, accessToken: string) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    cache: new InMemoryCache({
-      typePolicies: {
-        AuthenticatedUser: {
-          merge: true,
-        },
-        Comment: {
-          fields: {
-            replies: {
-              merge: false,
-            },
-          },
-        },
-        Query: {
-          fields: {
-            viewer: {
-              merge: true,
-            },
-          },
-        },
-        Recording: {
-          keyFields: ["uuid"],
-          fields: {
-            comments: {
-              merge: false,
-            },
-          },
-        },
-      },
-    }),
+    cache,
     defaultOptions: {
       query: {
         fetchPolicy: "network-only",
@@ -92,13 +97,13 @@ export function ApolloContextProvider({
   children,
 }: PropsWithChildren<{ accessToken: string }>) {
   const [currentToken, setCurrentToken] = useState(accessToken);
-  const [client] = useState(() => {
-    return createApolloClient(accessToken);
-  });
+  const [cache] = useState(createApolloCache);
+  const [client, setClient] = useState(() => createApolloClient(cache, accessToken));
 
+  // when the access token changes rerender asap with the new client but with a reused cache
   if (accessToken !== currentToken) {
-    client.setLink(createApolloLink(accessToken));
     setCurrentToken(accessToken);
+    setClient(createApolloClient(cache, accessToken));
   }
 
   return <ApolloContext.Provider value={client}>{children}</ApolloContext.Provider>;
