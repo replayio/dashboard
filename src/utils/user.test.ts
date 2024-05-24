@@ -6,6 +6,7 @@ import {
   getPrimaryRole,
   toggleAdminRole,
 } from "@/utils/user";
+import { expect } from "@playwright/test";
 
 describe("utils/user", () => {
   describe("getDefaultPermissionBitmask", () => {

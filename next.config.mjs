@@ -11,6 +11,18 @@ let nextConfig = {
       destination: `${devtoolsURL}/recording/:path*`,
     },
   ],
+  webpack: config => {
+    if (!config.module.rules) {
+      config.module.rules = [];
+    }
+
+    config.module.rules.push({
+      test: /\.txt$/i,
+      use: "raw-loader",
+    });
+
+    return config;
+  },
 };
 
 if (process.env.ANALYZE === "true") {
