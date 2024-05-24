@@ -27,6 +27,7 @@ export function TeamSettingsNav() {
   }
 
   const currentUserIsAdmin = member?.roles.includes("admin") == true;
+  const currentUserIsDeveloper = member?.roles.includes("debugger") == true;
 
   return (
     <LeftNav
@@ -57,12 +58,14 @@ export function TeamSettingsNav() {
           iconType="billing"
         />
       )}
-      <TeamSettingsNavLink
-        workspaceId={workspace.id}
-        label="API keys"
-        route="api-keys"
-        iconType="api-keys"
-      />
+      {(currentUserIsAdmin || currentUserIsDeveloper) && (
+        <TeamSettingsNavLink
+          workspaceId={workspace.id}
+          label="API keys"
+          route="api-keys"
+          iconType="api-keys"
+        />
+      )}
       {currentUserIsAdmin && (
         <TeamSettingsNavLink
           workspaceId={workspace.id}
