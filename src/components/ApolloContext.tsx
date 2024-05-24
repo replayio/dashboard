@@ -99,7 +99,7 @@ export function ApolloContextProvider({ children }: PropsWithChildren<{}>) {
     () => [session.accessToken, createApolloClient(session.accessToken)] as const
   );
 
-  // when the access token changes rerender asap with the new client but with a reused cache
+  // when the access token changes rerender asap with the new client
   if (accessToken !== session.accessToken) {
     setClient([session.accessToken, createApolloClient(session.accessToken)]);
   }
