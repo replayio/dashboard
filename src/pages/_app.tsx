@@ -88,7 +88,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
     let children = (
       <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
         <SessionContextProvider accessToken={accessToken} user={user}>
-          <ApolloContextProvider accessToken={accessToken}>
+          <ApolloContextProvider>
             <Layout>
               <Component {...pageProps} />
             </Layout>

@@ -1,5 +1,6 @@
 import { URLS } from "@/constants";
 import {
+  ApolloCache,
   ApolloClient,
   InMemoryCache,
   NormalizedCacheObject,
@@ -10,6 +11,7 @@ import { loadDevMessages, loadErrorMessageHandler } from "@apollo/client/dev";
 import { RetryLink } from "@apollo/client/link/retry";
 import { PropsWithChildren, createContext, useContext, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { SessionContext } from "./SessionContext";
 
 if (process.env.NODE_ENV === "development") {
   loadDevMessages();
@@ -18,7 +20,7 @@ if (process.env.NODE_ENV === "development") {
 
 export const ApolloContext = createContext<ApolloClient<NormalizedCacheObject>>(null as any);
 
-function createApolloCache() {
+function createApolloCache(): ApolloCache<NormalizedCacheObject> {
   return new InMemoryCache({
     typePolicies: {
       AuthenticatedUser: {
@@ -78,7 +80,7 @@ function createApolloLink(accessToken: string) {
   return from([retryLink, httpLink]);
 }
 
-function createApolloClient(cache: ReturnType<typeof createApolloCache>, accessToken: string) {
+function createApolloClient(accessToken: string, cache: ApolloCache<NormalizedCacheObject>) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     cache,
@@ -91,18 +93,16 @@ function createApolloClient(cache: ReturnType<typeof createApolloCache>, accessT
   });
 }
 
-export function ApolloContextProvider({
-  accessToken,
-  children,
-}: PropsWithChildren<{ accessToken: string }>) {
-  const [currentToken, setCurrentToken] = useState(accessToken);
-  const [cache] = useState(createApolloCache);
-  const [client, setClient] = useState(() => createApolloClient(cache, accessToken));
+export function ApolloContextProvider({ children }: PropsWithChildren<{}>) {
+  const session = useContext(SessionContext);
+  const [[clientSession, client], setClient] = useState(
+    () => [session, createApolloClient(session.accessToken, createApolloCache())] as const
+  );
 
   // when the access token changes rerender asap with the new client but with a reused cache
-  if (accessToken !== currentToken) {
-    setCurrentToken(accessToken);
-    setClient(createApolloClient(cache, accessToken));
+  if (clientSession.accessToken !== session.accessToken) {
+    const newCache = clientSession.user.id === session.user.id ? client.cache : createApolloCache();
+    setClient([session, createApolloClient(session.accessToken, newCache)]);
   }
 
   return <ApolloContext.Provider value={client}>{children}</ApolloContext.Provider>;
