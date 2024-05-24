@@ -163,36 +163,52 @@ module.exports = defineConfig({
 `.trim();
 
 const playwrightCJS = `
-const { devices } = require("@replayio/playwright");
+const {
+  devices: replayDevices,
+  replayReporter
+} = require("@replayio/playwright");
 
 module.exports = {
-  reporter: [["@replayio/playwright/reporter", {
-    apiKey: process.env.REPLAY_API_KEY,
-    upload: true
-  }], ['line']],
-  projects: [{
-    name: "replay-chromium",
-    use: {
-      ...devices["Replay Chromium"]
-    }
-  }]
+  reporter: [
+    replayReporter({
+      apiKey: process.env.REPLAY_API_KEY,
+      upload: true,
+    }),
+    ["line"],
+  ],
+  projects: [
+    {
+      name: "replay-chromium",
+      use: {
+        ...replayDevices["Replay Chromium"],
+      },
+    },
+  ],
 };
 `.trim();
 
 const playwrightESM = `
-import { devices } from "@replayio/playwright";
+import {
+  devices as replayDevices,
+  replayReporter
+} from "@replayio/playwright";
 
 const config = {
-  reporter: [["@replayio/playwright/reporter", {
-    apiKey: process.env.REPLAY_API_KEY,
-    upload: true
-  }], ['line']],
-  projects: [{
-    name: "replay-chromium",
-    use: {
-      ...devices["Replay Chromium"]
-    }
-  }]
+  reporter: [
+    replayReporter({
+      apiKey: process.env.REPLAY_API_KEY,
+      upload: true,
+    }),
+    ["line"],
+  ],
+  projects: [
+    {
+      name: "replay-chromium",
+      use: {
+        ...replayDevices["Replay Chromium"],
+      },
+    },
+  ],
 };
 
 export default config;
@@ -200,17 +216,23 @@ export default config;
 
 const playwrightTS = `
 import { PlaywrightTestConfig } from "@playwright/test";
-import { devices } from "@replayio/playwright";
+import {
+  devices as replayDevices,
+  replayReporter
+} from "@replayio/playwright";
 
 const config: PlaywrightTestConfig = {
-  reporter: [["@replayio/playwright/reporter", {
-    apiKey: process.env.REPLAY_API_KEY,
-    upload: true
-  }], ['line']],
+  reporter: [
+    replayReporter({
+      apiKey: process.env.REPLAY_API_KEY,
+      upload: true,
+    }),
+    ["line"],
+  ],
   projects: [
     {
       name: "replay-chromium",
-      use: { ...devices["Replay Chromium"] },
+      use: { ...replayDevices["Replay Chromium"] },
     }
   ],
 };
