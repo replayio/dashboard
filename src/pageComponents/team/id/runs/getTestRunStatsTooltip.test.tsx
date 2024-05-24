@@ -1,5 +1,6 @@
 import { TestRunStatsData } from "@/pageComponents/team/id/runs/TestRunStatsGraph";
 import { getTestRunStatsTooltip } from "@/pageComponents/team/id/runs/getTestRunStatsTooltip";
+import { expect } from "@playwright/test";
 import { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { act } from "react-dom/test-utils";

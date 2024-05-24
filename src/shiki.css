@@ -12,3 +12,7 @@
   --shiki-token-punctuation: theme("colors.slate.400");
   --shiki-token-link: theme("colors.zinc.700");
 }
+
+.shiki {
+  white-space: pre-wrap;
+}
