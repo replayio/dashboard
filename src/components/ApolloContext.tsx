@@ -80,10 +80,10 @@ function createApolloLink(accessToken: string) {
   return from([retryLink, httpLink]);
 }
 
-function createApolloClient(accessToken: string, cache: ApolloCache<NormalizedCacheObject>) {
+function createApolloClient(accessToken: string) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    cache,
+    cache: createApolloCache(),
     defaultOptions: {
       query: {
         fetchPolicy: "network-only",
@@ -95,14 +95,13 @@ function createApolloClient(accessToken: string, cache: ApolloCache<NormalizedCa
 
 export function ApolloContextProvider({ children }: PropsWithChildren<{}>) {
   const session = useContext(SessionContext);
-  const [[clientSession, client], setClient] = useState(
-    () => [session, createApolloClient(session.accessToken, createApolloCache())] as const
+  const [[accessToken, client], setClient] = useState(
+    () => [session.accessToken, createApolloClient(session.accessToken)] as const
   );
 
   // when the access token changes rerender asap with the new client but with a reused cache
-  if (clientSession.accessToken !== session.accessToken) {
-    const newCache = clientSession.user.id === session.user.id ? client.cache : createApolloCache();
-    setClient([session, createApolloClient(session.accessToken, newCache)]);
+  if (accessToken !== session.accessToken) {
+    setClient([session.accessToken, createApolloClient(session.accessToken)]);
   }
 
   return <ApolloContext.Provider value={client}>{children}</ApolloContext.Provider>;
