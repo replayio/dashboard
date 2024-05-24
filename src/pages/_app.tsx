@@ -1,3 +1,4 @@
+import { ApolloContextProvider } from "@/components/ApolloContext";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
@@ -15,7 +16,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { MockGraphQLData } from "tests/mocks/types";
 import "use-context-menu/styles.css";
 import "../global.css";
-import { ApolloContextProvider } from "@/components/ApolloContext";
+import "../shiki.css";
 
 type PageProps = {
   accessToken: string;

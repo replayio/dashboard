@@ -2,8 +2,17 @@ import { Code } from "@/components/Code";
 import { Icon } from "@/components/Icon";
 import { copyText } from "@/utils/copy";
 import { MouseEvent, useEffect, useState } from "react";
+import type { BundledLanguage } from "shiki";
 
-export function CopyCode({ text }: { text: string }) {
+export function CopyCode({
+  className,
+  code,
+  lang,
+}: {
+  className?: string;
+  code: string;
+  lang?: BundledLanguage;
+}) {
   const [state, setState] = useState<"hover" | "copied" | undefined>();
 
   const onMouse = (event: MouseEvent<HTMLDivElement>) => {
@@ -19,7 +28,7 @@ export function CopyCode({ text }: { text: string }) {
         setState(undefined);
         break;
       case "click":
-        copyText(text);
+        copyText(code);
         setState("copied");
         break;
     }
@@ -44,7 +53,7 @@ export function CopyCode({ text }: { text: string }) {
       onMouseEnter={onMouse}
       onMouseLeave={onMouse}
     >
-      <Code className="w-full hover:text-sky-400 cursor-pointer">{text}</Code>
+      <Code className={`w-full cursor-pointer ${className}`} code={code} lang={lang} />
       <div className="absolute top-1 right-1 pointer-events-none flex flex-row items-center text-xs">
         {state === "copied" ? (
           <span className="bg-slate-950 px-1 round text-sky-400">Copied</span>

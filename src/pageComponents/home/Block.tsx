@@ -11,10 +11,10 @@ export function Block({
 
   return (
     <Component
-      className="rounded-md flex flex-col bg-slate-700 overflow-hidden w-72 hover:bg-slate-600 cursor-pointer transition text-white"
+      className="flex flex-col w-64 overflow-hidden text-white transition rounded-md cursor-pointer bg-slate-700 hover:bg-slate-600"
       href={href}
     >
-      <div className="bg-gradient-to-br from-sky-500 to-pink-300 w-full h-32" />
+      <div className="hidden w-full h-32 bg-gradient-to-br from-sky-500 to-pink-300 lg:block short:hidden" />
       <div className="flex flex-col flex-wrap gap-2 p-6">
         <div className="text-xl">{title}</div>
         <div>{children}</div>
