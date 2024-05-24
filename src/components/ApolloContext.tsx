@@ -1,16 +1,15 @@
 import { URLS } from "@/constants";
-import { v4 as uuid } from "uuid";
 import {
-  ApolloCache,
   ApolloClient,
   InMemoryCache,
   NormalizedCacheObject,
   createHttpLink,
   from,
 } from "@apollo/client";
-import { RetryLink } from "@apollo/client/link/retry";
 import { loadDevMessages, loadErrorMessageHandler } from "@apollo/client/dev";
+import { RetryLink } from "@apollo/client/link/retry";
 import { PropsWithChildren, createContext, useContext, useState } from "react";
+import { v4 as uuid } from "uuid";
 
 if (process.env.NODE_ENV === "development") {
   loadDevMessages();
