@@ -1,13 +1,12 @@
 import { Button } from "@/components/Button";
 import { Callout } from "@/components/Callout";
-import { Code } from "@/components/Code";
 import { ExternalLink } from "@/components/ExternalLink";
 import { TabContainer } from "@/components/TabContainer";
 import { CopyCode } from "@/pageComponents/team/new/tests/CopyCode";
 import { Group } from "@/pageComponents/team/new/tests/Group";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { getInstallCommand } from "@/pageComponents/team/new/tests/getInstallCommand";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export default function FormStep2({
   apiKey,
@@ -89,8 +88,6 @@ function PlaywrightInstructions({
   apiKey: string;
   packageManager: PackageManager;
 }) {
-  const [tab, setTab] = useState("typescript");
-
   return (
     <>
       <Group>
