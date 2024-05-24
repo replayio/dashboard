@@ -1,9 +1,15 @@
+import cypressCJS from "!raw-loader!@/pageComponents/team/new/tests/examples/cypress/config-cjs";
+import cypressESM from "!raw-loader!@/pageComponents/team/new/tests/examples/cypress/config-esm";
+import cypressTS from "!raw-loader!@/pageComponents/team/new/tests/examples/cypress/config-ts";
+import playwrightCJS from "!raw-loader!@/pageComponents/team/new/tests/examples/playwright/config-cjs";
+import playwrightESM from "!raw-loader!@/pageComponents/team/new/tests/examples/playwright/config-esm";
+import playwrightTS from "!raw-loader!@/pageComponents/team/new/tests/examples/playwright/config-ts";
 import { Button } from "@/components/Button";
 import { Callout } from "@/components/Callout";
-import { Code } from "@/components/Code";
 import { ExternalLink } from "@/components/ExternalLink";
-import { CopyCode } from "@/pageComponents/team/new/tests/CopyCode";
 import { Group } from "@/pageComponents/team/new/tests/Group";
+import { CodeTabContainer } from "@/pageComponents/team/new/tests/components/CodeTabContainer";
+import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { getInstallCommand } from "@/pageComponents/team/new/tests/getInstallCommand";
 import { useMemo } from "react";
@@ -68,11 +74,11 @@ function CypressInstructions({
         <div>2. Install the Replay browser.</div>
         <CopyCode code="npx replayio install" />
       </Group>
+      <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
-        <div>3. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
-        <CopyCode code={cypressConfigCode} />
+        <div>4. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
+        <CodeTabContainer codeCJS={cypressCJS} codeESM={cypressESM} codeTS={cypressTS} />
       </Group>
-      <SaveApiKey apiKey={apiKey} number={4} />
       <Group>
         <div>5. Import Replay to your support file.</div>
         <CopyCode code={`require('@replayio/cypress/support');`} />
@@ -103,7 +109,7 @@ function PlaywrightInstructions({
       <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
         <div>4. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
-        <CopyCode code={playwrightConfigCode} />
+        <CodeTabContainer codeCJS={playwrightCJS} codeESM={playwrightESM} codeTS={playwrightTS} />
       </Group>
     </>
   );
@@ -130,42 +136,3 @@ function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
     </Group>
   );
 }
-
-const cypressConfigCode = `
-const { defineConfig } = require('cypress');
-const { plugin: replayPlugin } = require('@replayio/cypress')
-
-module.exports = defineConfig({
-  e2e: {
-    setupNodeEvents(on, config) {
-      // Add this line to install the replay plugin
-      replayPlugin(on, config, {
-        upload: true,
-        apiKey: process.env.REPLAY_API_KEY,
-      });
-      // Make sure that setupNodeEvents returns config
-      return config;
-    }
-  }
-});
-`.trim();
-
-const playwrightConfigCode = `
-import { PlaywrightTestConfig } from "@playwright/test";
-import { devices as replayDevices } from "@replayio/playwright";
-
-const config: PlaywrightTestConfig = {
-  reporter: [["@replayio/playwright/reporter", {
-    apiKey: process.env.REPLAY_API_KEY,
-    upload: true
-  }], ['line']],
-  projects: [
-    {
-      name: "replay-chromium",
-      use: { ...replayDevices["Replay Chromium"] },
-    }
-  ],
-};
-
-export default config;
-`.trim();

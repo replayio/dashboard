@@ -1,8 +1,8 @@
 import { Button } from "@/components/Button";
 import { Callout } from "@/components/Callout";
 import { ExternalLink } from "@/components/ExternalLink";
-import { CopyCode } from "@/pageComponents/team/new/tests/CopyCode";
 import { Group } from "@/pageComponents/team/new/tests/Group";
+import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
 import { TestRunner } from "@/pageComponents/team/new/tests/constants";
 
 export default function FormStep3({

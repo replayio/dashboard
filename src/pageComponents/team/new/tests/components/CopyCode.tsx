@@ -54,13 +54,15 @@ export function CopyCode({
       onMouseLeave={onMouse}
     >
       <Code className={`w-full cursor-pointer ${className}`} code={code} lang={lang} />
-      <div className="absolute top-1 right-1 pointer-events-none flex flex-row items-center text-xs">
+      <div className="absolute top-1 right-0 pointer-events-none flex flex-row items-center text-xs">
         {state === "copied" ? (
           <span className="bg-slate-950 px-1 round text-sky-400">Copied</span>
         ) : state === "hover" ? (
           <div className="bg-slate-950 px-1 round">Copy</div>
         ) : (
-          <Icon className="w-5 h-5" type="copy" />
+          <div className="bg-slate-950 px-1 round">
+            <Icon className="w-5 h-5" type="copy" />
+          </div>
         )}
       </div>
     </div>
