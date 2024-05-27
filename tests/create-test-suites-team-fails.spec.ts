@@ -19,23 +19,9 @@ test("create-test-suites-team-fails: shows mutation error message", async ({ pag
   await expect(goBackButton).not.toBeVisible();
   await expect(continueButton.isEnabled()).resolves.toBeFalsy();
 
-  {
-    // Step 1: Team name, test runner, and package manager
-
-    await page.locator('[data-test-id="CreateTestSuiteTeam-TeamName-Input"]').fill("Example");
-    await page
-      .locator('[data-test-id="CreateTestSuiteTeam-TestRunner-Select"]')
-      .selectOption({ label: "Playwright" });
-    await page
-      .locator('[data-test-id="CreateTestSuiteTeam-PackageManager-Select"]')
-      .selectOption({ label: "pnpm" });
-
-    await expect(continueButton.isEnabled()).resolves.toBeTruthy();
-    await continueButton.click();
-
-    const error = page.locator('[data-test-id="CreateTeam-Error"]');
-    await expect(error.textContent()).resolves.toContain("Failed to create workspace");
-  }
+  // test error synchronously returned by the mutation mock
+  const error = page.locator('[data-test-id="CreateTeam-Error"]');
+  await expect(error.textContent()).resolves.toContain("Failed to create workspace");
 });
 
 const mockGraphQLData: MockGraphQLData = {

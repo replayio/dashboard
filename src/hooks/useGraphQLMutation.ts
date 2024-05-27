@@ -31,6 +31,10 @@ export function useGraphQLMutation<Query, Variables extends OperationVariables =
   });
 
   // Support e2e tests
+  // WARNING: this doesn't quite mimick the real user flow
+  // usually the data/error would get returned asynchronously when the mutations happens
+  // we are returning it here synchronously so the initial HTML comes "preresolved"
+  // so it can be different from the one that would be returned in equivalen scenario in production
   const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;
   if (mockResponse) {
     const mutate: MutationFunction<Query, Variables> = async () => {
