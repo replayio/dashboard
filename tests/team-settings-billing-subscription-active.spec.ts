@@ -1,8 +1,9 @@
 import { getRelativeDate } from "@/utils/date";
 import { expect, test } from "@playwright/test";
-import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { mockGetUser } from "tests/mocks/utils/mockGetUser";
+import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembers";
 import { mockGetWorkspaceSubscription } from "tests/mocks/utils/mockGetWorkspaceSubscription";
+import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
 import { MockGraphQLData } from "./mocks/types";
 import { navigateToPage } from "./utils/navigateToPage";
@@ -35,8 +36,16 @@ test("team-settings-billing-subscription-active: should show information about t
   await expect(dialog).toContainText("Remove payment method");
 });
 
+const mockWorkspaceMembers = mockGetWorkspaceMembers([
+  {
+    roles: ["admin"],
+  },
+]);
+
 const mockGraphQLData: MockGraphQLData = {
   GetUser: mockGetUser(),
+  GetWorkspaceMembers: mockWorkspaceMembers,
+  GetWorkspaceMemberRoles: mockWorkspaceMembers,
   GetWorkspaces: mockGetWorkspaces([
     {
       hasPaymentMethod: true,
