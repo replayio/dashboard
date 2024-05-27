@@ -1,3 +1,4 @@
+import { ApolloContextProvider } from "@/components/ApolloContext";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
@@ -87,9 +88,11 @@ export default class MyApp extends App<AppProps<PageProps>> {
     let children = (
       <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
         <SessionContextProvider accessToken={accessToken} user={user}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <ApolloContextProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ApolloContextProvider>
         </SessionContextProvider>
       </EndToEndTestContextProvider>
     );
