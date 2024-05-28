@@ -13,13 +13,13 @@ export function HomePage() {
           Set up a new team to store your replays in one place
         </Block>
         <Block href="/team/new/tests" title="Create Test Suite">
-          Use Replay to record Playwright or Cypress e2e tests
+          Use Replay to record Playwright or Cypress tests
         </Block>
         <Block
           href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
           title="Replay Course"
         >
-          Learn the steps to get rolling through our class on YouTube
+          Our class on YouTube is great for learning the basics
         </Block>
         <Block href="https://www.replay.io/contact" title="Support">
           Contact us on Discord or send us a note
