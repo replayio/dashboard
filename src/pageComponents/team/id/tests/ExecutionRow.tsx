@@ -26,10 +26,10 @@ export function ExecutionRow({ testExecution }: { testExecution: TestSuiteTestEx
       <div className="flex flex-col">
         {testExecution.recordings.map(recording => (
           <RecordingRow
+            executionStatus={testExecution.status}
             key={recording.id}
             recording={recording}
             retentionLimit={retentionLimit}
-            status={testExecution.status}
           />
         ))}
       </div>

@@ -135,6 +135,7 @@ export type TestSuiteTestExecutionRecording = {
   duration: number;
   id: string;
   isProcessed: boolean;
+  testResult: TestSuiteTestStatus;
   title: string;
   uuid: string;
 };

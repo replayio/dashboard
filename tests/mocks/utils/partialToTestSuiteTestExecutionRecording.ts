@@ -8,6 +8,7 @@ export function partialToTestSuiteTestExecutionRecording({
   duration = 0,
   id = getUID("recording"),
   isProcessed = false,
+  testResult = "passed",
   title = "Recording title",
 }: Partial<TestSuiteTestExecutionRecording> = {}): TestSuiteTestExecutionRecording {
   return {
@@ -16,6 +17,7 @@ export function partialToTestSuiteTestExecutionRecording({
     duration,
     id,
     isProcessed,
+    testResult,
     title,
     uuid: id,
   };

@@ -8,11 +8,11 @@ import Link from "next/link";
 export function RecordingRow({
   recording,
   retentionLimit,
-  status,
+  executionStatus,
 }: {
   recording: TestSuiteTestExecutionRecording;
   retentionLimit: number | null;
-  status: TestSuiteTestStatus;
+  executionStatus: TestSuiteTestStatus;
 }) {
   const url = getURL(recording.id, recording.buildId);
 
@@ -21,7 +21,11 @@ export function RecordingRow({
   const isWithinRetentionLimit = isDateWithinRetentionLimits(recording.createdAt, retentionLimit);
 
   if (isWithinRetentionLimit) {
-    const colorClassName = getColorClassName(status);
+    let result = recording.testResult;
+    if (result === "failed" && executionStatus === "flaky") {
+      result = "flaky";
+    }
+    const colorClassName = getColorClassName(result);
 
     return (
       <Link

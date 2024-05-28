@@ -42,9 +42,13 @@ export function TestsAndExecutions() {
   const isWithinRetentionLimit = isDateWithinRetentionLimits(selectedTestRun.date, retentionLimit);
 
   const recordings = selectedTest.executions.flatMap(execution => {
-    return execution.recordings.map(recording => (
-      <TestExecutionRow key={recording.id} recording={recording} status={execution.status} />
-    ));
+    let status = execution.status;
+    if (status === "failed" && selectedTest.status === "flaky") {
+      status = "flaky";
+    }
+    return execution.recordings.map(recording => {
+      return <TestExecutionRow key={recording.id} recording={recording} status={status} />;
+    });
   });
 
   return (
