@@ -8,15 +8,19 @@ import { RCATestEntryRow } from "@/pageComponents/team/id/rca/RCATestEntryRow";
 import { RCATestEntryDetails } from "@/pageComponents/team/id/rca/RCATestEntryDetails";
 import { useContext, useState } from "react";
 import { SessionContext } from "@/components/SessionContext";
+import { useWorkspaceRootCauseCategories } from "@/graphql/queries/useWorkspaceRootCauseCategories";
 
 export default function Page({
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
+  const { categories } = useWorkspaceRootCauseCategories(workspaceId);
   const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
   const [selectedTestEntryId, setSelectedTestEntryId] = useState<string | null>(null);
 
   const { user } = useContext(SessionContext);
+
+  console.log("RCA categories: ", categories);
 
   console.log("RCA test results: ", rcaTestEntries);
 
@@ -33,13 +37,13 @@ export default function Page({
   const selectedTestEntry = rcaTestEntries.find(entry => entry.id === selectedTestEntryId);
 
   return (
-    <div className="w-full p-2">
-      <div className="flex w-full">
+    <div className="h-full w-full p-2">
+      <div className="flex h-full w-full">
         <div className="flex flex-col grow basis-2/5 p-2">
-          <div className="flex flex-col grow">
+          <div className="flex flex-col basis-1/2">
             <h3 className="text-lg font-bold">Categorized Test Failures</h3>
           </div>
-          <div className="flex flex-col grow">
+          <div className="flex flex-col basis-1/2">
             <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
             {renderedEntries}
           </div>
