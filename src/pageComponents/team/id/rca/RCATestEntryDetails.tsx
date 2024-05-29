@@ -44,7 +44,11 @@ export function RCATestEntryDetails({
     const key = `${f.sourceId}:${f.key}:${f.functionName}`;
     return (
       <div key={key} className="m-1">
-        <RCAJSFunctionDiscrepancy analysisTestEntry={analysisTestEntry} formattedFrame={f} />
+        <RCAJSFunctionDiscrepancy
+          analysisTestEntry={analysisTestEntry}
+          formattedFrame={f}
+          workspaceId={workspaceId}
+        />
       </div>
     );
   });

@@ -2,6 +2,7 @@ import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import assert from "assert";
 import { useMemo } from "react";
+import { decodeEncodedId } from "./useCreateRootCauseCategory";
 
 export interface RootCauseDiscrepancyTriplet {
   kind: string;
@@ -38,6 +39,7 @@ interface GetWorkspaceRootCauseCategoriesQueryVariables {
 // TODO stop fetching all discrepancies up front, and only fetch when an entry is selected
 
 export function useWorkspaceRootCauseCategories(workspaceId: string) {
+  const decodedWorkspaceId = decodeEncodedId(workspaceId);
   const {
     data,
     error: didError,
@@ -64,7 +66,7 @@ export function useWorkspaceRootCauseCategories(workspaceId: string) {
         }
       }
     `,
-    { workspaceId }
+    { workspaceId: decodedWorkspaceId }
   );
 
   const categories = useMemo<RCACategory[]>(() => {

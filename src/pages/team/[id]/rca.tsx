@@ -9,6 +9,8 @@ import { RCATestEntryDetails } from "@/pageComponents/team/id/rca/RCATestEntryDe
 import { useContext, useState } from "react";
 import { SessionContext } from "@/components/SessionContext";
 import { useWorkspaceRootCauseCategories } from "@/graphql/queries/useWorkspaceRootCauseCategories";
+import { useCreateRootCauseCategory } from "@/graphql/queries/useCreateRootCauseCategory";
+import { RCACategoryRow } from "@/pageComponents/team/id/rca/RCACategoryRow";
 
 export default function Page({
   workspaceId,
@@ -17,12 +19,13 @@ export default function Page({
   const { categories } = useWorkspaceRootCauseCategories(workspaceId);
   const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
   const [selectedTestEntryId, setSelectedTestEntryId] = useState<string | null>(null);
+  const { createRootCauseCategory } = useCreateRootCauseCategory();
 
   const { user } = useContext(SessionContext);
 
-  console.log("RCA categories: ", categories);
-
-  console.log("RCA test results: ", rcaTestEntries);
+  const renderedCategories = categories.map(category => (
+    <RCACategoryRow key={category.id} category={category} />
+  ));
 
   const renderedEntries = rcaTestEntries.map(entry => (
     <RCATestEntryRow
@@ -42,6 +45,15 @@ export default function Page({
         <div className="flex flex-col grow basis-2/5 p-2">
           <div className="flex flex-col basis-1/2">
             <h3 className="text-lg font-bold">Categorized Test Failures</h3>
+            <div className="flex flex-row gap-4">
+              <button
+                className="bg-blue-400 text-white p-2 rounded-md"
+                onClick={() => createRootCauseCategory(workspaceId, "New Category")}
+              >
+                Create New Category
+              </button>
+            </div>
+            {renderedCategories}
           </div>
           <div className="flex flex-col basis-1/2">
             <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>

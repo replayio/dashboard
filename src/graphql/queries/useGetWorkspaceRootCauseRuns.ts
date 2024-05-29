@@ -441,7 +441,11 @@ export function useWorkspaceRootCauseTestEntryDetails(
     GetWorkspaceRootCauseTestEntryQueryVariables
   >(
     gql`
-      query GetWorkspaceRootCauseRuns($workspaceId: ID!, $runId: String!, $testEntryId: String!) {
+      query GetWorkspaceRootCauseTestEntryDetails(
+        $workspaceId: ID!
+        $runId: String!
+        $testEntryId: String!
+      ) {
         node(id: $workspaceId) {
           ... on Workspace {
             id
@@ -523,7 +527,7 @@ function getTestEntriesFromRunsQueryResults(
 }
 
 export function isExecutedStatementDiscrepancy(
-  discrepancy: AnyDiscrepancy
+  discrepancy: any
 ): discrepancy is ExecutedStatementDiscrepancy {
-  return discrepancy.eventKind == "ExecutedStatement";
+  return "eventKind" in discrepancy && discrepancy.eventKind == "ExecutedStatement";
 }
