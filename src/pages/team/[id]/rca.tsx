@@ -42,7 +42,12 @@ export default function Page({
         <div className="basis-2/5 p-2">
           <h3 className="text-lg font-bold">Test Analysis Details</h3>
           {selectedTestEntry && (
-            <RCATestEntryDetails analysisTestEntry={selectedTestEntry} user={user} />
+            <RCATestEntryDetails
+              workspaceId={workspaceId}
+              runId={selectedTestEntry.runId}
+              testEntryId={selectedTestEntry.id}
+              user={user}
+            />
           )}
         </div>
       </div>

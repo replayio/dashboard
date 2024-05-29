@@ -1,6 +1,9 @@
 import classnames from "classnames";
 import { Icon } from "@/components/Icon";
-import { RCATestEntry } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
+import {
+  RCATestEntry,
+  useWorkspaceRootCauseTestEntryDetails,
+} from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
@@ -8,12 +11,30 @@ import { getURL } from "@/utils/recording";
 
 export function RCATestEntryDetails({
   user,
-  analysisTestEntry,
+  workspaceId,
+  runId,
+  testEntryId,
 }: {
-  analysisTestEntry: RCATestEntry;
+  workspaceId: string;
+  runId: string;
+  testEntryId: string;
   user: User;
 }) {
-  const { resultMetadata, discrepancies } = analysisTestEntry;
+  const { analysisTestEntry, isLoading } = useWorkspaceRootCauseTestEntryDetails(
+    workspaceId,
+    runId,
+    testEntryId
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!analysisTestEntry) {
+    return <div>Failed to load test entry details</div>;
+  }
+
+  const { discrepancies, resultMetadata } = analysisTestEntry;
 
   const renderedDiscrepances = discrepancies.map(d => {
     return (
