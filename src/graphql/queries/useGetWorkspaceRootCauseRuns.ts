@@ -18,7 +18,6 @@ interface RCADiscrepancy {
   kind: string;
   eventKind: string;
   key: string;
-  // TODO Need to expose this via GraphQL
   event: AnyDiscrepancy["event"];
 }
 
@@ -188,10 +187,10 @@ export interface CustomEvent extends DiscrepancyEvent {
   value?: ComparableValue;
 }
 
-type ExecutedStatementDiscrepancy = Discrepancy<ExecutedStatementWithDescription>;
-type ReactComponentDiscrepancy = Discrepancy<ReactComponent>;
-type NetworkEventDiscrepancy = Discrepancy<NetworkEventWithAlternate>;
-type CustomEventDiscrepancy = Discrepancy<CustomEvent>;
+export type ExecutedStatementDiscrepancy = Discrepancy<ExecutedStatementWithDescription>;
+export type ReactComponentDiscrepancy = Discrepancy<ReactComponent>;
+export type NetworkEventDiscrepancy = Discrepancy<NetworkEventWithAlternate>;
+export type CustomEventDiscrepancy = Discrepancy<CustomEvent>;
 
 export type AnyDiscrepancy =
   | ExecutedStatementDiscrepancy
@@ -295,7 +294,7 @@ export interface Exception {
   // Description of an exception's error, where available.
   error?: ProtocolObject;
 }
-interface LineExecutionDiscrepancy {
+export interface LineExecutionDiscrepancy {
   [DiscrepancyKind.Extra]?: ExecutionPoint;
   [DiscrepancyKind.Missing]?: ExecutionPoint;
 }
@@ -521,4 +520,10 @@ function getTestEntriesFromRunsQueryResults(
     )
     .flat();
   return recentSuccessfulAnalysisTestResults;
+}
+
+export function isExecutedStatementDiscrepancy(
+  discrepancy: AnyDiscrepancy
+): discrepancy is ExecutedStatementDiscrepancy {
+  return discrepancy.eventKind == "ExecutedStatement";
 }

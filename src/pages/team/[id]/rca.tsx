@@ -35,11 +35,11 @@ export default function Page({
   return (
     <div className="w-full p-2">
       <div className="flex flex-column w-full">
-        <div className="grow basis-3/5 p-2">
+        <div className="grow basis-2/5 p-2">
           <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
           {renderedEntries}
         </div>
-        <div className="basis-2/5 p-2">
+        <div className="basis-3/5 p-2 max-w-[60%]">
           <h3 className="text-lg font-bold">Test Analysis Details</h3>
           {selectedTestEntry && (
             <RCATestEntryDetails
