@@ -34,10 +34,15 @@ export default function Page({
 
   return (
     <div className="w-full p-2">
-      <div className="flex flex-column w-full">
-        <div className="grow basis-2/5 p-2">
-          <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
-          {renderedEntries}
+      <div className="flex w-full">
+        <div className="flex flex-col grow basis-2/5 p-2">
+          <div className="flex flex-col grow">
+            <h3 className="text-lg font-bold">Categorized Test Failures</h3>
+          </div>
+          <div className="flex flex-col grow">
+            <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
+            {renderedEntries}
+          </div>
         </div>
         <div className="basis-3/5 p-2 max-w-[60%]">
           <h3 className="text-lg font-bold">Test Analysis Details</h3>
