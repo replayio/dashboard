@@ -10,7 +10,7 @@ import {
   useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
-import { useCreateRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancies";
+import { useCreateRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancyMutations";
 import { useState } from "react";
 import {
   RootCauseDiscrepancyTriplet,
