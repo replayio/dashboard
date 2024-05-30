@@ -2,7 +2,7 @@ import { useGraphQLQuery } from "@/hooks/useGraphQLQuery";
 import { gql } from "@apollo/client";
 import assert from "assert";
 import { useMemo } from "react";
-import { decodeEncodedId } from "./useCreateRootCauseCategory";
+import { decodeEncodedId } from "./useRootCauseCategoryMutations";
 
 export interface RootCauseDiscrepancyTriplet {
   kind: string;

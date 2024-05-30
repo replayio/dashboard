@@ -4,60 +4,37 @@ import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerS
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { RCATestEntryRow } from "@/pageComponents/team/id/rca/RCATestEntryRow";
 import { RCATestEntryDetails } from "@/pageComponents/team/id/rca/RCATestEntryDetails";
 import { useContext, useState } from "react";
 import { SessionContext } from "@/components/SessionContext";
-import { useWorkspaceRootCauseCategories } from "@/graphql/queries/useWorkspaceRootCauseCategories";
-import { useCreateRootCauseCategory } from "@/graphql/queries/useCreateRootCauseCategory";
-import { RCACategoryRow } from "@/pageComponents/team/id/rca/RCACategoryRow";
+
+import { RCACategoriesList } from "@/pageComponents/team/id/rca/RCACategoriesList";
+import { RCAAnalyzedTestsList } from "@/pageComponents/team/id/rca/RCAAnalyzedTestsList";
 
 export default function Page({
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
-  const { categories } = useWorkspaceRootCauseCategories(workspaceId);
-  const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
   const [selectedTestEntryId, setSelectedTestEntryId] = useState<string | null>(null);
-  const { createRootCauseCategory } = useCreateRootCauseCategory();
+  const { isLoading, runs: rcaTestEntries } = useWorkspaceRootCauseRuns(workspaceId);
 
   const { user } = useContext(SessionContext);
-
-  const renderedCategories = categories.map(category => (
-    <RCACategoryRow key={category.id} category={category} />
-  ));
-
-  const renderedEntries = rcaTestEntries.map(entry => (
-    <RCATestEntryRow
-      key={entry.id}
-      analysisTestEntry={entry}
-      user={user}
-      onClick={() => setSelectedTestEntryId(entry.id)}
-      selected={selectedTestEntryId === entry.id}
-    />
-  ));
 
   const selectedTestEntry = rcaTestEntries.find(entry => entry.id === selectedTestEntryId);
 
   return (
     <div className="h-full w-full p-2">
       <div className="flex h-full w-full">
-        <div className="flex flex-col grow basis-2/5 p-2">
-          <div className="flex flex-col basis-1/2">
-            <h3 className="text-lg font-bold">Categorized Test Failures</h3>
-            <div className="flex flex-row gap-4">
-              <button
-                className="bg-blue-400 text-white p-2 rounded-md"
-                onClick={() => createRootCauseCategory(workspaceId, "New Category")}
-              >
-                Create New Category
-              </button>
-            </div>
-            {renderedCategories}
+        <div className="flex flex-col basis-2/5 p-2 max-w-[40%] ">
+          <div className="flex flex-col basis-1/2 max-h-[50%]">
+            <RCACategoriesList workspaceId={workspaceId} />
           </div>
-          <div className="flex flex-col basis-1/2">
-            <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
-            {renderedEntries}
+          <div className="flex flex-col basis-1/2 max-h-[50%]">
+            <RCAAnalyzedTestsList
+              workspaceId={workspaceId}
+              setSelectedTestEntryId={setSelectedTestEntryId}
+              selectedTestEntryId={selectedTestEntryId}
+            />
           </div>
         </div>
         <div className="basis-3/5 p-2 max-w-[60%]">

@@ -10,7 +10,7 @@ import {
   useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
-import { useCreateRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancies";
+import { useCreateRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancyMutations";
 import { useState } from "react";
 import {
   RootCauseDiscrepancyTriplet,
@@ -102,7 +102,7 @@ export function RCAJSFunctionDiscrepancy({
                           })}
                         </select>
                         <button
-                          className="bg-blue-400 text-white rounded"
+                          className="bg-sky-600 text-white rounded"
                           onClick={async () => {
                             const categoryToAdd = categories.find(
                               category => category.id === selectedCategory
