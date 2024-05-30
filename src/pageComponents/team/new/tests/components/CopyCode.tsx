@@ -7,11 +7,15 @@ import type { BundledLanguage } from "shiki";
 export function CopyCode({
   className,
   code,
+  codeToCopy,
   lang,
+  size = "normal",
 }: {
   className?: string;
   code: string;
+  codeToCopy?: string;
   lang?: BundledLanguage;
+  size?: "normal" | "small";
 }) {
   const [state, setState] = useState<"hover" | "copied" | undefined>();
 
@@ -28,7 +32,7 @@ export function CopyCode({
         setState(undefined);
         break;
       case "click":
-        copyText(code);
+        copyText(codeToCopy ?? code);
         setState("copied");
         break;
     }
@@ -47,13 +51,17 @@ export function CopyCode({
 
   return (
     <div
-      className="flex relative"
+      className="flex relative shrink-0"
       data-test-name="CopyCode"
       onClick={onMouse}
       onMouseEnter={onMouse}
       onMouseLeave={onMouse}
     >
-      <Code className={`w-full cursor-pointer ${className}`} code={code} lang={lang} />
+      <Code
+        className={`w-full cursor-pointer ${size === "normal" ? "" : "text-xs"} ${className}`}
+        code={code}
+        lang={lang}
+      />
       <div className="absolute top-1 right-0 pointer-events-none flex flex-row items-center text-xs">
         {state === "copied" ? (
           <span className="bg-slate-950 px-1 round text-sky-400">Copied</span>
@@ -61,7 +69,7 @@ export function CopyCode({
           <div className="bg-slate-950 px-1 round">Copy</div>
         ) : (
           <div className="bg-slate-950 px-1 round">
-            <Icon className="w-5 h-5" type="copy" />
+            <Icon className={size === "normal" ? "w-5 h-5" : "w-4 h-4"} type="copy" />
           </div>
         )}
       </div>
