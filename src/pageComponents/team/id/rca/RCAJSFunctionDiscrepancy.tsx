@@ -78,9 +78,9 @@ export function RCAJSFunctionDiscrepancy({
             }
           >
             <div className="flex flex-col font-mono">
-              {lineDetails.map(({ line, source, discrepancies }, index) => {
-                const hasExtra = !!discrepancies?.[DiscrepancyKind.Extra];
-                const hasMissing = !!discrepancies?.[DiscrepancyKind.Missing];
+              {lineDetails.map(({ line, source, discrepancies: discrepanciesForLine }, index) => {
+                const hasExtra = !!discrepanciesForLine?.[DiscrepancyKind.Extra];
+                const hasMissing = !!discrepanciesForLine?.[DiscrepancyKind.Missing];
 
                 const isHovered = hoveredLine === line;
                 const hasDiscrepancy = hasExtra || hasMissing;
@@ -116,29 +116,13 @@ export function RCAJSFunctionDiscrepancy({
                               const searchKind = hasExtra
                                 ? DiscrepancyKind.Extra
                                 : DiscrepancyKind.Missing;
-                              const searchPoint = discrepancies[searchKind];
-                              console.log("Search values: ", {
-                                sourceId: formattedFrame.sourceId,
-                                line,
-                                searchPoint,
-                              });
-                              const actualDiscrepancy = analysisTestEntry.discrepancies.find(d => {
-                                if (isExecutedStatementDiscrepancy(d)) {
-                                  const { event } = d;
-                                  const pointMatches = d.event.point === searchPoint;
 
-                                  return pointMatches;
-                                  // const matchingLocation = event.location.find(
-                                  //   l => l.sourceId == formattedFrame.sourceId && l.line == line
-                                  // );
-                                  // if (matchingLocation) {
-                                  //   console.log("Found matching location: ", matchingLocation, d);
-                                  //   return true;
-                                  // }
-                                }
+                              const discrepanciesForKindByPoint =
+                                discrepanciesByKindAndPoint[searchKind];
+                              const discrepancyPoint = discrepanciesForLine[searchKind];
 
-                                return false;
-                              });
+                              const actualDiscrepancy =
+                                discrepanciesForKindByPoint?.[discrepancyPoint ?? ""];
 
                               console.log("Actual discrepancy: ", actualDiscrepancy);
 

@@ -49,6 +49,9 @@ export interface Discrepancy<T extends DiscrepancyEvent> {
   // The kind of underlying event.
   eventKind: string;
 
+  // Added by the analysis logic on insert, extracted from the event type
+  key: string;
+
   // Any ID for a sequence of discrepancies this is associated with.
   sequenceId: string;
 
