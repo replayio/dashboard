@@ -1,5 +1,9 @@
+import { useState } from "react";
 import classnames from "classnames";
+
 import { Icon } from "@/components/Icon";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+
 import {
   AnyDiscrepancy,
   DiscrepancyKind,
@@ -10,10 +14,11 @@ import {
   isExecutedStatementDiscrepancy,
   useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
-import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import { useCreateRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancyMutations";
-import { useState } from "react";
+
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import {
+  RCACategory,
   RootCauseDiscrepancyTriplet,
   useWorkspaceRootCauseCategories,
 } from "@/graphql/queries/useWorkspaceRootCauseCategories";
@@ -79,117 +84,163 @@ export function RCAJSFunctionDiscrepancy({
           >
             <div className="flex flex-col font-mono">
               {lineDetails.map(({ line, source, discrepancies: discrepanciesForLine }, index) => {
-                const hasExtra = !!discrepanciesForLine?.[DiscrepancyKind.Extra];
-                const hasMissing = !!discrepanciesForLine?.[DiscrepancyKind.Missing];
-
-                const isHovered = hoveredLine === line;
-                const hasDiscrepancy = hasExtra || hasMissing;
-
-                let hoverContent: React.ReactNode = null;
-
-                if (isHovered) {
-                  if (hasDiscrepancy) {
-                    hoverContent = (
-                      <div className="absolute right-0">
-                        <select
-                          value={selectedCategory || ""}
-                          onChange={e => setSelectedCategory(e.target.value)}
-                        >
-                          <option value="">Select category</option>
-                          {categories.map(category => {
-                            return (
-                              <option key={category.id} value={category.id}>
-                                {category.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                        <button
-                          className="bg-sky-600 text-white rounded"
-                          onClick={async () => {
-                            const categoryToAdd = categories.find(
-                              category => category.id === selectedCategory
-                            );
-
-                            console.log("Category: ", categoryToAdd);
-                            if (categoryToAdd) {
-                              const searchKind = hasExtra
-                                ? DiscrepancyKind.Extra
-                                : DiscrepancyKind.Missing;
-
-                              const discrepanciesForKindByPoint =
-                                discrepanciesByKindAndPoint[searchKind];
-                              const discrepancyPoint = discrepanciesForLine[searchKind];
-
-                              const actualDiscrepancy =
-                                discrepanciesForKindByPoint?.[discrepancyPoint ?? ""];
-
-                              console.log("Actual discrepancy: ", actualDiscrepancy);
-
-                              if (actualDiscrepancy) {
-                                const { kind, eventKind, key } = actualDiscrepancy;
-                                const discrepancy: RootCauseDiscrepancyTriplet = {
-                                  kind,
-                                  eventKind,
-                                  key,
-                                };
-
-                                console.log("Creating discrepancy: ", {
-                                  categoryId: categoryToAdd.id,
-                                  discrepancy,
-                                });
-
-                                const result = await createRootCauseCategoryDiscrepancies(
-                                  workspaceId,
-                                  categoryToAdd.id,
-                                  [discrepancy]
-                                );
-                                console.log("Creation result: ", result);
-                              }
-                            }
-                          }}
-                        >
-                          Add to Category
-                        </button>
-                      </div>
-                    );
-                  }
-                }
                 return (
-                  <div
-                    className={classnames("flex flex-row relative", {
-                      "hover:border-blue-400 hover:border": hasExtra || hasMissing,
-                    })}
+                  <JSFunctionSourceLine
                     key={index}
-                    onMouseOver={() => setHoveredLine(line)}
-                    onMouseOut={() => setHoveredLine(null)}
-                  >
-                    <div className="min-w-8 text-gray-400">{line}</div>
-                    <div
-                      className={classnames("min-w-2 text-gray-400", {
-                        "bg-green-400": hasExtra,
-                      })}
-                    >
-                      {hasExtra ? "E" : null}
-                    </div>
-                    <div
-                      className={classnames("min-w-2 text-gray-400", {
-                        "bg-red-400": hasMissing,
-                      })}
-                    >
-                      {hasMissing ? "M" : null}
-                    </div>
-                    <div className="flex flex-grow ">
-                      <pre className="text-ellipsis">{source}</pre>
-                    </div>
-                    {hoverContent}
-                  </div>
+                    {...{
+                      discrepanciesForLine,
+                      hoveredLine,
+                      line,
+                      selectedCategory,
+                      setSelectedCategory,
+                      categories,
+                      discrepanciesByKindAndPoint,
+                      createRootCauseCategoryDiscrepancies,
+                      workspaceId,
+                      index,
+                      setHoveredLine,
+                      source,
+                    }}
+                  />
                 );
               })}
             </div>
           </ExpandableSection>
         </div>
       </div>
+    </div>
+  );
+}
+
+function JSFunctionSourceLine({
+  discrepanciesForLine,
+  hoveredLine,
+  line,
+  selectedCategory,
+  setSelectedCategory,
+  categories,
+  discrepanciesByKindAndPoint,
+  createRootCauseCategoryDiscrepancies,
+  workspaceId,
+  index,
+  setHoveredLine,
+  source,
+}: {
+  discrepanciesForLine: LineExecutionDiscrepancy | undefined;
+  hoveredLine: number | null;
+  line: number;
+  selectedCategory: string | null;
+  setSelectedCategory: (categoryId: string) => void;
+  categories: RCACategory[];
+  discrepanciesByKindAndPoint: Record<string, Record<string, ExecutedStatementDiscrepancy>>;
+  createRootCauseCategoryDiscrepancies: (
+    workspaceId: string,
+    categoryId: string,
+    discrepancies: RootCauseDiscrepancyTriplet[]
+  ) => Promise<any>;
+  workspaceId: string;
+  index: number;
+  setHoveredLine: (line: number | null) => void;
+  source: string;
+}) {
+  const hasExtra = !!discrepanciesForLine?.[DiscrepancyKind.Extra];
+  const hasMissing = !!discrepanciesForLine?.[DiscrepancyKind.Missing];
+
+  const isHovered = hoveredLine === line;
+  const hasDiscrepancy = hasExtra || hasMissing;
+
+  let hoverContent: React.ReactNode = null;
+
+  if (isHovered) {
+    if (hasDiscrepancy) {
+      hoverContent = (
+        <div className="absolute right-0">
+          <select
+            value={selectedCategory || ""}
+            onChange={e => setSelectedCategory(e.target.value)}
+          >
+            <option value="">Select category</option>
+            {categories.map(category => {
+              return (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              );
+            })}
+          </select>
+          <button
+            className="bg-sky-600 text-white rounded"
+            onClick={async () => {
+              const categoryToAdd = categories.find(category => category.id === selectedCategory);
+
+              console.log("Category: ", categoryToAdd);
+              if (categoryToAdd) {
+                const searchKind = hasExtra ? DiscrepancyKind.Extra : DiscrepancyKind.Missing;
+
+                const discrepanciesForKindByPoint = discrepanciesByKindAndPoint[searchKind];
+                const discrepancyPoint = discrepanciesForLine[searchKind];
+
+                const actualDiscrepancy = discrepanciesForKindByPoint?.[discrepancyPoint ?? ""];
+
+                console.log("Actual discrepancy: ", actualDiscrepancy);
+
+                if (actualDiscrepancy) {
+                  const { kind, eventKind, key } = actualDiscrepancy;
+                  const discrepancy: RootCauseDiscrepancyTriplet = {
+                    kind,
+                    eventKind,
+                    key,
+                  };
+
+                  console.log("Creating discrepancy: ", {
+                    categoryId: categoryToAdd.id,
+                    discrepancy,
+                  });
+
+                  const result = await createRootCauseCategoryDiscrepancies(
+                    workspaceId,
+                    categoryToAdd.id,
+                    [discrepancy]
+                  );
+                  console.log("Creation result: ", result);
+                }
+              }
+            }}
+          >
+            Add to Category
+          </button>
+        </div>
+      );
+    }
+  }
+  return (
+    <div
+      className={classnames("flex flex-row relative", {
+        "hover:border-blue-400 hover:border": hasExtra || hasMissing,
+      })}
+      key={index}
+      onMouseOver={() => setHoveredLine(line)}
+      onMouseOut={() => setHoveredLine(null)}
+    >
+      <div className="min-w-8 text-gray-400">{line}</div>
+      <div
+        className={classnames("min-w-2 text-gray-400", {
+          "bg-green-400": hasExtra,
+        })}
+      >
+        {hasExtra ? "E" : null}
+      </div>
+      <div
+        className={classnames("min-w-2 text-gray-400", {
+          "bg-red-400": hasMissing,
+        })}
+      >
+        {hasMissing ? "M" : null}
+      </div>
+      <div className="flex flex-grow ">
+        <pre className="text-ellipsis">{source}</pre>
+      </div>
+      {hoverContent}
     </div>
   );
 }
