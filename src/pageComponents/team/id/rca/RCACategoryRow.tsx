@@ -34,8 +34,8 @@ export function RCACategoryRow({
       data-test-name="RCACategoryRow"
       // onClick={onClick}
     >
-      <div className="flex flex-row items-center gap-2 w-full truncate">
-        <div className="flex flex-col grow gap-1 truncate">
+      <div className="flex flex-row items-center gap-1 w-full truncate">
+        <div className="flex flex-col grow truncate">
           <div className="truncate font-bold">{category.name}</div>
           <div>Failure percentage: {actualPercentage}%</div>
           <div>Discrepancies: {category.discrepancies.length}</div>

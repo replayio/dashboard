@@ -102,7 +102,7 @@ export function RCAJSFunctionDiscrepancy({
                           })}
                         </select>
                         <button
-                          className="bg-blue-400 text-white rounded"
+                          className="bg-sky-600 text-white rounded"
                           onClick={async () => {
                             const categoryToAdd = categories.find(
                               category => category.id === selectedCategory
