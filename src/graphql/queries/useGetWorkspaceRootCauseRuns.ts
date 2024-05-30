@@ -13,7 +13,7 @@ import {
 } from "@replayio/protocol";
 
 // TODO Port types from the backend
-interface RCADiscrepancy {
+export interface RCADiscrepancy {
   id: string;
   kind: string;
   eventKind: string;

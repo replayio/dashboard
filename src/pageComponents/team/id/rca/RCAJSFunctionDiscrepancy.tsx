@@ -3,6 +3,7 @@ import { Icon } from "@/components/Icon";
 import {
   AnyDiscrepancy,
   DiscrepancyKind,
+  ExecutedStatementDiscrepancy,
   FormattedFrame,
   LineExecutionDiscrepancy,
   RCATestEntry,
@@ -27,10 +28,12 @@ export function RCAJSFunctionDiscrepancy({
   analysisTestEntry,
   formattedFrame,
   workspaceId,
+  discrepanciesByKindAndPoint,
 }: {
   formattedFrame: FormattedFrame;
   analysisTestEntry: RCATestEntry;
   workspaceId: string;
+  discrepanciesByKindAndPoint: Record<string, Record<string, ExecutedStatementDiscrepancy>>;
 }) {
   const [hoveredLine, setHoveredLine] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

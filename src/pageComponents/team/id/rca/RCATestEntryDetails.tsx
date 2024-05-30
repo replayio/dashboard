@@ -2,13 +2,17 @@ import { useMemo } from "react";
 import classnames from "classnames";
 import groupBy from "lodash/groupBy";
 import sortBy from "lodash/sortBy";
+import mapValues from "lodash/mapValues";
 
 import { Icon } from "@/components/Icon";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 
 import {
+  ExecutedStatementDiscrepancy,
   FormattedFrame,
+  RCADiscrepancy,
   RCATestEntry,
+  isExecutedStatementDiscrepancy,
   useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
@@ -22,11 +26,13 @@ function FramesForURL({
   frames,
   workspaceId,
   analysisTestEntry,
+  discrepanciesByKindAndPoint,
 }: {
   url: string;
   frames: FormattedFrame[];
   workspaceId: string;
   analysisTestEntry: RCATestEntry;
+  discrepanciesByKindAndPoint: Record<string, Record<string, ExecutedStatementDiscrepancy>>;
 }) {
   const sortedFrames = useMemo(() => {
     return sortBy(frames, f => f.line);
@@ -40,6 +46,7 @@ function FramesForURL({
           analysisTestEntry={analysisTestEntry}
           formattedFrame={f}
           workspaceId={workspaceId}
+          discrepanciesByKindAndPoint={discrepanciesByKindAndPoint}
         />
       </div>
     );
@@ -51,6 +58,8 @@ function FramesForURL({
     </ExpandableSection>
   );
 }
+
+const NO_DISCREPANCIES: RCADiscrepancy[] = [];
 
 export function RCATestEntryDetails({
   user,
@@ -69,6 +78,26 @@ export function RCATestEntryDetails({
     testEntryId
   );
 
+  const discrepancies = analysisTestEntry?.discrepancies ?? NO_DISCREPANCIES;
+
+  const jsExecutionDiscrepancies = useMemo(() => {
+    return discrepancies.filter(d =>
+      isExecutedStatementDiscrepancy(d)
+    ) as unknown as ExecutedStatementDiscrepancy[];
+  }, [discrepancies]);
+
+  const discrepanciesByKindAndPoint = useMemo(() => {
+    const discrepanciesByKind = groupBy(jsExecutionDiscrepancies, d => d.kind);
+
+    return mapValues(discrepanciesByKind, discrepancies => {
+      const discrepanciesByPoint: Record<string, ExecutedStatementDiscrepancy> = {};
+      for (const d of discrepancies) {
+        discrepanciesByPoint[d.event.point] = d;
+      }
+      return discrepanciesByPoint;
+    });
+  }, [jsExecutionDiscrepancies]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -79,8 +108,10 @@ export function RCATestEntryDetails({
 
   console.log("Selected analysis entry: ", analysisTestEntry);
 
-  const { discrepancies, resultMetadata } = analysisTestEntry;
+  const { resultMetadata } = analysisTestEntry;
   const { failingFrames } = resultMetadata;
+
+  console.log("JS discrepancies: ", jsExecutionDiscrepancies);
 
   const framesByUrl = groupBy(failingFrames, f => f.url || "Unknown");
 
@@ -94,6 +125,7 @@ export function RCATestEntryDetails({
         frames={frames}
         workspaceId={workspaceId}
         analysisTestEntry={analysisTestEntry}
+        discrepanciesByKindAndPoint={discrepanciesByKindAndPoint}
       />
     );
   });
