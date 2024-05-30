@@ -170,7 +170,9 @@ export function RCAJSFunctionDiscrepancy({
                 }
                 return (
                   <div
-                    className="flex flex-row hover:border-blue-400 hover:border relative"
+                    className={classnames("flex flex-row relative", {
+                      "hover:border-blue-400 hover:border": hasExtra || hasMissing,
+                    })}
                     key={index}
                     onMouseOver={() => setHoveredLine(line)}
                     onMouseOut={() => setHoveredLine(null)}
