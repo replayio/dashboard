@@ -25,11 +25,17 @@ interface CreateRootCauseCategoryDiscrepanciesMutationVariables {
   discrepancies: RootCauseDiscrepancyTriplet[];
 }
 
+interface DeleteRootCauseCategoryDiscrepancyMutationVariables {
+  workspaceId: string;
+  categoryId: string;
+  discrepancyId: string;
+}
+
 export function useCreateRootCauseCategoryDiscrepancy() {
   const {
     error,
     isLoading,
-    mutate: createRootCauseCategoryMutation,
+    mutate: createRootCauseCategoryDiscrepancyMutation,
   } = useGraphQLMutation<
     CreateRootCauseCategoryDiscrepanciesMutation,
     CreateRootCauseCategoryDiscrepanciesMutationVariables
@@ -69,10 +75,48 @@ export function useCreateRootCauseCategoryDiscrepancy() {
     const decodedWorkspaceId = decodeEncodedId(workspaceId);
     // const decodedCategoryId = decodeEncodedId(categoryId);
 
-    return createRootCauseCategoryMutation({
+    return createRootCauseCategoryDiscrepancyMutation({
       variables: { workspaceId: decodedWorkspaceId, categoryId, discrepancies },
     });
   };
 
   return { createRootCauseCategoryDiscrepancies, error, isLoading };
+}
+
+export function useDeleteRootCauseCategoryDiscrepancy() {
+  const {
+    error,
+    isLoading,
+    mutate: deleteRootCauseCategoryDiscrepancyMutation,
+  } = useGraphQLMutation<
+    Record<string, unknown>,
+    DeleteRootCauseCategoryDiscrepancyMutationVariables
+  >(
+    gql`
+      mutation DeleteRootCauseCategoryDiscrepancy($workspaceId: String!, $discrepancyId: String!) {
+        deleteRootCauseCategoryDiscrepancy(
+          input: { workspaceId: $workspaceId, discrepancyId: $discrepancyId }
+        ) {
+          success
+        }
+      }
+    `,
+    {
+      refetchQueries: ["GetWorkspaceRootCauseCategories", "GetWorkspaceRootCauseTestEntryDetails"],
+    }
+  );
+
+  const deleteRootCauseCategoryDiscrepancy = (
+    workspaceId: string,
+    categoryId: string,
+    discrepancyId: string
+  ) => {
+    const decodedWorkspaceId = decodeEncodedId(workspaceId);
+
+    return deleteRootCauseCategoryDiscrepancyMutation({
+      variables: { workspaceId: decodedWorkspaceId, categoryId, discrepancyId },
+    });
+  };
+
+  return { deleteRootCauseCategoryDiscrepancy, error, isLoading };
 }

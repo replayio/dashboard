@@ -6,11 +6,69 @@ import { EditableTitle } from "@/components/EditableTitle";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 
-import { RCACategory } from "@/graphql/queries/useWorkspaceRootCauseCategories";
+import {
+  RCACategory,
+  RCACategoryDiscrepancy,
+} from "@/graphql/queries/useWorkspaceRootCauseCategories";
 import {
   useUpdateRootCauseCategory,
   useDeleteRootCauseCategory,
 } from "@/graphql/queries/useRootCauseCategoryMutations";
+import { useDeleteRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancyMutations";
+
+function RCACategoryDiscrepancyListItem({
+  workspaceId,
+  category,
+  discrepancy,
+}: {
+  workspaceId: string;
+  category: RCACategory;
+  discrepancy: RCACategoryDiscrepancy;
+}) {
+  const [isPending, setIsPending] = useState(false);
+  const { deleteRootCauseCategoryDiscrepancy } = useDeleteRootCauseCategoryDiscrepancy();
+
+  const {
+    confirmationDialog: confirmRemoveDiscrepancyDialog,
+    showConfirmationDialog: showRemoveDiscrepancyDialog,
+  } = useConfirmDialog(
+    async (confirmRemove: boolean) => {
+      if (confirmRemove) {
+        setIsPending(true);
+
+        try {
+          await deleteRootCauseCategoryDiscrepancy(workspaceId, category.id, discrepancy.id);
+        } finally {
+          setIsPending(false);
+        }
+      }
+    },
+    {
+      cancelButtonLabel: "No",
+      confirmButtonLabel: "Yes, remove",
+      message: `Are you sure you want to remove this discrepancy from the category?`,
+      title: "Remove categorized discrepancy?",
+    }
+  );
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex flex-row">
+        <div className="grow">
+          {discrepancy.eventKind}: {discrepancy.kind}{" "}
+        </div>
+        <IconButton
+          iconType="delete"
+          disabled={isPending}
+          onClick={showRemoveDiscrepancyDialog}
+          title="Remove categorized discrepancy"
+        />
+        {confirmRemoveDiscrepancyDialog}
+      </div>
+      <div className="truncate font-mono">{discrepancy.key}</div>
+    </div>
+  );
+}
 
 export function RCACategoryRow({
   workspaceId,
@@ -23,26 +81,28 @@ export function RCACategoryRow({
   const { updateRootCauseCategory } = useUpdateRootCauseCategory();
   const { deleteRootCauseCategory } = useDeleteRootCauseCategory();
 
-  const { confirmationDialog: confirmRemoveDialog, showConfirmationDialog: showRemoveDialog } =
-    useConfirmDialog(
-      async (confirmRemove: boolean) => {
-        if (confirmRemove) {
-          setIsPending(true);
+  const {
+    confirmationDialog: confirmRemoveCategoryDialog,
+    showConfirmationDialog: showRemoveCategoryDialog,
+  } = useConfirmDialog(
+    async (confirmRemove: boolean) => {
+      if (confirmRemove) {
+        setIsPending(true);
 
-          try {
-            await deleteRootCauseCategory(workspaceId, category.id);
-          } finally {
-            setIsPending(false);
-          }
+        try {
+          await deleteRootCauseCategory(workspaceId, category.id);
+        } finally {
+          setIsPending(false);
         }
-      },
-      {
-        cancelButtonLabel: "No",
-        confirmButtonLabel: "Yes, remove",
-        message: `Are you sure you want to delete the category '${category.name}'?`,
-        title: "Delete Category?",
       }
-    );
+    },
+    {
+      cancelButtonLabel: "No",
+      confirmButtonLabel: "Yes, remove",
+      message: `Are you sure you want to delete the category '${category.name}'?`,
+      title: "Delete Category?",
+    }
+  );
 
   const actualPercentage = (category.matchingFailurePercentage * 100).toFixed(2);
 
@@ -66,23 +126,23 @@ export function RCACategoryRow({
             <IconButton
               iconType="delete"
               disabled={isPending}
-              onClick={showRemoveDialog}
+              onClick={showRemoveCategoryDialog}
               title="Remove category"
             />
-            {confirmRemoveDialog}
+            {confirmRemoveCategoryDialog}
           </div>
 
           <div>Failure percentage: {actualPercentage}%</div>
           <ExpandableSection label={<div>Discrepancies: {category.discrepancies.length}</div>}>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pl-2">
               {category.discrepancies.map(discrepancy => {
                 return (
-                  <div key={discrepancy.id} className="flex flex-col ">
-                    <div>
-                      {discrepancy.eventKind}: {discrepancy.kind}
-                    </div>
-                    <div className="truncate font-mono">{discrepancy.key}</div>
-                  </div>
+                  <RCACategoryDiscrepancyListItem
+                    key={discrepancy.id}
+                    workspaceId={workspaceId}
+                    category={category}
+                    discrepancy={discrepancy}
+                  />
                 );
               })}
             </div>
