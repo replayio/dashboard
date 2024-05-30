@@ -1,4 +1,7 @@
 import { useState } from "react";
+
+import { Input } from "@/components/Input";
+
 import { useWorkspaceRootCauseCategories } from "@/graphql/queries/useWorkspaceRootCauseCategories";
 import { useCreateRootCauseCategory } from "@/graphql/queries/useRootCauseCategoryMutations";
 
@@ -8,8 +11,9 @@ export const RCACategoriesList = ({ workspaceId }: { workspaceId: string }) => {
   const [newCategoryName, setNewCategoryName] = useState("");
   const { categories } = useWorkspaceRootCauseCategories(workspaceId);
 
+  // TODO sorting order? Name, creation, failures?
   const renderedCategories = categories.map(category => (
-    <RCACategoryRow key={category.id} category={category} />
+    <RCACategoryRow key={category.id} workspaceId={workspaceId} category={category} />
   ));
 
   const { createRootCauseCategory } = useCreateRootCauseCategory();
@@ -22,11 +26,7 @@ export const RCACategoriesList = ({ workspaceId }: { workspaceId: string }) => {
     <>
       <h3 className="text-lg font-bold">Categorized Test Failures</h3>
       <div className="flex flex-row gap-4">
-        <input
-          className="grow p-2 rounded"
-          value={newCategoryName}
-          onChange={e => setNewCategoryName(e.target.value)}
-        />
+        <Input value={newCategoryName} onChange={name => setNewCategoryName(name)} />
         <button
           className="bg-sky-600 text-white p-2 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
           onClick={onCreateNewCategoryClick}
