@@ -18,8 +18,7 @@ interface RCADiscrepancy {
   kind: string;
   eventKind: string;
   key: string;
-  // TODO Need to expose this via GraphQL
-  // event: AnyDiscrepancy["event"];
+  event: AnyDiscrepancy["event"];
 }
 
 // Kinds of discrepancies that can happen in a test failure.
@@ -188,10 +187,10 @@ export interface CustomEvent extends DiscrepancyEvent {
   value?: ComparableValue;
 }
 
-type ExecutedStatementDiscrepancy = Discrepancy<ExecutedStatementWithDescription>;
-type ReactComponentDiscrepancy = Discrepancy<ReactComponent>;
-type NetworkEventDiscrepancy = Discrepancy<NetworkEventWithAlternate>;
-type CustomEventDiscrepancy = Discrepancy<CustomEvent>;
+export type ExecutedStatementDiscrepancy = Discrepancy<ExecutedStatementWithDescription>;
+export type ReactComponentDiscrepancy = Discrepancy<ReactComponent>;
+export type NetworkEventDiscrepancy = Discrepancy<NetworkEventWithAlternate>;
+export type CustomEventDiscrepancy = Discrepancy<CustomEvent>;
 
 export type AnyDiscrepancy =
   | ExecutedStatementDiscrepancy
@@ -283,11 +282,10 @@ export interface RootCauseAnalysisTestResult {
   // Frame data for the failing run.
   failingFrames: FormattedFrame[];
 
-  // Frame data for the passing run.
-  passingFrames: FormattedFrame[];
-
   // The highest priority signature which matches this failure, if any.
   matchingSignature?: TestFailureSignature;
+
+  version: 2;
 }
 
 export interface Exception {
@@ -296,23 +294,54 @@ export interface Exception {
   // Description of an exception's error, where available.
   error?: ProtocolObject;
 }
+export interface LineExecutionDiscrepancy {
+  [DiscrepancyKind.Extra]?: ExecutionPoint;
+  [DiscrepancyKind.Missing]?: ExecutionPoint;
+}
 
 export interface FormattedFrame {
   key: string;
   sourceId: string;
+  url?: string;
   functionName: string;
-  startingLineNumber: number;
+  line: number;
   sourceLines: string[];
-  hitCounts: number[];
-  breakableLines: boolean[];
+  discrepancies: Record<number, LineExecutionDiscrepancy>;
   exceptions?: Exception[];
 }
 
 export interface RCATestEntry {
   id: string;
+  // Added on the client, but whatever
+  runId: string;
   createdAt: string;
   resultMetadata: RootCauseAnalysisTestResult;
   discrepancies: Array<RCADiscrepancy>;
+}
+
+export type RCATestEntryWithoutDiscrepancies = Omit<RCATestEntry, "discrepancies">;
+
+export interface RCARunWithoutDiscrepancies {
+  id: string;
+  createdAt: string;
+  metadata: Record<string, unknown>;
+  result: string;
+  testEntries: Array<RCATestEntryWithoutDiscrepancies>;
+}
+
+// Hand-written for now, since I can't introspect Hasura in Cloud Dev
+interface GetWorkspaceRootCauseRunsQuery {
+  node: {
+    rootCauseAnalysisRuns: {
+      edges: Array<{
+        node: RCARunWithoutDiscrepancies;
+      }>;
+    };
+  };
+}
+
+interface GetWorkspaceRootCauseRunsQueryVariables {
+  workspaceId: string;
 }
 
 export interface RCARun {
@@ -324,7 +353,7 @@ export interface RCARun {
 }
 
 // Hand-written for now, since I can't introspect Hasura in Cloud Dev
-interface GetWorkspaceRootCauseRunsQuery {
+interface GetWorkspaceRootCauseTestEntryQuery {
   node: {
     rootCauseAnalysisRuns: {
       edges: Array<{
@@ -334,8 +363,10 @@ interface GetWorkspaceRootCauseRunsQuery {
   };
 }
 
-interface GetWorkspaceRootCauseRunsQueryVariables {
+interface GetWorkspaceRootCauseTestEntryQueryVariables {
   workspaceId: string;
+  runId: string;
+  testEntryId: string;
 }
 
 // TODO Update backend to allow filtering on status / creation date, and do ordering
@@ -353,23 +384,17 @@ export function useWorkspaceRootCauseRuns(workspaceId: string) {
         node(id: $workspaceId) {
           ... on Workspace {
             id
-            rootCauseAnalysisRuns {
+            rootCauseAnalysisRuns(filter: { status: "Success", startTime: "2024-05-28" }) {
               edges {
                 node {
                   id
                   createdAt
                   metadata
                   result
-                  testEntries {
+                  testEntries(filter: {}) {
                     id
                     createdAt
                     resultMetadata
-                    discrepancies {
-                      id
-                      kind
-                      eventKind
-                      key
-                    }
                   }
                 }
               }
@@ -381,7 +406,7 @@ export function useWorkspaceRootCauseRuns(workspaceId: string) {
     { workspaceId }
   );
 
-  const runs = useMemo<RCATestEntry[]>(() => {
+  const runs = useMemo<RCATestEntryWithoutDiscrepancies[]>(() => {
     if (isLoading || didError) {
       return [];
     }
@@ -391,21 +416,118 @@ export function useWorkspaceRootCauseRuns(workspaceId: string) {
       `RCA runs could not be loaded for workspace "${workspaceId}"`
     );
 
-    const allAnalysisRuns = data.node.rootCauseAnalysisRuns.edges.map(({ node }) => node);
-    console.log("All analysis runs: ", allAnalysisRuns);
-    const now = new Date();
-    const recentSuccessfulAnalysisTestResults = allAnalysisRuns
-      .filter(run => {
-        const runDate = new Date(run.createdAt);
-        const diff = differenceInCalendarDays(now, runDate);
-        return run.result === "Success" && diff < 7;
-      })
-      .map(run => run.testEntries)
-      .flat();
+    const recentSuccessfulAnalysisTestResults = getTestEntriesFromRunsQueryResults(
+      data
+    ) as RCATestEntryWithoutDiscrepancies[];
 
     console.log("Recent successful analysis test results: ", recentSuccessfulAnalysisTestResults);
     return recentSuccessfulAnalysisTestResults;
   }, [data, didError, workspaceId, isLoading]);
 
   return { didError, isLoading, runs };
+}
+
+export function useWorkspaceRootCauseTestEntryDetails(
+  workspaceId: string,
+  runId: string,
+  testEntryId: string
+) {
+  const {
+    data,
+    error: didError,
+    isLoading,
+  } = useGraphQLQuery<
+    GetWorkspaceRootCauseTestEntryQuery,
+    GetWorkspaceRootCauseTestEntryQueryVariables
+  >(
+    gql`
+      query GetWorkspaceRootCauseTestEntryDetails(
+        $workspaceId: ID!
+        $runId: String!
+        $testEntryId: String!
+      ) {
+        node(id: $workspaceId) {
+          ... on Workspace {
+            id
+            rootCauseAnalysisRuns(
+              filter: { status: "Success", startTime: "2024-05-28", runId: $runId }
+            ) {
+              edges {
+                node {
+                  id
+                  createdAt
+                  metadata
+                  result
+                  testEntries(filter: { testEntryId: $testEntryId }) {
+                    id
+                    createdAt
+                    resultMetadata
+                    discrepancies {
+                      id
+                      kind
+                      eventKind
+                      key
+                      event
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+    { workspaceId, runId, testEntryId }
+  );
+
+  const analysisTestEntry = useMemo<RCATestEntry | null>(() => {
+    if (isLoading || didError) {
+      return null;
+    }
+
+    assert(
+      data?.node?.rootCauseAnalysisRuns?.edges,
+      `RCA runs could not be loaded for workspace "${workspaceId}"`
+    );
+
+    const recentSuccessfulAnalysisTestResults = getTestEntriesFromRunsQueryResults(
+      data
+    ) as RCATestEntry[];
+
+    console.log(
+      "Selected successful analysis test entry details: ",
+      recentSuccessfulAnalysisTestResults
+    );
+    return recentSuccessfulAnalysisTestResults[0] || null;
+  }, [data, didError, workspaceId, isLoading]);
+
+  return { didError, isLoading, analysisTestEntry };
+}
+
+function getTestEntriesFromRunsQueryResults(
+  data: GetWorkspaceRootCauseRunsQuery | GetWorkspaceRootCauseTestEntryQuery
+) {
+  const allAnalysisRuns = data.node.rootCauseAnalysisRuns.edges.map(({ node }) => node);
+  console.log("All analysis runs: ", allAnalysisRuns);
+  const now = new Date();
+  const recentSuccessfulAnalysisTestResults = allAnalysisRuns
+    .filter(run => {
+      const runDate = new Date(run.createdAt);
+      const diff = differenceInCalendarDays(now, runDate);
+      return run.result === "Success" && diff < 7;
+    })
+    .map(run =>
+      run.testEntries.map(testEntry => ({
+        ...testEntry,
+        runId: run.id,
+      }))
+    )
+    .flat();
+  return recentSuccessfulAnalysisTestResults;
+}
+
+export function isExecutedStatementDiscrepancy(
+  discrepancy: any
+): discrepancy is ExecutedStatementDiscrepancy {
+  return "eventKind" in discrepancy && discrepancy.eventKind == "ExecutedStatement";
 }

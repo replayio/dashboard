@@ -1,6 +1,9 @@
 import classnames from "classnames";
 import { Icon } from "@/components/Icon";
-import { RCATestEntry } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
+import {
+  RCATestEntry,
+  RCATestEntryWithoutDiscrepancies,
+} from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
 import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { getURL } from "@/utils/recording";
@@ -12,7 +15,7 @@ export function RCATestEntryRow({
   onClick,
   selected,
 }: {
-  analysisTestEntry: RCATestEntry;
+  analysisTestEntry: RCATestEntryWithoutDiscrepancies;
   user: User;
   onClick: () => void;
   selected: boolean;
