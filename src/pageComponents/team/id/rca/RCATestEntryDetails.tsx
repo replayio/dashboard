@@ -53,7 +53,7 @@ function FramesForURL({
   });
 
   return (
-    <ExpandableSection label={<h4 className="text-md">{url}</h4>}>
+    <ExpandableSection label={<h4 className="text-md font-normal font-mono">{url}</h4>}>
       {renderedJSDiscrepancies}
     </ExpandableSection>
   );
@@ -138,6 +138,9 @@ export function RCATestEntryDetails({
   const failingRecordingHref = getURL(failedRecordingId, buildId);
   const passingRecordingHref = getURL(passingRecordingId, buildId);
 
+  const failingRecordingLink = `${failingRecordingHref}?point=${resultMetadata.failedRun.start.point}`;
+  const passingRecordingLink = `${passingRecordingHref}?point=${resultMetadata.successRun.start.point}`;
+
   return (
     <div
       className={classnames(
@@ -145,7 +148,7 @@ export function RCATestEntryDetails({
       )}
       data-test-name="RCATestEntryDetails"
     >
-      <div className="flex flex-row w-full truncate">
+      <div className="flex flex-row w-full truncate min-h-24">
         <div className="grow basis-1/2 mr-1">
           <h4 className="text-md font-bold">Test Name</h4>
           <div> {resultMetadata.title}</div>
@@ -154,7 +157,7 @@ export function RCATestEntryDetails({
           <h4 className="text-md font-bold">Recordings</h4>
           <div className="flex flex-row shrink-0 w-full">
             <div className="m-1">
-              <a href={failingRecordingHref}>
+              <a href={failingRecordingLink}>
                 Failed:
                 <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
                   <RecordingThumbnail buildId={buildId} recordingId={failedRecordingId} />
@@ -162,7 +165,7 @@ export function RCATestEntryDetails({
               </a>
             </div>
             <div className="m-1">
-              <a href={passingRecordingHref}>
+              <a href={passingRecordingLink}>
                 Passing:
                 <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
                   <RecordingThumbnail buildId={buildId} recordingId={passingRecordingId} />

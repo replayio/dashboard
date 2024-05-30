@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import classnames from "classnames";
 
 import { Icon } from "@/components/Icon";
@@ -29,6 +29,12 @@ interface LineDetails {
   discrepancies?: LineExecutionDiscrepancy;
 }
 
+interface DiscrepancyToAddDescription {
+  line: number;
+  kind: DiscrepancyKind;
+  hasExtra: boolean;
+}
+
 export function RCAJSFunctionDiscrepancy({
   analysisTestEntry,
   formattedFrame,
@@ -42,119 +48,34 @@ export function RCAJSFunctionDiscrepancy({
 }) {
   const [hoveredLine, setHoveredLine] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [discrepancyToAdd, setDiscrepancyToAdd] = useState<DiscrepancyToAddDescription | null>(
+    null
+  );
 
   const { categories } = useWorkspaceRootCauseCategories(workspaceId);
   const { createRootCauseCategoryDiscrepancies } = useCreateRootCauseCategoryDiscrepancy();
 
-  const numLinesWithDiscrepancies = Object.keys(formattedFrame.discrepancies).length;
-
   const {
-    line: functionStartLine,
-    sourceLines,
-    discrepancies: functionDiscrepancies,
-  } = formattedFrame;
-
-  const lineDetails: LineDetails[] = sourceLines.map((source, index) => {
-    const line = functionStartLine + index;
-    return {
-      line,
-      source,
-      discrepancies: functionDiscrepancies[line],
-    };
-  });
-
-  return (
-    <div
-      className={classnames(
-        "flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
-      )}
-      data-test-name="RCAJSFunctionDiscrepancy"
-    >
-      <div className="flex flex-row items-center gap-2 w-full truncate">
-        <div className="flex flex-col grow gap-1 truncate">
-          <ExpandableSection
-            label={
-              <>
-                <div className="truncate font-bold font-mono">{formattedFrame.functionName}()</div>
-                <div className="flex flex-row gap-4 text-sm text-gray-500 whitespace-nowrap">
-                  {numLinesWithDiscrepancies} lines with discrepancies
-                </div>
-              </>
-            }
-          >
-            <div className="flex flex-col font-mono">
-              {lineDetails.map(({ line, source, discrepancies: discrepanciesForLine }, index) => {
-                return (
-                  <JSFunctionSourceLine
-                    key={index}
-                    {...{
-                      discrepanciesForLine,
-                      hoveredLine,
-                      line,
-                      selectedCategory,
-                      setSelectedCategory,
-                      categories,
-                      discrepanciesByKindAndPoint,
-                      createRootCauseCategoryDiscrepancies,
-                      workspaceId,
-                      index,
-                      setHoveredLine,
-                      source,
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </ExpandableSection>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function JSFunctionSourceLine({
-  discrepanciesForLine,
-  hoveredLine,
-  line,
-  selectedCategory,
-  setSelectedCategory,
-  categories,
-  discrepanciesByKindAndPoint,
-  createRootCauseCategoryDiscrepancies,
-  workspaceId,
-  index,
-  setHoveredLine,
-  source,
-}: {
-  discrepanciesForLine: LineExecutionDiscrepancy | undefined;
-  hoveredLine: number | null;
-  line: number;
-  selectedCategory: string | null;
-  setSelectedCategory: (categoryId: string) => void;
-  categories: RCACategory[];
-  discrepanciesByKindAndPoint: Record<string, Record<string, ExecutedStatementDiscrepancy>>;
-  createRootCauseCategoryDiscrepancies: (
-    workspaceId: string,
-    categoryId: string,
-    discrepancies: RootCauseDiscrepancyTriplet[]
-  ) => Promise<any>;
-  workspaceId: string;
-  index: number;
-  setHoveredLine: (line: number | null) => void;
-  source: string;
-}) {
-  const hasExtra = !!discrepanciesForLine?.[DiscrepancyKind.Extra];
-  const hasMissing = !!discrepanciesForLine?.[DiscrepancyKind.Missing];
-
-  const isHovered = hoveredLine === line;
-  const hasDiscrepancy = hasExtra || hasMissing;
-
-  let hoverContent: React.ReactNode = null;
-
-  if (isHovered) {
-    if (hasDiscrepancy) {
-      hoverContent = (
-        <div className="absolute right-0">
+    confirmationDialog: addDiscrepancyToCategoryDialog,
+    showConfirmationDialog: showAddDiscrepancyDialog,
+  } = useConfirmDialog(
+    async (confirmRemove: boolean) => {
+      if (confirmRemove && discrepancyToAdd) {
+        await addDiscrepancyToCategory(
+          formattedFrame.discrepancies[discrepancyToAdd.line],
+          discrepancyToAdd
+        );
+      }
+    },
+    {
+      cancelButtonLabel: "Cancel",
+      confirmButtonLabel: "Add to Category",
+      message: (
+        <div className="flex flex-col">
+          <div>
+            &apos;{discrepancyToAdd?.kind === DiscrepancyKind.Extra ? "Extra" : "Missing"}&apos;
+            discrepancy on line {discrepancyToAdd?.line}
+          </div>
           <select
             value={selectedCategory || ""}
             onChange={e => setSelectedCategory(e.target.value)}
@@ -168,43 +89,148 @@ function JSFunctionSourceLine({
               );
             })}
           </select>
+        </div>
+      ),
+      title: "Add Discrepancy to Category",
+    }
+  );
+
+  const numLinesWithDiscrepancies = Object.keys(formattedFrame.discrepancies).length;
+
+  const {
+    line: functionStartLine,
+    sourceLines,
+    discrepancies: functionDiscrepancies,
+  } = formattedFrame;
+
+  const lineDetails: LineDetails[] = useMemo(() => {
+    return sourceLines.map((source, index) => {
+      const line = functionStartLine + index;
+      return {
+        line,
+        source,
+        discrepancies: functionDiscrepancies[line],
+      };
+    });
+  }, [sourceLines, functionDiscrepancies, functionStartLine]);
+
+  const addDiscrepancyToCategory = async (
+    discrepanciesForLine: LineExecutionDiscrepancy | undefined,
+    description: DiscrepancyToAddDescription
+  ) => {
+    const categoryToAdd = categories.find(category => category.id === selectedCategory);
+
+    console.log("Category: ", categoryToAdd);
+    if (categoryToAdd) {
+      const searchKind = description.hasExtra ? DiscrepancyKind.Extra : DiscrepancyKind.Missing;
+
+      const discrepanciesForKindByPoint = discrepanciesByKindAndPoint[searchKind];
+      const discrepancyPoint = discrepanciesForLine?.[searchKind];
+
+      const actualDiscrepancy = discrepanciesForKindByPoint?.[discrepancyPoint ?? ""];
+
+      console.log("Actual discrepancy: ", actualDiscrepancy);
+
+      if (actualDiscrepancy) {
+        const { kind, eventKind, key } = actualDiscrepancy;
+        const discrepancy: RootCauseDiscrepancyTriplet = {
+          kind,
+          eventKind,
+          key,
+        };
+
+        console.log("Creating discrepancy: ", {
+          categoryId: categoryToAdd.id,
+          discrepancy,
+        });
+
+        const result = await createRootCauseCategoryDiscrepancies(workspaceId, categoryToAdd.id, [
+          discrepancy,
+        ]);
+        console.log("Creation result: ", result);
+      }
+    }
+  };
+
+  return (
+    <div
+      className={classnames(
+        "flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
+      )}
+      data-test-name="RCAJSFunctionDiscrepancy"
+    >
+      <div className="flex flex-row items-center gap-2 w-full truncate">
+        <div className="flex flex-col grow gap-1 truncate">
+          <ExpandableSection
+            label={
+              <>
+                <div className="truncate font-bold font-mono">
+                  {formattedFrame.functionName}() on line {formattedFrame.line}
+                </div>
+                <div className="flex flex-row gap-4 text-sm text-gray-500 whitespace-nowrap">
+                  {numLinesWithDiscrepancies} lines with discrepancies
+                </div>
+              </>
+            }
+          >
+            <div className="flex flex-col font-mono">
+              {lineDetails.map(({ line, source, discrepancies: discrepanciesForLine }, index) => {
+                return (
+                  <JSFunctionSourceLine
+                    key={index}
+                    line={line}
+                    source={source}
+                    discrepanciesForLine={discrepanciesForLine}
+                    hoveredLine={hoveredLine}
+                    setHoveredLine={setHoveredLine}
+                    onAddToCategoryClicked={description => {
+                      console.log("Adding to category: ", description);
+                      setDiscrepancyToAdd(description);
+                      showAddDiscrepancyDialog();
+                    }}
+                  />
+                );
+              })}
+              {addDiscrepancyToCategoryDialog}
+            </div>
+          </ExpandableSection>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function JSFunctionSourceLine({
+  discrepanciesForLine,
+  hoveredLine,
+  line,
+  setHoveredLine,
+  source,
+  onAddToCategoryClicked,
+}: {
+  line: number;
+  source: string;
+  discrepanciesForLine: LineExecutionDiscrepancy | undefined;
+  hoveredLine: number | null;
+  setHoveredLine: (line: number | null) => void;
+  onAddToCategoryClicked: (description: DiscrepancyToAddDescription) => void;
+}) {
+  const hasExtra = !!discrepanciesForLine?.[DiscrepancyKind.Extra];
+  const hasMissing = !!discrepanciesForLine?.[DiscrepancyKind.Missing];
+
+  const isHovered = hoveredLine === line;
+  const hasDiscrepancy = hasExtra || hasMissing;
+
+  let hoverContent: React.ReactNode = null;
+
+  if (isHovered) {
+    if (hasDiscrepancy) {
+      hoverContent = (
+        <div className="absolute right-0">
           <button
             className="bg-sky-600 text-white rounded"
-            onClick={async () => {
-              const categoryToAdd = categories.find(category => category.id === selectedCategory);
-
-              console.log("Category: ", categoryToAdd);
-              if (categoryToAdd) {
-                const searchKind = hasExtra ? DiscrepancyKind.Extra : DiscrepancyKind.Missing;
-
-                const discrepanciesForKindByPoint = discrepanciesByKindAndPoint[searchKind];
-                const discrepancyPoint = discrepanciesForLine[searchKind];
-
-                const actualDiscrepancy = discrepanciesForKindByPoint?.[discrepancyPoint ?? ""];
-
-                console.log("Actual discrepancy: ", actualDiscrepancy);
-
-                if (actualDiscrepancy) {
-                  const { kind, eventKind, key } = actualDiscrepancy;
-                  const discrepancy: RootCauseDiscrepancyTriplet = {
-                    kind,
-                    eventKind,
-                    key,
-                  };
-
-                  console.log("Creating discrepancy: ", {
-                    categoryId: categoryToAdd.id,
-                    discrepancy,
-                  });
-
-                  const result = await createRootCauseCategoryDiscrepancies(
-                    workspaceId,
-                    categoryToAdd.id,
-                    [discrepancy]
-                  );
-                  console.log("Creation result: ", result);
-                }
-              }
+            onClick={() => {
+              onAddToCategoryClicked({ line, kind: DiscrepancyKind.Extra, hasExtra });
             }}
           >
             Add to Category
@@ -213,12 +239,19 @@ function JSFunctionSourceLine({
       );
     }
   }
+
+  // Show 4 columns:
+  // 1. Line number
+  // 2. Extra discrepancy
+  // 3. Missing discrepancy
+  // 4. Source code
+  // Additionally, show a commands bar on hover if the line has discrepancies,
+  // absolutely positioned on the right
   return (
     <div
       className={classnames("flex flex-row relative", {
         "hover:border-blue-400 hover:border": hasExtra || hasMissing,
       })}
-      key={index}
       onMouseOver={() => setHoveredLine(line)}
       onMouseOut={() => setHoveredLine(null)}
     >
