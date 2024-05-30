@@ -1,7 +1,18 @@
+import { useMemo } from "react";
 import classnames from "classnames";
+import groupBy from "lodash/groupBy";
+import sortBy from "lodash/sortBy";
+import mapValues from "lodash/mapValues";
+
 import { Icon } from "@/components/Icon";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
+
 import {
+  ExecutedStatementDiscrepancy,
+  FormattedFrame,
+  RCADiscrepancy,
   RCATestEntry,
+  isExecutedStatementDiscrepancy,
   useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
@@ -9,6 +20,46 @@ import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
 import { getURL } from "@/utils/recording";
 import { RCAJSFunctionDiscrepancy } from "./RCAJSFunctionDiscrepancy";
+
+function FramesForURL({
+  url,
+  frames,
+  workspaceId,
+  analysisTestEntry,
+  discrepanciesByKindAndPoint,
+}: {
+  url: string;
+  frames: FormattedFrame[];
+  workspaceId: string;
+  analysisTestEntry: RCATestEntry;
+  discrepanciesByKindAndPoint: Record<string, Record<string, ExecutedStatementDiscrepancy>>;
+}) {
+  const sortedFrames = useMemo(() => {
+    return sortBy(frames, f => f.line);
+  }, [frames]);
+
+  const renderedJSDiscrepancies = sortedFrames.map(f => {
+    const key = `${f.sourceId}:${f.key}:${f.functionName}`;
+    return (
+      <div key={key} className="m-1">
+        <RCAJSFunctionDiscrepancy
+          analysisTestEntry={analysisTestEntry}
+          formattedFrame={f}
+          workspaceId={workspaceId}
+          discrepanciesByKindAndPoint={discrepanciesByKindAndPoint}
+        />
+      </div>
+    );
+  });
+
+  return (
+    <ExpandableSection label={<h4 className="text-md font-normal font-mono">{url}</h4>}>
+      {renderedJSDiscrepancies}
+    </ExpandableSection>
+  );
+}
+
+const NO_DISCREPANCIES: RCADiscrepancy[] = [];
 
 export function RCATestEntryDetails({
   user,
@@ -27,6 +78,26 @@ export function RCATestEntryDetails({
     testEntryId
   );
 
+  const discrepancies = analysisTestEntry?.discrepancies ?? NO_DISCREPANCIES;
+
+  const jsExecutionDiscrepancies = useMemo(() => {
+    return discrepancies.filter(d =>
+      isExecutedStatementDiscrepancy(d)
+    ) as unknown as ExecutedStatementDiscrepancy[];
+  }, [discrepancies]);
+
+  const discrepanciesByKindAndPoint = useMemo(() => {
+    const discrepanciesByKind = groupBy(jsExecutionDiscrepancies, d => d.kind);
+
+    return mapValues(discrepanciesByKind, discrepancies => {
+      const discrepanciesByPoint: Record<string, ExecutedStatementDiscrepancy> = {};
+      for (const d of discrepancies) {
+        discrepanciesByPoint[d.event.point] = d;
+      }
+      return discrepanciesByPoint;
+    });
+  }, [jsExecutionDiscrepancies]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -35,29 +106,40 @@ export function RCATestEntryDetails({
     return <div>Failed to load test entry details</div>;
   }
 
-  const { discrepancies, resultMetadata } = analysisTestEntry;
+  console.log("Selected analysis entry: ", analysisTestEntry);
+
+  const { resultMetadata } = analysisTestEntry;
   const { failingFrames } = resultMetadata;
 
-  // TODO Sort this by URL once that's available
+  console.log("JS discrepancies: ", jsExecutionDiscrepancies);
 
-  const renderedJSDiscrepancies = failingFrames.map(f => {
-    const key = `${f.sourceId}:${f.key}:${f.functionName}`;
+  const framesByUrl = groupBy(failingFrames, f => f.url || "Unknown");
+
+  const sortedGroups = sortBy(Object.entries(framesByUrl), ([url, frames]) => url);
+
+  const renderedJSDiscrepancies = sortedGroups.map(([url, frames]) => {
     return (
-      <div key={key} className="m-1">
-        <RCAJSFunctionDiscrepancy
-          analysisTestEntry={analysisTestEntry}
-          formattedFrame={f}
-          workspaceId={workspaceId}
-        />
-      </div>
+      <FramesForURL
+        key={url}
+        url={url}
+        frames={frames}
+        workspaceId={workspaceId}
+        analysisTestEntry={analysisTestEntry}
+        discrepanciesByKindAndPoint={discrepanciesByKindAndPoint}
+      />
     );
   });
 
-  const { recordingId } = resultMetadata.failedRun.id;
+  const { recordingId: failedRecordingId } = resultMetadata.failedRun.id;
+  const { recordingId: passingRecordingId } = resultMetadata.successRun.id;
   // TODO Fake build ID! We don't have the real recording data atm. Just assume it's Chromium
   const buildId = "chromium";
 
-  const recordingHref = getURL(recordingId, buildId);
+  const failingRecordingHref = getURL(failedRecordingId, buildId);
+  const passingRecordingHref = getURL(passingRecordingId, buildId);
+
+  const failingRecordingLink = `${failingRecordingHref}?point=${resultMetadata.failedRun.start.point}`;
+  const passingRecordingLink = `${passingRecordingHref}?point=${resultMetadata.successRun.start.point}`;
 
   return (
     <div
@@ -66,15 +148,35 @@ export function RCATestEntryDetails({
       )}
       data-test-name="RCATestEntryDetails"
     >
-      <h4 className="text-md font-bold">Test Name</h4>
-      <div> {resultMetadata.title}</div>
-      <h4 className="text-md font-bold">Recording</h4>
-      <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">
-        <a href={recordingHref}>
-          <RecordingThumbnail buildId={buildId} recordingId={recordingId} />
-        </a>
+      <div className="flex flex-row w-full truncate min-h-24">
+        <div className="grow basis-1/2 mr-1">
+          <h4 className="text-md font-bold">Test Name</h4>
+          <div> {resultMetadata.title}</div>
+        </div>
+        <div className="grow basis-1/2 ml-1">
+          <h4 className="text-md font-bold">Recordings</h4>
+          <div className="flex flex-row shrink-0 w-full">
+            <div className="m-1">
+              <a href={failingRecordingLink}>
+                Failed:
+                <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
+                  <RecordingThumbnail buildId={buildId} recordingId={failedRecordingId} />
+                </div>
+              </a>
+            </div>
+            <div className="m-1">
+              <a href={passingRecordingLink}>
+                Passing:
+                <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
+                  <RecordingThumbnail buildId={buildId} recordingId={passingRecordingId} />
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-      <h4 className="text-md font-bold">Discrepancies</h4>
+
+      <h4 className="text-md font-bold">JS Discrepancies</h4>
       <div className="flex flex-col grow overflow-y-auto w-full">{renderedJSDiscrepancies}</div>
     </div>
   );

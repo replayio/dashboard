@@ -13,7 +13,7 @@ import {
 } from "@replayio/protocol";
 
 // TODO Port types from the backend
-interface RCADiscrepancy {
+export interface RCADiscrepancy {
   id: string;
   kind: string;
   eventKind: string;
@@ -48,6 +48,9 @@ export interface Discrepancy<T extends DiscrepancyEvent> {
 
   // The kind of underlying event.
   eventKind: string;
+
+  // Added by the analysis logic on insert, extracted from the event type
+  key: string;
 
   // Any ID for a sequence of discrepancies this is associated with.
   sequenceId: string;

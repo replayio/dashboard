@@ -81,7 +81,6 @@ export function useWorkspaceRootCauseCategories(workspaceId: string) {
 
     const { rootCauseAnalysisCategories: categories } = data.workspace;
 
-    console.log("RCA categories", categories);
     return categories;
   }, [data, didError, workspaceId, isLoading]);
 
