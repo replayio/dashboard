@@ -8,7 +8,7 @@ export function DefaultLayout({
   NavComponent?: ComponentType<PropsWithChildren>;
 }>) {
   return (
-    <div className="h-screen w-screen flex flex-row bg-slate-900">
+    <div className="h-screen w-screen flex flex-row bg-slate-900 text-white">
       <NavComponent />
       <main className="flex flex-col grow overflow-auto">{children}</main>
     </div>
