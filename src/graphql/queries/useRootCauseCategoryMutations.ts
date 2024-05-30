@@ -47,7 +47,7 @@ export function useCreateRootCauseCategory() {
     // Our workspaceId is base64 encoded, so we need to decode it before sending it to the backend.
     // This should probably be handled more consistently somehow.
     const decodedWorkspaceId = decodeEncodedId(workspaceId);
-    console.log({ workspaceId, decodedWorkspaceId });
+
     return createRootCauseCategoryMutation({
       variables: { workspaceId: decodedWorkspaceId, name },
     });

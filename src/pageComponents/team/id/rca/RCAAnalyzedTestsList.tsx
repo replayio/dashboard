@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useWorkspaceRootCauseCategories } from "@/graphql/queries/useWorkspaceRootCauseCategories";
-import { useCreateRootCauseCategory } from "@/graphql/queries/useCreateRootCauseCategory";
+import { useCreateRootCauseCategory } from "@/graphql/queries/useRootCauseCategoryMutations";
 
 import { RCATestEntryRow } from "@/pageComponents/team/id/rca/RCATestEntryRow";
 import { useWorkspaceRootCauseRuns } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";

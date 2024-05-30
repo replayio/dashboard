@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { useGraphQLMutation } from "@/hooks/useGraphQLMutation";
 
 import { RCACategory, RootCauseDiscrepancyTriplet } from "./useWorkspaceRootCauseCategories";
-import { decodeEncodedId } from "./useCreateRootCauseCategory";
+import { decodeEncodedId } from "./useRootCauseCategoryMutations";
 
 interface RCACategoryDiscrepancy extends RootCauseDiscrepancyTriplet {
   id: string;
