@@ -82,7 +82,6 @@ export function RCATestEntryDetails({
   const { discrepancies, resultMetadata } = analysisTestEntry;
   const { failingFrames } = resultMetadata;
 
-  // TODO Sort this by URL once that's available
   const framesByUrl = groupBy(failingFrames, f => f.url || "Unknown");
 
   const sortedGroups = sortBy(Object.entries(framesByUrl), ([url, frames]) => url);
@@ -99,11 +98,13 @@ export function RCATestEntryDetails({
     );
   });
 
-  const { recordingId } = resultMetadata.failedRun.id;
+  const { recordingId: failedRecordingId } = resultMetadata.failedRun.id;
+  const { recordingId: passingRecordingId } = resultMetadata.successRun.id;
   // TODO Fake build ID! We don't have the real recording data atm. Just assume it's Chromium
   const buildId = "chromium";
 
-  const recordingHref = getURL(recordingId, buildId);
+  const failingRecordingHref = getURL(failedRecordingId, buildId);
+  const passingRecordingHref = getURL(passingRecordingId, buildId);
 
   return (
     <div
@@ -112,14 +113,34 @@ export function RCATestEntryDetails({
       )}
       data-test-name="RCATestEntryDetails"
     >
-      <h4 className="text-md font-bold">Test Name</h4>
-      <div> {resultMetadata.title}</div>
-      <h4 className="text-md font-bold">Recording</h4>
-      <div className="w-16 h-9 bg-slate-900 rounded-sm shrink-0">
-        <a href={recordingHref}>
-          <RecordingThumbnail buildId={buildId} recordingId={recordingId} />
-        </a>
+      <div className="flex flex-row w-full truncate">
+        <div className="grow basis-1/2 mr-1">
+          <h4 className="text-md font-bold">Test Name</h4>
+          <div> {resultMetadata.title}</div>
+        </div>
+        <div className="grow basis-1/2 ml-1">
+          <h4 className="text-md font-bold">Recordings</h4>
+          <div className="flex flex-row shrink-0 w-full">
+            <div className="m-1">
+              <a href={failingRecordingHref}>
+                Failed:
+                <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
+                  <RecordingThumbnail buildId={buildId} recordingId={failedRecordingId} />
+                </div>
+              </a>
+            </div>
+            <div className="m-1">
+              <a href={passingRecordingHref}>
+                Passing:
+                <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
+                  <RecordingThumbnail buildId={buildId} recordingId={passingRecordingId} />
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
+
       <h4 className="text-md font-bold">JS Discrepancies</h4>
       <div className="flex flex-col grow overflow-y-auto w-full">{renderedJSDiscrepancies}</div>
     </div>
