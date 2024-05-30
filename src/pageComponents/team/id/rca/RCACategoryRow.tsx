@@ -7,7 +7,10 @@ import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 
 import { RCACategory } from "@/graphql/queries/useWorkspaceRootCauseCategories";
-import { useUpdateRootCauseCategory } from "@/graphql/queries/useRootCauseCategoryMutations";
+import {
+  useUpdateRootCauseCategory,
+  useDeleteRootCauseCategory,
+} from "@/graphql/queries/useRootCauseCategoryMutations";
 
 export function RCACategoryRow({
   workspaceId,
@@ -18,6 +21,7 @@ export function RCACategoryRow({
 }) {
   const [isPending, setIsPending] = useState(false);
   const { updateRootCauseCategory } = useUpdateRootCauseCategory();
+  const { deleteRootCauseCategory } = useDeleteRootCauseCategory();
 
   const { confirmationDialog: confirmRemoveDialog, showConfirmationDialog: showRemoveDialog } =
     useConfirmDialog(
@@ -26,7 +30,7 @@ export function RCACategoryRow({
           setIsPending(true);
 
           try {
-            // await removeUserFromWorkspace(member.membershipId);
+            await deleteRootCauseCategory(workspaceId, category.id);
           } finally {
             setIsPending(false);
           }
