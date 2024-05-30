@@ -1,6 +1,13 @@
+import { useMemo } from "react";
 import classnames from "classnames";
+import groupBy from "lodash/groupBy";
+import sortBy from "lodash/sortBy";
+
 import { Icon } from "@/components/Icon";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
+
 import {
+  FormattedFrame,
   RCATestEntry,
   useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
@@ -9,6 +16,41 @@ import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
 import { getURL } from "@/utils/recording";
 import { RCAJSFunctionDiscrepancy } from "./RCAJSFunctionDiscrepancy";
+
+function FramesForURL({
+  url,
+  frames,
+  workspaceId,
+  analysisTestEntry,
+}: {
+  url: string;
+  frames: FormattedFrame[];
+  workspaceId: string;
+  analysisTestEntry: RCATestEntry;
+}) {
+  const sortedFrames = useMemo(() => {
+    return sortBy(frames, f => f.line);
+  }, [frames]);
+
+  const renderedJSDiscrepancies = sortedFrames.map(f => {
+    const key = `${f.sourceId}:${f.key}:${f.functionName}`;
+    return (
+      <div key={key} className="m-1">
+        <RCAJSFunctionDiscrepancy
+          analysisTestEntry={analysisTestEntry}
+          formattedFrame={f}
+          workspaceId={workspaceId}
+        />
+      </div>
+    );
+  });
+
+  return (
+    <ExpandableSection label={<h4 className="text-md">{url}</h4>}>
+      {renderedJSDiscrepancies}
+    </ExpandableSection>
+  );
+}
 
 export function RCATestEntryDetails({
   user,
@@ -35,21 +77,25 @@ export function RCATestEntryDetails({
     return <div>Failed to load test entry details</div>;
   }
 
+  console.log("Selected analysis entry: ", analysisTestEntry);
+
   const { discrepancies, resultMetadata } = analysisTestEntry;
   const { failingFrames } = resultMetadata;
 
   // TODO Sort this by URL once that's available
+  const framesByUrl = groupBy(failingFrames, f => f.url || "Unknown");
 
-  const renderedJSDiscrepancies = failingFrames.map(f => {
-    const key = `${f.sourceId}:${f.key}:${f.functionName}`;
+  const sortedGroups = sortBy(Object.entries(framesByUrl), ([url, frames]) => url);
+
+  const renderedJSDiscrepancies = sortedGroups.map(([url, frames]) => {
     return (
-      <div key={key} className="m-1">
-        <RCAJSFunctionDiscrepancy
-          analysisTestEntry={analysisTestEntry}
-          formattedFrame={f}
-          workspaceId={workspaceId}
-        />
-      </div>
+      <FramesForURL
+        key={url}
+        url={url}
+        frames={frames}
+        workspaceId={workspaceId}
+        analysisTestEntry={analysisTestEntry}
+      />
     );
   });
 
@@ -74,7 +120,7 @@ export function RCATestEntryDetails({
           <RecordingThumbnail buildId={buildId} recordingId={recordingId} />
         </a>
       </div>
-      <h4 className="text-md font-bold">Discrepancies</h4>
+      <h4 className="text-md font-bold">JS Discrepancies</h4>
       <div className="flex flex-col grow overflow-y-auto w-full">{renderedJSDiscrepancies}</div>
     </div>
   );
