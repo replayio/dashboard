@@ -23,7 +23,7 @@ export const RCACategoriesList = ({ workspaceId }: { workspaceId: string }) => {
       <h3 className="text-lg font-bold">Categorized Test Failures</h3>
       <div className="flex flex-row gap-4">
         <input
-          className="grow p-2"
+          className="grow p-2 rounded"
           value={newCategoryName}
           onChange={e => setNewCategoryName(e.target.value)}
         />
@@ -35,7 +35,7 @@ export const RCACategoriesList = ({ workspaceId }: { workspaceId: string }) => {
           Create New Category
         </button>
       </div>
-      <div className="mt-2">{renderedCategories}</div>
+      <div className="mt-2 grow overflow-y-auto">{renderedCategories}</div>
     </>
   );
 };

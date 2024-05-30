@@ -1,13 +1,5 @@
 import classnames from "classnames";
-import { Icon } from "@/components/Icon";
-import {
-  RCATestEntry,
-  RCATestEntryWithoutDiscrepancies,
-} from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
-import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
-import { formatDuration, formatRelativeTime } from "@/utils/number";
-import { getURL } from "@/utils/recording";
-import Link from "next/link";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import { RCACategory } from "@/graphql/queries/useWorkspaceRootCauseCategories";
 
 export function RCACategoryRow({
@@ -38,7 +30,19 @@ export function RCACategoryRow({
         <div className="flex flex-col grow truncate">
           <div className="truncate font-bold">{category.name}</div>
           <div>Failure percentage: {actualPercentage}%</div>
-          <div>Discrepancies: {category.discrepancies.length}</div>
+          <ExpandableSection label={<div>Discrepancies: {category.discrepancies.length}</div>}>
+            <div className="flex flex-col gap-2">
+              {category.discrepancies.map(discrepancy => {
+                return (
+                  <div key={discrepancy.id} className="flex flex-col ">
+                    <div className="truncate">{discrepancy.eventKind}</div>
+                    <div className="truncate">{discrepancy.kind}</div>
+                    <div className="truncate">{discrepancy.key}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </ExpandableSection>
         </div>
       </div>
     </div>
