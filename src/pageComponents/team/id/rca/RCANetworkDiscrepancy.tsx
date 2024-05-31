@@ -28,6 +28,49 @@ import {
   useWorkspaceRootCauseCategories,
 } from "@/graphql/queries/useWorkspaceRootCauseCategories";
 
+function RCANetworkDiscrepancyLine({
+  discrepancy,
+  children,
+  setHoveredDiscrepancy,
+  isHovered,
+  onAddToCategoryClicked,
+}: {
+  discrepancy: NetworkEventDiscrepancy;
+  children: React.ReactNode;
+  setHoveredDiscrepancy: (discrepancy: NetworkEventDiscrepancy | null) => void;
+  isHovered: boolean;
+  onAddToCategoryClicked: (discrepancy: NetworkEventDiscrepancy) => void;
+}) {
+  const discrepancyColor = discrepancy.kind === "Missing" ? "bg-red-400" : "bg-green-400";
+
+  let hoverContent: React.ReactNode = null;
+  if (isHovered) {
+    hoverContent = (
+      <div className="absolute right-0">
+        <button
+          className="bg-sky-600 text-white rounded"
+          onClick={() => {
+            onAddToCategoryClicked(discrepancy);
+          }}
+        >
+          Add to Category
+        </button>
+      </div>
+    );
+  }
+  return (
+    <div
+      className={classnames("flex flex-row relative hover:border-blue-400 hover:border")}
+      onMouseOver={() => setHoveredDiscrepancy(discrepancy)}
+      onMouseOut={() => setHoveredDiscrepancy(null)}
+    >
+      <div className={classnames("min-w-16", discrepancyColor)}>{discrepancy.kind}</div>
+      <div className="font-mono">{children}</div>
+      {hoverContent}
+    </div>
+  );
+}
+
 export function RCANetworkDiscrepancyDisplay({
   analysisTestEntry,
   workspaceId,
@@ -37,10 +80,76 @@ export function RCANetworkDiscrepancyDisplay({
   workspaceId: string;
   networkDiscrepancies: NetworkEventDiscrepancy[];
 }) {
+  const [hoveredDiscrepancy, setHoveredDiscrepancy] = useState<NetworkEventDiscrepancy | null>(
+    null
+  );
+
+  const [discrepancyToAdd, setDiscrepancyToAdd] = useState<NetworkEventDiscrepancy | null>(null);
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const { categories } = useWorkspaceRootCauseCategories(workspaceId);
+  const { createRootCauseCategoryDiscrepancies } = useCreateRootCauseCategoryDiscrepancy();
+
+  const {
+    confirmationDialog: addDiscrepancyToCategoryDialog,
+    showConfirmationDialog: showAddDiscrepancyDialog,
+  } = useConfirmDialog(
+    async (confirmRemove: boolean) => {
+      const categoryToAdd = categories.find(category => category.id === selectedCategory);
+
+      console.log("Category: ", categoryToAdd);
+      if (confirmRemove && discrepancyToAdd && categoryToAdd) {
+        const { kind, eventKind, key } = discrepancyToAdd;
+        const discrepancy: RootCauseDiscrepancyTriplet = {
+          kind,
+          eventKind,
+          key,
+        };
+
+        console.log("Creating discrepancy: ", {
+          categoryId: categoryToAdd.id,
+          discrepancy,
+        });
+
+        const result = await createRootCauseCategoryDiscrepancies(workspaceId, categoryToAdd.id, [
+          discrepancy,
+        ]);
+        console.log("Creation result: ", result);
+      }
+    },
+    {
+      cancelButtonLabel: "Cancel",
+      confirmButtonLabel: "Add to Category",
+      message: (
+        <div className="flex flex-col">
+          <div>
+            &apos;{discrepancyToAdd?.kind === DiscrepancyKind.Extra ? "Extra" : "Missing"}&apos;
+            discrepancy from request {discrepancyToAdd?.event.data.requestUrl}
+          </div>
+          <select
+            value={selectedCategory || ""}
+            onChange={e => setSelectedCategory(e.target.value)}
+          >
+            <option value="">Select category</option>
+            {categories.map(category => {
+              return (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      ),
+      title: "Add Discrepancy to Category",
+    }
+  );
+
   const url = networkDiscrepancies[0]?.event.data.requestUrl;
 
   const discrepanciesByRequestOrResponse = groupBy(networkDiscrepancies, d => d.event.data.kind);
-  console.log("discrepanciesByRequestOrResponse", discrepanciesByRequestOrResponse);
+  // console.log("discrepanciesByRequestOrResponse", discrepanciesByRequestOrResponse);
 
   const requestDiscrepancies = discrepanciesByRequestOrResponse["Request"];
   const responseDiscrepancies = discrepanciesByRequestOrResponse["ResponseJSON"];
@@ -57,15 +166,27 @@ export function RCANetworkDiscrepancyDisplay({
             const contents = d.event.data as NetworkEventContentsRequest;
             const key = `${d.kind}:${d.eventKind}:${d.key}`;
             const { requestTag, requestUrl, requestMethod, responseCode } = contents;
-            const discrepancyColor = d.kind === "Missing" ? "bg-red-400" : "bg-green-400";
+            const lineContent = (
+              <>
+                {requestMethod} {requestUrl} -&gt; {responseCode}{" "}
+                {requestTag ? `(${requestTag})` : null}
+              </>
+            );
+
             return (
-              <div key={key} className="flex flex-row">
-                <div className={classnames("min-w-16", discrepancyColor)}>{d.kind}</div>
-                <div className="font-mono">
-                  {requestMethod} {requestUrl} -&gt; {responseCode}{" "}
-                  {requestTag ? `(${requestTag})` : null}
-                </div>
-              </div>
+              <RCANetworkDiscrepancyLine
+                key={key}
+                discrepancy={d}
+                setHoveredDiscrepancy={setHoveredDiscrepancy}
+                isHovered={d === hoveredDiscrepancy}
+                onAddToCategoryClicked={discrepancy => {
+                  console.log("Adding to category: ", discrepancy);
+                  setDiscrepancyToAdd(discrepancy);
+                  showAddDiscrepancyDialog();
+                }}
+              >
+                {lineContent}
+              </RCANetworkDiscrepancyLine>
             );
           })}
         </div>
@@ -107,14 +228,22 @@ export function RCANetworkDiscrepancyDisplay({
         <div className="flex flex-col gap-1">
           {networkDiscrepanciesToShow.map(d => {
             const key = `${d.kind}:${d.eventKind}:${d.key}`;
-            const discrepancyColor = d.kind === "Missing" ? "bg-red-400" : "bg-green-400";
             const contents = d.event.data as NetworkEventContentsResponseJSON;
 
             return (
-              <div key={key} className="flex flex-row">
-                <div className={classnames("min-w-16", discrepancyColor)}>{d.kind}</div>
-                <div className="font-mono">{contents.path}</div>
-              </div>
+              <RCANetworkDiscrepancyLine
+                key={key}
+                discrepancy={d}
+                setHoveredDiscrepancy={setHoveredDiscrepancy}
+                isHovered={d === hoveredDiscrepancy}
+                onAddToCategoryClicked={discrepancy => {
+                  console.log("Adding to category: ", discrepancy);
+                  setDiscrepancyToAdd(discrepancy);
+                  showAddDiscrepancyDialog();
+                }}
+              >
+                {contents.path}
+              </RCANetworkDiscrepancyLine>
             );
           })}
         </div>
@@ -127,6 +256,7 @@ export function RCANetworkDiscrepancyDisplay({
       <div className="flex flex-col ml-2">
         {requestContent}
         {responseContent}
+        {addDiscrepancyToCategoryDialog}
       </div>
     </ExpandableSection>
   );
