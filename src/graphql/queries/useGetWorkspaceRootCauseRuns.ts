@@ -87,7 +87,7 @@ interface ExecutedStatementWithDescription extends ExecutedStatement {
   description?: LocationDescription;
 }
 
-interface NetworkEventContentsRequest {
+export interface NetworkEventContentsRequest {
   kind: "Request";
   requestUrl: string;
   requestMethod: string;
@@ -120,7 +120,7 @@ interface ComparableValueAny {
 
 export type ComparableValue = ComparableValueLiteral | ComparableValueType | ComparableValueAny;
 
-interface NetworkEventContentsResponseJSON {
+export interface NetworkEventContentsResponseJSON {
   kind: "ResponseJSON";
 
   // Information about the associated request.
