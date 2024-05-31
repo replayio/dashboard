@@ -49,12 +49,14 @@ export default function FormStep3({
 }
 
 function CypressInstructions({ apiKey }: { apiKey: string }) {
+  const code = "npx cypress run --browser replay-chromium";
+
   return (
     <>
       <div>Now you&apos;re ready to record your tests with Replay!</div>
       <Group>
-        <CopyCode code="npx cypress run --browser replay-chromium" />
-        <ApiKeyCallout apiKey={apiKey} />
+        <CopyCode code={code} />
+        <ApiKeyCallout apiKey={apiKey} code={code} />
       </Group>
       <CIInstructions href="https://docs.replay.io/test-runners/cypress-io/github-actions" />
     </>
@@ -62,26 +64,32 @@ function CypressInstructions({ apiKey }: { apiKey: string }) {
 }
 
 function PlaywrightInstructions({ apiKey }: { apiKey: string }) {
+  const code = "npx playwright test --project replay-chromium";
+
   return (
     <>
       <div>Now you&apos;re ready to record your tests with Replay!</div>
       <Group>
-        <CopyCode code="npx playwright test --project replay-chromium" />
-        <ApiKeyCallout apiKey={apiKey} />
+        <CopyCode code={code} />
+        <ApiKeyCallout apiKey={apiKey} code={code} />
       </Group>
       <CIInstructions href="https://docs.replay.io/test-runners/playwright/github-actions" />
     </>
   );
 }
 
-function ApiKeyCallout({ apiKey }: { apiKey: string }) {
+function ApiKeyCallout({ apiKey, code }: { apiKey: string; code: string }) {
   return (
     <Callout
       bodyText={
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 grow">
           <div>If you&apos;ve saved it to an environment variable, you&apos;re all set.</div>
           <div>Otherwise you need to pass it explicitly:</div>
-          <CopyCode className="text-xs" code={`REPLAY_API_KEY=${apiKey} npx …`} />
+          <CopyCode
+            code={`REPLAY_API_KEY=${apiKey} npx …`}
+            codeToCopy={`REPLAY_API_KEY=${apiKey} ${code}`}
+            size="small"
+          />
         </div>
       }
       headerText="Your API key is needed to upload replays"
