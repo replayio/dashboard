@@ -1,29 +1,21 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import classnames from "classnames";
 import groupBy from "lodash/groupBy";
 import mapValues from "lodash/mapValues";
 
-import { Icon } from "@/components/Icon";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 
 import {
-  AnyDiscrepancy,
   DiscrepancyKind,
-  ExecutedStatementDiscrepancy,
-  FormattedFrame,
-  LineExecutionDiscrepancy,
   NetworkEventContentsRequest,
   NetworkEventContentsResponseJSON,
   NetworkEventDiscrepancy,
   RCATestEntry,
-  isExecutedStatementDiscrepancy,
-  useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { useCreateRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancyMutations";
 
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import {
-  RCACategory,
   RootCauseDiscrepancyTriplet,
   useWorkspaceRootCauseCategories,
 } from "@/graphql/queries/useWorkspaceRootCauseCategories";
@@ -98,7 +90,6 @@ export function RCANetworkDiscrepancyDisplay({
     async (confirmRemove: boolean) => {
       const categoryToAdd = categories.find(category => category.id === selectedCategory);
 
-      console.log("Category: ", categoryToAdd);
       if (confirmRemove && discrepancyToAdd && categoryToAdd) {
         const { kind, eventKind, key } = discrepancyToAdd;
         const discrepancy: RootCauseDiscrepancyTriplet = {
@@ -107,15 +98,9 @@ export function RCANetworkDiscrepancyDisplay({
           key,
         };
 
-        console.log("Creating discrepancy: ", {
-          categoryId: categoryToAdd.id,
-          discrepancy,
-        });
-
         const result = await createRootCauseCategoryDiscrepancies(workspaceId, categoryToAdd.id, [
           discrepancy,
         ]);
-        console.log("Creation result: ", result);
       }
     },
     {
@@ -149,7 +134,6 @@ export function RCANetworkDiscrepancyDisplay({
   const url = networkDiscrepancies[0]?.event.data.requestUrl;
 
   const discrepanciesByRequestOrResponse = groupBy(networkDiscrepancies, d => d.event.data.kind);
-  // console.log("discrepanciesByRequestOrResponse", discrepanciesByRequestOrResponse);
 
   const requestDiscrepancies = discrepanciesByRequestOrResponse["Request"];
   const responseDiscrepancies = discrepanciesByRequestOrResponse["ResponseJSON"];
@@ -180,7 +164,6 @@ export function RCANetworkDiscrepancyDisplay({
                 setHoveredDiscrepancy={setHoveredDiscrepancy}
                 isHovered={d === hoveredDiscrepancy}
                 onAddToCategoryClicked={discrepancy => {
-                  console.log("Adding to category: ", discrepancy);
                   setDiscrepancyToAdd(discrepancy);
                   showAddDiscrepancyDialog();
                 }}
@@ -237,7 +220,6 @@ export function RCANetworkDiscrepancyDisplay({
                 setHoveredDiscrepancy={setHoveredDiscrepancy}
                 isHovered={d === hoveredDiscrepancy}
                 onAddToCategoryClicked={discrepancy => {
-                  console.log("Adding to category: ", discrepancy);
                   setDiscrepancyToAdd(discrepancy);
                   showAddDiscrepancyDialog();
                 }}

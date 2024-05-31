@@ -89,8 +89,6 @@ export function RCATestEntryDetails({
     };
   }, [discrepancies]);
 
-  // console.log("Grouped discrepancies: ", discrepanciesByEventKind);
-
   const jsDiscrepanciesByKindAndPoint = useMemo(() => {
     const discrepanciesByKind = groupBy(discrepanciesByEventKind.ExecutedStatement, d => d.kind);
 
@@ -107,17 +105,6 @@ export function RCATestEntryDetails({
     return groupBy(discrepanciesByEventKind.NetworkEvent, d => d.event.point);
   }, [discrepanciesByEventKind]);
 
-  // console.log("Network discrepancies by point: ", networkDiscrepanciesByPoint);
-
-  const networkEventTypes = mapValues(networkDiscrepanciesByPoint, discrepancies =>
-    discrepancies.map(d => ({
-      kind: d.event.data.kind,
-      requestTag: d.event.data.requestTag,
-    }))
-  );
-
-  // console.log("Network event types: ", networkEventTypes);
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -125,8 +112,6 @@ export function RCATestEntryDetails({
   if (!analysisTestEntry) {
     return <div>Failed to load test entry details</div>;
   }
-
-  // console.log("Selected analysis entry: ", analysisTestEntry);
 
   const { resultMetadata } = analysisTestEntry;
   const { failingFrames } = resultMetadata;
