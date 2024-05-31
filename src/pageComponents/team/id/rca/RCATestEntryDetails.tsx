@@ -10,6 +10,7 @@ import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSecti
 import {
   ExecutedStatementDiscrepancy,
   FormattedFrame,
+  NetworkEventDiscrepancy,
   RCADiscrepancy,
   RCATestEntry,
   isExecutedStatementDiscrepancy,
@@ -20,6 +21,7 @@ import { formatDuration, formatRelativeTime } from "@/utils/number";
 import { RecordingThumbnail } from "@/pageComponents/team/id/recordings/RecordingThumbnail";
 import { getURL } from "@/utils/recording";
 import { RCAJSFunctionDiscrepancy } from "./RCAJSFunctionDiscrepancy";
+import { RCANetworkDiscrepancyDisplay } from "./RCANetworkDiscrepancy";
 
 function FramesForURL({
   url,
@@ -80,14 +82,17 @@ export function RCATestEntryDetails({
 
   const discrepancies = analysisTestEntry?.discrepancies ?? NO_DISCREPANCIES;
 
-  const jsExecutionDiscrepancies = useMemo(() => {
-    return discrepancies.filter(d =>
-      isExecutedStatementDiscrepancy(d)
-    ) as unknown as ExecutedStatementDiscrepancy[];
+  const discrepanciesByEventKind = useMemo(() => {
+    return groupBy(discrepancies, d => d.eventKind) as unknown as {
+      ExecutedStatement: ExecutedStatementDiscrepancy[];
+      NetworkEvent: NetworkEventDiscrepancy[];
+    };
   }, [discrepancies]);
 
-  const discrepanciesByKindAndPoint = useMemo(() => {
-    const discrepanciesByKind = groupBy(jsExecutionDiscrepancies, d => d.kind);
+  // console.log("Grouped discrepancies: ", discrepanciesByEventKind);
+
+  const jsDiscrepanciesByKindAndPoint = useMemo(() => {
+    const discrepanciesByKind = groupBy(discrepanciesByEventKind.ExecutedStatement, d => d.kind);
 
     return mapValues(discrepanciesByKind, discrepancies => {
       const discrepanciesByPoint: Record<string, ExecutedStatementDiscrepancy> = {};
@@ -96,7 +101,22 @@ export function RCATestEntryDetails({
       }
       return discrepanciesByPoint;
     });
-  }, [jsExecutionDiscrepancies]);
+  }, [discrepanciesByEventKind]);
+
+  const networkDiscrepanciesByPoint = useMemo(() => {
+    return groupBy(discrepanciesByEventKind.NetworkEvent, d => d.event.point);
+  }, [discrepanciesByEventKind]);
+
+  // console.log("Network discrepancies by point: ", networkDiscrepanciesByPoint);
+
+  const networkEventTypes = mapValues(networkDiscrepanciesByPoint, discrepancies =>
+    discrepancies.map(d => ({
+      kind: d.event.data.kind,
+      requestTag: d.event.data.requestTag,
+    }))
+  );
+
+  // console.log("Network event types: ", networkEventTypes);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -106,12 +126,10 @@ export function RCATestEntryDetails({
     return <div>Failed to load test entry details</div>;
   }
 
-  console.log("Selected analysis entry: ", analysisTestEntry);
+  // console.log("Selected analysis entry: ", analysisTestEntry);
 
   const { resultMetadata } = analysisTestEntry;
   const { failingFrames } = resultMetadata;
-
-  console.log("JS discrepancies: ", jsExecutionDiscrepancies);
 
   const framesByUrl = groupBy(failingFrames, f => f.url || "Unknown");
 
@@ -125,7 +143,23 @@ export function RCATestEntryDetails({
         frames={frames}
         workspaceId={workspaceId}
         analysisTestEntry={analysisTestEntry}
-        discrepanciesByKindAndPoint={discrepanciesByKindAndPoint}
+        discrepanciesByKindAndPoint={jsDiscrepanciesByKindAndPoint}
+      />
+    );
+  });
+
+  const sortedNetworkDiscrepancies = sortBy(
+    Object.entries(networkDiscrepanciesByPoint),
+    ([point]) => point
+  );
+
+  const renderedNetworkDiscrepancies = sortedNetworkDiscrepancies.map(([point, discrepancies]) => {
+    return (
+      <RCANetworkDiscrepancyDisplay
+        key={point}
+        analysisTestEntry={analysisTestEntry}
+        workspaceId={workspaceId}
+        networkDiscrepancies={discrepancies}
       />
     );
   });
@@ -176,8 +210,12 @@ export function RCATestEntryDetails({
         </div>
       </div>
 
-      <h4 className="text-md font-bold">JS Discrepancies</h4>
-      <div className="flex flex-col grow overflow-y-auto w-full">{renderedJSDiscrepancies}</div>
+      <div className="flex flex-col grow overflow-y-auto w-full">
+        <h4 className="text-md font-bold">JS Discrepancies</h4>
+        <div className="flex flex-col grow  w-full">{renderedJSDiscrepancies}</div>
+        <h4 className="text-md font-bold mt-2">Network Discrepancies</h4>
+        <div className="flex flex-col grow  w-full">{renderedNetworkDiscrepancies}</div>
+      </div>
     </div>
   );
 }

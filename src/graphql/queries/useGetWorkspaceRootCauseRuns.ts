@@ -534,3 +534,9 @@ export function isExecutedStatementDiscrepancy(
 ): discrepancy is ExecutedStatementDiscrepancy {
   return "eventKind" in discrepancy && discrepancy.eventKind == "ExecutedStatement";
 }
+
+export function isNetworkEventDiscrepancy(
+  discrepancy: any
+): discrepancy is NetworkEventDiscrepancy {
+  return "eventKind" in discrepancy && discrepancy.eventKind == "NetworkEvent";
+}
