@@ -1,24 +1,19 @@
 import { useMemo, useState } from "react";
 import classnames from "classnames";
 
-import { Icon } from "@/components/Icon";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 
 import {
-  AnyDiscrepancy,
   DiscrepancyKind,
   ExecutedStatementDiscrepancy,
   FormattedFrame,
   LineExecutionDiscrepancy,
   RCATestEntry,
-  isExecutedStatementDiscrepancy,
-  useWorkspaceRootCauseTestEntryDetails,
 } from "@/graphql/queries/useGetWorkspaceRootCauseRuns";
 import { useCreateRootCauseCategoryDiscrepancy } from "@/graphql/queries/useRootCauseCategoryDiscrepancyMutations";
 
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import {
-  RCACategory,
   RootCauseDiscrepancyTriplet,
   useWorkspaceRootCauseCategories,
 } from "@/graphql/queries/useWorkspaceRootCauseCategories";
@@ -120,7 +115,6 @@ export function RCAJSFunctionDiscrepancy({
   ) => {
     const categoryToAdd = categories.find(category => category.id === selectedCategory);
 
-    console.log("Category: ", categoryToAdd);
     if (categoryToAdd) {
       const searchKind = description.hasExtra ? DiscrepancyKind.Extra : DiscrepancyKind.Missing;
 
@@ -128,8 +122,6 @@ export function RCAJSFunctionDiscrepancy({
       const discrepancyPoint = discrepanciesForLine?.[searchKind];
 
       const actualDiscrepancy = discrepanciesForKindByPoint?.[discrepancyPoint ?? ""];
-
-      console.log("Actual discrepancy: ", actualDiscrepancy);
 
       if (actualDiscrepancy) {
         const { kind, eventKind, key } = actualDiscrepancy;
@@ -139,15 +131,9 @@ export function RCAJSFunctionDiscrepancy({
           key,
         };
 
-        console.log("Creating discrepancy: ", {
-          categoryId: categoryToAdd.id,
-          discrepancy,
-        });
-
         const result = await createRootCauseCategoryDiscrepancies(workspaceId, categoryToAdd.id, [
           discrepancy,
         ]);
-        console.log("Creation result: ", result);
       }
     }
   };
@@ -184,7 +170,6 @@ export function RCAJSFunctionDiscrepancy({
                     hoveredLine={hoveredLine}
                     setHoveredLine={setHoveredLine}
                     onAddToCategoryClicked={description => {
-                      console.log("Adding to category: ", description);
                       setDiscrepancyToAdd(description);
                       showAddDiscrepancyDialog();
                     }}
