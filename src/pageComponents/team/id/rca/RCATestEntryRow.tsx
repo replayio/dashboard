@@ -25,20 +25,21 @@ export function RCATestEntryRow({
   return (
     <div
       className={classnames(
-        "flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white",
+        "flex flex-row items-center gap-4 px-4 py-2 rounded-md mb-1 cursor-pointer text-white",
         {
-          "border-blue-400 border-2": selected,
+          "bg-sky-900 hover:bg-sky-800": selected,
+          "bg-slate-800 hover:bg-slate-700": !selected,
         }
       )}
       data-test-name="RCATestEntryRow"
       onClick={onClick}
     >
-      <div className="flex flex-row items-center gap-2 w-full truncate">
-        <div className="flex flex-col grow gap-1 truncate">
+      <div className="flex flex-row items-center w-full gap-2 truncate">
+        <div className="flex flex-col gap-1 truncate grow">
           <div className="truncate">{resultMetadata.title}</div>
-          <div className="flex flex-row gap-4 text-sm text-gray-500 whitespace-nowrap">
+          <div className="flex flex-row gap-4 text-sm text-gray-400 whitespace-nowrap">
             <div
-              className="w-20 flex flex-row gap-1 items-center shrink-0"
+              className="flex flex-row items-center w-20 gap-1 shrink-0"
               suppressHydrationWarning
             >
               <Icon className="w-3 h-3" type="calendar" />

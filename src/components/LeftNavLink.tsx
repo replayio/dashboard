@@ -37,8 +37,8 @@ export function LeftNavLink({
       href={href}
       {...rest}
     >
-      <Icon className="h-4 w-4 hidden md:block shrink-0" type={iconType} />
-      <div className="grow truncate">{label}</div>
+      <Icon className="hidden w-4 h-4 md:block shrink-0" type={iconType} />
+      <div className="truncate grow">{label}</div>
     </Component>
   );
 }

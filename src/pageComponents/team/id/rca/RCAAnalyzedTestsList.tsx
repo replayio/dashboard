@@ -30,9 +30,9 @@ export const RCAAnalyzedTestsList = ({
 
   return (
     <>
-      <h3 className="text-lg font-bold">Recent Analyzed Failed Tests</h3>
+      <h3 className="mt-8 text-xl font-medium">Recent Analyzed Failed Tests</h3>
 
-      <div className="mt-2 grow overflow-y-auto">{renderedEntries}</div>
+      <div className="mt-2 overflow-y-auto grow">{renderedEntries}</div>
     </>
   );
 };

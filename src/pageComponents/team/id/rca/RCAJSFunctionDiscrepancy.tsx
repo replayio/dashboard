@@ -140,17 +140,15 @@ export function RCAJSFunctionDiscrepancy({
 
   return (
     <div
-      className={classnames(
-        "flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
-      )}
+      className={classnames("flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 text-white")}
       data-test-name="RCAJSFunctionDiscrepancy"
     >
-      <div className="flex flex-row items-center gap-2 w-full truncate">
-        <div className="flex flex-col grow gap-1 truncate">
+      <div className="flex flex-row items-center w-full gap-2 truncate">
+        <div className="flex flex-col gap-1 truncate grow">
           <ExpandableSection
             label={
               <>
-                <div className="truncate font-bold font-mono">
+                <div className="font-mono font-bold truncate">
                   {formattedFrame.functionName}() on line {formattedFrame.line}
                 </div>
                 <div className="flex flex-row gap-4 text-sm text-gray-500 whitespace-nowrap">
@@ -211,9 +209,9 @@ function JSFunctionSourceLine({
   if (isHovered) {
     if (hasDiscrepancy) {
       hoverContent = (
-        <div className="absolute right-0">
+        <div className="absolute top-0 h-2 right-1">
           <button
-            className="bg-sky-600 text-white rounded"
+            className="px-2 text-sm text-white rounded-sm cursor-pointer right-2 mt--1 bg-sky-600"
             onClick={() => {
               onAddToCategoryClicked({ line, kind: DiscrepancyKind.Extra, hasExtra });
             }}
@@ -235,12 +233,12 @@ function JSFunctionSourceLine({
   return (
     <div
       className={classnames("flex flex-row relative", {
-        "hover:border-blue-400 hover:border": hasExtra || hasMissing,
+        "": hasExtra || hasMissing,
       })}
       onMouseOver={() => setHoveredLine(line)}
       onMouseOut={() => setHoveredLine(null)}
     >
-      <div className="min-w-8 text-gray-400">{line}</div>
+      <div className="text-gray-400 min-w-8">{line}</div>
       <div
         className={classnames("min-w-2 text-gray-400", {
           "bg-green-400": hasExtra,
@@ -249,8 +247,8 @@ function JSFunctionSourceLine({
         {hasExtra ? "E" : null}
       </div>
       <div
-        className={classnames("min-w-2 text-gray-400", {
-          "bg-red-400": hasMissing,
+        className={classnames("min-w-2 px-1 text-white", {
+          "bg-pink-600": hasMissing,
         })}
       >
         {hasMissing ? "M" : null}
