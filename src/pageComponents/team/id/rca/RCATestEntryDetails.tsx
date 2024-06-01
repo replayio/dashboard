@@ -55,7 +55,7 @@ function FramesForURL({
   });
 
   return (
-    <ExpandableSection label={<h4 className="mb-1 font-mono text-sm">{url}</h4>}>
+    <ExpandableSection label={<h4 className="mb-2 font-mono text-sm">{url}</h4>}>
       {renderedJSDiscrepancies}
     </ExpandableSection>
   );
