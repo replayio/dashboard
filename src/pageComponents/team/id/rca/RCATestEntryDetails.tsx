@@ -55,7 +55,7 @@ function FramesForURL({
   });
 
   return (
-    <ExpandableSection label={<h4 className="text-md font-normal font-mono">{url}</h4>}>
+    <ExpandableSection label={<h4 className="mb-1 font-mono text-sm">{url}</h4>}>
       {renderedJSDiscrepancies}
     </ExpandableSection>
   );
@@ -162,23 +162,21 @@ export function RCATestEntryDetails({
 
   return (
     <div
-      className={classnames(
-        "flex flex-col items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white max-h-[90svh]"
-      )}
+      className={classnames("flex flex-col items-center gap-4  text-white max-h-[90svh]")}
       data-test-name="RCATestEntryDetails"
     >
       <div className="flex flex-row w-full truncate min-h-24">
-        <div className="grow basis-1/2 mr-1">
-          <h4 className="text-md font-bold">Test Name</h4>
+        <div className="mr-1 grow basis-1/2">
+          <h4 className="font-bold text-md">Test Name</h4>
           <div> {resultMetadata.title}</div>
         </div>
-        <div className="grow basis-1/2 ml-1">
-          <h4 className="text-md font-bold">Recordings</h4>
-          <div className="flex flex-row shrink-0 w-full">
+        <div className="ml-1 grow basis-1/2">
+          <h4 className="font-bold text-md">Recordings</h4>
+          <div className="flex flex-row w-full shrink-0">
             <div className="m-1">
               <a href={failingRecordingLink}>
                 Failed:
-                <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
+                <div className="w-16 p-2 rounded-sm h-9 bg-slate-900">
                   <RecordingThumbnail buildId={buildId} recordingId={failedRecordingId} />
                 </div>
               </a>
@@ -186,7 +184,7 @@ export function RCATestEntryDetails({
             <div className="m-1">
               <a href={passingRecordingLink}>
                 Passing:
-                <div className="p-2 w-16 h-9  bg-slate-900 rounded-sm">
+                <div className="w-16 p-2 rounded-sm h-9 bg-slate-900">
                   <RecordingThumbnail buildId={buildId} recordingId={passingRecordingId} />
                 </div>
               </a>
@@ -195,11 +193,11 @@ export function RCATestEntryDetails({
         </div>
       </div>
 
-      <div className="flex flex-col grow overflow-y-auto w-full">
-        <h4 className="text-md font-bold">JS Discrepancies</h4>
-        <div className="flex flex-col grow  w-full">{renderedJSDiscrepancies}</div>
-        <h4 className="text-md font-bold mt-2">Network Discrepancies</h4>
-        <div className="flex flex-col grow  w-full">{renderedNetworkDiscrepancies}</div>
+      <div className="flex flex-col w-full overflow-y-auto grow">
+        <h4 className="font-bold text-md">JS Discrepancies</h4>
+        <div className="flex flex-col w-full grow">{renderedJSDiscrepancies}</div>
+        <h4 className="mt-2 font-bold text-md">Network Discrepancies</h4>
+        <div className="flex flex-col w-full grow">{renderedNetworkDiscrepancies}</div>
       </div>
     </div>
   );

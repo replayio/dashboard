@@ -23,8 +23,8 @@ export default function Page({
   const selectedTestEntry = rcaTestEntries.find(entry => entry.id === selectedTestEntryId);
 
   return (
-    <div className="h-full w-full p-2">
-      <div className="flex h-full w-full">
+    <div className="w-full h-full p-2">
+      <div className="flex w-full h-full">
         <div className="flex flex-col basis-2/5 p-2 max-w-[40%] ">
           <div className="flex flex-col basis-1/2 max-h-[50%]">
             <RCACategoriesList workspaceId={workspaceId} />
@@ -38,7 +38,7 @@ export default function Page({
           </div>
         </div>
         <div className="basis-3/5 p-2 max-w-[60%]">
-          <h3 className="text-lg font-bold">Test Analysis Details</h3>
+          <h3 className="text-xl font-medium">Test Analysis Details</h3>
           {selectedTestEntry && (
             <RCATestEntryDetails
               workspaceId={workspaceId}

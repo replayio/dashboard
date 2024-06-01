@@ -65,7 +65,7 @@ function RCACategoryDiscrepancyListItem({
         />
         {confirmRemoveDiscrepancyDialog}
       </div>
-      <div className="truncate font-mono">{discrepancy.key}</div>
+      <div className="font-mono truncate">{discrepancy.key}</div>
     </div>
   );
 }
@@ -113,14 +113,14 @@ export function RCACategoryRow({
   return (
     <div
       className={classnames(
-        "flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white"
+        "mb-1 flex flex-row items-center gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg"
       )}
       data-test-name="RCACategoryRow"
     >
-      <div className="flex flex-row items-center gap-1 w-full truncate">
-        <div className="flex flex-col grow truncate">
+      <div className="flex flex-row items-center w-full gap-1 truncate">
+        <div className="flex flex-col truncate grow">
           <div className="flex flex-row">
-            <div className="truncate font-bold grow">
+            <div className="font-medium truncate grow">
               <EditableTitle title={category.name} saveTitle={saveName} />
             </div>
             <IconButton
