@@ -16,7 +16,7 @@ test("login-external-browser: should login using an external browser", async ({ 
 
   await login(page);
 
-  await page.getByText("Authentication Complete").waitFor({ timeout: 10_000 });
+  await page.getByText("Authenticating...").waitFor({ timeout: 10_000 });
 
   const token = await pollForAuthentication(key);
   expect(token.accessToken).toBeTruthy();
