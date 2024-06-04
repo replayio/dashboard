@@ -51,24 +51,20 @@ export function CopyCode({
 
   return (
     <div
-      className="flex relative shrink-0"
+      className="relative flex shrink-0"
       data-test-name="CopyCode"
       onClick={onMouse}
       onMouseEnter={onMouse}
       onMouseLeave={onMouse}
     >
-      <Code
-        className={`w-full cursor-pointer ${size === "normal" ? "" : "text-xs"} ${className}`}
-        code={code}
-        lang={lang}
-      />
-      <div className="absolute top-1 right-0 pointer-events-none flex flex-row items-center text-xs">
+      <Code className={`w-full cursor-pointer text-lg truncate`} code={code} lang={lang} />
+      <div className="absolute right-0 flex flex-row items-center text-xs pointer-events-none top-1">
         {state === "copied" ? (
-          <span className="bg-slate-950 px-1 round text-sky-400">Copied</span>
+          <span className="px-1 bg-slate-950 round text-sky-400">Copied</span>
         ) : state === "hover" ? (
-          <div className="bg-slate-950 px-1 round">Copy</div>
+          <div className="px-1 bg-slate-950 round">Copy</div>
         ) : (
-          <div className="bg-slate-950 px-1 round">
+          <div className="px-1 bg-slate-950 round">
             <Icon className={size === "normal" ? "w-5 h-5" : "w-4 h-4"} type="copy" />
           </div>
         )}
