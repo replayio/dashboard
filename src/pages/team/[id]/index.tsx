@@ -12,9 +12,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   if (isInvalid) {
     return redirectWithState({
       context,
-      pathname: "/team/me/recordings",
+      pathname: "/team/not-found",
     });
   }
+
   return redirectWithState({
     context,
     pathname: isTest ? `/team/${workspaceId}/runs` : `/team/${workspaceId}/recordings`,
