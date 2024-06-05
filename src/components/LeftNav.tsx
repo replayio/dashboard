@@ -2,6 +2,8 @@ import { Icon } from "@/components/Icon";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { HomeNavLink } from "@/components/layout/HomeNavLink";
 import { MyLibraryNavLink } from "@/components/layout/MyLibraryLink";
+import { CreateTestSuiteLink } from "@/components/layout/CreateTestSuiteLink";
+import { NewTeamLink } from "@/components/layout/NewTeamLink";
 import { CurrentUser } from "@/pageComponents/team/layout/CurrentUser";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
@@ -25,8 +27,8 @@ export function LeftNav({
         <HomeNavLink />
         <MyLibraryNavLink />
         <hr className="w-4/5 mx-auto my-3 border-slate-900" />
-        <div className="w-3/4 pl-2">+ Add a test suite</div>
-        <div className="w-3/4 pl-2">+ Add a new team</div>
+        <CreateTestSuiteLink />
+        <NewTeamLink />
         <hr className="w-4/5 mx-auto my-3 border-slate-900" />
       </nav>
       <nav className="relative flex flex-col p-1 overflow-auto grow">
