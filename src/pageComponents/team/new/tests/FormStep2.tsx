@@ -99,20 +99,18 @@ function PlaywrightInstructions({
   return (
     <>
       <Group>
-        <div className="text-xl xl:text-2xl">
-          1. Install the @replayio/playwright package in your project
-        </div>
+        <div className="text-xl">1. Install the @replayio/playwright package in your project</div>
         <CopyCode
           code={getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
         />
       </Group>
       <Group>
-        <div className="text-xl xl:text-2xl">2. Install the Replay browser.</div>
+        <div className="text-xl">2. Install the Replay browser.</div>
         <CopyCode code="npx replayio install" />
       </Group>
       <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
-        <div className="text-xl xl:text-2xl">
+        <div className="text-xl">
           4. Add the Replay browser and Reporter to your playwright.config.ts file.
         </div>
         <CodeTabContainer codeCJS={playwrightCJS} codeESM={playwrightESM} codeTS={playwrightTS} />
@@ -124,7 +122,7 @@ function PlaywrightInstructions({
 function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
   return (
     <Group>
-      <div className="text-xl xl:text-2xl">{number}. Save the API key below before continuing</div>
+      <div className="text-xl">{number}. Save the API key below before continuing</div>
       <CopyCode code={`REPLAY_API_KEY=${apiKey}`} />
       <Callout
         bodyText={

@@ -179,7 +179,7 @@ export function CreateTestSuitesTeam() {
 
   return (
     <div className="flex flex-row w-screen h-screen" data-test-id="CreateTestSuitesTeam">
-      <div className="flex flex-row justify-center w-full px-16 py-16 overflow-auto md:w-1/2 grow">
+      <div className="flex flex-row justify-center w-full px-16 py-16 overflow-auto md:w-3/5 grow">
         <div className="flex flex-col w-full gap-10 text-lg center-items">
           <Link className="flex flex-row items-center text-2xl text-white" href="/home">
             <Icon className="w-5 h-5" type="back-arrow" /> Back to library
@@ -188,7 +188,7 @@ export function CreateTestSuitesTeam() {
           <Suspense>{form}</Suspense>
         </div>
       </div>
-      <div className="hidden md:flex w-1/2 bg-[#EEC764] flex-col justify-end overflow-hidden relative">
+      <div className="relative flex-col justify-end hidden w-2/5 overflow-hidden md:flex">
         <Image alt="Box image" layout="fill" objectFit="cover" src={image} />
       </div>
     </div>
