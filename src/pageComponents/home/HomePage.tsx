@@ -10,7 +10,7 @@ export function HomePage() {
       {/* This div will be displayed on screens larger than 'md' */}
       <div className="hidden lg:block">
         <div className="grid grid-cols-1 gap-4 border shadow-lg border-slate-700 md:grid-cols-2 lg:grid-cols-2 bg-none rounded-xl lg:bg-slate-800 lg:p-6 lg:gap-6">
-          <div className="text-2xl font-medium underline col-span-full">Home</div>
+          <div className="text-2xl font-medium col-span-full">Home</div>
 
           <Block
             href="https://docs.replay.io/basics/getting-started/record-your-app"

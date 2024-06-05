@@ -7,20 +7,20 @@ export function CurrentUser() {
 
   return (
     <Link
-      className="flex flex-row items-center gap-4 bg-slate-950 !p-2 text-white cursor-pointer whitespace-nowrap rounded truncate"
+      className="flex flex-row items-center gap-4 px-2 py-4 text-white truncate rounded cursor-pointer bg-slate-900 whitespace-nowrap"
       href="/user/settings/account"
     >
       {user.picture && (
         <img
           alt={`${user.name} avatar`}
-          className="rounded-full w-10 h-10 hidden md:block"
+          className="hidden w-10 h-10 rounded-full md:block"
           referrerPolicy="no-referrer"
           src={user.picture}
         />
       )}
       <div className="truncate">
         <div className="truncate">{user.name}</div>
-        <div className="truncate text-sm text-slate-400">View settings</div>
+        <div className="text-sm truncate text-slate-400">View settings</div>
       </div>
     </Link>
   );
