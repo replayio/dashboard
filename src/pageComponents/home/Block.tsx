@@ -6,15 +6,22 @@ export function Block({
   children,
   href,
   title,
-}: PropsWithChildren<{ href: string; title: string }>) {
+  imageUrl, // Add an imageUrl prop
+}: PropsWithChildren<{ href: string; title: string; imageUrl?: string }>) {
+  // imageUrl is optional
   const Component = href.startsWith("/") || href.startsWith("mailto:") ? Link : ExternalLink;
 
   return (
     <Component
-      className="flex flex-col w-64 overflow-hidden text-white transition rounded-md cursor-pointer bg-slate-700 hover:bg-slate-600"
+      className="flex flex-col overflow-hidden text-white transition rounded-md shadow-xl cursor-pointer w-96 bg-slate-950 hover:bg-black"
       href={href}
     >
-      <div className="hidden w-full h-32 bg-gradient-to-br from-sky-500 to-pink-300 lg:block short:hidden" />
+      {imageUrl && ( // Conditionally render the image if imageUrl is provided
+        <div
+          className="w-full h-32 bg-center bg-cover short:hidden"
+          style={{ backgroundImage: `url(${imageUrl})` }}
+        />
+      )}
       <div className="flex flex-col flex-wrap gap-2 p-6">
         <div className="text-xl">{title}</div>
         <div>{children}</div>
