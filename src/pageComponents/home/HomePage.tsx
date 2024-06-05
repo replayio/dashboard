@@ -40,17 +40,14 @@ export function HomePage() {
           <li>
             <a
               href="https://docs.replay.io/basics/getting-started/record-your-app"
-              className="text-2xl font-medium text-white underline"
+              className="text-2xl text-white underline"
             >
               Documentation
             </a>
             <div>Filled with examples to help you on your way</div>
           </li>
           <li>
-            <a
-              href="https://www.replay.io/support"
-              className="text-2xl font-medium text-white underline"
-            >
+            <a href="https://www.replay.io/support" className="text-2xl text-white underline">
               Support
             </a>
             <div>Contact us on Discord, we&apos;re here to help!</div>
@@ -58,14 +55,14 @@ export function HomePage() {
           <li>
             <a
               href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
-              className="text-2xl font-medium text-white underline"
+              className="text-2xl text-white underline"
             >
               Replay Course
             </a>
             <div>Our course on YouTube is great for learning the basics</div>
           </li>
           <li>
-            <a href="https://blog.replay.io" className="text-2xl font-medium text-white underline">
+            <a href="https://blog.replay.io" className="text-2xl text-white underline">
               Replay Blog
             </a>
             <div>See how other teams perform time travel miracles with Replay</div>
