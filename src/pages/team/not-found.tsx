@@ -11,7 +11,7 @@ export default function TeamNotFoundPage() {
       </div>
       <div>Contact an admin if you think you should have access to this team.</div>
       <Link href="/home">
-        <Button size="large" variant="outline">
+        <Button data-test-id="Button-GoHome" size="large" variant="outline">
           Go home
         </Button>
       </Link>
