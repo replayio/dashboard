@@ -57,7 +57,11 @@ export function CopyCode({
       onMouseEnter={onMouse}
       onMouseLeave={onMouse}
     >
-      <Code className={`w-full cursor-pointer text-lg truncate`} code={code} lang={lang} />
+      <Code
+        className={`w-full truncate cursor-pointer ${size === "normal" ? "" : "text-xs"} ${className}`}
+        code={code}
+        lang={lang}
+      />
       <div className="absolute right-0 flex flex-row items-center text-xs pointer-events-none top-1">
         {state === "copied" ? (
           <span className="px-1 bg-slate-950 round text-sky-400">Copied</span>
