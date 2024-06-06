@@ -1,7 +1,5 @@
 import { LeftNavLink } from "@/components/LeftNavLink";
 
-import { usePathname } from "next/navigation";
-
 export function CreateTestSuiteLink() {
   return (
     <LeftNavLink
