@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, Suspense, lazy, startTransition, useCallback, useState } from "react";
-import image from "./test-suites-box.png";
+import image from "./new-teams-delorean.png";
 
 const FormStep1 = lazy(() => import("@/pageComponents/team/new/tests/FormStep1"));
 const FormStep2 = lazy(() => import("@/pageComponents/team/new/tests/FormStep2"));
@@ -179,28 +179,17 @@ export function CreateTestSuitesTeam() {
 
   return (
     <div className="flex flex-row w-screen h-screen" data-test-id="CreateTestSuitesTeam">
-      <div className="flex flex-row justify-center w-full p-8 overflow-auto grow">
-        <div className="flex flex-col center-items gap-6 w-[505px]">
-          <Link className="flex flex-row items-center text-xl text-white" href="/home">
-            <Icon className="w-4 h-4" type="back-arrow" /> Back to library
+      <div className="flex flex-row justify-center w-full px-16 py-16 overflow-auto md:w-3/5 grow">
+        <div className="flex flex-col w-full gap-10 text-lg center-items">
+          <Link className="flex flex-row items-center text-2xl text-white" href="/home">
+            <Icon className="w-5 h-5" type="back-arrow" /> Back to library
           </Link>
           <MultiStepForm currentIndex={state.step - 1} steps={STEPS} />
           <Suspense>{form}</Suspense>
         </div>
       </div>
-      <div className="min-w-72 grow-0 shrink bg-[#ffc22c] flex flex-col justify-end overflow-hidden">
-        <Image
-          alt="Box image"
-          height={264}
-          sizes="100vw"
-          src={image}
-          style={{
-            minWidth: 100,
-            maxWidth: "100%",
-            height: "auto",
-          }}
-          width={512}
-        />
+      <div className="relative flex-col justify-end hidden w-2/5 overflow-hidden md:flex">
+        <Image alt="Box image" layout="fill" objectFit="cover" src={image} />
       </div>
     </div>
   );
