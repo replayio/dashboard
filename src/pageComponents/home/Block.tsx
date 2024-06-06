@@ -5,10 +5,9 @@ import { PropsWithChildren } from "react";
 export function Block({
   children,
   href,
+  imageUrl,
   title,
-  imageUrl, // Add an imageUrl prop
-}: PropsWithChildren<{ href: string; title: string; imageUrl?: string }>) {
-  // imageUrl is optional
+}: PropsWithChildren<{ href: string; imageUrl: string; title: string }>) {
   const Component = href.startsWith("/") || href.startsWith("mailto:") ? Link : ExternalLink;
 
   return (
