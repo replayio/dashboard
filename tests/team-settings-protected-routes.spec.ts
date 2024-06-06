@@ -19,7 +19,7 @@ test("team-settings-protected-routes: should restrict certain routes from non-de
   // Protected routes should not be in the left nav
 
   const links = page.locator('[data-test-name="LeftNavLink"]');
-  await expect(links).toHaveCount(3);
+  await expect(links).toHaveCount(5);
   await expect(links.allTextContents()).resolves.toContain("Home");
   await expect(links.allTextContents()).resolves.toContain("My Library");
   await expect(links.allTextContents()).resolves.toContain("Members");
