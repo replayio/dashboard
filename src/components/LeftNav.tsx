@@ -31,7 +31,7 @@ export function LeftNav({
         <NewTeamLink />
         <hr className="w-4/5 mx-auto my-3 border-slate-900" />
       </nav>
-      <nav className="relative flex flex-col p-1 overflow-auto grow">
+      <nav className="relative flex flex-col px-1 overflow-auto grow">
         {backLink && (
           <Link
             className="flex flex-row items-center px-2 py-1 overflow-auto text-lg text-white truncate hover:text-sky-400 whitespace-nowrap shrink-0"
