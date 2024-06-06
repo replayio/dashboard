@@ -16,12 +16,10 @@ export function Block({
       className="flex flex-col overflow-hidden text-white transition rounded-md shadow-xl cursor-pointer w-96 bg-slate-950 hover:bg-black"
       href={href}
     >
-      {imageUrl && ( // Conditionally render the image if imageUrl is provided
-        <div
-          className="w-full h-32 bg-center bg-cover short:hidden"
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        />
-      )}
+      <div
+        className="w-full h-32 bg-center bg-cover short:hidden"
+        style={{ backgroundImage: `url(${imageUrl})` }}
+      />
       <div className="flex flex-col flex-wrap gap-2 p-6">
         <div className="text-xl">{title}</div>
         <div>{children}</div>
