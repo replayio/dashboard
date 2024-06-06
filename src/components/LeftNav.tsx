@@ -23,7 +23,7 @@ export function LeftNav({
         <ReplayLogo className="pl-1 max-h-6 max-w-5" color="#ffffff" />
         <div className="text-xl font-light">Replay</div>
       </div>
-      <nav className="relative flex flex-col p-1 overflow-auto shrink-0">
+      <nav className="relative flex flex-col px-1 overflow-auto shrink-0">
         <HomeNavLink />
         <MyLibraryNavLink />
         <hr className="w-4/5 mx-auto my-3 border-slate-900" />
