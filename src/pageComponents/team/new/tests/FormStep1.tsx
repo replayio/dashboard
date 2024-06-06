@@ -60,7 +60,7 @@ export default function FormStep1({
         </div>
       </Group>
       <Group>
-        <div>Team name</div>
+        <div className="text-xl font-bold">Team name</div>
         <Input
           data-test-id="CreateTestSuiteTeam-TeamName-Input"
           onChange={value =>
@@ -74,8 +74,8 @@ export default function FormStep1({
         />
       </Group>
       <Group>
-        <div>Test runner</div>
-        <div className="flex flex-row center-items gap-2">
+        <div className="text-xl font-bold">Test runner</div>
+        <div className="flex flex-row gap-2 center-items">
           <Select
             data-test-id="CreateTestSuiteTeam-TestRunner-Select"
             onChange={value =>
@@ -91,8 +91,8 @@ export default function FormStep1({
         </div>
       </Group>
       <Group>
-        <div>Package manager</div>
-        <div className="flex flex-row center-items gap-2">
+        <div className="text-xl font-bold">Package manager</div>
+        <div className="flex flex-row gap-2 center-items">
           <Select
             data-test-id="CreateTestSuiteTeam-PackageManager-Select"
             onChange={value =>

@@ -3,7 +3,7 @@ import { Block } from "@/pageComponents/home/Block";
 export function HomePage() {
   return (
     <div className="flex items-start justify-start h-full p-2 overflow-auto lg:justify-center lg:items-center">
-      <div className="grid grid-cols-1 gap-2 shadow-lg shadow-xl md:grid-cols-2 lg:grid-cols-3 bg-none rounded-xl lg:bg-slate-950 lg:p-6 lg:gap-4">
+      <div className="grid grid-cols-1 gap-2 shadow-lg md:grid-cols-2 lg:grid-cols-3 bg-none rounded-xl lg:bg-slate-950 lg:p-6 lg:gap-4">
         <div className="text-2xl font-medium col-span-full md:col-span-2 lg:col-span-3">Home</div>
         <Block href="https://docs.replay.io/quickstart" title="Quickstart">
           Record your first replay with{" "}

@@ -43,14 +43,16 @@ export default function FormStep2({
   return (
     <>
       {instructions}
-      <Button
-        className="self-start"
-        data-test-id="CreateTeam-Continue-Button"
-        onClick={onContinue}
-        size="large"
-      >
-        Continue
-      </Button>
+      <div className="pb-12">
+        <Button
+          className="self-start"
+          data-test-id="CreateTeam-Continue-Button"
+          onClick={onContinue}
+          size="large"
+        >
+          Continue
+        </Button>
+      </div>
     </>
   );
 }
@@ -71,16 +73,16 @@ function CypressInstructions({
         />
       </Group>
       <Group>
-        <div>2. Install the Replay browser.</div>
+        <div>2. Install the Replay browser</div>
         <CopyCode code="npx replayio install" />
       </Group>
       <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
-        <div>4. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
+        <div>4. Add the Replay browser and Reporter to your cypress.config.ts file</div>
         <CodeTabContainer codeCJS={cypressCJS} codeESM={cypressESM} codeTS={cypressTS} />
       </Group>
       <Group>
-        <div>5. Import Replay to your support file.</div>
+        <div>5. Import Replay to your support file</div>
         <CopyCode code={`require('@replayio/cypress/support');`} />
       </Group>
     </>
@@ -97,18 +99,20 @@ function PlaywrightInstructions({
   return (
     <>
       <Group>
-        <div>1. Install the @replayio/playwright package in your project.</div>
+        <div className="text-xl">1. Install the @replayio/playwright package in your project</div>
         <CopyCode
           code={getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
         />
       </Group>
       <Group>
-        <div>2. Install the Replay browser.</div>
+        <div className="text-xl">2. Install the Replay browser.</div>
         <CopyCode code="npx replayio install" />
       </Group>
       <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
-        <div>4. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
+        <div className="text-xl">
+          4. Add the Replay browser and Reporter to your playwright.config.ts file.
+        </div>
         <CodeTabContainer codeCJS={playwrightCJS} codeESM={playwrightESM} codeTS={playwrightTS} />
       </Group>
     </>
@@ -118,7 +122,7 @@ function PlaywrightInstructions({
 function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
   return (
     <Group>
-      <div>{number}. Save the API key below before continuing.</div>
+      <div className="text-xl">{number}. Save the API key below before continuing</div>
       <CopyCode code={`REPLAY_API_KEY=${apiKey}`} />
       <Callout
         bodyText={
