@@ -1,10 +1,10 @@
 import { COOKIES, URLS } from "@/constants";
+import { fulfillAuthRequest } from "@/graphql/queries/fulfillAuthRequest";
+import { initAuthRequest } from "@/graphql/queries/initAuthRequest";
+import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
 import cookie from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
-import { initAuthRequest } from "@/graphql/queries/initAuthRequest";
-import { fulfillAuthRequest } from "@/graphql/queries/fulfillAuthRequest";
-import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const key = getValueFromArrayOrString(req.query.key);
