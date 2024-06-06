@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, Suspense, lazy, startTransition, useCallback, useState } from "react";
-import image from "./delorean-view.png";
+import image from "./new-teams-delorean.png";
 
 const FormStep1 = lazy(() => import("@/pageComponents/team/new/tests/FormStep1"));
 const FormStep2 = lazy(() => import("@/pageComponents/team/new/tests/FormStep2"));
