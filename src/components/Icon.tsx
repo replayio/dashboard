@@ -3,6 +3,7 @@ import { HTMLAttributes, ReactElement } from "react";
 export type IconType =
   | "account"
   | "api-keys"
+  | "approve-request"
   | "back-arrow"
   | "billing"
   | "calendar"
@@ -44,6 +45,7 @@ export type IconType =
   | "processed-recording"
   | "recording-graphic-browser"
   | "recording-graphic-node"
+  | "reject-request"
   | "secondary-branch"
   | "settings"
   | "show-more"
@@ -73,6 +75,9 @@ export function Icon({
     case "api-keys":
       path =
         "M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z";
+      break;
+    case "approve-request":
+      path = "M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z";
       break;
     case "back-arrow":
       path = "M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z";
@@ -226,6 +231,10 @@ export function Icon({
     case "recording-graphic-node":
       path =
         "M20,4H4C2.89,4,2,4.9,2,6v12c0,1.1,0.89,2,2,2h16c1.1,0,2-0.9,2-2V6C22,4.9,21.11,4,20,4z M20,18H4V8h16V18z M18,17h-6v-2 h6V17z M7.5,17l-1.41-1.41L8.67,13l-2.59-2.59L7.5,9l4,4L7.5,17z";
+      break;
+    case "reject-request":
+      path =
+        "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z";
       break;
     case "secondary-branch":
       path =

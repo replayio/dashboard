@@ -48,6 +48,15 @@ export type AcceptTermsOfServiceInput = {
   version: Scalars['Int']['input'];
 };
 
+export type AcceptWorkspaceMembershipRequest = {
+  __typename?: 'AcceptWorkspaceMembershipRequest';
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type AcceptWorkspaceMembershipRequestInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type ActivateWorkspaceSubscription = {
   __typename?: 'ActivateWorkspaceSubscription';
   subscription?: Maybe<WorkspaceSubscription>;
@@ -627,6 +636,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   acceptRecordingCollaboratorRequest: AcceptRecordingCollaboratorRequest;
   acceptTermsOfService: AcceptTermsOfService;
+  acceptWorkspaceMembershipRequest: AcceptWorkspaceMembershipRequest;
   activateWorkspaceSubscription: ActivateWorkspaceSubscription;
   addComment: AddComment;
   addCommentReply: AddCommentReply;
@@ -665,9 +675,11 @@ export type Mutation = {
   initializeRecording: InitializeRecording;
   maybeMarkRecordingViewed: MaybeMarkRecordingViewed;
   prepareWorkspacePaymentMethod: PrepareWorkspacePaymentMethod;
+  rejectWorkspaceMembershipRequest: RejectWorkspaceMembershipRequest;
   removeRecordingCollaborator: RemoveRecordingCollaborator;
   removeWorkspaceMember: RemoveWorkspaceMember;
   requestRecordingAccess: RequestRecordingAccess;
+  requestWorkspaceMembership: RequestWorkspaceMembership;
   resetTestUser: ResetTestUser;
   setRecordingMetadata: SetRecordingMetadata;
   setWorkspaceDefaultPaymentMethod: SetWorkspaceDefaultPaymentMethod;
@@ -701,6 +713,11 @@ export type MutationAcceptRecordingCollaboratorRequestArgs = {
 
 export type MutationAcceptTermsOfServiceArgs = {
   input: AcceptTermsOfServiceInput;
+};
+
+
+export type MutationAcceptWorkspaceMembershipRequestArgs = {
+  input: AcceptWorkspaceMembershipRequestInput;
 };
 
 
@@ -894,6 +911,11 @@ export type MutationPrepareWorkspacePaymentMethodArgs = {
 };
 
 
+export type MutationRejectWorkspaceMembershipRequestArgs = {
+  input: RejectWorkspaceMembershipRequestInput;
+};
+
+
 export type MutationRemoveRecordingCollaboratorArgs = {
   input: RemoveRecordingCollaboratorInput;
 };
@@ -906,6 +928,11 @@ export type MutationRemoveWorkspaceMemberArgs = {
 
 export type MutationRequestRecordingAccessArgs = {
   input: RequestRecordingAccessInput;
+};
+
+
+export type MutationRequestWorkspaceMembershipArgs = {
+  input: RequestWorkspaceMembershipInput;
 };
 
 
@@ -1244,6 +1271,15 @@ export type RecordingUserCollaborator = {
   user: User;
 };
 
+export type RejectWorkspaceMembershipRequest = {
+  __typename?: 'RejectWorkspaceMembershipRequest';
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type RejectWorkspaceMembershipRequestInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type RemoveRecordingCollaborator = {
   __typename?: 'RemoveRecordingCollaborator';
   success?: Maybe<Scalars['Boolean']['output']>;
@@ -1269,6 +1305,15 @@ export type RequestRecordingAccess = {
 
 export type RequestRecordingAccessInput = {
   recordingId: Scalars['ID']['input'];
+};
+
+export type RequestWorkspaceMembership = {
+  __typename?: 'RequestWorkspaceMembership';
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type RequestWorkspaceMembershipInput = {
+  workspaceId: Scalars['ID']['input'];
 };
 
 export type ResetTestUser = {
@@ -1560,6 +1605,7 @@ export type TestRunSource = {
   prNumber?: Maybe<Scalars['Int']['output']>;
   prTitle?: Maybe<Scalars['String']['output']>;
   repository?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   triggerUrl?: Maybe<Scalars['String']['output']>;
   user?: Maybe<Scalars['String']['output']>;
 };
@@ -1930,6 +1976,7 @@ export type Workspace = Node & {
   logo?: Maybe<Scalars['String']['output']>;
   logoFormat?: Maybe<Scalars['String']['output']>;
   members?: Maybe<WorkspaceMemberConnection>;
+  membershipRequests?: Maybe<WorkspaceMembershipRequestConnection>;
   name: Scalars['String']['output'];
   recordingCount: Scalars['Int']['output'];
   recordings?: Maybe<WorkspaceRecordingConnection>;
@@ -1945,6 +1992,14 @@ export type Workspace = Node & {
 
 
 export type WorkspaceMembersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type WorkspaceMembershipRequestsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -2010,6 +2065,26 @@ export type WorkspaceMemberEdge = {
   __typename?: 'WorkspaceMemberEdge';
   cursor: Scalars['String']['output'];
   node: WorkspaceUserMember;
+};
+
+export type WorkspaceMembershipRequest = {
+  __typename?: 'WorkspaceMembershipRequest';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  user: User;
+};
+
+export type WorkspaceMembershipRequestConnection = {
+  __typename?: 'WorkspaceMembershipRequestConnection';
+  edges: Array<WorkspaceMembershipRequestEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type WorkspaceMembershipRequestEdge = {
+  __typename?: 'WorkspaceMembershipRequestEdge';
+  cursor: Scalars['String']['output'];
+  node: WorkspaceMembershipRequest;
 };
 
 export type WorkspaceRecordingConnection = {
@@ -5859,6 +5934,7 @@ export type Mutation_Root = {
   __typename?: 'mutation_root';
   acceptRecordingCollaboratorRequest: AcceptRecordingCollaboratorRequest;
   acceptTermsOfService: AcceptTermsOfService;
+  acceptWorkspaceMembershipRequest: AcceptWorkspaceMembershipRequest;
   /** perform the action: "actionName" */
   actionName?: Maybe<SampleOutput>;
   activateWorkspaceSubscription: ActivateWorkspaceSubscription;
@@ -6076,6 +6152,10 @@ export type Mutation_Root = {
   delete_users?: Maybe<Users_Mutation_Response>;
   /** delete single row from the table: "users" */
   delete_users_by_pk?: Maybe<Users>;
+  /** delete data from the table: "workspace_membership_requests" */
+  delete_workspace_membership_requests?: Maybe<Workspace_Membership_Requests_Mutation_Response>;
+  /** delete single row from the table: "workspace_membership_requests" */
+  delete_workspace_membership_requests_by_pk?: Maybe<Workspace_Membership_Requests>;
   /** delete data from the table: "workspace_sourcemaps" */
   delete_workspace_sourcemaps?: Maybe<Workspace_Sourcemaps_Mutation_Response>;
   /** delete single row from the table: "workspace_sourcemaps" */
@@ -6289,6 +6369,10 @@ export type Mutation_Root = {
   insert_users?: Maybe<Users_Mutation_Response>;
   /** insert a single row into the table: "users" */
   insert_users_one?: Maybe<Users>;
+  /** insert data into the table: "workspace_membership_requests" */
+  insert_workspace_membership_requests?: Maybe<Workspace_Membership_Requests_Mutation_Response>;
+  /** insert a single row into the table: "workspace_membership_requests" */
+  insert_workspace_membership_requests_one?: Maybe<Workspace_Membership_Requests>;
   /** insert data into the table: "workspace_sourcemaps" */
   insert_workspace_sourcemaps?: Maybe<Workspace_Sourcemaps_Mutation_Response>;
   /** insert a single row into the table: "workspace_sourcemaps" */
@@ -6311,9 +6395,11 @@ export type Mutation_Root = {
   insert_workspaces_user_one?: Maybe<Workspaces_User>;
   maybeMarkRecordingViewed: MaybeMarkRecordingViewed;
   prepareWorkspacePaymentMethod: PrepareWorkspacePaymentMethod;
+  rejectWorkspaceMembershipRequest: RejectWorkspaceMembershipRequest;
   removeRecordingCollaborator: RemoveRecordingCollaborator;
   removeWorkspaceMember: RemoveWorkspaceMember;
   requestRecordingAccess: RequestRecordingAccess;
+  requestWorkspaceMembership: RequestWorkspaceMembership;
   resetTestUser: ResetTestUser;
   setRecordingMetadata: SetRecordingMetadata;
   setWorkspaceDefaultPaymentMethod: SetWorkspaceDefaultPaymentMethod;
@@ -6521,6 +6607,10 @@ export type Mutation_Root = {
   update_users?: Maybe<Users_Mutation_Response>;
   /** update single row of the table: "users" */
   update_users_by_pk?: Maybe<Users>;
+  /** update data of the table: "workspace_membership_requests" */
+  update_workspace_membership_requests?: Maybe<Workspace_Membership_Requests_Mutation_Response>;
+  /** update single row of the table: "workspace_membership_requests" */
+  update_workspace_membership_requests_by_pk?: Maybe<Workspace_Membership_Requests>;
   /** update data of the table: "workspace_sourcemaps" */
   update_workspace_sourcemaps?: Maybe<Workspace_Sourcemaps_Mutation_Response>;
   /** update single row of the table: "workspace_sourcemaps" */
@@ -6553,6 +6643,12 @@ export type Mutation_RootAcceptRecordingCollaboratorRequestArgs = {
 /** mutation root */
 export type Mutation_RootAcceptTermsOfServiceArgs = {
   input: AcceptTermsOfServiceInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootAcceptWorkspaceMembershipRequestArgs = {
+  input: AcceptWorkspaceMembershipRequestInput;
 };
 
 
@@ -7315,6 +7411,18 @@ export type Mutation_RootDelete_Users_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Workspace_Membership_RequestsArgs = {
+  where: Workspace_Membership_Requests_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Workspace_Membership_Requests_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_Workspace_SourcemapsArgs = {
   where: Workspace_Sourcemaps_Bool_Exp;
 };
@@ -8061,6 +8169,20 @@ export type Mutation_RootInsert_Users_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Workspace_Membership_RequestsArgs = {
+  objects: Array<Workspace_Membership_Requests_Insert_Input>;
+  on_conflict?: InputMaybe<Workspace_Membership_Requests_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Workspace_Membership_Requests_OneArgs = {
+  object: Workspace_Membership_Requests_Insert_Input;
+  on_conflict?: InputMaybe<Workspace_Membership_Requests_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_Workspace_SourcemapsArgs = {
   objects: Array<Workspace_Sourcemaps_Insert_Input>;
   on_conflict?: InputMaybe<Workspace_Sourcemaps_On_Conflict>;
@@ -8143,6 +8265,12 @@ export type Mutation_RootPrepareWorkspacePaymentMethodArgs = {
 
 
 /** mutation root */
+export type Mutation_RootRejectWorkspaceMembershipRequestArgs = {
+  input: RejectWorkspaceMembershipRequestInput;
+};
+
+
+/** mutation root */
 export type Mutation_RootRemoveRecordingCollaboratorArgs = {
   input: RemoveRecordingCollaboratorInput;
 };
@@ -8157,6 +8285,12 @@ export type Mutation_RootRemoveWorkspaceMemberArgs = {
 /** mutation root */
 export type Mutation_RootRequestRecordingAccessArgs = {
   input: RequestRecordingAccessInput;
+};
+
+
+/** mutation root */
+export type Mutation_RootRequestWorkspaceMembershipArgs = {
+  input: RequestWorkspaceMembershipInput;
 };
 
 
@@ -9173,6 +9307,20 @@ export type Mutation_RootUpdate_Users_By_PkArgs = {
   _prepend?: InputMaybe<Users_Prepend_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   pk_columns: Users_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Workspace_Membership_RequestsArgs = {
+  _set?: InputMaybe<Workspace_Membership_Requests_Set_Input>;
+  where: Workspace_Membership_Requests_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Workspace_Membership_Requests_By_PkArgs = {
+  _set?: InputMaybe<Workspace_Membership_Requests_Set_Input>;
+  pk_columns: Workspace_Membership_Requests_Pk_Columns_Input;
 };
 
 
@@ -10640,6 +10788,12 @@ export type Query_Root = {
   users_by_pk?: Maybe<Users>;
   viewer?: Maybe<AuthenticatedUser>;
   workspace?: Maybe<Workspace>;
+  /** fetch data from the table: "workspace_membership_requests" */
+  workspace_membership_requests: Array<Workspace_Membership_Requests>;
+  /** fetch aggregated fields from the table: "workspace_membership_requests" */
+  workspace_membership_requests_aggregate: Workspace_Membership_Requests_Aggregate;
+  /** fetch data from the table: "workspace_membership_requests" using primary key columns */
+  workspace_membership_requests_by_pk?: Maybe<Workspace_Membership_Requests>;
   /** fetch data from the table: "workspace_sourcemaps" */
   workspace_sourcemaps: Array<Workspace_Sourcemaps>;
   /** fetch aggregated fields from the table: "workspace_sourcemaps" */
@@ -11992,6 +12146,32 @@ export type Query_RootUsers_By_PkArgs = {
 /** query root */
 export type Query_RootWorkspaceArgs = {
   uuid: Scalars['UUID']['input'];
+};
+
+
+/** query root */
+export type Query_RootWorkspace_Membership_RequestsArgs = {
+  distinct_on?: InputMaybe<Array<Workspace_Membership_Requests_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Workspace_Membership_Requests_Order_By>>;
+  where?: InputMaybe<Workspace_Membership_Requests_Bool_Exp>;
+};
+
+
+/** query root */
+export type Query_RootWorkspace_Membership_Requests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Workspace_Membership_Requests_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Workspace_Membership_Requests_Order_By>>;
+  where?: InputMaybe<Workspace_Membership_Requests_Bool_Exp>;
+};
+
+
+/** query root */
+export type Query_RootWorkspace_Membership_Requests_By_PkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -18687,6 +18867,12 @@ export type Subscription_Root = {
   users_aggregate: Users_Aggregate;
   /** fetch data from the table: "users" using primary key columns */
   users_by_pk?: Maybe<Users>;
+  /** fetch data from the table: "workspace_membership_requests" */
+  workspace_membership_requests: Array<Workspace_Membership_Requests>;
+  /** fetch aggregated fields from the table: "workspace_membership_requests" */
+  workspace_membership_requests_aggregate: Workspace_Membership_Requests_Aggregate;
+  /** fetch data from the table: "workspace_membership_requests" using primary key columns */
+  workspace_membership_requests_by_pk?: Maybe<Workspace_Membership_Requests>;
   /** fetch data from the table: "workspace_sourcemaps" */
   workspace_sourcemaps: Array<Workspace_Sourcemaps>;
   /** fetch aggregated fields from the table: "workspace_sourcemaps" */
@@ -19992,6 +20178,32 @@ export type Subscription_RootUsers_AggregateArgs = {
 
 /** subscription root */
 export type Subscription_RootUsers_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** subscription root */
+export type Subscription_RootWorkspace_Membership_RequestsArgs = {
+  distinct_on?: InputMaybe<Array<Workspace_Membership_Requests_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Workspace_Membership_Requests_Order_By>>;
+  where?: InputMaybe<Workspace_Membership_Requests_Bool_Exp>;
+};
+
+
+/** subscription root */
+export type Subscription_RootWorkspace_Membership_Requests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Workspace_Membership_Requests_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Workspace_Membership_Requests_Order_By>>;
+  where?: InputMaybe<Workspace_Membership_Requests_Bool_Exp>;
+};
+
+
+/** subscription root */
+export type Subscription_RootWorkspace_Membership_Requests_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -24142,6 +24354,178 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
+/** columns and relationships of "workspace_membership_requests" */
+export type Workspace_Membership_Requests = {
+  __typename?: 'workspace_membership_requests';
+  created_at: Scalars['timestamptz']['output'];
+  id: Scalars['uuid']['output'];
+  user_id: Scalars['uuid']['output'];
+  workspace_id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Aggregate = {
+  __typename?: 'workspace_membership_requests_aggregate';
+  aggregate?: Maybe<Workspace_Membership_Requests_Aggregate_Fields>;
+  nodes: Array<Workspace_Membership_Requests>;
+};
+
+/** aggregate fields of "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Aggregate_Fields = {
+  __typename?: 'workspace_membership_requests_aggregate_fields';
+  count?: Maybe<Scalars['Int']['output']>;
+  max?: Maybe<Workspace_Membership_Requests_Max_Fields>;
+  min?: Maybe<Workspace_Membership_Requests_Min_Fields>;
+};
+
+
+/** aggregate fields of "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Workspace_Membership_Requests_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Workspace_Membership_Requests_Max_Order_By>;
+  min?: InputMaybe<Workspace_Membership_Requests_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Arr_Rel_Insert_Input = {
+  data: Array<Workspace_Membership_Requests_Insert_Input>;
+  on_conflict?: InputMaybe<Workspace_Membership_Requests_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "workspace_membership_requests". All fields are combined with a logical 'AND'. */
+export type Workspace_Membership_Requests_Bool_Exp = {
+  _and?: InputMaybe<Array<InputMaybe<Workspace_Membership_Requests_Bool_Exp>>>;
+  _not?: InputMaybe<Workspace_Membership_Requests_Bool_Exp>;
+  _or?: InputMaybe<Array<InputMaybe<Workspace_Membership_Requests_Bool_Exp>>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  workspace_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "workspace_membership_requests" */
+export enum Workspace_Membership_Requests_Constraint {
+  /** unique or primary key constraint */
+  WorkspaceMembershipRequestsPkey = 'workspace_membership_requests_pkey',
+  /** unique or primary key constraint */
+  WorkspaceMembershipRequestsUserIdWorkspaceIdKey = 'workspace_membership_requests_user_id_workspace_id_key'
+}
+
+/** input type for inserting data into table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Insert_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+  workspace_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type Workspace_Membership_Requests_Max_Fields = {
+  __typename?: 'workspace_membership_requests_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+  workspace_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  workspace_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Workspace_Membership_Requests_Min_Fields = {
+  __typename?: 'workspace_membership_requests_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+  workspace_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  workspace_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Mutation_Response = {
+  __typename?: 'workspace_membership_requests_mutation_response';
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data of the affected rows by the mutation */
+  returning: Array<Workspace_Membership_Requests>;
+};
+
+/** input type for inserting object relation for remote table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Obj_Rel_Insert_Input = {
+  data: Workspace_Membership_Requests_Insert_Input;
+  on_conflict?: InputMaybe<Workspace_Membership_Requests_On_Conflict>;
+};
+
+/** on conflict condition type for table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_On_Conflict = {
+  constraint: Workspace_Membership_Requests_Constraint;
+  update_columns: Array<Workspace_Membership_Requests_Update_Column>;
+  where?: InputMaybe<Workspace_Membership_Requests_Bool_Exp>;
+};
+
+/** ordering options when selecting data from "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+  workspace_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "workspace_membership_requests" */
+export enum Workspace_Membership_Requests_Select_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  WorkspaceId = 'workspace_id'
+}
+
+/** input type for updating data in table "workspace_membership_requests" */
+export type Workspace_Membership_Requests_Set_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+  workspace_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "workspace_membership_requests" */
+export enum Workspace_Membership_Requests_Update_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'user_id',
+  /** column name */
+  WorkspaceId = 'workspace_id'
+}
+
 /** columns and relationships of "workspace_sourcemaps" */
 export type Workspace_Sourcemaps = {
   __typename?: 'workspace_sourcemaps';
@@ -26088,6 +26472,13 @@ export type AddCollaboratorMutationVariables = Exact<{
 
 export type AddCollaboratorMutation = { __typename?: 'mutation_root', addRecordingCollaborator: { __typename?: 'AddRecordingCollaborator', success?: boolean | null } };
 
+export type ApproveWorkspaceMembershipRequestMutationVariables = Exact<{
+  requestId: Scalars['ID']['input'];
+}>;
+
+
+export type ApproveWorkspaceMembershipRequestMutation = { __typename?: 'mutation_root', acceptWorkspaceMembershipRequest: { __typename?: 'AcceptWorkspaceMembershipRequest', success?: boolean | null } };
+
 export type ClaimTeamInvitationCodeMutationVariables = Exact<{
   code: Scalars['ID']['input'];
 }>;
@@ -26121,6 +26512,13 @@ export type GetWorkspaceApiKeysQueryVariables = Exact<{
 
 export type GetWorkspaceApiKeysQuery = { __typename?: 'query_root', node?: { __typename?: 'Recording' } | { __typename?: 'RootCauseAnalysis' } | { __typename?: 'Workspace', id: string, apiKeys?: Array<{ __typename?: 'WorkspaceAPIKey', id: string, createdAt: any, label: string, scopes: Array<string>, recordingCount: number, maxRecordings?: number | null }> | null } | null };
 
+export type GetWorkspaceMembershipRequestsQueryVariables = Exact<{
+  workspaceId: Scalars['ID']['input'];
+}>;
+
+
+export type GetWorkspaceMembershipRequestsQuery = { __typename?: 'query_root', node?: { __typename?: 'Recording' } | { __typename?: 'RootCauseAnalysis' } | { __typename?: 'Workspace', id: string, membershipRequests?: { __typename?: 'WorkspaceMembershipRequestConnection', edges: Array<{ __typename?: 'WorkspaceMembershipRequestEdge', node: { __typename?: 'WorkspaceMembershipRequest', id: string, user: { __typename?: 'User', id: string, name?: string | null, picture?: string | null } } }> } | null } | null };
+
 export type GetPersonalRecordingsQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -26142,6 +26540,13 @@ export type GetOwnerAndCollaboratorsQueryVariables = Exact<{
 
 export type GetOwnerAndCollaboratorsQuery = { __typename?: 'query_root', recording?: { __typename?: 'Recording', uuid: any, collaborators?: { __typename?: 'RecordingCollaboratorsConnection', edges: Array<{ __typename?: 'RecordingCollaboratorsEdge', node: { __typename?: 'RecordingPendingEmailCollaborator', id: string, email: string, createdAt: any } | { __typename?: 'RecordingPendingUserCollaborator', id: string, user: { __typename?: 'User', name?: string | null, picture?: string | null } } | { __typename?: 'RecordingUserCollaborator', id: string, user: { __typename?: 'User', name?: string | null, picture?: string | null } } }> } | null, collaboratorRequests?: { __typename?: 'RecordingCollaboratorRequestsConnection', edges: Array<{ __typename?: 'RecordingCollaboratorRequestsEdge', node: { __typename?: 'RecordingCollaboratorRequest', id: string, user: { __typename?: 'User', name?: string | null, picture?: string | null } } }> } | null } | null };
 
+export type RejectWorkspaceMembershipRequestMutationVariables = Exact<{
+  requestId: Scalars['ID']['input'];
+}>;
+
+
+export type RejectWorkspaceMembershipRequestMutation = { __typename?: 'mutation_root', rejectWorkspaceMembershipRequest: { __typename?: 'RejectWorkspaceMembershipRequest', success?: boolean | null } };
+
 export type RemovePaymentMethodMutationVariables = Exact<{
   workspaceId: Scalars['ID']['input'];
   paymentMethodId: Scalars['String']['input'];
@@ -26149,6 +26554,13 @@ export type RemovePaymentMethodMutationVariables = Exact<{
 
 
 export type RemovePaymentMethodMutation = { __typename?: 'mutation_root', deleteWorkspacePaymentMethod: { __typename?: 'DeleteWorkspacePaymentMethod', success?: boolean | null } };
+
+export type RequestWorkspaceMembershipMutationVariables = Exact<{
+  workspaceId: Scalars['ID']['input'];
+}>;
+
+
+export type RequestWorkspaceMembershipMutation = { __typename?: 'mutation_root', requestWorkspaceMembership: { __typename?: 'RequestWorkspaceMembership', success?: boolean | null } };
 
 export type GetTestsRunsForWorkspaceQueryVariables = Exact<{
   workspaceId: Scalars['ID']['input'];
@@ -26258,15 +26670,19 @@ export const InitAutRequestDocument = {"kind":"Document","definitions":[{"kind":
 export const InviteWorkspaceMemberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InviteWorkspaceMember"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roles"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addWorkspaceMember"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"workspaceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"roles"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roles"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<InviteWorkspaceMemberMutation, InviteWorkspaceMemberMutationVariables>;
 export const ActivateWorkspaceSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ActivateWorkspaceSubscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"planKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodBillingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setWorkspaceDefaultPaymentMethod"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"workspaceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"paymentMethodId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodBillingId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}},{"kind":"Field","name":{"kind":"Name","value":"activateWorkspaceSubscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"workspaceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"planKey"},"value":{"kind":"Variable","name":{"kind":"Name","value":"planKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"subscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"effectiveUntil"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]}}]} as unknown as DocumentNode<ActivateWorkspaceSubscriptionMutation, ActivateWorkspaceSubscriptionMutationVariables>;
 export const AddCollaboratorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddCollaborator"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"recordingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addRecordingCollaborator"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"recordingId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"recordingId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<AddCollaboratorMutation, AddCollaboratorMutationVariables>;
+export const ApproveWorkspaceMembershipRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ApproveWorkspaceMembershipRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"requestId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"acceptWorkspaceMembershipRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"requestId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<ApproveWorkspaceMembershipRequestMutation, ApproveWorkspaceMembershipRequestMutationVariables>;
 export const ClaimTeamInvitationCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ClaimTeamInvitationCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"claimTeamInvitationCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"workspaceId"}}]}}]}}]} as unknown as DocumentNode<ClaimTeamInvitationCodeMutation, ClaimTeamInvitationCodeMutationVariables>;
 export const DeleteRecordingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteRecording"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"recordingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteRecording"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"recordingId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<DeleteRecordingMutation, DeleteRecordingMutationVariables>;
 export const DeleteCollaboratorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteCollaborator"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"collaborationId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeRecordingCollaborator"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collaborationId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<DeleteCollaboratorMutation, DeleteCollaboratorMutationVariables>;
 export const GetUserSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"viewer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apiKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"scopes"}},{"kind":"Field","name":{"kind":"Name","value":"recordingCount"}},{"kind":"Field","name":{"kind":"Name","value":"maxRecordings"}}]}}]}}]}}]} as unknown as DocumentNode<GetUserSettingsQuery, GetUserSettingsQueryVariables>;
 export const GetWorkspaceApiKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetWorkspaceApiKeys"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Workspace"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"apiKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"scopes"}},{"kind":"Field","name":{"kind":"Name","value":"recordingCount"}},{"kind":"Field","name":{"kind":"Name","value":"maxRecordings"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetWorkspaceApiKeysQuery, GetWorkspaceApiKeysQueryVariables>;
+export const GetWorkspaceMembershipRequestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetWorkspaceMembershipRequests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Workspace"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"membershipRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetWorkspaceMembershipRequestsQuery, GetWorkspaceMembershipRequestsQueryVariables>;
 export const GetPersonalRecordingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPersonalRecordings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"viewer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recordings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"buildId"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"owner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"workspace"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetPersonalRecordingsQuery, GetPersonalRecordingsQueryVariables>;
 export const PrepareWorkspacePaymentMethodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PrepareWorkspacePaymentMethod"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"prepareWorkspacePaymentMethod"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"workspaceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"paymentSecret"}}]}}]}}]} as unknown as DocumentNode<PrepareWorkspacePaymentMethodMutation, PrepareWorkspacePaymentMethodMutationVariables>;
 export const GetOwnerAndCollaboratorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetOwnerAndCollaborators"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"recordingId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recording"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"recordingId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"collaborators"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordingPendingEmailCollaborator"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordingPendingUserCollaborator"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordingUserCollaborator"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"collaboratorRequests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RecordingCollaboratorRequest"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetOwnerAndCollaboratorsQuery, GetOwnerAndCollaboratorsQueryVariables>;
+export const RejectWorkspaceMembershipRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RejectWorkspaceMembershipRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"requestId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rejectWorkspaceMembershipRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"requestId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<RejectWorkspaceMembershipRequestMutation, RejectWorkspaceMembershipRequestMutationVariables>;
 export const RemovePaymentMethodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemovePaymentMethod"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteWorkspacePaymentMethod"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"workspaceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"paymentMethodId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<RemovePaymentMethodMutation, RemovePaymentMethodMutationVariables>;
+export const RequestWorkspaceMembershipDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RequestWorkspaceMembership"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"requestWorkspaceMembership"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"workspaceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<RequestWorkspaceMembershipMutation, RequestWorkspaceMembershipMutationVariables>;
 export const GetTestsRunsForWorkspaceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTestsRunsForWorkspace"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endTime"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Workspace"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"testRuns"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"startTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startTime"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"endTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endTime"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mode"}},{"kind":"Field","name":{"kind":"Name","value":"results"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"counts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"failed"}},{"kind":"Field","name":{"kind":"Name","value":"flaky"}},{"kind":"Field","name":{"kind":"Name","value":"passed"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"source"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commitId"}},{"kind":"Field","name":{"kind":"Name","value":"commitTitle"}},{"kind":"Field","name":{"kind":"Name","value":"groupLabel"}},{"kind":"Field","name":{"kind":"Name","value":"isPrimaryBranch"}},{"kind":"Field","name":{"kind":"Name","value":"branchName"}},{"kind":"Field","name":{"kind":"Name","value":"prNumber"}},{"kind":"Field","name":{"kind":"Name","value":"prTitle"}},{"kind":"Field","name":{"kind":"Name","value":"repository"}},{"kind":"Field","name":{"kind":"Name","value":"triggerUrl"}},{"kind":"Field","name":{"kind":"Name","value":"user"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTestsRunsForWorkspaceQuery, GetTestsRunsForWorkspaceQueryVariables>;
 export const GetTestsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTests"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Workspace"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"testRuns"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"includeNonRecorded"},"value":{"kind":"BooleanValue","value":true}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"testId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"scope"}},{"kind":"Field","name":{"kind":"Name","value":"sourcePath"}},{"kind":"Field","name":{"kind":"Name","value":"result"}},{"kind":"Field","name":{"kind":"Name","value":"errors"}},{"kind":"Field","name":{"kind":"Name","value":"durationMs"}},{"kind":"Field","name":{"kind":"Name","value":"executions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"}},{"kind":"Field","name":{"kind":"Name","value":"recordings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"buildId"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}},{"kind":"Field","name":{"kind":"Name","value":"isProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTestsQuery, GetTestsQueryVariables>;
 export const UpdateUserPreferencesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserPreferences"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"preferences"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserPreferences"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"preferences"},"value":{"kind":"Variable","name":{"kind":"Name","value":"preferences"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<UpdateUserPreferencesMutation, UpdateUserPreferencesMutationVariables>;
