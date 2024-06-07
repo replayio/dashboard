@@ -109,7 +109,7 @@ export function CreateTestSuitesTeam() {
                 const apiKey = await createApiKey(
                   workspaceId,
                   testRunner,
-                  ["admin:all"],
+                  ["admin:all", "write:sourcemap"],
                   state.apiKey
                 );
 
