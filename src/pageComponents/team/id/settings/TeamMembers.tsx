@@ -1,7 +1,9 @@
 import { SessionContext } from "@/components/SessionContext";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
+import { useGetWorkspaceMembershipRequests } from "@/graphql/queries/useGetWorkspaceMembershipRequests";
 import { InvitationLink } from "@/pageComponents/team/id/settings/InvitationLink";
 import { InviteTeamMember } from "@/pageComponents/team/id/settings/InviteTeamMember";
+import { PendingWorkspaceMemberRow } from "@/pageComponents/team/id/settings/PendingWorkspaceMemberRow";
 import { TeamMemberRow } from "@/pageComponents/team/id/settings/TeamMemberRow";
 import { useContext, useMemo } from "react";
 
@@ -16,8 +18,14 @@ export function TeamMembers({
 
   const { error, isLoading, members } = useGetWorkspaceMembers(workspaceId);
 
+  const { pendingWorkspaceMembers } = useGetWorkspaceMembershipRequests(workspaceId);
+
   const member = members?.find(({ id }) => id === user?.id);
   const currentUserIsAdmin = member?.roles.includes("admin") == true;
+
+  const sortedPendingMembers = useMemo(() => {
+    return pendingWorkspaceMembers?.sort((a, b) => a.name.localeCompare(b.name)) ?? [];
+  }, [pendingWorkspaceMembers]);
 
   const sortedMembers = useMemo(() => {
     return members?.sort((a, b) => a.name.localeCompare(b.name)) ?? [];
@@ -39,6 +47,9 @@ export function TeamMembers({
             {error.message}
           </div>
         )}
+        {sortedPendingMembers.map((member, index) => (
+          <PendingWorkspaceMemberRow key={index} member={member} />
+        ))}
         {sortedMembers.map((member, index) => (
           <TeamMemberRow
             currentUserId={user.id}

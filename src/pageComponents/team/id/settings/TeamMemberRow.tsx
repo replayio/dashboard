@@ -85,7 +85,7 @@ export function TeamMemberRow({
           className="shrink-0 text-xs bg-rose-600 px-1 rounded-sm"
           data-test-name="TeamMembers-Role-Admin"
         >
-          admin
+          Admin
         </div>
       )}
       <div

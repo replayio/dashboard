@@ -24,7 +24,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<{ id
   if (isInvalid) {
     return redirectWithState({
       context,
-      pathname: "/team/not-found",
+      pathname: `/team/${workspaceId}/not-found`,
     });
   } else if (isTest) {
     return redirectWithState({
