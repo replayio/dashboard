@@ -60,7 +60,10 @@ export function PendingWorkspaceMemberRow({ member }: { member: PendingWorkspace
 
       {member.name}
 
-      <div className="shrink-0 text-xs bg-yellow-300 text-yellow-950 px-1 rounded-sm">
+      <div
+        className="shrink-0 text-xs bg-yellow-300 text-yellow-950 px-1 rounded-sm"
+        data-test-name="TeamMembers-RequestedAccess"
+      >
         Requested Access
       </div>
 
