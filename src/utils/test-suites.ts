@@ -146,8 +146,10 @@ export function isPlanPricingPerSeat(subscription: WorkspaceSubscription) {
 }
 
 export function getTestRunTitle(groupedTestCases: TestRun): string {
-  const { commitTitle, prTitle } = groupedTestCases;
-  if (commitTitle) {
+  const { commitTitle, groupLabel, prTitle } = groupedTestCases;
+  if (groupLabel) {
+    return groupLabel;
+  } else if (commitTitle) {
     return commitTitle;
   } else if (prTitle) {
     return prTitle;
