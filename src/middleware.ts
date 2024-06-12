@@ -170,7 +170,7 @@ async function redirectIfMobile(request: NextRequest) {
 
 async function redirectIfProtectedRoute(request: NextRequest) {
   const { nextUrl } = request;
-  const { pathname } = nextUrl;
+  const { pathname, search } = nextUrl;
 
   if (
     pathname === "/" ||
@@ -180,7 +180,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
     pathname.startsWith("/user")
   ) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
+    loginUrl.searchParams.set("returnTo", pathname + search);
 
     throw loginUrl;
   }
