@@ -124,7 +124,12 @@ export function ContextRoot({
 
     summaries = summaries.filter(test => {
       if (filterText) {
-        if (!test.title.toLowerCase().includes(filterText.toLowerCase())) {
+        const lowerCaseFilterText = filterText.toLowerCase();
+
+        if (
+          !test.sourcePath.toLowerCase().includes(lowerCaseFilterText) &&
+          !test.title.toLowerCase().includes(lowerCaseFilterText)
+        ) {
           return false;
         }
       }

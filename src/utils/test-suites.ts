@@ -32,7 +32,10 @@ export function filterTest(
   if (text !== "") {
     const lowerCaseText = text.toLowerCase();
 
-    if (!test.title.toLowerCase().includes(lowerCaseText)) {
+    if (
+      !test.sourcePath.toLowerCase().includes(lowerCaseText) &&
+      !test.title.toLowerCase().includes(lowerCaseText)
+    ) {
       return false;
     }
   }
