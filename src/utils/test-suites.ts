@@ -147,12 +147,18 @@ export function isPlanPricingPerSeat(subscription: WorkspaceSubscription) {
 
 export function getTestRunTitle(groupedTestCases: TestRun): string {
   const { commitTitle, groupLabel, prTitle } = groupedTestCases;
-  if (groupLabel) {
-    return groupLabel;
-  } else if (commitTitle) {
+  if (commitTitle) {
     return commitTitle;
   } else if (prTitle) {
     return prTitle;
+  } else if (groupLabel) {
+    // it feels like this should have the highest priority
+    // however, REPLAY_METADATA_TEST_RUN_TITLE is sometimes used to set this
+    // we need to investigate how it gets used and why to raise priority here
+    // and to suggests other solutions to customers if needed
+    //
+    // if this gets the highest priority, then all test runs from different branches are displayed using the same title
+    return groupLabel;
   }
 
   return "Test";
