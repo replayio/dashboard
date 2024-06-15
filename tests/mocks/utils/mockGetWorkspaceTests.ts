@@ -44,6 +44,12 @@ export function mockGetWorkspaceTests(
                 testId: id,
                 title: title,
                 scope: scope,
+                executions: [
+                  {
+                    __typename: "TestExecution",
+                    sourcePath: "fake-source-path",
+                  },
+                ],
                 stats: {
                   __typename: "TestsStats",
                   failed,

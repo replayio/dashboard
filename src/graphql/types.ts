@@ -123,6 +123,7 @@ export type UserSettings = {
 export type TestSuiteTestSummary = {
   id: string;
   scope: string[];
+  sourcePath: string;
   stats: {
     failed: number;
     failureRate: number;
