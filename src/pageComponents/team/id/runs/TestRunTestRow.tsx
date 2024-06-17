@@ -15,7 +15,7 @@ export function TestRunTestRow({
 
   return (
     <Component
-      className={`w-full px-2 py-1 outline-0 ${
+      className={`block w-full px-2 py-1 outline-0 ${
         isActive
           ? "text-sky-500 cursor-default"
           : "focus:text-sky-500 hover:text-sky-500 cursor-pointer text-white"
