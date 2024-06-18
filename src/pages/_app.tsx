@@ -1,5 +1,5 @@
 import { ApolloContextProvider } from "@/components/ApolloContext";
-import MixPanel from "@/components/MixPanel";
+import { initializeMixPanel } from "@/utils/mixpanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
@@ -75,6 +75,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
         window.location.reload();
       });
     }
+    initializeMixPanel();
   }
 
   render() {
@@ -103,7 +104,6 @@ export default class MyApp extends App<AppProps<PageProps>> {
         <Head>
           <link rel="icon" href="/favicon.svg" />
         </Head>
-        <MixPanel />
         {children}
       </ErrorBoundary>
     );
