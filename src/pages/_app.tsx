@@ -1,4 +1,5 @@
 import { ApolloContextProvider } from "@/components/ApolloContext";
+import MixPanel from "@/components/MixPanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
@@ -102,6 +103,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
         <Head>
           <link rel="icon" href="/favicon.svg" />
         </Head>
+        <MixPanel />
         {children}
       </ErrorBoundary>
     );
@@ -111,9 +113,9 @@ export default class MyApp extends App<AppProps<PageProps>> {
 function ErrorFallback() {
   return (
     <section role="alert">
-      <div className="flex flex-col gap-2 p-4 items-center">
+      <div className="flex flex-col items-center gap-2 p-4">
         <h1 className="text-6xl font-bold text-red-500">We&apos;re sorry</h1>
-        <p className="font-bold text-3xl text-white">Something went wrong.</p>
+        <p className="text-3xl font-bold text-white">Something went wrong.</p>
         <p className="text-lg font-light text-slate-400">
           While we look into it, try reloading the page.
         </p>
