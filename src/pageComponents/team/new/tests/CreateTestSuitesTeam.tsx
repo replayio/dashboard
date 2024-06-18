@@ -170,6 +170,7 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
             router.push(`/team/${state.workspaceId}`);
           }}
           testRunner={state.testRunner}
+          workspaceId={state.workspaceId}
         />
       );
       break;
