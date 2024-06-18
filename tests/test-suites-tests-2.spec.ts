@@ -10,8 +10,7 @@ import { getTestExecutionRow } from "./utils/getTestExecutionRow";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
 
-// TODO [PRO-664] Re-enable this test
-test.skip("test-suites-tests-2: failed test executions", async ({ page }) => {
+test("test-suites-tests-2: failed test executions", async ({ page }) => {
   await navigateToPage({
     mockGraphQLData,
     page,

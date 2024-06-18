@@ -9,8 +9,7 @@ import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 import { submitInputText } from "./utils/submitInputText";
 
-// TODO [PRO-664] Re-enable this test
-test.skip("test-suites-tests-1: sorting and filtering test runs", async ({ page }) => {
+test("test-suites-tests-1: sorting and filtering test runs", async ({ page }) => {
   await navigateToPage({
     mockGraphQLData,
     page,

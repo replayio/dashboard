@@ -6,8 +6,7 @@ import { MockGraphQLData } from "./mocks/types";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
 
-// TODO [PRO-664] Re-enable this test
-test.skip("test-suites-tests-6: should show a warning when a user opens a URL linking to a test that could not be loaded", async ({
+test("test-suites-tests-6: should show a warning when a user opens a URL linking to a test that could not be loaded", async ({
   page,
 }) => {
   const warningDialog = page.locator('[data-test-id="DeepLinkWarningDialog"]');

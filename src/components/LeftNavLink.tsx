@@ -4,20 +4,18 @@ import Link from "next/link";
 import { HTMLAttributes, ReactNode } from "react";
 
 export function LeftNavLink({
-  disabled,
   href,
   iconType,
   isActive,
   label,
   ...rest
 }: HTMLAttributes<HTMLElement> & {
-  disabled?: boolean;
   href: string;
   iconType: IconType;
   isActive: boolean;
   label: ReactNode;
 }) {
-  const Component = disabled || isActive ? "div" : Link;
+  const Component = isActive ? "div" : Link;
 
   // Scroll into view on mount
   useIsomorphicLayoutEffect(() => {
@@ -33,7 +31,7 @@ export function LeftNavLink({
     <Component
       className={`flex flex-row gap-2 items-center text-white px-2 py-1 transition rounded ${
         isActive ? "bg-sky-900 cursor-default" : "hover:text-sky-500"
-      } ${disabled ? "opacity-50 cursor-default hover:text-white" : ""}`}
+      }`}
       data-is-active={isActive || undefined}
       data-test-name="LeftNavLink"
       href={href}
