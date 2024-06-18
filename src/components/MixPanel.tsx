@@ -9,7 +9,6 @@ export default function MixPanel() {
       track_pageview: true,
       persistence: "localStorage",
     });
-    console.log("mixpanel loaded");
   }, []);
 
   return null;
