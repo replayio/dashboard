@@ -52,14 +52,7 @@ export function TestSummaryRow({
       }}
     >
       <div className="w-10 h-6 shrink-0 flex justify-center">{icon}</div>
-      <div className="overflow-hidden">
-        {testSummary.sourcePath && (
-          <div className="truncate shrink grow text-slate-400 text-xs">
-            {testSummary.sourcePath}
-          </div>
-        )}
-        <div className="truncate">{testSummary.title}</div>
-      </div>
+      <div className="truncate">{testSummary.title}</div>
     </Component>
   );
 }
