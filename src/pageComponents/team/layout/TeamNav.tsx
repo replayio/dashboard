@@ -43,22 +43,15 @@ export function TeamNav() {
             isActive={!!pathname?.endsWith("runs")}
             label="Runs"
           />
-          {/* <LeftNavLink
+          {/* TODO [PRO-664] Re-enable Tests view once GraphQL perf issue has been resolved */}
+          <LeftNavLink
+            disabled
             href={`/team/${workspace.id}/tests`}
             iconType="menu-tests"
             isActive={!!pathname?.endsWith("tests")}
             label="Tests"
-          /> */}
-          <div
-            className={`flex flex-row gap-2 items-center text-white px-2 py-1 transition rounded text-gray-400`}
-            data-test-name="LeftNavLink"
-            onMouseEnter={onMouseEnter}
-            onMouseMove={onMouseMove}
-            onMouseLeave={onMouseLeave}
-          >
-            <Icon className="h-4 w-4 hidden md:block shrink-0" type="menu-tests" />
-            <div className="grow truncate">Tests</div>
-          </div>
+            title="Tests view is temporarily disabled while we fix an performance issue."
+          />
           {tooltip}
         </>
       ) : (
