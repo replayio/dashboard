@@ -55,7 +55,7 @@
     "@jest/globals": "^29.7.0",
     "@playwright/test": "1.44.0",
     "@replayio/cypress": "^2.1.1",
-    "@replayio/playwright": "3.0.0-alpha.14",
+    "@replayio/playwright": "0.0.0-pr536-20240618142255",
     "@testing-library/jest-dom": "^6.4.1",
     "@testing-library/react": "^14.2.1",
     "@types/cookie": "^0.6.0",
