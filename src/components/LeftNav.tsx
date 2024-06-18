@@ -17,7 +17,7 @@ export function LeftNav({
   };
 }>) {
   return (
-    <div className="flex flex-col w-32 h-full p-0 pr-0 overflow-auto text-white border-r bg-slate-800 shrink-0 md:w-72 border-slate-700">
+    <div className="flex flex-col w-32 h-full p-0 pr-0 overflow-auto text-white bg-slate-800 shrink-0 md:w-72 ">
       <div className="flex flex-row items-center gap-2 p-2">
         <ReplayLogo className="pl-1 max-h-6 max-w-5" color="#ffffff" />
         <div className="text-xl font-light">Replay</div>
