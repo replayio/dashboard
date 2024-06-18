@@ -1,20 +1,14 @@
-import { Icon } from "@/components/Icon";
 import { LeftNav } from "@/components/LeftNav";
 import { LeftNavLink } from "@/components/LeftNavLink";
 import { DefaultNav } from "@/components/layout/DefaultNav";
 import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { Workspace } from "@/graphql/types";
-import useTooltip from "@/hooks/useTooltip";
 import { usePathname } from "next/navigation";
 
 export function TeamNav() {
   const { workspaces } = useWorkspaces();
 
   let workspace: Workspace | undefined = undefined;
-
-  const { onMouseEnter, onMouseMove, onMouseLeave, tooltip } = useTooltip({
-    tooltip: "Tests view is temporarily disabled while we fix an performance issue.",
-  });
 
   const pathname = usePathname();
   if (pathname && pathname.startsWith("/team/")) {
@@ -52,7 +46,6 @@ export function TeamNav() {
             label="Tests"
             title="Tests view is temporarily disabled while we fix an performance issue."
           />
-          {tooltip}
         </>
       ) : (
         <LeftNavLink
