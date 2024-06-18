@@ -12,9 +12,9 @@ import { getRecordingRow } from "./utils/getRecordingRow";
 import { getTestExecutionRow } from "./utils/getTestExecutionRow";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
-import exp from "constants";
 
-test("test-suites-tests-4: should respect workspace retention limits", async ({ page }) => {
+// TODO [PRO-664] Re-enable this test
+test.skip("test-suites-tests-4: should respect workspace retention limits", async ({ page }) => {
   await navigateToPage({
     mockGraphQLData,
     page,

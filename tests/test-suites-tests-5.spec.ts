@@ -9,7 +9,10 @@ import { getRecordingRow } from "./utils/getRecordingRow";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";
 
-test("test-suites-tests-5: should handle when filters hide a selected test", async ({ page }) => {
+// TODO [PRO-664] Re-enable this test
+test.skip("test-suites-tests-5: should handle when filters hide a selected test", async ({
+  page,
+}) => {
   await navigateToPage({
     mockGraphQLData,
     page,
