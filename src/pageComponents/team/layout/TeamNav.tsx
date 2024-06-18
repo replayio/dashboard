@@ -37,14 +37,11 @@ export function TeamNav() {
             isActive={!!pathname?.endsWith("runs")}
             label="Runs"
           />
-          {/* TODO [PRO-664] Re-enable Tests view once GraphQL perf issue has been resolved */}
           <LeftNavLink
-            disabled
             href={`/team/${workspace.id}/tests`}
             iconType="menu-tests"
             isActive={!!pathname?.endsWith("tests")}
             label="Tests"
-            title="Tests view is temporarily disabled while we fix an performance issue."
           />
         </>
       ) : (

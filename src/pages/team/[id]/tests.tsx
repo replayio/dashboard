@@ -1,6 +1,3 @@
-import { Button } from "@/components/Button";
-import { EmptyLayout } from "@/components/EmptyLayout";
-import { Message } from "@/components/Message";
 import { COOKIES } from "@/constants";
 import { useSyncDefaultWorkspace } from "@/hooks/useSyncDefaultWorkspace";
 import { getServerSideWorkspaceProps } from "@/pageComponents/team/id/getServerSidePropsHelpers";
@@ -9,7 +6,6 @@ import { ContextRoot, Filters } from "@/pageComponents/team/id/tests/TestsViewCo
 import { TeamLayout } from "@/pageComponents/team/layout/TeamLayout";
 import { redirectWithState } from "@/utils/redirectWithState";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { useRouter } from "next/navigation";
 
 export default function Page({
   filters,
@@ -19,37 +15,19 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSyncDefaultWorkspace();
 
-  // TODO [PRO-664] Re-enable Tests view once GraphQL perf issue has been resolved
-  const router = useRouter();
   return (
-    <Message className="m-4">
-      <div>Tests view is temporarily disabled while we fix an performance issue.</div>
-      <Button
-        onClick={() => {
-          router.push("/home");
-        }}
-        size="large"
-      >
-        Go home
-      </Button>
-    </Message>
+    <ContextRoot
+      defaultTestSummaryId={testSummaryId}
+      filters={filters}
+      retentionLimit={retentionLimit}
+      workspaceId={workspaceId}
+    >
+      <TestSuiteTestsPage />
+    </ContextRoot>
   );
-
-  // return (
-  //   <ContextRoot
-  //     defaultTestSummaryId={testSummaryId}
-  //     filters={filters}
-  //     retentionLimit={retentionLimit}
-  //     workspaceId={workspaceId}
-  //   >
-  //     <TestSuiteTestsPage />
-  //   </ContextRoot>
-  // );
 }
 
-// TODO [PRO-664]
-// Page.Layout = TeamLayout;
-Page.Layout = EmptyLayout;
+Page.Layout = TeamLayout;
 
 export async function getServerSideProps(context: GetServerSidePropsContext<any>) {
   const stringValue = context.req.cookies[COOKIES.testsFilters];
