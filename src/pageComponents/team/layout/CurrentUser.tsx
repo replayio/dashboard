@@ -7,7 +7,7 @@ export function CurrentUser() {
 
   return (
     <Link
-      className="flex flex-row items-center gap-3 px-3 py-2 shrink-0 text-white truncate cursor-pointer bg-slate-900 whitespace-nowrap"
+      className="flex flex-row items-center gap-3 px-3 py-2 text-white truncate cursor-pointer shrink-0 bg-slate-950 whitespace-nowrap"
       href="/user/settings/account"
     >
       {user.picture && (
