@@ -1,4 +1,5 @@
 import { ApolloContextProvider } from "@/components/ApolloContext";
+import { initializeMixPanel } from "@/utils/mixpanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
@@ -74,6 +75,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
         window.location.reload();
       });
     }
+    initializeMixPanel();
   }
 
   render() {
