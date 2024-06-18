@@ -23,9 +23,6 @@ export function useWorkspaceTests(workspaceId: string, startDate: Date, endDate?
                   testId
                   title
                   scope
-                  executions {
-                    sourcePath
-                  }
                   stats {
                     passed
                     failed
@@ -54,7 +51,6 @@ export function useWorkspaceTests(workspaceId: string, startDate: Date, endDate?
       return data.node.tests.edges.map(({ node }) => ({
         id: node.testId,
         scope: node.scope,
-        sourcePath: node.executions[0]?.sourcePath ?? "",
         stats: {
           failed: node.stats.failed,
           failureRate: node.stats.failureRate,
