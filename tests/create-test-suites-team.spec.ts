@@ -10,6 +10,7 @@ import { mockWorkspaceRecordings } from "tests/mocks/utils/mockWorkspaceRecordin
 import { getLeftNavLink } from "tests/utils/getLeftNavLink";
 import { navigateToPage } from "./utils/navigateToPage";
 import { waitUntil } from "tests/utils/waitUntil";
+import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRunsForWorkspace";
 
 test("create-test-suites-team: create a test suites workspace", async ({ page }) => {
   await navigateToPage({
@@ -58,9 +59,6 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
     await expect(form.textContent()).resolves.toContain(
       "npx cypress run --browser replay-chromium"
     );
-
-    await expect(continueButton.isEnabled()).resolves.toBeTruthy();
-    await continueButton.click();
   }
 
   {
@@ -79,10 +77,10 @@ test("create-test-suites-team: create a test suites workspace", async ({ page })
   }
 
   {
-    // Continue to new workspace
+    // Confirm waiting state
 
-    await expect(getLeftNavLink(page, "Runs").getAttribute("data-is-active")).resolves.toBe("true");
-    await expect(getLeftNavLink(page, "Tests").getAttribute("data-is-active")).resolves.toBeNull();
+    await expect(continueButton.isEnabled()).resolves.toBeFalsy();
+    await expect(continueButton.textContent()).resolves.toContain("Waiting for test data");
   }
 });
 
@@ -107,6 +105,7 @@ const mockGraphQLData: MockGraphQLData = {
       name: "Example",
     },
   ]),
+  GetTestsRunsForWorkspace: mockGetTestsRunsForWorkspace([], teamId),
 };
 
 export async function waitUntilTestFormStep(page: Page, currentStep: number) {
