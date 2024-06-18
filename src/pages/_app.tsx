@@ -113,9 +113,9 @@ export default class MyApp extends App<AppProps<PageProps>> {
 function ErrorFallback() {
   return (
     <section role="alert">
-      <div className="flex flex-col items-center gap-2 p-4">
+      <div className="flex flex-col gap-2 p-4 items-center">
         <h1 className="text-6xl font-bold text-red-500">We&apos;re sorry</h1>
-        <p className="text-3xl font-bold text-white">Something went wrong.</p>
+        <p className="font-bold text-3xl text-white">Something went wrong.</p>
         <p className="text-lg font-light text-slate-400">
           While we look into it, try reloading the page.
         </p>
