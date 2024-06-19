@@ -3,7 +3,6 @@ import { MultiStepForm } from "@/components/MultiStepForm";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
 import { useCreateWorkspaceAPIKey } from "@/graphql/queries/createWorkspaceAPIKey";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
-import { generateApiKey } from "@/pageComponents/team/new/tests/generateApiKey";
 import { getPlanKey } from "@/utils/test-suites";
 import assert from "assert";
 import Image from "next/image";
@@ -41,9 +40,9 @@ type StateStep3 = Omit<StateStep2, "step"> & {
 
 type State = StateStep1 | StateStep2 | StateStep3;
 
-export function CreateTestSuitesTeam() {
+export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
   const [state, setStateUnsafe] = useState<State>({
-    apiKey: generateApiKey(),
+    apiKey,
     packageManager: null,
     step: 1,
     teamName: null,
@@ -171,6 +170,7 @@ export function CreateTestSuitesTeam() {
             router.push(`/team/${state.workspaceId}`);
           }}
           testRunner={state.testRunner}
+          workspaceId={state.workspaceId}
         />
       );
       break;
