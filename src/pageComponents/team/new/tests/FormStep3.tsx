@@ -9,7 +9,7 @@ import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
 import { TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { useContext, useEffect, useState } from "react";
 
-const POLL_INTERVAL = 2_500;
+const POLL_INTERVAL = 5_000;
 
 export default function FormStep3({
   apiKey,
@@ -35,13 +35,15 @@ export default function FormStep3({
         const result = await hasTestsRunsForWorkspace(accessToken, workspaceId, mockGraphQLData);
         if (result) {
           setHasTestData(true);
+        } else {
+          timeout = setTimeout(checkTestRuns, POLL_INTERVAL);
         }
       };
 
-      const interval = setInterval(checkTestRuns, POLL_INTERVAL);
+      let timeout = setTimeout(checkTestRuns, POLL_INTERVAL);
 
       return () => {
-        clearInterval(interval);
+        clearInterval(timeout);
       };
     }
   }, [accessToken, hasTestData, mockGraphQLData, workspaceId]);
