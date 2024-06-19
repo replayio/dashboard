@@ -13,7 +13,6 @@ import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { getInstallCommand } from "@/pageComponents/team/new/tests/getInstallCommand";
 import { useMemo } from "react";
-import mixpanel from "mixpanel-browser";
 
 export default function FormStep2({
   apiKey,
@@ -41,15 +40,6 @@ export default function FormStep2({
     }
   }, [apiKey, testRunner, packageManager]);
 
-  const handleContinue = () => {
-    mixpanel.track("testsuite.new.step2.configuration-complete", {
-      step: 2,
-      packageManager: packageManager,
-      testRunner: testRunner,
-    });
-    onContinue();
-  };
-
   return (
     <>
       {instructions}
@@ -57,7 +47,7 @@ export default function FormStep2({
         <Button
           className="self-start"
           data-test-id="CreateTeam-Continue-Button"
-          onClick={handleContinue}
+          onClick={onContinue}
           size="large"
         >
           Continue

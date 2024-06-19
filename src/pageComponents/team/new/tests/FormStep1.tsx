@@ -14,7 +14,6 @@ import {
 } from "@/pageComponents/team/new/tests/constants";
 import assert from "assert";
 import { useState } from "react";
-import mixpanel from "mixpanel-browser";
 
 export default function FormStep1({
   defaultPackageManager,
@@ -50,24 +49,6 @@ export default function FormStep1({
   const { packageManager, teamName, testRunner } = state;
 
   const isValid = !!teamName && !!packageManager && !!testRunner;
-
-  const handleContinue = async () => {
-    assert(testRunner);
-
-    setIsPending(true);
-    const success = await onContinue(teamName, packageManager.type, testRunner.type);
-    mixpanel.track("testsuite.new.step1.team-created", {
-      step: 1,
-      teamName: teamName,
-      packageManager: packageManager.type,
-      testRunner: testRunner.type,
-      success: success,
-    });
-
-    if (!success) {
-      setIsPending(false);
-    }
-  };
 
   return (
     <>
@@ -135,7 +116,15 @@ export default function FormStep1({
         className="self-start"
         data-test-id="CreateTeam-Continue-Button"
         disabled={!isValid || isPending}
-        onClick={handleContinue}
+        onClick={async () => {
+          assert(testRunner);
+
+          setIsPending(true);
+          const success = await onContinue(teamName, packageManager.type, testRunner.type);
+          if (!success) {
+            setIsPending(false);
+          }
+        }}
         size="large"
       >
         {isPending ? "Saving..." : "Continue"}
