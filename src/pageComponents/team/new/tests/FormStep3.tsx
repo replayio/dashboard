@@ -30,7 +30,7 @@ export default function FormStep3({
   }
 
   const handleBack = () => {
-    mixpanel.track("testsuite.new.step3.return-to-configure", {
+    mixpanel.track("testsuite.new.step3.return-to-configuration", {
       step: 3,
       testRunner: testRunner,
     });
