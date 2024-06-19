@@ -1,13 +1,15 @@
 import { Button } from "@/components/Button";
 import { Callout } from "@/components/Callout";
+import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import { ExternalLink } from "@/components/ExternalLink";
-import { useTestSuiteTestRuns } from "@/graphql/queries/useTestSuiteTestRuns";
+import { SessionContext } from "@/components/SessionContext";
+import { hasTestsRunsForWorkspace } from "@/graphql/queries/hasTestsRunsForWorkspace";
 import { Group } from "@/pageComponents/team/new/tests/Group";
 import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
 import { TestRunner } from "@/pageComponents/team/new/tests/constants";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-const POLL_INTERVAL = 5_000;
+const POLL_INTERVAL = 2_500;
 
 export default function FormStep3({
   apiKey,
@@ -24,21 +26,25 @@ export default function FormStep3({
 }) {
   const [hasTestData, setHasTestData] = useState(false);
 
-  const { refetch, testRuns } = useTestSuiteTestRuns(workspaceId, new Date());
+  const { mockGraphQLData } = useContext(EndToEndTestContext);
+  const { accessToken } = useContext(SessionContext);
 
   useEffect(() => {
     if (!hasTestData) {
-      if (testRuns && testRuns.length > 0) {
-        setHasTestData(true);
-      } else {
-        const interval = setInterval(refetch, POLL_INTERVAL);
+      const checkTestRuns = async () => {
+        const result = await hasTestsRunsForWorkspace(accessToken, workspaceId, mockGraphQLData);
+        if (result) {
+          setHasTestData(true);
+        }
+      };
 
-        return () => {
-          clearInterval(interval);
-        };
-      }
+      const interval = setInterval(checkTestRuns, POLL_INTERVAL);
+
+      return () => {
+        clearInterval(interval);
+      };
     }
-  }, [hasTestData, refetch, testRuns]);
+  }, [accessToken, hasTestData, mockGraphQLData, workspaceId]);
 
   let code;
   let githubDocsLink;

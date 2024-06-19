@@ -8,7 +8,7 @@ import { gql } from "@apollo/client";
 import { useMemo } from "react";
 
 export function useTestSuiteTestRuns(workspaceId: string, startDate: Date, endDate?: Date) {
-  const { data, error, isLoading, refetch } = useGraphQLQuery<
+  const { data, error, isLoading } = useGraphQLQuery<
     GetTestsRunsForWorkspaceQuery,
     GetTestsRunsForWorkspaceQueryVariables
   >(
@@ -85,5 +85,5 @@ export function useTestSuiteTestRuns(workspaceId: string, startDate: Date, endDa
     }
   }, [data]);
 
-  return { error, isLoading, refetch, testRuns };
+  return { error, isLoading, testRuns };
 }
