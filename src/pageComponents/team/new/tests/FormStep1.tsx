@@ -56,8 +56,6 @@ export default function FormStep1({
 
     setIsPending(true);
     const success = await onContinue(teamName, packageManager.type, testRunner.type);
-
-    // Track the event with Mixpanel
     mixpanel.track("testsuite.new.step1.team-created", {
       step: 1,
       teamName: teamName,
