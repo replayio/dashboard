@@ -51,7 +51,7 @@ export default function FormStep1({
 
   const isValid = !!teamName && !!packageManager && !!testRunner;
 
-  const handleContinueClick = async () => {
+  const handleContinue = async () => {
     assert(testRunner);
 
     setIsPending(true);
@@ -137,7 +137,7 @@ export default function FormStep1({
         className="self-start"
         data-test-id="CreateTeam-Continue-Button"
         disabled={!isValid || isPending}
-        onClick={handleContinueClick}
+        onClick={handleContinue}
         size="large"
       >
         {isPending ? "Saving..." : "Continue"}

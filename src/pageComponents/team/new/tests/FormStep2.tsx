@@ -41,7 +41,7 @@ export default function FormStep2({
     }
   }, [apiKey, testRunner, packageManager]);
 
-  const handleContinueClick = () => {
+  const handleContinue = () => {
     mixpanel.track("testsuite.new.step2.configuration-complete", {
       step: 2,
       packageManager: packageManager,
@@ -57,7 +57,7 @@ export default function FormStep2({
         <Button
           className="self-start"
           data-test-id="CreateTeam-Continue-Button"
-          onClick={handleContinueClick}
+          onClick={handleContinue}
           size="large"
         >
           Continue

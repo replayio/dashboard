@@ -29,8 +29,17 @@ export default function FormStep3({
     }
   }
 
+  const handleBack = () => {
+    mixpanel.track("testsuite.new.step2.return-to-configure", {
+      step: 3,
+      testRunner: testRunner,
+    });
+    onBack();
+  };
+
   const handleContinue = () => {
     mixpanel.track("testsuite.new.step3.return-to-dashboard", {
+      step: 3,
       testRunner: testRunner,
     });
     onContinue();
@@ -42,7 +51,7 @@ export default function FormStep3({
       <div className="flex flex-row gap-2">
         <Button
           data-test-id="CreateTeam-Back-Button"
-          onClick={onBack}
+          onClick={handleBack}
           size="large"
           variant="outline"
         >
