@@ -4,6 +4,7 @@ import { ExternalLink } from "@/components/ExternalLink";
 import { Group } from "@/pageComponents/team/new/tests/Group";
 import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
 import { TestRunner } from "@/pageComponents/team/new/tests/constants";
+import mixpanel from "mixpanel-browser";
 
 export default function FormStep3({
   apiKey,
@@ -28,6 +29,13 @@ export default function FormStep3({
     }
   }
 
+  const handleContinue = () => {
+    mixpanel.track("testsuite.new.step3.return-to-dashboard", {
+      testRunner: testRunner,
+    });
+    onContinue();
+  };
+
   return (
     <>
       {instructions}
@@ -40,7 +48,7 @@ export default function FormStep3({
         >
           Go Back
         </Button>
-        <Button data-test-id="CreateTeam-Continue-Button" onClick={onContinue} size="large">
+        <Button data-test-id="CreateTeam-Continue-Button" onClick={handleContinue} size="large">
           Go to dashboard
         </Button>
       </div>
