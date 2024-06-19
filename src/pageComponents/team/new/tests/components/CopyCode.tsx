@@ -52,6 +52,7 @@ export function CopyCode({
   return (
     <div
       className="relative flex shrink-0"
+      data-private
       data-test-name="CopyCode"
       onClick={onMouse}
       onMouseEnter={onMouse}
