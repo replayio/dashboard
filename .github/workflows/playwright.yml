@@ -13,7 +13,7 @@ jobs:
         id: wait
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 120
+          max_timeout: 240
     outputs:
       preview_url: ${{ steps.wait.outputs.url }}
   generate-test-run-id:
