@@ -1,15 +1,17 @@
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
 import { SessionContext } from "@/components/SessionContext";
-import { PropsWithChildren, useContext, useLayoutEffect, useState } from "react";
 import type LogRocketType from "logrocket";
+import { PropsWithChildren, useContext, useLayoutEffect, useState } from "react";
 
 export default function LogRocket({ children }: PropsWithChildren) {
   const { user } = useContext(SessionContext);
 
   const [initialized, setInitialized] = useState(false);
 
+  const { email, id, isInternal, name } = user;
+
   useLayoutEffect(() => {
-    if (process.env.NODE_ENV === "development" || user.isInternal) {
+    if (process.env.NODE_ENV === "development" || isInternal) {
       return;
     }
 
@@ -17,19 +19,26 @@ export default function LogRocket({ children }: PropsWithChildren) {
 
     import("logrocket").then(module => {
       logRocketAPI = module.default;
-      logRocketAPI.init("4sdo4i/replay-dashboard");
-      logRocketAPI.identify(user.id, {
-        name: user.name,
-        email: user.email,
+      logRocketAPI.init("4sdo4i/replay-dashboard", {
+        dom: {
+          textSanitizer: true,
+        },
+      });
+      logRocketAPI.identify(id, {
+        email,
+        name,
       });
 
       setInitialized(true);
     });
 
     return () => {
-      // TODO [PRO-657] End session and stop recording
+      if (logRocketAPI) {
+        // Hidden API recommended to us by Matt Arbesfeld at LogRocket
+        (logRocketAPI as any).uninstall();
+      }
     };
-  }, [user]);
+  }, [email, id, isInternal, name]);
 
   return initialized ? children : <LoadingProgressBar />;
 }

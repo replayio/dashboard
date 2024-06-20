@@ -123,7 +123,7 @@ function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
   return (
     <Group>
       <div className="text-xl">{number}. Save the API key below before continuing</div>
-      <CopyCode code={`REPLAY_API_KEY=${apiKey}`} />
+      <CopyCode code={`REPLAY_API_KEY=${apiKey}`} data-private />
       <Callout
         bodyText={
           <div>

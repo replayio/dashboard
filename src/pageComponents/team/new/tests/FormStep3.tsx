@@ -88,6 +88,7 @@ export default function FormStep3({
               <CopyCode
                 code={`REPLAY_API_KEY=${apiKey} npx …`}
                 codeToCopy={`REPLAY_API_KEY=${apiKey} ${code}`}
+                data-private
                 size="small"
               />
             </div>
