@@ -189,7 +189,16 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
         </div>
       </div>
       <div className="relative flex-col justify-end hidden w-2/5 overflow-hidden md:flex">
-        <Image alt="Box image" layout="fill" objectFit="cover" src={image} />
+        <Image
+          alt="Box image"
+          fill
+          priority
+          sizes="40vw"
+          src={image}
+          style={{
+            objectFit: "cover",
+          }}
+        />
       </div>
     </div>
   );
