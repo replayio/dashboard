@@ -1,5 +1,5 @@
 import { COOKIES, HEADERS } from "@/constants";
-import { getAccessToken } from "@auth0/nextjs-auth0/edge";
+import { getAccessToken, touchSession } from "@auth0/nextjs-auth0/edge";
 import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
@@ -87,6 +87,8 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
       token: null,
     };
   }
+
+  await touchSession();
 
   const cookieStore = cookies();
   const prevAccessTokenCookieRaw = cookieStore.get(COOKIES.accessToken);
