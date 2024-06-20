@@ -8,8 +8,19 @@ import assert from "assert";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ReactNode, Suspense, lazy, startTransition, useCallback, useState } from "react";
+
+import {
+  ReactNode,
+  Suspense,
+  lazy,
+  startTransition,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
 import image from "./new-teams-delorean.png";
+import mixpanel from "mixpanel-browser";
 
 const FormStep1 = lazy(() => import("@/pageComponents/team/new/tests/FormStep1"));
 const FormStep2 = lazy(() => import("@/pageComponents/team/new/tests/FormStep2"));
@@ -58,6 +69,10 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
 
   const router = useRouter();
 
+  useEffect(() => {
+    mixpanel.track(`testsuite.new.step-${state.step}`);
+  }, [state.step]);
+
   const { createWorkspace, error: createWorkspaceError } = useCreateWorkspace();
   const { createApiKey, error: createApiKeyError } = useCreateWorkspaceAPIKey();
 
@@ -85,12 +100,20 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
 
             let workspaceId;
             if (!workspaceId) {
+              mixpanel.track("testsuite.new.create-workspace", {
+                teamName,
+                packageManager,
+                testRunner,
+              });
+
               workspaceId = await createWorkspace(
                 teamName,
                 getPlanKey({ isOrg: false, teamType: "testsuite" })
               );
 
               if (!workspaceId) {
+                mixpanel.track("testsuite.new.create-workspace.error");
+
                 // Workspace creation failed; GraphQL will re-render with an error message
                 return false;
               }
@@ -105,6 +128,10 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
             switch (testRunner) {
               case "cypress":
               case "playwright":
+                mixpanel.track("testsuite.new.create-api-key", {
+                  testRunner,
+                });
+
                 const apiKey = await createApiKey(
                   workspaceId,
                   testRunner,
@@ -113,6 +140,8 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
                 );
 
                 if (!apiKey) {
+                  mixpanel.track("testsuite.new.create-api-key.error");
+
                   // API key creation failed; GraphQL will re-render with an error message
                   return false;
                 }
