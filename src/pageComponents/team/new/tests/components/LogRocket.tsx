@@ -12,6 +12,7 @@ export default function LogRocket({ children }: PropsWithChildren) {
 
   useLayoutEffect(() => {
     if (process.env.NODE_ENV === "development" || isInternal) {
+      setInitialized(true);
       return;
     }
 
