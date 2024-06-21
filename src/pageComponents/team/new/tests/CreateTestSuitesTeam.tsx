@@ -9,6 +9,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import LogRocket from "@/pageComponents/team/new/tests/components/LogRocket";
+import mixpanel from "mixpanel-browser";
 import {
   ReactNode,
   Suspense,
@@ -18,9 +20,7 @@ import {
   useEffect,
   useState,
 } from "react";
-
 import image from "./new-teams-delorean.png";
-import mixpanel from "mixpanel-browser";
 
 const FormStep1 = lazy(() => import("@/pageComponents/team/new/tests/FormStep1"));
 const FormStep2 = lazy(() => import("@/pageComponents/team/new/tests/FormStep2"));
@@ -214,7 +214,9 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
             <Icon className="w-5 h-5" type="back-arrow" /> Back to library
           </Link>
           <MultiStepForm currentIndex={state.step - 1} steps={STEPS} />
-          <Suspense>{form}</Suspense>
+          <Suspense>
+            <LogRocket>{form}</LogRocket>
+          </Suspense>
         </div>
       </div>
       <div className="relative flex-col justify-end hidden w-2/5 overflow-hidden md:flex">

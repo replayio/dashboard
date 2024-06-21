@@ -1,7 +1,7 @@
 import { Code } from "@/components/Code";
 import { Icon } from "@/components/Icon";
 import { copyText } from "@/utils/copy";
-import { MouseEvent, useEffect, useState } from "react";
+import { HTMLAttributes, MouseEvent, useEffect, useState } from "react";
 import type { BundledLanguage } from "shiki";
 
 export function CopyCode({
@@ -10,7 +10,8 @@ export function CopyCode({
   codeToCopy,
   lang,
   size = "normal",
-}: {
+  ...rest
+}: HTMLAttributes<HTMLDivElement> & {
   className?: string;
   code: string;
   codeToCopy?: string;
@@ -56,6 +57,7 @@ export function CopyCode({
       onClick={onMouse}
       onMouseEnter={onMouse}
       onMouseLeave={onMouse}
+      {...rest}
     >
       <Code
         className={`w-full truncate cursor-pointer ${size === "normal" ? "" : "text-xs"} ${className}`}
