@@ -10,6 +10,10 @@ export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
   const { pathname } = nextUrl;
 
+  if (["/track", "/engage"].includes(pathname)) {
+    return NextResponse.rewrite("https://api-js.mixpanel.com" + pathname);
+  }
+
   const response = NextResponse.next();
 
   const { ua } = userAgent(request);
