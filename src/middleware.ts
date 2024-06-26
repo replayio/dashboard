@@ -10,6 +10,24 @@ export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
   const { pathname } = nextUrl;
 
+  if (["/track", "/engage"].includes(pathname)) {
+    const headers = new Headers();
+    headers.set("cookie", "");
+    headers.set("foo", "bar");
+    headers.set("x-foo", "bar");
+    // const ip = request.headers.get("x-forwarded-for");
+    // if (ip) {
+    //   console.log(`IP: ${ip}`);
+    //   // headers.set("X-Real-IP", ip);
+    //   // headers.set("X-Forwarded-For", ip);
+    // }
+    // // headers.set("x-middleware-rewrite", )
+    // headers.set("foo", "bar");
+    // headers.set("x-foo", "bar");
+    return NextResponse.rewrite("https://holger.evandor.de/track/", { headers });
+    // return new NextResponse(null, { headers });
+  }
+
   const response = NextResponse.next();
 
   const { ua } = userAgent(request);
