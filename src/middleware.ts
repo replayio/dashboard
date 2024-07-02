@@ -88,7 +88,7 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     };
   }
 
-  await touchSession();
+  await touchSession(request, response);
 
   const cookieStore = cookies();
   const prevAccessTokenCookieRaw = cookieStore.get(COOKIES.accessToken);
