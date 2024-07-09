@@ -1,58 +1,154 @@
 import { Button } from "@/components/Button";
-import { Code } from "@/components/Code";
+import { Callout } from "@/components/Callout";
+import { EndToEndTestContext } from "@/components/EndToEndTestContext";
+import { ExternalLink } from "@/components/ExternalLink";
+import { SessionContext } from "@/components/SessionContext";
+import { hasTestsRunsForWorkspace } from "@/graphql/queries/hasTestsRunsForWorkspace";
 import { Group } from "@/pageComponents/team/new/tests/Group";
-import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
+import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
+import { TestRunner } from "@/pageComponents/team/new/tests/constants";
+import { useContext, useEffect, useState } from "react";
 
-export function FormStep3({
+const POLL_INTERVAL = 5_000;
+
+export default function FormStep3({
+  apiKey,
+  onBack,
   onContinue,
-  packageManager,
   testRunner,
+  workspaceId,
 }: {
+  apiKey: string;
+  onBack: () => void;
   onContinue: () => void;
-  packageManager: PackageManager;
   testRunner: TestRunner;
+  workspaceId: string;
 }) {
-  let instructions;
+  const [hasTestData, setHasTestData] = useState(false);
+
+  const { mockGraphQLData } = useContext(EndToEndTestContext);
+  const { accessToken } = useContext(SessionContext);
+
+  useEffect(() => {
+    if (!hasTestData) {
+      const checkTestRuns = async () => {
+        const result = await hasTestsRunsForWorkspace(accessToken, workspaceId, mockGraphQLData);
+        if (result) {
+          setHasTestData(true);
+        } else {
+          timeout = setTimeout(checkTestRuns, POLL_INTERVAL);
+        }
+      };
+
+      let timeout = setTimeout(checkTestRuns, POLL_INTERVAL);
+
+      return () => {
+        clearInterval(timeout);
+      };
+    }
+  }, [accessToken, hasTestData, mockGraphQLData, workspaceId]);
+
+  let code;
+  let githubDocsLink;
+  let quickStartGuideLink;
+
   switch (testRunner) {
     case "cypress": {
-      instructions = <CypressInstructions />;
+      code = "npx cypress run --browser replay-chromium";
+      githubDocsLink = "https://docs.replay.io/test-runners/cypress-io/github-actions";
+      quickStartGuideLink =
+        "https://docs.replay.io/basics/getting-started/record-your-cypress-tests";
       break;
     }
     case "playwright": {
-      instructions = <PlaywrightInstructions />;
+      code = "npx playwright test --project replay-chromium";
+      githubDocsLink = "https://docs.replay.io/test-runners/playwright/github-actions";
+      quickStartGuideLink =
+        "https://docs.replay.io/basics/getting-started/record-your-playwright-tests";
       break;
     }
   }
 
   return (
     <>
-      {instructions}
-      <Button
-        className="self-start"
-        data-test-id="CreateTeam-Continue-Button"
-        onClick={onContinue}
-        size="large"
-      >
-        Go to dashboard
-      </Button>
+      {hasTestData || (
+        <div>
+          Now you&apos;re ready to record your tests with Replay!
+          <br />
+          Run this command and we&apos;ll tell you when your test suite is ready.
+        </div>
+      )}
+      <Group>
+        <CopyCode code={code} />
+        <Callout
+          bodyText={
+            <div className="flex flex-col gap-2 grow">
+              <div>If you&apos;ve saved it to an environment variable, you&apos;re all set.</div>
+              <div>Otherwise you need to pass it explicitly:</div>
+              <CopyCode
+                code={`REPLAY_API_KEY=${apiKey} npx …`}
+                codeToCopy={`REPLAY_API_KEY=${apiKey} ${code}`}
+                data-private
+                size="small"
+              />
+            </div>
+          }
+          headerText="Your API key is needed to upload replays"
+          type="info"
+        />
+      </Group>
+      {hasTestData ? (
+        <div>
+          We recommend configuring your CI to record tests with Replay.{" "}
+          <ExternalLink className="text-white underline" href={githubDocsLink}>
+            Check out our docs
+          </ExternalLink>{" "}
+          to see how.
+        </div>
+      ) : (
+        <div>
+          <div className="font-bold">Almost there! Need help?</div>
+          <ul className="list-disc ml-6 mt-2">
+            <li>
+              Go back to the{" "}
+              <span className="underline cursor-pointer" onClick={onBack}>
+                configuration step
+              </span>{" "}
+              to double-check your config
+            </li>
+            <li>
+              Refer to the{" "}
+              <ExternalLink className="text-white underline" href={quickStartGuideLink}>
+                {testRunner === "cypress" ? "Cypress" : "Playwright"} quickstart guide
+              </ExternalLink>
+            </li>
+            <li>
+              <ExternalLink className="text-white underline" href={githubDocsLink}>
+                Get Replay working with CI
+              </ExternalLink>
+            </li>
+          </ul>
+        </div>
+      )}
+      <div className="flex flex-row gap-2">
+        <Button
+          data-test-id="CreateTeam-Back-Button"
+          onClick={onBack}
+          size="large"
+          variant="outline"
+        >
+          Go Back
+        </Button>
+        <Button
+          data-test-id="CreateTeam-Continue-Button"
+          disabled={!hasTestData}
+          onClick={hasTestData ? onContinue : undefined}
+          size="large"
+          variant={hasTestData ? "solid" : "outline"}
+        >
+          {hasTestData ? "Success! Go to the dashboard" : "Waiting for test data..."}
+        </Button>
+      </div>
     </>
-  );
-}
-
-export function CypressInstructions() {
-  return (
-    <Group>
-      <strong>5. Run cypress as you normally would</strong>
-      <Code>npx cypress run --browser replay-chromium</Code>
-    </Group>
-  );
-}
-
-export function PlaywrightInstructions() {
-  return (
-    <Group>
-      <strong>4. Run playwright as you normally would</strong>
-      <Code>npx playwright test --project replay-chromium</Code>
-    </Group>
   );
 }

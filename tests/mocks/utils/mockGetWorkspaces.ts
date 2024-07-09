@@ -23,7 +23,7 @@ export function mockGetWorkspaces(
               invitationCode: workspace.invitationCode ?? "11111111-2222-3333-4444-55555555",
               isOrganization: workspace.isOrganization ?? false,
               isTest: workspace.isTest ?? false,
-              name: workspace.name ?? "Fake Worksapce",
+              name: workspace.name ?? "Fake Workspace",
               settings: workspace.settings
                 ? {
                     __typename: "WorkspaceSettings",

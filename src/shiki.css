@@ -1,0 +1,19 @@
+:root {
+  --shiki-background: inherit;
+  --shiki-color-text: inherit;
+  --shiki-foreground: inherit;
+  --shiki-token-constant: theme("colors.white");
+  --shiki-token-string: theme("colors.green.200");
+  --shiki-token-comment: theme("colors.slate.400");
+  --shiki-token-keyword: theme("colors.sky.300");
+  --shiki-token-parameter: theme("colors.rose.400");
+  --shiki-token-function: theme("colors.purple.400");
+  --shiki-token-string-expression: theme("colors.green.200");
+  --shiki-token-punctuation: theme("colors.slate.400");
+  --shiki-token-link: theme("colors.zinc.700");
+}
+
+.shiki {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

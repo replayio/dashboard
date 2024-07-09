@@ -1,3 +1,5 @@
+import { ApolloContextProvider } from "@/components/ApolloContext";
+import { initializeMixPanel } from "@/utils/mixpanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
@@ -15,6 +17,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { MockGraphQLData } from "tests/mocks/types";
 import "use-context-menu/styles.css";
 import "../global.css";
+import "../shiki.css";
 
 type PageProps = {
   accessToken: string;
@@ -72,6 +75,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
         window.location.reload();
       });
     }
+    initializeMixPanel();
   }
 
   render() {
@@ -86,9 +90,11 @@ export default class MyApp extends App<AppProps<PageProps>> {
     let children = (
       <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
         <SessionContextProvider accessToken={accessToken} user={user}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <ApolloContextProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ApolloContextProvider>
         </SessionContextProvider>
       </EndToEndTestContextProvider>
     );

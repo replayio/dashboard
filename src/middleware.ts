@@ -1,5 +1,5 @@
 import { COOKIES, HEADERS } from "@/constants";
-import { getAccessToken } from "@auth0/nextjs-auth0/edge";
+import { getAccessToken, touchSession } from "@auth0/nextjs-auth0/edge";
 import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
@@ -88,6 +88,8 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     };
   }
 
+  await touchSession(request, response);
+
   const cookieStore = cookies();
   const prevAccessTokenCookieRaw = cookieStore.get(COOKIES.accessToken);
   let prevAccessTokenCookie: AccessTokenCookie | undefined;
@@ -170,7 +172,7 @@ async function redirectIfMobile(request: NextRequest) {
 
 async function redirectIfProtectedRoute(request: NextRequest) {
   const { nextUrl } = request;
-  const { pathname } = nextUrl;
+  const { pathname, search } = nextUrl;
 
   if (
     pathname === "/" ||
@@ -180,7 +182,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
     pathname.startsWith("/user")
   ) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("returnTo", request.nextUrl.pathname);
+    loginUrl.searchParams.set("returnTo", pathname + search);
 
     throw loginUrl;
   }

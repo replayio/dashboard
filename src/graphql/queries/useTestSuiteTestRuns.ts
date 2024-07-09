@@ -31,11 +31,11 @@ export function useTestSuiteTestRuns(workspaceId: string, startDate: Date, endDa
                     }
                   }
                   source {
+                    branchName
                     commitId
                     commitTitle
                     groupLabel
                     isPrimaryBranch
-                    branchName
                     prNumber
                     prTitle
                     repository

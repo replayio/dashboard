@@ -13,7 +13,7 @@ jobs:
         id: wait
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 120
+          max_timeout: 240
     outputs:
       preview_url: ${{ steps.wait.outputs.url }}
   generate-test-run-id:
@@ -58,24 +58,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # Install (and cache) Playwright dependencies
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> $GITHUB_ENV
-      - name: Cache playwright binaries
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-      # install the native deps of Chromium itself which happens to be the same as the ones of Replay Chromium
-      - run: npx playwright install-deps chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-
       - name: Get Replay Chromium
-        run: npx replayio update
+        run: npx replayio install
 
       - name: Run Playwright tests
         run: pnpm test:e2e:record

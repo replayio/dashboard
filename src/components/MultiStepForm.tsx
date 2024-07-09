@@ -4,7 +4,7 @@ import { Fragment } from "react";
 export function MultiStepForm({ currentIndex, steps }: { currentIndex: number; steps: string[] }) {
   return (
     <div
-      className="flex items-center w-full text-sm text-center whitespace-nowrap font-medium"
+      className="flex items-center w-full text-center font-md text-md whitespace-nowrap"
       data-test-name="MultiStepForm"
     >
       {steps.map((step, index) => {
@@ -19,17 +19,17 @@ export function MultiStepForm({ currentIndex, steps }: { currentIndex: number; s
               data-test-state={isCurrent ? "current" : isCompleted ? "complete" : "incomplete"}
             >
               {isCompleted ? (
-                <Icon className="w-6 h-6 text-green-600" type="step-complete" />
+                <Icon className="w-6 h-6 text-sky-400" type="step-complete" />
               ) : (
-                <div className="w-6 h-6 flex items-center justify-center relative">
-                  <Icon className="w-6 h-6 absolute" type="step-incomplete" />
-                  <span className="text-slate-900 relative text-xs">{index + 1}</span>
+                <div className="relative flex items-center justify-center w-6 h-6">
+                  <Icon className="absolute w-6 h-6" type="step-incomplete" />
+                  <span className="relative text-xs text-slate-900">{index + 1}</span>
                 </div>
               )}
               <span>{step}</span>
             </div>
 
-            {index < steps.length - 1 && <div className="grow h-px w-full bg-slate-600 mx-4" />}
+            {index < steps.length - 1 && <div className="w-full h-px mx-4 grow bg-slate-600" />}
           </Fragment>
         );
       })}

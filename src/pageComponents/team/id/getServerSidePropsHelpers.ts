@@ -31,7 +31,7 @@ export async function getServerSideWorkspaceProps({
       isInvalid: false as const,
       isTest,
       retentionLimit,
-      workspaceId: params.id,
+      workspaceId,
     };
   } catch (error) {
     return {

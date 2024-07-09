@@ -1,6 +1,6 @@
 import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import { SessionContext } from "@/components/SessionContext";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
+import { useApolloClient } from "@/components/ApolloContext";
 import {
   ApolloError,
   ApolloQueryResult,
@@ -24,9 +24,7 @@ export function useGraphQLQuery<Query, Variables extends OperationVariables = {}
   refetch: (variables?: Partial<Variables>) => Promise<ApolloQueryResult<Query>>;
 } {
   const { mockGraphQLData } = useContext(EndToEndTestContext);
-  const { accessToken } = useContext(SessionContext);
-
-  const client = getGraphQLClient(accessToken);
+  const client = useApolloClient();
 
   // Support e2e tests
   const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;

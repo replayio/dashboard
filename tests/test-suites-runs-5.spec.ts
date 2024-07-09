@@ -67,7 +67,7 @@ test("test-suites-runs-5: should handle when filters hide a selected test run or
     const testRunRows = page.locator('[data-test-name="TestRunTests-Row"]');
     expect(testRunRows).toHaveCount(2);
     await testRunRows.first().click();
-    await expect(testDetails).toContainText("View recording");
+    await expect(testDetails).toContainText("View replay");
 
     // Change filters so that it's hidden and confirm 3rd column message
     await submitInputText(page, "TestRun-TextFilter", "Second");
@@ -85,7 +85,7 @@ test("test-suites-runs-5: should handle when filters hide a selected test run or
     // Confirm previous selection is restored
     await submitInputText(page, "TestRun-TextFilter", "");
     expect(testRunRows).toHaveCount(2);
-    await expect(testDetails).toContainText("View recording");
+    await expect(testDetails).toContainText("View replay");
   }
 });
 

@@ -1,7 +1,13 @@
-export function ReplayLogo({ className = "" }: { className?: string }) {
+export function ReplayLogo({
+  className = "",
+  color = "#F02D5E",
+}: {
+  className?: string;
+  color?: string;
+}) {
   return (
     <svg
-      className={`h-8 w-8 text-[#F02D5E] ${className}`}
+      className={`h-8 w-8 text-[${color}] ${className}`}
       fill="none"
       viewBox="0 0 34 40"
       xmlns="http://www.w3.org/2000/svg"

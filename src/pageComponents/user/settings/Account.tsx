@@ -14,6 +14,7 @@ export function Account() {
     setIsPending(true);
 
     setAccessTokenInBrowserPrefs(null);
+    deleteCookieValueClient(COOKIES.defaultPathname);
     deleteCookieValueClient(COOKIES.accessToken);
 
     window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);

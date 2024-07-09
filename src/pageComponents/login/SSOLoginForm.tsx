@@ -1,3 +1,4 @@
+import { useApolloClient } from "@/components/ApolloContext";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Message } from "@/components/Message";
@@ -14,11 +15,12 @@ export function SSOLoginForm({
   defaultConnection: string;
   onLogin: (connection: string) => void;
 }) {
+  const client = useApolloClient();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | boolean>(false);
 
   const onSSOLogin = async () => {
-    const authConnection = await getAuthConnection(email);
+    const authConnection = await getAuthConnection(client, email);
 
     if (authConnection) {
       onLogin(authConnection);

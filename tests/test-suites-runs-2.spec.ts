@@ -96,7 +96,7 @@ test("test-suites-runs-2: passed run in main branch with source", async ({ page 
     await expect(rows).toHaveCount(1);
 
     const text = await rows.textContent();
-    await expect(text).toContain("View recording");
+    await expect(text).toContain("View replay");
 
     const errors = page.locator('[data-test-id="TestExecution-Errors"]');
     await expect(errors).not.toBeVisible();

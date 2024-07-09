@@ -1,5 +1,6 @@
 .next
 .swc
-.trunk
 .vscode
 node_modules
+pnpm-lock.yaml
+src/graphql/generated
