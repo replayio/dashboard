@@ -2,18 +2,29 @@ import { Icon } from "@/components/Icon";
 import { MultiStepForm } from "@/components/MultiStepForm";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
 import { useCreateWorkspaceAPIKey } from "@/graphql/queries/createWorkspaceAPIKey";
-import { FormStep1 } from "@/pageComponents/team/new/tests/FormStep1";
-import { FormStep2 } from "@/pageComponents/team/new/tests/FormStep2";
-import { FormStep3 } from "@/pageComponents/team/new/tests/FormStep3";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
-import { generateApiKey } from "@/pageComponents/team/new/tests/generateApiKey";
 import { getPlanKey } from "@/utils/test-suites";
 import assert from "assert";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
-import image from "./test-suites-box.png";
+
+import LogRocket from "@/pageComponents/team/new/tests/components/LogRocket";
+import mixpanel from "mixpanel-browser";
+import {
+  ReactNode,
+  Suspense,
+  lazy,
+  startTransition,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import image from "./new-teams-delorean.png";
+
+const FormStep1 = lazy(() => import("@/pageComponents/team/new/tests/FormStep1"));
+const FormStep2 = lazy(() => import("@/pageComponents/team/new/tests/FormStep2"));
+const FormStep3 = lazy(() => import("@/pageComponents/team/new/tests/FormStep3"));
 
 type StateStep1 = {
   apiKey: string;
@@ -21,6 +32,7 @@ type StateStep1 = {
   step: 1;
   teamName: string | null;
   testRunner: TestRunner | null;
+  workspaceId: string | null;
 };
 
 type StateStep2 = {
@@ -29,7 +41,7 @@ type StateStep2 = {
   step: 2;
   teamName: string;
   testRunner: TestRunner;
-  workspaceId: string | undefined;
+  workspaceId: string;
 };
 
 type StateStep3 = Omit<StateStep2, "step"> & {
@@ -39,16 +51,27 @@ type StateStep3 = Omit<StateStep2, "step"> & {
 
 type State = StateStep1 | StateStep2 | StateStep3;
 
-export function CreateTestSuitesTeam() {
-  const [state, setState] = useState<State>({
-    apiKey: generateApiKey(),
+export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
+  const [state, setStateUnsafe] = useState<State>({
+    apiKey,
     packageManager: null,
     step: 1,
     teamName: null,
     testRunner: null,
+    workspaceId: null,
   });
 
+  const setStateWithTransition = useCallback((args: Parameters<typeof setStateUnsafe>[0]) => {
+    return startTransition(() => {
+      setStateUnsafe(args);
+    });
+  }, []);
+
   const router = useRouter();
+
+  useEffect(() => {
+    mixpanel.track(`testsuite.new.step-${state.step}`);
+  }, [state.step]);
 
   const { createWorkspace, error: createWorkspaceError } = useCreateWorkspace();
   const { createApiKey, error: createApiKeyError } = useCreateWorkspaceAPIKey();
@@ -58,24 +81,83 @@ export function CreateTestSuitesTeam() {
     case 1: {
       form = (
         <FormStep1
-          defaultPackageManager={state.packageManager || undefined}
+          defaultPackageManager={state.packageManager || "npm"}
           defaultTeamName={state.teamName || undefined}
-          defaultTestRunner={state.testRunner || undefined}
-          onContinue={(
+          defaultTestRunner={state.testRunner || "playwright"}
+          errorMessage={
+            createWorkspaceError
+              ? createWorkspaceError.message
+              : createApiKeyError
+                ? createApiKeyError.message
+                : undefined
+          }
+          onContinue={async (
             teamName: string,
             packageManager: PackageManager,
             testRunner: TestRunner
           ) => {
             assert(state.step === 1);
 
-            setState({
+            let workspaceId;
+            if (!workspaceId) {
+              mixpanel.track("testsuite.new.create-workspace", {
+                teamName,
+                packageManager,
+                testRunner,
+              });
+
+              workspaceId = await createWorkspace(
+                teamName,
+                getPlanKey({ isOrg: false, teamType: "testsuite" })
+              );
+
+              if (!workspaceId) {
+                mixpanel.track("testsuite.new.create-workspace.error");
+
+                // Workspace creation failed; GraphQL will re-render with an error message
+                return false;
+              }
+
+              setStateWithTransition({
+                ...state,
+                step: 1,
+                workspaceId,
+              });
+            }
+
+            switch (testRunner) {
+              case "cypress":
+              case "playwright":
+                mixpanel.track("testsuite.new.create-api-key", {
+                  testRunner,
+                });
+
+                const apiKey = await createApiKey(
+                  workspaceId,
+                  testRunner,
+                  ["admin:all", "write:sourcemap"],
+                  state.apiKey
+                );
+
+                if (!apiKey) {
+                  mixpanel.track("testsuite.new.create-api-key.error");
+
+                  // API key creation failed; GraphQL will re-render with an error message
+                  return false;
+                }
+                break;
+            }
+
+            setStateWithTransition({
               ...state,
               packageManager,
               step: 2,
               teamName,
               testRunner,
-              workspaceId: undefined,
+              workspaceId,
             });
+
+            return true;
           }}
         />
       );
@@ -85,64 +167,13 @@ export function CreateTestSuitesTeam() {
       form = (
         <FormStep2
           apiKey={state.apiKey}
-          errorMessage={
-            createWorkspaceError
-              ? createWorkspaceError.message
-              : createApiKeyError
-                ? createApiKeyError.message
-                : undefined
-          }
-          onContinue={async () => {
+          onContinue={() => {
             assert(state.step === 2);
 
-            let workspaceId = state.workspaceId;
-            if (!workspaceId) {
-              workspaceId = await createWorkspace(
-                state.teamName,
-                getPlanKey({ isOrg: false, teamType: "testsuite" })
-              );
-
-              if (!workspaceId) {
-                // Workspace creation failed; GraphQL will re-render with an error message
-                return false;
-              }
-
-              setState({
-                ...state,
-                step: 2,
-                workspaceId,
-              });
-            }
-
-            switch (state.testRunner) {
-              case "cypress":
-              case "playwright":
-                const apiKey = await createApiKey(
-                  workspaceId,
-                  state.testRunner,
-                  ["admin:all"],
-                  state.apiKey
-                );
-
-                if (!apiKey) {
-                  // API key creation failed; GraphQL will re-render with an error message
-                  return false;
-                }
-                break;
-            }
-
-            setState({
+            setStateWithTransition({
               ...state,
               step: 3,
-              workspaceId,
             });
-
-            return true;
-          }}
-          onGoBack={() => {
-            assert(state.step === 2);
-
-            setState({ ...state, step: 1 });
           }}
           packageManager={state.packageManager}
           testRunner={state.testRunner}
@@ -153,13 +184,22 @@ export function CreateTestSuitesTeam() {
     case 3: {
       form = (
         <FormStep3
+          apiKey={state.apiKey}
+          onBack={() => {
+            assert(state.step === 3);
+
+            setStateWithTransition({
+              ...state,
+              step: 2,
+            });
+          }}
           onContinue={() => {
             assert(state.step === 3);
 
             router.push(`/team/${state.workspaceId}`);
           }}
-          packageManager={state.packageManager}
           testRunner={state.testRunner}
+          workspaceId={state.workspaceId}
         />
       );
       break;
@@ -167,32 +207,32 @@ export function CreateTestSuitesTeam() {
   }
 
   return (
-    <div className="flex flex-row h-screen w-screen" data-test-id="CreateTestSuitesTeam">
-      <div className="grow flex flex-row justify-center w-full overflow-auto p-8">
-        <div className="flex flex-col center-items gap-6 max-w-xl w-[500px]">
-          <Link className="flex flex-row items-center text-xl text-white" href="/home">
-            <Icon className="w-4 h-4" type="back-arrow" /> Back to library
+    <div className="flex flex-row w-screen h-screen" data-test-id="CreateTestSuitesTeam">
+      <div className="flex flex-row justify-center w-full px-16 py-16 overflow-auto md:w-3/5 grow">
+        <div className="flex flex-col w-full gap-10 text-lg center-items">
+          <Link className="flex flex-row items-center text-2xl text-white" href="/home">
+            <Icon className="w-5 h-5" type="back-arrow" /> Back to library
           </Link>
           <MultiStepForm currentIndex={state.step - 1} steps={STEPS} />
-          {form}
+          <Suspense>
+            <LogRocket>{form}</LogRocket>
+          </Suspense>
         </div>
       </div>
-      <div className="min-w-72 grow-0 shrink bg-[#ffc22c] flex flex-col justify-end overflow-hidden">
+      <div className="relative flex-col justify-end hidden w-2/5 overflow-hidden md:flex">
         <Image
           alt="Box image"
-          height={264}
-          sizes="100vw"
+          fill
+          priority
+          sizes="40vw"
           src={image}
           style={{
-            minWidth: 100,
-            maxWidth: "100%",
-            height: "auto",
+            objectFit: "cover",
           }}
-          width={512}
         />
       </div>
     </div>
   );
 }
 
-const STEPS = ["Team Info", "Configuration", "Confirmation"];
+const STEPS = ["Team Info", "Configuration", "Run Tests"];

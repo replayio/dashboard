@@ -15,16 +15,22 @@ import {
 import assert from "assert";
 import { useState } from "react";
 
-export function FormStep1({
+export default function FormStep1({
   defaultPackageManager,
   defaultTeamName,
   defaultTestRunner,
+  errorMessage,
   onContinue,
 }: {
-  onContinue: (teamName: string, packageManager: PackageManager, testRunner: TestRunner) => void;
+  onContinue: (
+    teamName: string,
+    packageManager: PackageManager,
+    testRunner: TestRunner
+  ) => Promise<boolean>;
   defaultPackageManager?: PackageManager;
   defaultTeamName?: string;
   defaultTestRunner?: TestRunner;
+  errorMessage: string | undefined;
 }) {
   const [state, setState] = useState<{
     packageManager: PackageManagerOption;
@@ -37,6 +43,8 @@ export function FormStep1({
     teamName: defaultTeamName ?? "",
     testRunner: TEST_RUNNER_OPTIONS.find(option => option.type === defaultTestRunner),
   });
+
+  const [isPending, setIsPending] = useState(false);
 
   const { packageManager, teamName, testRunner } = state;
 
@@ -52,7 +60,7 @@ export function FormStep1({
         </div>
       </Group>
       <Group>
-        <div>Team name</div>
+        <div className="text-xl font-bold">Team name</div>
         <Input
           data-test-id="CreateTestSuiteTeam-TeamName-Input"
           onChange={value =>
@@ -66,8 +74,8 @@ export function FormStep1({
         />
       </Group>
       <Group>
-        <div>Test runner</div>
-        <div className="flex flex-row center-items gap-2">
+        <div className="text-xl font-bold">Test runner</div>
+        <div className="flex flex-row gap-2 center-items">
           <Select
             data-test-id="CreateTestSuiteTeam-TestRunner-Select"
             onChange={value =>
@@ -83,8 +91,8 @@ export function FormStep1({
         </div>
       </Group>
       <Group>
-        <div>Package manager</div>
-        <div className="flex flex-row center-items gap-2">
+        <div className="text-xl font-bold">Package manager</div>
+        <div className="flex flex-row gap-2 center-items">
           <Select
             data-test-id="CreateTestSuiteTeam-PackageManager-Select"
             onChange={value =>
@@ -99,18 +107,27 @@ export function FormStep1({
           />
         </div>
       </Group>
+      {errorMessage && (
+        <div className="text-red-500" data-test-id="CreateTeam-Error" role="alert">
+          {errorMessage}
+        </div>
+      )}
       <Button
         className="self-start"
         data-test-id="CreateTeam-Continue-Button"
-        disabled={!isValid}
-        onClick={() => {
+        disabled={!isValid || isPending}
+        onClick={async () => {
           assert(testRunner);
 
-          onContinue(teamName, packageManager.type, testRunner.type);
+          setIsPending(true);
+          const success = await onContinue(teamName, packageManager.type, testRunner.type);
+          if (!success) {
+            setIsPending(false);
+          }
         }}
         size="large"
       >
-        Continue
+        {isPending ? "Saving..." : "Continue"}
       </Button>
     </>
   );

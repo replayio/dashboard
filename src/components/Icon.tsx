@@ -3,6 +3,7 @@ import { HTMLAttributes, ReactElement } from "react";
 export type IconType =
   | "account"
   | "api-keys"
+  | "approve-request"
   | "back-arrow"
   | "billing"
   | "calendar"
@@ -19,10 +20,12 @@ export type IconType =
   | "drop-down-caret-left"
   | "edit"
   | "email"
+  | "error"
   | "external-link"
   | "failed-test"
   | "flaky-test"
   | "folder"
+  | "help"
   | "home"
   | "info"
   | "legal"
@@ -42,6 +45,7 @@ export type IconType =
   | "processed-recording"
   | "recording-graphic-browser"
   | "recording-graphic-node"
+  | "reject-request"
   | "secondary-branch"
   | "settings"
   | "show-more"
@@ -71,6 +75,9 @@ export function Icon({
     case "api-keys":
       path =
         "M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z";
+      break;
+    case "approve-request":
+      path = "M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z";
       break;
     case "back-arrow":
       path = "M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z";
@@ -129,6 +136,10 @@ export function Icon({
       path =
         "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z";
       break;
+    case "error":
+      path =
+        "M4.47 21h15.06c1.54 0 2.5-1.67 1.73-3L13.73 4.99c-.77-1.33-2.69-1.33-3.46 0L2.74 18c-.77 1.33.19 3 1.73 3zM12 14c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z";
+      break;
     case "external-link":
       path =
         "M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z";
@@ -144,6 +155,10 @@ export function Icon({
     case "folder":
       path =
         "M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z";
+      break;
+    case "help":
+      path =
+        "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z";
       break;
     case "home":
       path = (
@@ -216,6 +231,10 @@ export function Icon({
     case "recording-graphic-node":
       path =
         "M20,4H4C2.89,4,2,4.9,2,6v12c0,1.1,0.89,2,2,2h16c1.1,0,2-0.9,2-2V6C22,4.9,21.11,4,20,4z M20,18H4V8h16V18z M18,17h-6v-2 h6V17z M7.5,17l-1.41-1.41L8.67,13l-2.59-2.59L7.5,9l4,4L7.5,17z";
+      break;
+    case "reject-request":
+      path =
+        "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z";
       break;
     case "secondary-branch":
       path =

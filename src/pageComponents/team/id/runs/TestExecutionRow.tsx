@@ -24,7 +24,7 @@ export function TestExecutionRow({
       href={url ?? ""}
     >
       <Icon className={`w-6 h-6 shrink-0 ${colorClassName}`} type={iconType} />
-      <div className="truncate shrink">View recording</div>
+      <div className="truncate shrink">View replay</div>
       <div
         className="flex flex-row gap-1 items-center shrink-0 text-sm text-slate-300"
         suppressHydrationWarning

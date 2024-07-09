@@ -1,28 +1,30 @@
+import cypressCJS from "!raw-loader!@/pageComponents/team/new/tests/examples/cypress/config-cjs";
+import cypressESM from "!raw-loader!@/pageComponents/team/new/tests/examples/cypress/config-esm";
+import cypressTS from "!raw-loader!@/pageComponents/team/new/tests/examples/cypress/config-ts";
+import playwrightCJS from "!raw-loader!@/pageComponents/team/new/tests/examples/playwright/config-cjs";
+import playwrightESM from "!raw-loader!@/pageComponents/team/new/tests/examples/playwright/config-esm";
+import playwrightTS from "!raw-loader!@/pageComponents/team/new/tests/examples/playwright/config-ts";
 import { Button } from "@/components/Button";
-import { Code } from "@/components/Code";
-import { CopyCode } from "@/pageComponents/team/new/tests/CopyCode";
+import { Callout } from "@/components/Callout";
+import { ExternalLink } from "@/components/ExternalLink";
 import { Group } from "@/pageComponents/team/new/tests/Group";
+import { CodeTabContainer } from "@/pageComponents/team/new/tests/components/CodeTabContainer";
+import { CopyCode } from "@/pageComponents/team/new/tests/components/CopyCode";
 import { PackageManager, TestRunner } from "@/pageComponents/team/new/tests/constants";
 import { getInstallCommand } from "@/pageComponents/team/new/tests/getInstallCommand";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
-export function FormStep2({
+export default function FormStep2({
   apiKey,
-  errorMessage,
   onContinue,
-  onGoBack,
   packageManager,
   testRunner,
 }: {
   apiKey: string;
-  errorMessage: string | undefined;
-  onContinue: () => Promise<boolean>;
-  onGoBack: () => void;
+  onContinue: () => void;
   packageManager: PackageManager;
   testRunner: TestRunner;
 }) {
-  const [isPending, setIsPending] = useState(false);
-
   const instructions = useMemo(() => {
     if (!packageManager || !testRunner) {
       return null;
@@ -41,42 +43,21 @@ export function FormStep2({
   return (
     <>
       {instructions}
-      {errorMessage && (
-        <div className="text-red-500" data-test-id="CreateTeam-Error" role="alert">
-          {errorMessage}
-        </div>
-      )}
-      <div className="flex flex-row gap-2">
-        <Button
-          data-test-id="CreateTeam-GoBack-Button"
-          disabled={isPending}
-          onClick={onGoBack}
-          size="large"
-          variant="outline"
-        >
-          Go back
-        </Button>
+      <div className="pb-12">
         <Button
           className="self-start"
-          disabled={isPending}
           data-test-id="CreateTeam-Continue-Button"
-          onClick={async () => {
-            setIsPending(true);
-            const success = await onContinue();
-            if (!success) {
-              setIsPending(false);
-            }
-          }}
+          onClick={onContinue}
           size="large"
         >
-          {isPending ? "Saving..." : "Continue"}
+          Continue
         </Button>
       </div>
     </>
   );
 }
 
-export function CypressInstructions({
+function CypressInstructions({
   apiKey,
   packageManager,
 }: {
@@ -86,29 +67,29 @@ export function CypressInstructions({
   return (
     <>
       <Group>
-        <div>1. Install the @replayio/cypress package in your project</div>
-        <Code>{getInstallCommand(packageManager, "@replayio/cypress", { development: true })}</Code>
+        <div>1. Install the @replayio/cypress package in your project.</div>
+        <CopyCode
+          code={getInstallCommand(packageManager, "@replayio/cypress", { development: true })}
+        />
       </Group>
       <Group>
-        <div>2. Add the Replay browser and Reporter to your cypress.config.ts file.</div>
-        <Code>{cypressConfigCode}</Code>
+        <div>2. Install the Replay browser</div>
+        <CopyCode code="npx replayio install" />
+      </Group>
+      <SaveApiKey apiKey={apiKey} number={3} />
+      <Group>
+        <div>4. Add the Replay browser and Reporter to your cypress.config.ts file</div>
+        <CodeTabContainer codeCJS={cypressCJS} codeESM={cypressESM} codeTS={cypressTS} />
       </Group>
       <Group>
-        <div>3. Import Replay to your support file</div>
-        <Code>{`require('@replayio/cypress/support');`}</Code>
-      </Group>
-      <Group>
-        <div>
-          4. Copy this API key to your .env file;{" "}
-          <strong className="text-yellow-400">(it will only be shown once!)</strong>
-        </div>
-        <CopyCode text={apiKey} />
+        <div>5. Import Replay to your support file</div>
+        <CopyCode code={`require('@replayio/cypress/support');`} />
       </Group>
     </>
   );
 }
 
-export function PlaywrightInstructions({
+function PlaywrightInstructions({
   apiKey,
   packageManager,
 }: {
@@ -118,61 +99,44 @@ export function PlaywrightInstructions({
   return (
     <>
       <Group>
-        <div>1. Install the @replayio/playwright package in your project</div>
-        <Code>
-          {getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
-        </Code>
+        <div className="text-xl">1. Install the @replayio/playwright package in your project</div>
+        <CopyCode
+          code={getInstallCommand(packageManager, "@replayio/playwright", { development: true })}
+        />
       </Group>
       <Group>
-        <div>2. Add the Replay browser and Reporter to your playwright.config.ts file.</div>
-        <Code>{playwrightConfigCode}</Code>
+        <div className="text-xl">2. Install the Replay browser.</div>
+        <CopyCode code="npx replayio install" />
       </Group>
+      <SaveApiKey apiKey={apiKey} number={3} />
       <Group>
-        <div>
-          3. Copy this API key to your .env file;{" "}
-          <strong className="text-yellow-400">(it will only be shown once!)</strong>
+        <div className="text-xl">
+          4. Add the Replay browser and Reporter to your playwright.config.ts file.
         </div>
-        <CopyCode text={apiKey} />
+        <CodeTabContainer codeCJS={playwrightCJS} codeESM={playwrightESM} codeTS={playwrightTS} />
       </Group>
     </>
   );
 }
 
-const cypressConfigCode = `
-const { defineConfig } = require('cypress');
-// Add this line to require the replay plugin
-const { plugin: replayPlugin } = require('@replayio/cypress')
-
-module.exports = defineConfig({
-  e2e: {
-    setupNodeEvents(on, config) {
-      // Add this line to install the replay plugin
-      replayPlugin(on, config, {
-        upload: true,
-        apiKey: process.env.REPLAY_API_KEY,
-      });
-      // Make sure that setupNodeEvents returns config
-      return config;
-    }
-  }
-});
-`.trim();
-
-const playwrightConfigCode = `
-import { PlaywrightTestConfig, devices } from "@playwright/test";
-import { devices as replayDevices } from "@replayio/playwright";
-
-const config: PlaywrightTestConfig = {
-  reporter: [["@replayio/playwright/reporter", {
-    apiKey: process.env.REPLAY_API_KEY,
-    upload: true
-  }], ['line']],
-  projects: [
-    {
-      name: "replay-chromium",
-      use: { ...replayDevices["Replay Chromium"] },
-    }
-  ],
-};
-export default config;
-`.trim();
+function SaveApiKey({ apiKey, number }: { apiKey: string; number: number }) {
+  return (
+    <Group>
+      <div className="text-xl">{number}. Save the API key below before continuing</div>
+      <CopyCode code={`REPLAY_API_KEY=${apiKey}`} data-private />
+      <Callout
+        bodyText={
+          <div>
+            We&apos;ll only show it once. See our{" "}
+            <ExternalLink href="https://docs.replay.io/ci-workflows/generate-api-key#using-your-api-key">
+              &quot;Getting Started&quot; docs
+            </ExternalLink>{" "}
+            for more info.
+          </div>
+        }
+        headerText="Save the API key before continuing!"
+        type="warning"
+      />
+    </Group>
+  );
+}

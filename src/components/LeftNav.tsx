@@ -1,4 +1,5 @@
 import { Icon } from "@/components/Icon";
+import { LeftNavLink } from "@/components/LeftNavLink";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { HomeNavLink } from "@/components/layout/HomeNavLink";
 import { MyLibraryNavLink } from "@/components/layout/MyLibraryLink";
@@ -16,19 +17,33 @@ export function LeftNav({
   };
 }>) {
   return (
-    <div className="flex flex-col gap-2 h-full text-white overflow-auto shrink-0 p-2 pr-0 w-32 md:w-72">
-      <div className="flex flex-row items-center gap-2 p-2 bg-slate-950 rounded">
-        <ReplayLogo className="max-h-6 max-w-6" />
-        <div className="text-xl font-bold">Replay</div>
+    <div className="flex flex-col w-32 h-full p-0 pr-0 overflow-auto text-white bg-slate-800 shrink-0 md:w-72 ">
+      <div className="flex flex-row items-center gap-2 p-2">
+        <ReplayLogo className="pl-1 max-h-6 max-w-5" color="#ffffff" />
+        <div className="text-xl font-light">Replay</div>
       </div>
-      <nav className="flex flex-col overflow-auto bg-slate-800 rounded shrink-0 relative p-1">
+      <nav className="relative flex flex-col px-1 overflow-auto shrink-0">
         <HomeNavLink />
         <MyLibraryNavLink />
+        <hr className="w-4/5 mx-auto my-3 border-slate-900" />
+        <LeftNavLink
+          href="/team/new/tests"
+          iconType="create"
+          isActive={false}
+          label="Create test suite"
+        />
+        <LeftNavLink
+          href="/team/new/standard"
+          iconType="create"
+          isActive={false}
+          label="Create new team"
+        />
+        <hr className="w-4/5 mx-auto my-3 border-slate-900" />
       </nav>
-      <nav className="flex flex-col overflow-auto bg-slate-800 rounded grow relative p-1">
+      <nav className="relative flex flex-col px-1 overflow-auto grow">
         {backLink && (
           <Link
-            className="px-2 py-1 flex flex-row items-center text-lg text-white hover:text-sky-400 overflow-auto truncate whitespace-nowrap shrink-0"
+            className="flex flex-row items-center px-2 py-1 overflow-auto text-lg text-white truncate hover:text-sky-400 whitespace-nowrap shrink-0"
             data-test-id="LeftNavLink-BackLink"
             href={backLink.href}
             title={backLink.label}

@@ -1,33 +1,35 @@
 import { Block } from "@/pageComponents/home/Block";
+import blogImage from "@/pageComponents/home/blog.png";
+import courseImage from "@/pageComponents/home/course.png";
+import documentationImage from "@/pageComponents/home/documentation.png";
+import supportImage from "@/pageComponents/home/support.png";
 
 export function HomePage() {
   return (
-    <div className="h-full flex items-start p-2 overflow-auto">
-      <div className="rounded bg-slate-800 p-4 pt-2 inline-flex flex-col gap-4 max-w-full">
-        <div className="text-2xl">Home</div>
-        <div className="inline-flex flex-row flex-wrap gap-4 max-w-full">
-          <Block href="https://docs.replay.io/quickstart" title="Quickstart">
-            Create your own replay with{" "}
-            <code className="bg-slate-950 rounded px-2 py-1 text-white text-sm">
-              npx replayio@latest
-            </code>
-          </Block>
-          <Block href="/team/new/standard" title="Add a new team">
-            Set up a new team to store your replays in one place
-          </Block>
-          <Block href="/team/new/tests" title="Test Suites">
-            Use Replay to record Playwright or Cypress e2e tests
-          </Block>
-          <Block
-            href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
-            title="Replay Course"
-          >
-            Learn the steps to get rolling through our class on YouTube
-          </Block>
-          <Block href="https://www.replay.io/contact" title="Support">
-            Contact us on Discord or send us a note
-          </Block>
-        </div>
+    <div className="flex items-start justify-start h-full p-6 overflow-auto lg:justify-center lg:items-center">
+      <div className="flex flex-col gap-2 lg:grid lg:grid-cols-2 lg:p-6 lg:gap-6 lg:shadow-lg bg-none rounded-xl lg:bg-slate-800">
+        <div className="hidden text-2xl font-medium col-span-full lg:block">Home</div>
+
+        <Block
+          href="https://docs.replay.io/basics/getting-started/record-your-app"
+          title="Documentation"
+          imageUrl={documentationImage.src}
+        >
+          Filled with examples to help you on your way
+        </Block>
+        <Block href="https://www.replay.io/support" title="Support" imageUrl={supportImage.src}>
+          Contact us on Discord, we&apos;re here to help!
+        </Block>
+        <Block
+          href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
+          title="Replay Course"
+          imageUrl={courseImage.src}
+        >
+          Our course on YouTube is great for learning the basics
+        </Block>
+        <Block href="https://blog.replay.io" title="Replay Blog" imageUrl={blogImage.src}>
+          See how other teams perform time travel miracles with Replay
+        </Block>
       </div>
     </div>
   );

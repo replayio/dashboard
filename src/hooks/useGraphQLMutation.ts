@@ -1,6 +1,5 @@
+import { useApolloClient } from "@/components/ApolloContext";
 import { EndToEndTestContext } from "@/components/EndToEndTestContext";
-import { SessionContext } from "@/components/SessionContext";
-import { getGraphQLClient } from "@/graphql/graphQLClient";
 import {
   ApolloError,
   DocumentNode,
@@ -11,7 +10,6 @@ import {
   TypedDocumentNode,
   useMutation,
 } from "@apollo/client";
-import assert from "assert";
 import { GraphQLError } from "graphql";
 import { useContext } from "react";
 import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
@@ -25,10 +23,7 @@ export function useGraphQLMutation<Query, Variables extends OperationVariables =
   mutate: MutationFunction<Query, Variables>;
 } {
   const { mockGraphQLData } = useContext(EndToEndTestContext);
-  const { accessToken } = useContext(SessionContext);
-  assert(accessToken != null, "accessToken is required");
-
-  const client = getGraphQLClient(accessToken);
+  const client = useApolloClient();
 
   const [mutate, { error, loading: isLoading }] = useMutation<Query, Variables>(query, {
     client,
@@ -36,6 +31,10 @@ export function useGraphQLMutation<Query, Variables extends OperationVariables =
   });
 
   // Support e2e tests
+  // WARNING: this doesn't quite mimick the real user flow
+  // usually the data/error would get returned asynchronously when the mutations happens
+  // we are returning it here synchronously so the initial HTML comes "preresolved"
+  // so it can be different from the one that would be returned in equivalen scenario in production
   const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;
   if (mockResponse) {
     const mutate: MutationFunction<Query, Variables> = async () => {

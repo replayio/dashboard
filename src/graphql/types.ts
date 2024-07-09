@@ -99,6 +99,12 @@ export type WorkspaceMember = {
   roles: string[];
 };
 
+export type PendingWorkspaceMember = {
+  id: string;
+  name: string;
+  picture: string | null;
+};
+
 export type ApiKeyScope = "admin:all" | "write:sourcemap";
 
 export type ApiKey = {

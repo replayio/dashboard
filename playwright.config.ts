@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { createReplayReporterConfig, devices as replayDevices } from "@replayio/playwright";
+import { devices as replayDevices, replayReporter } from "@replayio/playwright";
 import dotenv from "dotenv";
 import { resolve } from "path";
 
@@ -13,15 +13,15 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.RECORD
-    ? [
-        ["line"],
-        createReplayReporterConfig({
+  reporter: [
+    process.env.CI ? (["dot"] as const) : (["line"] as const),
+    process.env.RECORD
+      ? replayReporter({
           apiKey: process.env.REPLAY_API_KEY,
           upload: true,
-        }),
-      ]
-    : "line",
+        })
+      : null,
+  ].filter((v): v is NonNullable<typeof v> => !!v),
   timeout: 10_000,
   use: {
     launchOptions: {
