@@ -1,7 +1,7 @@
 def dashboard(dashboard_directory=config.main_dir, api='https://api.replay.io/v1/graphql', resource_deps=[]):
   local_resource(
     "dashboard deps",
-    os.path.join(config.main_dir, "scripts/bin/pnpm") + " install",
+    os.path.join(config.main_dir, "scripts/bin/corepack") + " pnpm install",
     deps=["package.json"],
     dir=dashboard_directory,
     allow_parallel=True
