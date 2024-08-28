@@ -12,7 +12,14 @@ export function RecordingDisplay(props: RecordingDisplayProps) {
   const url = new URL(recordingURL);
   const name = url.host;
 
-  return <div className="RecordingInfo">
-    <RecordingLink className="DefaultRecordingLink" text={`Recording of ${name}`} point={undefined} time={undefined}></RecordingLink>
-  </div>;
+  return (
+    <div className="RecordingInfo">
+      <RecordingLink
+        className="DefaultRecordingLink"
+        text={`Recording of ${name}`}
+        point={undefined}
+        time={undefined}
+      ></RecordingLink>
+    </div>
+  );
 }

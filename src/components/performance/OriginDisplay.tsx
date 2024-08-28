@@ -1,6 +1,6 @@
 import { OriginSummaryDisplay } from "./OriginSummaryDisplay";
 import { TimelineEntry, TimelineEntryProps } from "./TimelineEntry";
-import { OriginSummary, DependencyChainStep } from "../interfaceTypes";
+import { OriginSummary, DependencyChainStep } from "../../performance/interfaceTypes";
 import { useState } from "react";
 
 // Displays all information for an originating event.
@@ -29,11 +29,15 @@ export function OriginDisplay(props: OriginDisplayProps) {
 
   const triangle = stepsExpanded ? "▼" : "▶";
 
-  return <div>
-    <OriginSummaryDisplay summary={summary}></OriginSummaryDisplay>
-    <div className="SummaryTitle" onClick={toggleSteps}>{triangle + " Steps"}</div>
-    {
-      entries.map(props => (<TimelineEntry {...props}></TimelineEntry>))
-    }
-  </div>;
+  return (
+    <div>
+      <OriginSummaryDisplay summary={summary}></OriginSummaryDisplay>
+      <div className="SummaryTitle" onClick={toggleSteps}>
+        {triangle + " Steps"}
+      </div>
+      {entries.map(props => (
+        <TimelineEntry key={`${props.step.time}${props.step.point}`} {...props}></TimelineEntry>
+      ))}
+    </div>
+  );
 }

@@ -5,8 +5,12 @@ function addCORSProxy(url: string) {
   return "https://corsproxy.io/?" + url;
 }
 
-export async function fetchResult(recordingId: string): Promise<PerformanceAnalysisResult | string> {
-  const jsonURL = addCORSProxy(`https://static.replay.io/performance/performance-v${Version}-${recordingId}.json`);
+export async function fetchResult(
+  recordingId: string
+): Promise<PerformanceAnalysisResult | string> {
+  const jsonURL = addCORSProxy(
+    `https://static.replay.io/performance/performance-v${Version}-${recordingId}.json`
+  );
 
   let result;
   try {
