@@ -1,3 +1,4 @@
+import classnames from "classnames";
 import { RecordingLink } from "./RecordingLink";
 import { DependencyChainStep } from "../../performance/interfaceTypes";
 import { formatTime } from "../../performance/utils";
@@ -75,20 +76,16 @@ export interface TimelineEntryProps {
 export function TimelineEntry(props: TimelineEntryProps) {
   const { step, previous } = props;
 
-  const children: any[] = [];
-  children.push(<div className="TimelineDescription">{getDescription(step)}</div>);
-  children.push(<div className="TimelineTime">{"Time: " + formatTime(step.time ?? 0)}</div>);
+  const children: React.ReactNode[] = [];
 
-  if (previous) {
-    const elapsed = (step.time ?? 0) - (previous.time ?? 0);
-    children.push(<div className="TimelineTime">{"Elapsed: " + formatTime(elapsed)}</div>);
-  }
+  const description = getDescription(step);
 
+  let timeToDisplay: React.ReactNode = formatTime(step.time ?? 0);
   if (step.point) {
-    children.push(
+    timeToDisplay = (
       <RecordingLink
         className="TimelineEntryPoint"
-        text="Point"
+        text={timeToDisplay}
         point={step.point}
         time={step.time ?? 0}
       ></RecordingLink>
@@ -104,7 +101,16 @@ export function TimelineEntry(props: TimelineEntryProps) {
     children.push(<div className="TimelineLocation">{`Location: ${url}:${line}`}</div>);
   }
 
-  const className = isNetworkResponse(step) ? "TimelineEntryNetwork" : "TimelineEntry";
+  const networkResponse = isNetworkResponse(step);
+  const className = classnames("mb-2", {
+    TimelineEntryNetwork: networkResponse,
+    TimelineEntry: !networkResponse,
+  });
 
-  return <div className={className}>{children}</div>;
+  return (
+    <li className={className}>
+      {timeToDisplay}: {description}
+      {children}
+    </li>
+  );
 }

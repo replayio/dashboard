@@ -41,9 +41,11 @@ export function OriginDisplay(props: OriginDisplayProps) {
         grow={false}
         label={<h4 className="text-2xl font-bold">Detailed Steps</h4>}
       >
-        {steps.map(props => (
-          <TimelineEntry key={`${props.step.time}${props.step.point}`} {...props}></TimelineEntry>
-        ))}
+        <ul className="list-decimal ml-6">
+          {steps.map(props => (
+            <TimelineEntry key={`${props.step.time}${props.step.point}`} {...props}></TimelineEntry>
+          ))}
+        </ul>
       </ExpandableSection>
     </div>
   );
