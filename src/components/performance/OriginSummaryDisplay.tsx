@@ -1,6 +1,7 @@
 import { ExpandableScreenShot } from "./ExpandableScreenShot";
 import { DependencyChainOrigin, OriginSummary } from "../../performance/interfaceTypes";
 import { assert, formatTime } from "../../performance/utils";
+import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 
 // Displays overall information about performance for behavior triggered
 // by an originating event.
@@ -72,28 +73,54 @@ export function OriginSummaryDisplay(props: OriginSummaryProps) {
   const otherTime = workerThreadTime + timerTime + unknownTime;
 
   return (
-    <span>
-      <div className="OriginTitle">{title}</div>
-      {originScreenShotElement}
-      {commitScreenShotElement}
-      <div className="OriginEntry">{"Start Time: " + formatTime(startTime)}</div>
-      <div className="OriginEntry">{"Elapsed: " + formatTime(elapsed)}</div>
+    <>
+      <h3 className="text-4xl font-bold">{title}</h3>
+      <div className="flex mt-2">
+        <div className="shrink-0 min-w-72">
+          <h4 className="text-2xl font-bold">Timings</h4>
 
-      <div className="SummaryTitle">Timing</div>
-      <div className="SummaryEntry">{"Network: " + formatTime(networkTime)}</div>
-      <div className="SummaryEntry">{"Main Thread: " + formatTime(mainThreadTime)}</div>
-      <div className="SummaryEntry">{"Scheduling: " + formatTime(schedulingTime)}</div>
-      <div className="SummaryEntry">{"Other: " + formatTime(otherTime)}</div>
+          <div className="flex flex-col mt-2 mr-2">
+            <div className="flex flex-col px-2 py-2">
+              <h4 className="text-2xl font-bold">Overall</h4>
+              <div className="OriginEntry">Started at: {formatTime(startTime)}</div>
+              <div className="OriginEntry">Elapsed: {formatTime(elapsed)}</div>
 
-      <div className="SummaryTitle">Network</div>
-      <div className="SummaryEntry">{"Round Trips: " + numNetworkRoundTrips}</div>
-
-      <div className="SummaryTitle">Main Thread</div>
-      <div className="SummaryEntry">{"React Rendering: " + formatTime(timeRender)}</div>
-      <div className="SummaryEntry">{"React Committing: " + formatTime(timeCommit)}</div>
-      <div className="SummaryEntry">
-        {"React Flushing Effects: " + formatTime(timeFlushPassiveEffects)}
+              <div className="SummaryEntry">Network Round Trips: {numNetworkRoundTrips}</div>
+            </div>
+            <ExpandableSection
+              grow={false}
+              label={<h4 className="text-2xl  font-bold">Timing Details</h4>}
+            >
+              <div className="flex flex-col">
+                <div className="flex flex-col px-2 py-2">
+                  <h4 className="text-xl  font-bold">Breakdown</h4>
+                  <div className="SummaryEntry">{"Network: " + formatTime(networkTime)}</div>
+                  <div className="SummaryEntry">{"Main Thread: " + formatTime(mainThreadTime)}</div>
+                  <div className="SummaryEntry">{"Scheduling: " + formatTime(schedulingTime)}</div>
+                  <div className="SummaryEntry">{"Other: " + formatTime(otherTime)}</div>
+                </div>
+                <div className="flex flex-col px-2 py-2">
+                  <h4 className="text-xl  font-bold">Main Thread</h4>
+                  <div className="SummaryEntry">{"React Rendering: " + formatTime(timeRender)}</div>
+                  <div className="SummaryEntry">
+                    {"React Committing: " + formatTime(timeCommit)}
+                  </div>
+                  <div className="SummaryEntry">
+                    {"React Flushing Effects: " + formatTime(timeFlushPassiveEffects)}
+                  </div>
+                </div>
+              </div>
+            </ExpandableSection>
+          </div>
+        </div>
+        <div className="grow">
+          <h4 className="text-2xl  font-bold">Screenshots</h4>
+          <div className="flex grow">
+            {originScreenShotElement}
+            {commitScreenShotElement}
+          </div>
+        </div>
       </div>
-    </span>
+    </>
   );
 }
