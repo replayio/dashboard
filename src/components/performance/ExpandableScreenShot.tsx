@@ -1,5 +1,5 @@
 import { MouseLocation, ScaledScreenShot } from "../../performance/interfaceTypes";
-import { useState } from "react";
+import React, { useState } from "react";
 
 // Displays a screen shot with optional annotations that can be expanded
 // or shrunk by clicking on it.
@@ -28,7 +28,7 @@ export function ExpandableScreenShot(props: ExpandableScreenShotProps) {
     ? scaledWidth
     : Math.round(scaledWidth * (CollapsedHeightPx / scaledHeight));
 
-  const containerStyle: any = {
+  const containerStyle: React.CSSProperties = {
     position: "relative",
     display: "inline-block",
     height: `${heightPx}px`,
@@ -36,7 +36,7 @@ export function ExpandableScreenShot(props: ExpandableScreenShotProps) {
     overflow: "hidden",
   };
 
-  const imageStyle: any = {
+  const imageStyle: React.CSSProperties = {
     height: "100%", // Make the image fill the container width
     width: "100%", // Make the image fill the container height
     objectFit: "cover", // This maintains the aspect ratio of the image by covering the entire container
@@ -51,7 +51,7 @@ export function ExpandableScreenShot(props: ExpandableScreenShotProps) {
     const circleRadius = screenExpanded ? 15 : 5;
     const borderWidth = screenExpanded ? 3 : 2;
     const borderColor = "red";
-    const circleStyle: any = {
+    const circleStyle: React.CSSProperties = {
       position: "absolute",
       left: `${circleX - circleRadius - borderWidth}px`, // Adjust the position to center the circle
       top: `${circleY - circleRadius - borderWidth}px`, // Adjust the position to center the circle
@@ -65,7 +65,7 @@ export function ExpandableScreenShot(props: ExpandableScreenShotProps) {
   }
 
   return (
-    <div>
+    <div className="m-2">
       <div className="ScreenShotTitle">{title}</div>
       <div className="ScreenShot" style={containerStyle}>
         <img style={imageStyle} src={imageSource} onClick={toggleScreenExpanded}></img>;
