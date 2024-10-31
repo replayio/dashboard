@@ -1,4 +1,4 @@
-import { fetchResult } from "../performance/performanceResult";
+import { fetchPerformanceResult } from "../performance/performanceResult";
 import { PerformanceAnalysisResult } from "../performance/interfaceTypes";
 import { useState, useEffect } from "react";
 import { RecordingDisplay } from "./performance/RecordingDisplay";
@@ -6,19 +6,10 @@ import { OriginDisplay } from "./performance/OriginDisplay";
 
 interface PerformanceMockupProps {
   recordingId: string;
+  result: PerformanceAnalysisResult;
 }
 
-function PerformanceMockup({ recordingId }: PerformanceMockupProps) {
-  const [result, setResult] = useState<string | PerformanceAnalysisResult>("initial");
-  useEffect(() => {
-    if (recordingId) {
-      setResult("Fetching results...");
-      fetchResult(recordingId).then(result => setResult(result));
-    } else {
-      setResult("recordingId URL param not specified");
-    }
-  }, [recordingId]);
-
+export default function PerformanceMockup({ recordingId, result }: PerformanceMockupProps) {
   if (typeof result == "string") {
     return <div className="Status">{result}</div>;
   }
