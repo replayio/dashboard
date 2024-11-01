@@ -1,4 +1,4 @@
-export const Version = 1;
+export const Version = 5;
 
 type ProtocolExecutionPoint = string;
 
