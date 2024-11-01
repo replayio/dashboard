@@ -1,3 +1,4 @@
+import React from "react";
 import { getRecordingId } from "../../performance/params";
 import { assert } from "../../performance/utils";
 
@@ -5,7 +6,7 @@ import { assert } from "../../performance/utils";
 
 interface RecordingLinkProps {
   className: string;
-  text: string;
+  text: React.ReactNode;
   point: string | undefined;
   time: number | undefined;
 }
