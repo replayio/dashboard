@@ -45,10 +45,12 @@ function getDescription(step: DependencyChainStep): string {
       return `Component render created a new component`;
     case "ReactExternalStoreRerender":
       return `A store external to React triggered a rerender`;
-    case "ReactCallUseEffect":
+    case "ReactCallEffect":
       return `Component render called useEffect()`;
-    case "ReactEffectFirstCall":
+    case "ReactCreateEffect":
       return `Effect function called for the first time`;
+    case "ReactRootRender":
+      return `The React root component was rendered`;
     case "ReactCallSetState":
       return `Script called setState()`;
     case "ReactRenderCommit":
@@ -96,9 +98,15 @@ export function TimelineEntry(props: TimelineEntryProps) {
     children.push(<div className="TimelineURL">{"URL: " + step.url}</div>);
   }
 
-  if ("calleeLocation" in step && step.calleeLocation) {
-    const { url, line } = step.calleeLocation;
-    children.push(<div className="TimelineLocation">{`Location: ${url}:${line}`}</div>);
+  if ("functionLocation" in step && step.functionLocation) {
+    const { url, line } = step.functionLocation;
+    const { functionName } = step;
+    const componentName = functionName ? `<${functionName}> ` : "";
+    children.push(
+      <div className="TimelineLocation">
+        {componentName} ( {url}:{line} )
+      </div>
+    );
   }
 
   const networkResponse = isNetworkResponse(step);

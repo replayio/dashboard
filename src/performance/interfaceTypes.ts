@@ -1,4 +1,5 @@
-export const Version = 5;
+export const PerformanceAnalysisVersion = 2;
+export const DependencyGraphVersion = 4;
 
 type ProtocolExecutionPoint = string;
 
@@ -22,6 +23,7 @@ export interface URLLocation {
 interface ReactEventSummary {
   kind: ReactEventKind;
   functionLocation: URLLocation | undefined;
+  functionName: string | undefined;
 
   // Number of times the event occurred.
   count: number;
@@ -29,6 +31,70 @@ interface ReactEventSummary {
   // Execution duration blamed on the times this event occurred.
   elapsed: number;
 }
+
+type UnknownDependencyChainStepInfo =
+  | {
+      code: "UnknownNode";
+      node: unknown;
+    }
+  | {
+      code: "UnknownEdge";
+      edge: unknown;
+    };
+
+type ReactDependencyChainStepInfo =
+  | {
+      // React's createRoot(...).render() was called.
+      code: "ReactRootRender";
+    }
+  | {
+      // React hydration has started.
+      code: "ReactHydrateRoot";
+    }
+  | {
+      // React has rendered a component.
+      code: "ReactRender";
+      functionLocation?: URLLocation;
+      functionName?: string;
+    }
+  | {
+      // React was able to resume rendering after a suspense promise resolved.
+      code: "ReactResumeSuspendedRender";
+    }
+  | {
+      // An application render function returned an existing element object for
+      // converting into a component.
+      code: "ReactReturnElement";
+    }
+  | {
+      // An application render function created an element object for converting
+      // into a component.
+      code: "ReactCreateElement";
+    }
+  | {
+      // An application render function called setState().
+      code: "ReactCallSetState";
+    }
+  | {
+      // A React external store triggered a rerender.
+      code: "ReactExternalStoreRerender";
+    }
+  | {
+      // An application render function called useEffect/useLayoutEffect/etc.
+      code: "ReactCreateEffect";
+      functionLocation?: URLLocation;
+      functionName?: string;
+    }
+  | {
+      // An effect hook is called after the original useEffect/useLayoutEffect/etc created it in render.
+      code: "ReactCallEffect";
+      functionLocation?: URLLocation;
+      functionName?: string;
+    }
+  | {
+      // A change which triggered a render led to a later commit.
+      code: "ReactRenderCommit";
+    };
 
 type DependencyChainStepInfo =
   | {
@@ -86,70 +152,23 @@ type DependencyChainStepInfo =
       code: "WebSocketConnected";
     }
   | {
-      // A script sent a message over a websocket.
+      // A script sent a message over a websocket. It was determined that this is a request for a message received and handled later.
       code: "ScriptSendWebSocketMessage";
     }
   | {
-      // A websocket message determined to be a response to an earlier message
-      // was received and message handlers were called.
+      // A websocket message received and message handlers were called.
       code: "WebSocketMessageReceived";
+    }
+  | {
+      code: "PostMessageReceived";
+      time: number;
     }
   | {
       // A promise settled and its then/catch hooks were called.
       code: "PromiseSettled";
     }
-  | {
-      // React hydration has started.
-      code: "ReactHydrateRoot";
-    }
-  | {
-      // React has rendered a component.
-      code: "ReactRender";
-      calleeLocation?: URLLocation;
-    }
-  | {
-      // React was able to resume rendering after a suspense promise resolved.
-      code: "ReactResumeSuspendedRender";
-    }
-  | {
-      // An application render function returned an existing element object for
-      // converting into a component.
-      code: "ReactReturnElement";
-    }
-  | {
-      // An application render function created an element object for converting
-      // into a component.
-      code: "ReactCreateElement";
-    }
-  | {
-      // An application render function called setState().
-      code: "ReactCallSetState";
-    }
-  | {
-      // A React external store triggered a rerender.
-      code: "ReactExternalStoreRerender";
-    }
-  | {
-      // An application render function called useEffect().
-      code: "ReactCallUseEffect";
-    }
-  | {
-      // An effect hook is called for the first time after the original useEffect().
-      code: "ReactEffectFirstCall";
-      calleeLocation?: URLLocation;
-    }
-  | {
-      // A change which triggered a render led to a later commit.
-      code: "ReactRenderCommit";
-    }
-  | {
-      code: "UnknownNode";
-      node: any;
-    }
-  | {
-      code: "UnknownEdge";
-      edge: any;
-    };
+  | ReactDependencyChainStepInfo
+  | UnknownDependencyChainStepInfo;
 
 export type DependencyChainStep = DependencyChainStepInfo & {
   time?: number;
