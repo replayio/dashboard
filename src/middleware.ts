@@ -81,11 +81,6 @@ export const config = {
 };
 
 async function getAccessTokenForSession(request: NextRequest, response: NextResponse) {
-  return {
-    source: null,
-    token: null,
-  };
-
   if (request.nextUrl.pathname.startsWith("/api/auth/logout")) {
     return {
       source: null,
