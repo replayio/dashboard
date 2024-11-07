@@ -77,3 +77,14 @@ input::placeholder {
     transform: translateX(100%) scaleX(0.5);
   }
 }
+
+span.TimelineEntryTime {
+  padding-left: 5px;
+  padding-bottom: 5px;
+}
+
+div.TimelineEntryNetwork {
+  background-color: darkred;
+  border-radius: 0.5rem;
+  margin-bottom: 5px;
+}

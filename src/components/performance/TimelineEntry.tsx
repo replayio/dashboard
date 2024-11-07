@@ -56,10 +56,11 @@ function getDescription(step: DependencyChainStep): string {
     case "ReactRenderCommit":
       return `A change triggered a React render which was later committed`;
   }
+  console.log("UnknownEntry", step);
   return "Entry: " + step.code;
 }
 
-function isNetworkResponse(step: DependencyChainStep) {
+export function isNetworkResponse(step: DependencyChainStep) {
   switch (step.code) {
     case "NetworkReceiveData":
     case "NetworkReceiveResource":
@@ -73,14 +74,15 @@ function isNetworkResponse(step: DependencyChainStep) {
 export interface TimelineEntryProps {
   step: DependencyChainStep;
   previous: DependencyChainStep | null;
+  next: DependencyChainStep | null;
 }
 
 export function TimelineEntry(props: TimelineEntryProps) {
-  const { step, previous } = props;
+  const { step, previous, next } = props;
 
   const children: React.ReactNode[] = [];
 
-  const description = getDescription(step);
+  children.push(<div key="description">{getDescription(step)}</div>);
 
   let timeToDisplay: React.ReactNode = formatTime(step.time ?? 0);
   if (step.point) {
@@ -95,7 +97,7 @@ export function TimelineEntry(props: TimelineEntryProps) {
   }
 
   if ("url" in step) {
-    children.push(<div className="TimelineURL">{"URL: " + step.url}</div>);
+    children.push(<div className="TimelineURL" key="url">{"URL: " + step.url}</div>);
   }
 
   if ("functionLocation" in step && step.functionLocation) {
@@ -103,22 +105,33 @@ export function TimelineEntry(props: TimelineEntryProps) {
     const { functionName } = step;
     const componentName = functionName ? `<${functionName}> ` : "";
     children.push(
-      <div className="TimelineLocation">
+      <div className="TimelineLocation" key="location">
         {componentName} ( {url}:{line} )
       </div>
     );
   }
 
+  const networkRequest = next && isNetworkResponse(next);
   const networkResponse = isNetworkResponse(step);
   const className = classnames("mb-2", {
-    TimelineEntryNetwork: networkResponse,
-    TimelineEntry: !networkResponse,
+    TimelineEntryNetworkRequest: networkRequest,
+    TimelineEntryNetworkResponse: networkResponse,
+    TimelineEntry: !networkRequest && !networkResponse,
   });
 
   return (
-    <li className={className}>
-      {timeToDisplay}: {description}
-      {children}
-    </li>
+    <div style={{
+      display: 'flex',
+      alignItems: 'flex-end',
+    }}>
+      <span className="TimelineEntryTime" key="time" style={{ width: '90px' }}>{timeToDisplay}</span>
+      <div className={className} key="description" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end'
+      }}>
+        {children}
+      </div>
+    </div>
   );
 }
