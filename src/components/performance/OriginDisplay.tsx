@@ -1,7 +1,7 @@
 import { OriginSummaryDisplay } from "./OriginSummaryDisplay";
 import { TimelineEntry, TimelineEntryProps, isNetworkResponse } from "./TimelineEntry";
 import { OriginSummary, DependencyChainStep } from "../../performance/interfaceTypes";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 
 // Displays all information for an originating event.
@@ -11,12 +11,6 @@ interface OriginDisplayProps {
 }
 
 export function OriginDisplay(props: OriginDisplayProps) {
-  const [stepsExpanded, setStepsExpanded] = useState(false);
-
-  function toggleSteps() {
-    setStepsExpanded(!stepsExpanded);
-  }
-
   const { summary } = props;
 
   const steps = useMemo(() => {
@@ -28,10 +22,11 @@ export function OriginDisplay(props: OriginDisplayProps) {
       }
       return true;
     }).map(step => {
+      const time = (step.time ?? 0) - (summary.dependencySteps[0]!.time ?? 0);
       if (step.code == "UnknownNode" && (step.node as any).kind == "websocketNewMessage") {
-        return { ...step, code: "WebSocketMessageReceived" };
+        return { ...step, code: "WebSocketMessageReceived", time };
       }
-      return step;
+      return { ...step, time };
     });
 
     const entries: TimelineEntryProps[] = [];
@@ -44,11 +39,6 @@ export function OriginDisplay(props: OriginDisplayProps) {
     return entries;
   }, [summary]);
 
-  if (stepsExpanded) {
-  }
-
-  const triangle = stepsExpanded ? "▼" : "▶";
-
   const baseEntries = steps.map((props, i) => {
     const key = `${JSON.stringify(summary.origin)}:${i}`;
     return <TimelineEntry key={key} {...props}></TimelineEntry>;
@@ -56,15 +46,31 @@ export function OriginDisplay(props: OriginDisplayProps) {
 
   const timelineEntries: JSX.Element[] = [];
   for (let i = 0; i < steps.length; i++) {
+    let separator = null;
+    const elapsed = Math.max(0, (steps[i]!.step.time ?? 0) - (steps[i - 1]?.step.time ?? 0));
+    if (elapsed > 40) {
+      separator = <div
+        className="TimelineEntrySeparator"
+        key={`sep-${baseEntries[i]!.key}`}
+        style={{ height: `${elapsed}px` }}
+      ></div>;
+    }
+
     if (isNetworkResponse(steps[i]!.step)) {
       timelineEntries.push(<div className="TimelineEntryNetwork" key={baseEntries[i]!.key}>
         {baseEntries[i - 1]}
+        {separator}
         {baseEntries[i]}
       </div>);
-    } else if (steps[i + 1] && isNetworkResponse(steps[i + 1]!.step)) {
-      // ignore
     } else {
-      timelineEntries.push(baseEntries[i]!);
+      if (separator) {
+        timelineEntries.push(separator);
+      }
+      if (steps[i + 1] && isNetworkResponse(steps[i + 1]!.step)) {
+        // ignore
+      } else {
+        timelineEntries.push(baseEntries[i]!);
+      }
     }
   }
 

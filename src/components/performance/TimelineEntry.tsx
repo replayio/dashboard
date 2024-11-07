@@ -119,18 +119,13 @@ export function TimelineEntry(props: TimelineEntryProps) {
     TimelineEntry: !networkRequest && !networkResponse,
   });
 
-  const elapsed = Math.max(0, (step.time ?? 0) - (previous?.time ?? 0));
-  const height = (elapsed > 40) ? `${elapsed}px` : undefined;
-
   return (
     <div style={{
       display: 'flex',
       alignItems: 'flex-end',
-      height,
     }}>
       <span className="TimelineEntryTime" key="time" style={{ width: '90px' }}>{timeToDisplay}</span>
       <div className={className} key="description" style={{
-        height,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-end'
