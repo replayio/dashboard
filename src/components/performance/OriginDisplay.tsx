@@ -16,18 +16,20 @@ export function OriginDisplay(props: OriginDisplayProps) {
   const steps = useMemo(() => {
     // Fixup the dependency steps to paper over some unknown
     // nodes/edges we might encounter.
-    const dependencySteps: DependencyChainStep[] = summary.dependencySteps.filter(step => {
-      if (step.code == "UnknownEdge" && (step.edge as any).kind == "executionParent") {
-        return false;
-      }
-      return true;
-    }).map(step => {
-      const time = (step.time ?? 0) - (summary.dependencySteps[0]!.time ?? 0);
-      if (step.code == "UnknownNode" && (step.node as any).kind == "websocketNewMessage") {
-        return { ...step, code: "WebSocketMessageReceived", time };
-      }
-      return { ...step, time };
-    });
+    const dependencySteps: DependencyChainStep[] = summary.dependencySteps
+      .filter(step => {
+        if (step.code == "UnknownEdge" && (step.edge as any).kind == "executionParent") {
+          return false;
+        }
+        return true;
+      })
+      .map(step => {
+        const time = (step.time ?? 0) - (summary.dependencySteps[0]!.time ?? 0);
+        if (step.code == "UnknownNode" && (step.node as any).kind == "websocketNewMessage") {
+          return { ...step, code: "WebSocketMessageReceived", time };
+        }
+        return { ...step, time };
+      });
 
     const entries: TimelineEntryProps[] = [];
     for (let i = 0; i < dependencySteps.length; i++) {
@@ -49,19 +51,23 @@ export function OriginDisplay(props: OriginDisplayProps) {
     let separator = null;
     const elapsed = Math.max(0, (steps[i]!.step.time ?? 0) - (steps[i - 1]?.step.time ?? 0));
     if (elapsed > 40) {
-      separator = <div
-        className="TimelineEntrySeparator"
-        key={`sep-${baseEntries[i]!.key}`}
-        style={{ height: `${elapsed}px` }}
-      ></div>;
+      separator = (
+        <div
+          className="TimelineEntrySeparator"
+          key={`sep-${baseEntries[i]!.key}`}
+          style={{ height: `${elapsed}px` }}
+        ></div>
+      );
     }
 
     if (isNetworkResponse(steps[i]!.step)) {
-      timelineEntries.push(<div className="TimelineEntryNetwork" key={baseEntries[i]!.key}>
-        {baseEntries[i - 1]}
-        {separator}
-        {baseEntries[i]}
-      </div>);
+      timelineEntries.push(
+        <div className="TimelineEntryNetwork" key={baseEntries[i]!.key}>
+          {baseEntries[i - 1]}
+          {separator}
+          {baseEntries[i]}
+        </div>
+      );
     } else {
       if (separator) {
         timelineEntries.push(separator);
@@ -81,9 +87,7 @@ export function OriginDisplay(props: OriginDisplayProps) {
         grow={false}
         label={<h4 className="text-2xl font-bold">Detailed Steps</h4>}
       >
-        <ul>
-          {timelineEntries}
-        </ul>
+        <ul>{timelineEntries}</ul>
       </ExpandableSection>
     </div>
   );

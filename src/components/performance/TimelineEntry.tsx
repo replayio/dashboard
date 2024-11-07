@@ -97,7 +97,11 @@ export function TimelineEntry(props: TimelineEntryProps) {
   }
 
   if ("url" in step) {
-    children.push(<div className="TimelineURL" key="url">{"URL: " + step.url}</div>);
+    children.push(
+      <div className="TimelineURL" key="url">
+        {"URL: " + step.url}
+      </div>
+    );
   }
 
   if ("functionLocation" in step && step.functionLocation) {
@@ -120,16 +124,24 @@ export function TimelineEntry(props: TimelineEntryProps) {
   });
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'flex-end',
-    }}>
-      <span className="TimelineEntryTime" key="time" style={{ width: '90px' }}>{timeToDisplay}</span>
-      <div className={className} key="description" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-end'
-      }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-end",
+      }}
+    >
+      <span className="TimelineEntryTime" key="time" style={{ width: "90px" }}>
+        {timeToDisplay}
+      </span>
+      <div
+        className={className}
+        key="description"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+        }}
+      >
         {children}
       </div>
     </div>
