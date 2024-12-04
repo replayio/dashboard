@@ -27,6 +27,8 @@
     "@apollo/client": "^3.9.6",
     "@auth0/nextjs-auth0": "^3.5.0",
     "@next/bundle-analyzer": "^14.2.3",
+    "@radix-ui/react-scroll-area": "^1.2.1",
+    "@radix-ui/react-tabs": "^1.1.1",
     "@replayio/overboard": "^0.4.1",
     "@stripe/react-stripe-js": "^2.6.2",
     "@stripe/stripe-js": "^3.0.10",
