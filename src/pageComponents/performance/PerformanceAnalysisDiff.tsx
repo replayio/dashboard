@@ -1,23 +1,9 @@
 import React from "react";
-import Image from "next/image";
 
 import { PerformanceAnalysisResult } from "@/performance/interfaceTypes";
-import {
-  compare,
-  PerformanceComparisonResult,
-  RequestComparisonResult,
-  SummaryComparisonResult,
-} from "@/performance/compare";
+import { compare, SummaryComparisonResult } from "@/performance/compare";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -28,6 +14,69 @@ import { RequestComparison } from "./RequestComparison";
 
 import { ExpandableScreenShot } from "@/components/performance/ExpandableScreenShot";
 
+interface SummaryComparisonProps {
+  summary: SummaryComparisonResult;
+}
+
+const SummaryComparison = ({ summary }: SummaryComparisonProps) => {
+  const { origin } = summary;
+  let title: React.ReactNode = <>Summary</>;
+
+  if (origin.kind === "documentLoad") {
+    title = "Document Load";
+  } else if ((origin.kind = "dispatchEvent")) {
+    title = <>Event: {origin.eventType ?? "unknown"}</>;
+  } else if (origin.kind === "resize") {
+    title = "Resize";
+  } else {
+    title = "Other";
+  }
+
+  return (
+    <Card className="mb-4">
+      <CardHeader>
+        <CardTitle className="text-xl">{title}</CardTitle>
+        <CardDescription>
+          <div>
+            Total time diff: <DiffBadge value={summary.diffs.time} unit="ms" />
+          </div>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <h4 className="font-semibold mb-2">Screenshot</h4>
+        <ExpandableScreenShot scaledScreenShot={summary.screenshot} title="" />
+        <h4 className="font-semibold mb-2">Network</h4>
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            Time: <DiffBadge value={summary.network.diffs.time} unit="ms" />
+          </div>
+          <div>
+            Received bytes: <DiffBadge value={summary.network.diffs.receivedBytes} unit="bytes" />
+          </div>
+          <div>
+            Round trips:{" "}
+            <DiffBadge value={summary.network.diffs.roundTrips} unit="" reverseColors={true} />
+          </div>
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>URL</TableHead>
+              <TableHead>Time Diff</TableHead>
+              <TableHead>Size Diff</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {summary.network.requests.map((request, i) => (
+              <RequestComparison request={request} key={i} />
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
+};
+
 interface PerformanceDiffPageProps {
   current: PerformanceAnalysisResult;
   previous: PerformanceAnalysisResult;
@@ -37,65 +86,6 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
   const comparisonResult = compare(current, previous);
 
   console.log("Comparison result: ", comparisonResult);
-
-  const renderSummaryComparison = (summary: SummaryComparisonResult, index: number) => {
-    const { origin } = summary;
-    let title: React.ReactNode = <>Summary {index + 1}</>;
-
-    if (origin.kind === "documentLoad") {
-      title = "Document Load";
-    } else if ((origin.kind = "dispatchEvent")) {
-      title = <>Event: {origin.eventType ?? "unknown"}</>;
-    } else if (origin.kind === "resize") {
-      title = "Resize";
-    } else {
-      title = "Other";
-    }
-
-    return (
-      <Card key={index} className="mb-4">
-        <CardHeader>
-          <CardTitle className="text-xl">{title}</CardTitle>
-          <CardDescription>
-            <div>
-              Total time diff: <DiffBadge value={summary.diffs.time} unit="ms" />
-            </div>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <h4 className="font-semibold mb-2">Screenshot</h4>
-          <ExpandableScreenShot scaledScreenShot={summary.screenshot} title="" />
-          <h4 className="font-semibold mb-2">Network</h4>
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div>
-              Time: <DiffBadge value={summary.network.diffs.time} unit="ms" />
-            </div>
-            <div>
-              Received bytes: <DiffBadge value={summary.network.diffs.receivedBytes} unit="bytes" />
-            </div>
-            <div>
-              Round trips:{" "}
-              <DiffBadge value={summary.network.diffs.roundTrips} unit="" reverseColors={true} />
-            </div>
-          </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>URL</TableHead>
-                <TableHead>Time Diff</TableHead>
-                <TableHead>Size Diff</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {summary.network.requests.map((request, i) => (
-                <RequestComparison request={request} key={i} />
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    );
-  };
 
   return (
     <div className="container mx-auto p-4">
@@ -168,7 +158,9 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
         </TabsList>
         <TabsContent value="summaries">
           <ScrollArea className="h-[600px] pr-4">
-            {comparisonResult.summaries.map(renderSummaryComparison)}
+            {comparisonResult.summaries.map((summary, i) => (
+              <SummaryComparison summary={summary} key={i} />
+            ))}
           </ScrollArea>
         </TabsContent>
         <TabsContent value="network">
