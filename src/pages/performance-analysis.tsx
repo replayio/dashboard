@@ -10,17 +10,17 @@ const PerformanceMockup = dynamic(() => import("../components/PerformanceMockup"
 
 type PAProps =
   | {
-      type: "error";
-      message: string;
+      status: "error";
+      error: string;
     }
   | {
-      type: "success";
+      status: "success";
       recordingId: string;
       result: PerformanceAnalysisResult;
     };
 
 export default function PerformanceAnalysis(props: PAProps) {
-  if (props.type === "error") {
+  if (props.status === "error") {
     return <div>Invalid or missing recordingId</div>;
   }
 
@@ -29,7 +29,11 @@ export default function PerformanceAnalysis(props: PAProps) {
 
 PerformanceAnalysis.Layout = VerticalLayout;
 
-export const getServerSideProps: GetServerSideProps = async function ({ params, req, query }) {
+export const getServerSideProps: GetServerSideProps<PAProps> = async function ({
+  params,
+  req,
+  query,
+}) {
   const { recordingId } = query;
 
   if (typeof recordingId !== "string") {
@@ -41,7 +45,7 @@ export const getServerSideProps: GetServerSideProps = async function ({ params, 
     };
   }
 
-  const result = await fetchPerformanceResult(recordingId);
+  const result = (await fetchPerformanceResult(recordingId)) as PerformanceAnalysisResult;
 
   return {
     props: {
