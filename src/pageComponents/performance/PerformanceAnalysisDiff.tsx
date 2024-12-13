@@ -1,11 +1,11 @@
 import React from "react";
-import { PerformanceAnalysisResult } from "../performance/interfaceTypes";
+import { PerformanceAnalysisResult } from "@/performance/interfaceTypes";
 import {
   compare,
   PerformanceComparisonResult,
   RequestComparisonResult,
   SummaryComparisonResult,
-} from "../performance/compare";
+} from "@/performance/compare";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
