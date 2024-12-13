@@ -1,4 +1,4 @@
-import { MouseLocation, ScaledScreenShot } from "../../performance/interfaceTypes";
+import { MouseLocation, ScaledScreenShot } from "@/performance/interfaceTypes";
 import React, { useState } from "react";
 
 // Displays a screen shot with optional annotations that can be expanded

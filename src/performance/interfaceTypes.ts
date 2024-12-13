@@ -411,7 +411,7 @@ export interface ScaledScreenShot {
   scaledWidth: number;
 }
 
-interface MouseLocation {
+export interface MouseLocation {
   clientX: number;
   clientY: number;
 }
