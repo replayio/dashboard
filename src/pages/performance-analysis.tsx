@@ -45,13 +45,13 @@ export const getServerSideProps: GetServerSideProps<PAProps> = async function ({
     };
   }
 
-  const result = (await fetchPerformanceResult(recordingId)) as PerformanceAnalysisResult;
+  const result = await fetchPerformanceResult(recordingId);
 
   return {
     props: {
       status: "success",
       recordingId,
-      result,
+      result: result.analysisResult,
     },
   };
 };
