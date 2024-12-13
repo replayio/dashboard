@@ -146,7 +146,7 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
           <TabsTrigger value="network">Network Details</TabsTrigger>
         </TabsList>
         <TabsContent value="summaries">
-          <ScrollArea className="h-[600px]">
+          <ScrollArea className="h-[600px] pr-4">
             {comparisonResult.summaries.map(renderSummaryComparison)}
           </ScrollArea>
         </TabsContent>
