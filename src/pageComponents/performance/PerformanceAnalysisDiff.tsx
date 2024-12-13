@@ -23,6 +23,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
+import { DiffBadge } from "./DiffBadge";
+import { RequestComparison } from "./RequestComparison";
+
 import { ExpandableScreenShot } from "@/components/performance/ExpandableScreenShot";
 
 interface PerformanceDiffPageProps {
@@ -34,31 +37,6 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
   const comparisonResult = compare(current, previous);
 
   console.log("Comparison result: ", comparisonResult);
-
-  const renderDiffBadge = (value: number, unit: string, reverseColors: boolean = false) => (
-    <Badge
-      variant={
-        value > 0
-          ? reverseColors
-            ? "default"
-            : "secondary"
-          : reverseColors
-            ? "secondary"
-            : "default"
-      }
-    >
-      {value > 0 ? "+" : ""}
-      {value.toFixed(2)} {unit}
-    </Badge>
-  );
-
-  const renderRequestComparison = (request: RequestComparisonResult, index: number) => (
-    <TableRow key={index}>
-      <TableCell>{request.urls.current}</TableCell>
-      <TableCell>{renderDiffBadge(request.diffs.time, "ms")}</TableCell>
-      <TableCell>{renderDiffBadge(request.diffs.receivedBytes, "bytes")}</TableCell>
-    </TableRow>
-  );
 
   const renderSummaryComparison = (summary: SummaryComparisonResult, index: number) => {
     const { origin } = summary;
@@ -79,7 +57,9 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
         <CardHeader>
           <CardTitle className="text-xl">{title}</CardTitle>
           <CardDescription>
-            <div>Total time diff: {renderDiffBadge(summary.diffs.time, "ms")}</div>
+            <div>
+              Total time diff: <DiffBadge value={summary.diffs.time} unit="ms" />
+            </div>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,11 +67,16 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
           <ExpandableScreenShot scaledScreenShot={summary.screenshot} title="" />
           <h4 className="font-semibold mb-2">Network</h4>
           <div className="grid grid-cols-3 gap-4 mb-4">
-            <div>Time: {renderDiffBadge(summary.network.diffs.time, "ms")}</div>
             <div>
-              Received bytes: {renderDiffBadge(summary.network.diffs.receivedBytes, "bytes")}
+              Time: <DiffBadge value={summary.network.diffs.time} unit="ms" />
             </div>
-            <div>Round trips: {renderDiffBadge(summary.network.diffs.roundTrips, "", true)}</div>
+            <div>
+              Received bytes: <DiffBadge value={summary.network.diffs.receivedBytes} unit="bytes" />
+            </div>
+            <div>
+              Round trips:{" "}
+              <DiffBadge value={summary.network.diffs.roundTrips} unit="" reverseColors={true} />
+            </div>
           </div>
           <Table>
             <TableHeader>
@@ -101,7 +86,11 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
                 <TableHead>Size Diff</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>{summary.network.requests.map(renderRequestComparison)}</TableBody>
+            <TableBody>
+              {summary.network.requests.map((request, i) => (
+                <RequestComparison request={request} key={i} />
+              ))}
+            </TableBody>
           </Table>
         </CardContent>
       </Card>
@@ -148,17 +137,24 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold mb-2">Total Time Difference</h4>
-              {renderDiffBadge(comparisonResult.diffs.time, "ms")}
+              <DiffBadge value={comparisonResult.diffs.time} unit="ms" />
             </div>
             <div>
               <h4 className="font-semibold mb-2">Network</h4>
-              <div>Time: {renderDiffBadge(comparisonResult.network.diffs.time, "ms")}</div>
               <div>
-                Received bytes:{" "}
-                {renderDiffBadge(comparisonResult.network.diffs.receivedBytes, "bytes")}
+                Time: <DiffBadge value={comparisonResult.network.diffs.time} unit="ms" />
               </div>
               <div>
-                Round trips: {renderDiffBadge(comparisonResult.network.diffs.roundTrips, "", true)}
+                Received bytes:{" "}
+                <DiffBadge value={comparisonResult.network.diffs.receivedBytes} unit="bytes" />
+              </div>
+              <div>
+                Round trips:{" "}
+                <DiffBadge
+                  value={comparisonResult.network.diffs.roundTrips}
+                  unit=""
+                  reverseColors={true}
+                />
               </div>
             </div>
           </div>
@@ -192,7 +188,9 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
                   </TableHeader>
                   <TableBody>
                     {comparisonResult.summaries.flatMap(summary =>
-                      summary.network.requests.map(renderRequestComparison)
+                      summary.network.requests.map((request, i) => (
+                        <RequestComparison request={request} key={i} />
+                      ))
                     )}
                   </TableBody>
                 </Table>
