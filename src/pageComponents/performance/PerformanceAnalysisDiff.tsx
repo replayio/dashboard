@@ -1,4 +1,6 @@
 import React from "react";
+import Image from "next/image";
+
 import { PerformanceAnalysisResult } from "@/performance/interfaceTypes";
 import {
   compare,
@@ -21,6 +23,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
+import { ExpandableScreenShot } from "@/components/performance/ExpandableScreenShot";
+
 interface PerformanceDiffPageProps {
   current: PerformanceAnalysisResult;
   previous: PerformanceAnalysisResult;
@@ -28,6 +32,8 @@ interface PerformanceDiffPageProps {
 
 const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, previous }) => {
   const comparisonResult = compare(current, previous);
+
+  console.log("Comparison result: ", comparisonResult);
 
   const renderDiffBadge = (value: number, unit: string, reverseColors: boolean = false) => (
     <Badge
@@ -54,34 +60,53 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
     </TableRow>
   );
 
-  const renderSummaryComparison = (summary: SummaryComparisonResult, index: number) => (
-    <Card key={index} className="mb-4">
-      <CardHeader>
-        <CardTitle>Summary {index + 1}</CardTitle>
-        <CardDescription>
-          Total time diff: {renderDiffBadge(summary.diffs.time, "ms")}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <h4 className="font-semibold mb-2">Network</h4>
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>Time: {renderDiffBadge(summary.network.diffs.time, "ms")}</div>
-          <div>Received bytes: {renderDiffBadge(summary.network.diffs.receivedBytes, "bytes")}</div>
-          <div>Round trips: {renderDiffBadge(summary.network.diffs.roundTrips, "", true)}</div>
-        </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>URL</TableHead>
-              <TableHead>Time Diff</TableHead>
-              <TableHead>Size Diff</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>{summary.network.requests.map(renderRequestComparison)}</TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  );
+  const renderSummaryComparison = (summary: SummaryComparisonResult, index: number) => {
+    const { origin } = summary;
+    let title: React.ReactNode = <>Summary {index + 1}</>;
+
+    if (origin.kind === "documentLoad") {
+      title = "Document Load";
+    } else if ((origin.kind = "dispatchEvent")) {
+      title = <>Event: {origin.eventType ?? "unknown"}</>;
+    } else if (origin.kind === "resize") {
+      title = "Resize";
+    } else {
+      title = "Other";
+    }
+
+    return (
+      <Card key={index} className="mb-4">
+        <CardHeader>
+          <CardTitle className="text-xl">{title}</CardTitle>
+          <CardDescription>
+            <div>Total time diff: {renderDiffBadge(summary.diffs.time, "ms")}</div>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <h4 className="font-semibold mb-2">Screenshot</h4>
+          <ExpandableScreenShot scaledScreenShot={summary.screenshot} title="" />
+          <h4 className="font-semibold mb-2">Network</h4>
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            <div>Time: {renderDiffBadge(summary.network.diffs.time, "ms")}</div>
+            <div>
+              Received bytes: {renderDiffBadge(summary.network.diffs.receivedBytes, "bytes")}
+            </div>
+            <div>Round trips: {renderDiffBadge(summary.network.diffs.roundTrips, "", true)}</div>
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>URL</TableHead>
+                <TableHead>Time Diff</TableHead>
+                <TableHead>Size Diff</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>{summary.network.requests.map(renderRequestComparison)}</TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -142,7 +167,7 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
 
       <Tabs defaultValue="summaries">
         <TabsList>
-          <TabsTrigger value="summaries">Summaries</TabsTrigger>
+          <TabsTrigger value="summaries">Interactions</TabsTrigger>
           <TabsTrigger value="network">Network Details</TabsTrigger>
         </TabsList>
         <TabsContent value="summaries">
