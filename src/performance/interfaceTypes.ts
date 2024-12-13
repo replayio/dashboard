@@ -1,5 +1,26 @@
-export const PerformanceAnalysisVersion = 2;
+// These constants must match what is currently deployed in the
+// dispatcher and analysis runner services.
+export const PerformanceAnalysisVersion = 3;
 export const DependencyGraphVersion = 4;
+export const AnalyzeDependenciesVersion = 12;
+export const WorkspacePerformanceMetadataVersion = 1;
+
+export type WorkspacePerformanceAnalysisEntry = {
+  recordingId: string;
+  metadata?:
+    | {
+        workspaceId?: string | undefined;
+        workspaceName?: string | undefined;
+        testTitle?: string | undefined;
+        repo?: string | undefined;
+        pullRequest?: number | undefined;
+        branch?: string | undefined;
+        commit?: string | undefined;
+      }
+    | undefined;
+  timestamp: string;
+  recordingPerformanceFile: string;
+};
 
 type ProtocolExecutionPoint = string;
 
@@ -466,4 +487,10 @@ export interface PerformanceAnalysisResult {
   requests: RequestSummary[];
   errors: AnalysisPointError[];
   recordingURL: string;
+}
+
+export interface PerformanceAnalysisResultFile {
+  version: number;
+  result: string;
+  analysisResult: PerformanceAnalysisResult;
 }
