@@ -416,7 +416,7 @@ interface MouseLocation {
   clientY: number;
 }
 
-interface OriginSummary extends LimitingPathSummary {
+export interface OriginSummary extends LimitingPathSummary {
   origin: DependencyChainOrigin;
 
   // base64 screenshot at the point of the origin, present except for
@@ -430,7 +430,7 @@ interface OriginSummary extends LimitingPathSummary {
   commitScreenShot: ScaledScreenShot;
 }
 
-interface RequestSummary {
+export interface RequestSummary {
   url: string;
   time: number;
   point: ProtocolExecutionPoint;
