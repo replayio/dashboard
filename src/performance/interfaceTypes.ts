@@ -86,7 +86,7 @@ export interface RenderCommitTriggerPoint {
   mutationPoints: ProtocolExecutionPoint[];
 }
 
-interface DependencyChainOrigin {
+export interface DependencyChainOrigin {
   kind: "documentLoad" | "dispatchEvent" | "resize" | "other";
   time: number;
   eventType?: string;
@@ -398,7 +398,7 @@ interface LimitingPathSummary {
   dependencySteps: DependencyChainStep[];
 }
 
-interface ScaledScreenShot {
+export interface ScaledScreenShot {
   screen: string;
 
   // Original screen dimensions before scaling.

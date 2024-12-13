@@ -1,5 +1,9 @@
 import assert from "assert";
-import { PerformanceAnalysisResult } from "./interfaceTypes";
+import {
+  DependencyChainOrigin,
+  PerformanceAnalysisResult,
+  ScaledScreenShot,
+} from "./interfaceTypes";
 
 function getLimitingNetworkRequests(
   steps: PerformanceAnalysisResult["summaries"][number]["dependencySteps"]
@@ -66,6 +70,8 @@ export type SummaryNetworkComparisonResult = ComparisonResult<
 export type SummaryComparisonResult = ComparisonResult<
   {
     network: SummaryNetworkComparisonResult;
+    origin: DependencyChainOrigin;
+    screenshot: ScaledScreenShot;
   },
   {
     time: number;
@@ -149,6 +155,8 @@ export function compare(
       diffs: {
         time: currentSummary.elapsed - previousSummary.elapsed,
       },
+      origin: currentSummary.origin,
+      screenshot: currentSummary.commitScreenShot,
       network: {
         diffs: {
           time: currentSummary.networkTime - previousSummary.networkTime,
