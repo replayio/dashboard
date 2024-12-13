@@ -39,7 +39,7 @@ type ComparisonResult<TData = unknown, TDiffs extends Record<string, number> = {
   errors: string[];
 };
 
-type RequestComparisonResult = ComparisonResult<
+export type RequestComparisonResult = ComparisonResult<
   {
     urls: {
       previous: string;
@@ -52,7 +52,7 @@ type RequestComparisonResult = ComparisonResult<
   }
 >;
 
-type SummaryNetworkComparisonResult = ComparisonResult<
+export type SummaryNetworkComparisonResult = ComparisonResult<
   {
     requests: RequestComparisonResult[];
   },
@@ -63,7 +63,7 @@ type SummaryNetworkComparisonResult = ComparisonResult<
   }
 >;
 
-type SummaryComparisonResult = ComparisonResult<
+export type SummaryComparisonResult = ComparisonResult<
   {
     network: SummaryNetworkComparisonResult;
   },
@@ -72,7 +72,7 @@ type SummaryComparisonResult = ComparisonResult<
   }
 >;
 
-type NetworkComparisonResult = ComparisonResult<
+export type NetworkComparisonResult = ComparisonResult<
   unknown,
   {
     time: number;
@@ -81,7 +81,7 @@ type NetworkComparisonResult = ComparisonResult<
   }
 >;
 
-type PerformanceComparisonResult = ComparisonResult<
+export type PerformanceComparisonResult = ComparisonResult<
   {
     summaries: SummaryComparisonResult[];
     network: NetworkComparisonResult;
