@@ -109,74 +109,70 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
         <Card>
           <CardHeader>
             <CardTitle>Current Recording</CardTitle>
-            <CardDescription>
-              <RecordingLink recordingId={current.spec.recordingId} />{" "}
-              {branch ? `(branch: ${branch})` : null}
-            </CardDescription>
           </CardHeader>
+          <CardContent>
+            <RecordingLink recordingId={current.spec.recordingId} />{" "}
+            {branch ? `(branch: ${branch})` : null}
+          </CardContent>
+          <CardHeader>
+            <CardTitle>Previous Recordings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {previous.map(p => {
+              const { recordingId } = p.spec;
+              return (
+                <div key={recordingId}>
+                  <RecordingLink recordingId={recordingId} />
+                </div>
+              );
+            })}
+          </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Previous Recordings</CardTitle>
-            <CardDescription>
-              {previous.map(p => {
-                const { recordingId } = p.spec;
-                return (
-                  <div key={recordingId}>
-                    <RecordingLink recordingId={recordingId} />
-                  </div>
-                );
-              })}
-            </CardDescription>
+            <CardTitle>Overall Comparison</CardTitle>
           </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold mb-2">Total Time Difference</h4>
+                <DiffBadge value={comparisonResult.diffs.time} unit="ms" />
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Network</h4>
+                <div>
+                  Time: <DiffBadge value={comparisonResult.network.diffs.time} unit="ms" />
+                </div>
+                <div>
+                  Received bytes:{" "}
+                  <DiffBadge value={comparisonResult.network.diffs.receivedBytes} unit="bytes" />
+                </div>
+                <div>
+                  Round trips:{" "}
+                  <DiffBadge
+                    value={comparisonResult.network.diffs.roundTrips}
+                    unit=""
+                    reverseColors={true}
+                  />
+                </div>
+              </div>
+            </div>
+            {comparisonResult.errors.length > 0 && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Errors</AlertTitle>
+                <AlertDescription>
+                  <ul className="list-disc list-inside">
+                    {comparisonResult.errors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
         </Card>
       </div>
-
-      {comparisonResult.errors.length > 0 && (
-        <Alert variant="destructive" className="mb-4">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Errors</AlertTitle>
-          <AlertDescription>
-            <ul className="list-disc list-inside">
-              {comparisonResult.errors.map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <Card className="mb-4">
-        <CardHeader>
-          <CardTitle>Overall Comparison</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h4 className="font-semibold mb-2">Total Time Difference</h4>
-              <DiffBadge value={comparisonResult.diffs.time} unit="ms" />
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Network</h4>
-              <div>
-                Time: <DiffBadge value={comparisonResult.network.diffs.time} unit="ms" />
-              </div>
-              <div>
-                Received bytes:{" "}
-                <DiffBadge value={comparisonResult.network.diffs.receivedBytes} unit="bytes" />
-              </div>
-              <div>
-                Round trips:{" "}
-                <DiffBadge
-                  value={comparisonResult.network.diffs.roundTrips}
-                  unit=""
-                  reverseColors={true}
-                />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       <Tabs defaultValue="summaries">
         <TabsList>
