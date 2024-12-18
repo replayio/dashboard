@@ -14,6 +14,14 @@ import { RequestComparison } from "./RequestComparison";
 
 import { ExpandableScreenShot } from "@/components/performance/ExpandableScreenShot";
 
+const RecordingLink = ({ recordingId }: { recordingId: string }) => {
+  return (
+    <a href={`/recording/${recordingId}`} className="text-blue-500 underline">
+      {recordingId}
+    </a>
+  );
+};
+
 interface SummaryComparisonProps {
   summary: SummaryComparisonResult;
 }
@@ -92,6 +100,8 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
 
   console.log("Comparison result: ", comparisonResult);
 
+  const branch = current.spec?.metadata?.branch;
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Performance Analysis Diff</h1>
@@ -99,13 +109,25 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
         <Card>
           <CardHeader>
             <CardTitle>Current Recording</CardTitle>
-            <CardDescription>{current.spec.recordingId}</CardDescription>
+            <CardDescription>
+              <RecordingLink recordingId={current.spec.recordingId} />{" "}
+              {branch ? `(branch: ${branch})` : null}
+            </CardDescription>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader>
             <CardTitle>Previous Recordings</CardTitle>
-            <CardDescription>{previous.map(p => p.spec.recordingId).join(", ")}</CardDescription>
+            <CardDescription>
+              {previous.map(p => {
+                const { recordingId } = p.spec;
+                return (
+                  <div key={recordingId}>
+                    <RecordingLink recordingId={recordingId} />
+                  </div>
+                );
+              })}
+            </CardDescription>
           </CardHeader>
         </Card>
       </div>
