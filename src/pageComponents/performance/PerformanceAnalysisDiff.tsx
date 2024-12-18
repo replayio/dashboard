@@ -107,14 +107,14 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
       <h1 className="text-2xl font-bold mb-4">Performance Analysis Diff</h1>
       <div className="grid grid-cols-2 gap-4 mb-4">
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-2">
             <CardTitle>Current Recording</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-2">
             <RecordingLink recordingId={current.spec.recordingId} />{" "}
             {branch ? `(branch: ${branch})` : null}
           </CardContent>
-          <CardHeader>
+          <CardHeader className="pt-0 pb-2">
             <CardTitle>Previous Recordings</CardTitle>
           </CardHeader>
           <CardContent>
