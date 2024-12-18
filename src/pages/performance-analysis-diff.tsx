@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps<PAProps> = async function ({
     return {
       props: {
         status: "error",
-        error: e.message,
+        error: e.message || e.toString(),
       },
     };
   }

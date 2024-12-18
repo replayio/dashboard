@@ -1,7 +1,7 @@
 // These constants must match what is currently deployed in the
 // dispatcher and analysis runner services.
 export const PerformanceAnalysisVersion = 3;
-export const DependencyGraphVersion = 4;
+export const DependencyGraphVersion = 5;
 export const AnalyzeDependenciesVersion = 12;
 export const WorkspacePerformanceMetadataVersion = 1;
 
