@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
-import { DiffBadge } from "./DiffBadge";
+import { DiffBadge, DeviationHighlightBadge } from "./DiffBadge";
 import { RequestComparison } from "./RequestComparison";
 
 import { ExpandableScreenShot } from "@/components/performance/ExpandableScreenShot";
@@ -48,14 +48,19 @@ const SummaryComparison = ({ summary }: SummaryComparisonProps) => {
         <h4 className="font-semibold mb-2">Network</h4>
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            Time: <DiffBadge value={summary.network.diffs.time} unit="ms" />
+            Time: <DeviationHighlightBadge value={summary.network.diffs.time} unit="ms" />
           </div>
           <div>
-            Received bytes: <DiffBadge value={summary.network.diffs.receivedBytes} unit="bytes" />
+            Received bytes:{" "}
+            <DeviationHighlightBadge value={summary.network.diffs.receivedBytes} unit="bytes" />
           </div>
           <div>
             Round trips:{" "}
-            <DiffBadge value={summary.network.diffs.roundTrips} unit="" reverseColors={true} />
+            <DeviationHighlightBadge
+              value={summary.network.diffs.roundTrips}
+              unit=""
+              reverseColors={true}
+            />
           </div>
         </div>
         <Table>
