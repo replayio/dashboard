@@ -67,7 +67,7 @@ export const getServerSideProps: GetServerSideProps<PAProps> = async function ({
       throw new Error("Recording not found");
     }
 
-    console.log("Current result spec", currentResult.analysisResult.spec);
+    // console.log("Current result spec", currentResult.analysisResult.spec);
 
     const workspaceId = currentResult.analysisResult.spec.metadata?.workspaceId;
 
@@ -77,13 +77,13 @@ export const getServerSideProps: GetServerSideProps<PAProps> = async function ({
 
     const workspaceData = await fetchWorkspacePerformanceAnalysis(workspaceId);
 
-    console.log("Workspace data size", workspaceData.length, workspaceData.slice(-1));
+    // console.log("Workspace data size", workspaceData.length, workspaceData.slice(-1));
 
     const recentMainRecordings = workspaceData
       .filter(entry => entry.metadata?.branch === "main")
       .slice(-5);
 
-    console.log("Recent main results: ", recentMainRecordings);
+    // console.log("Recent main results: ", recentMainRecordings);
 
     if (recentMainRecordings.length === 0) {
       throw new Error("No main branch recordings found");

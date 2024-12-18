@@ -98,7 +98,7 @@ interface PerformanceDiffPageProps {
 const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, previous }) => {
   const comparisonResult = comparePerformanceAnalysisResults(current, previous);
 
-  console.log("Comparison result: ", comparisonResult);
+  // console.log("Comparison result: ", comparisonResult);
 
   const branch = current.spec?.metadata?.branch;
 

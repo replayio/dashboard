@@ -119,7 +119,7 @@ export function comparePerformanceAnalysisResults(
   const currentSummaryCount = currentSummaries.length;
   let numSummariesToCompare = currentSummaryCount;
 
-  console.log("Performance results: ", { current, previousResults });
+  // console.log("Performance results: ", { current, previousResults });
 
   const previousResultSummaryCounts = previousResults.map(result => result.summaries.length);
 
@@ -241,17 +241,17 @@ export function comparePerformanceAnalysisResults(
     );
     const maxPreviousElapsed = Math.max(...previousElapsed);
 
-    console.log(`Summary ${i}: `, {
-      current: {
-        summary: currentSummary,
-        networkRequests: currentLimitingNetworkRequests,
-      },
-      allPreviousNetworkRequestDetails,
-      currentInteractionNetworkTotals,
-      currentElapsed: currentSummary.elapsed,
-      maxPreviousNetworkTotals,
-      maxPreviousElapsed,
-    });
+    // console.log(`Summary ${i}: `, {
+    //   current: {
+    //     summary: currentSummary,
+    //     networkRequests: currentLimitingNetworkRequests,
+    //   },
+    //   allPreviousNetworkRequestDetails,
+    //   currentInteractionNetworkTotals,
+    //   currentElapsed: currentSummary.elapsed,
+    //   maxPreviousNetworkTotals,
+    //   maxPreviousElapsed,
+    // });
 
     return {
       diffs: {
@@ -295,13 +295,13 @@ export function comparePerformanceAnalysisResults(
   const maxEndTimes = previousResults.map(result => last(result.summaries).endTime);
   const maxEndTime = Math.max(...maxEndTimes);
 
-  console.log("End times: ", {
-    currentEndTime,
-    maxEndTimes,
-    maxEndTime,
-  });
+  // console.log("End times: ", {
+  //   currentEndTime,
+  //   maxEndTimes,
+  //   maxEndTime,
+  // });
 
-  console.log("Final network totals: ");
+  // console.log("Final network totals: ");
   return {
     diffs: {
       // this truly compares *last* end times, if the number of summaries is different, this will likely be way off
