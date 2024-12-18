@@ -1,29 +1,223 @@
-export const PerformanceAnalysisVersion = 2;
-export const DependencyGraphVersion = 4;
+// These constants must match what is currently deployed in the
+// dispatcher and analysis runner services.
+export const PerformanceAnalysisVersion = 3;
+export const DependencyGraphVersion = 5;
+export const AnalyzeDependenciesVersion = 12;
+export const WorkspacePerformanceMetadataVersion = 1;
+
+export type WorkspacePerformanceAnalysisEntry = {
+  recordingId: string;
+  metadata?:
+    | {
+        workspaceId?: string | undefined;
+        workspaceName?: string | undefined;
+        testTitle?: string | undefined;
+        repo?: string | undefined;
+        pullRequest?: number | undefined;
+        branch?: string | undefined;
+        commit?: string | undefined;
+      }
+    | undefined;
+  timestamp: string;
+  recordingPerformanceFile: string;
+};
 
 type ProtocolExecutionPoint = string;
 
-export interface PerformanceAnalysisSpec {
-  // Associated recording ID.
-  recordingId: string;
+// Information about a DOM mutation performed by React during a commit.
+interface MutationInfo {
+  // Point of the mutation.
+  point: ProtocolExecutionPoint;
 
-  // Trigger points to look at.
-  triggerPoints?: ProtocolExecutionPoint[];
+  // ID of the fiber being committed.
+  fiberId: number;
 }
 
-export type ReactEventKind = "RenderFiber" | "PassiveEffect" | "LayoutEffect";
+// Information about a commit performed by React.
+interface CommitInfo {
+  // Point/time where the commit started.
+  point: ProtocolExecutionPoint;
+  time: number;
 
-export interface URLLocation {
+  // Point where the commit finished.
+  afterPoint: ProtocolExecutionPoint;
+
+  // All DOM mutations during this commit.
+  mutations: MutationInfo[];
+}
+
+/** Reasons why a set of fibers might need to be rerendered. */
+export enum RerenderFiberReason {
+  /** The application called setState. */
+  SetState = "SetState",
+
+  /** A useSyncExternalStore subscription triggered a rerender. */
+  StoreRerender = "StoreRerender",
+}
+
+export enum RenderRootFiberReason {
+  RootRender = "RootRender",
+  HydrateRoot = "HydrateRoot",
+}
+
+export enum UseFiberReason {
+  ConstructFiber = 1 << 0,
+  CreateWorkInProgress = 1 << 1,
+
+  RenderWithHooks = 1 << 2,
+  RenderWithHooksAgain = 1 << 3,
+  FinishClassComponent = 1 << 4,
+
+  UpdateContextConsumer = 1 << 5,
+
+  CommitLayoutEffectOnFiber = 1 << 6,
+  CommitMutationEffectsOnFiber = 1 << 7,
+  CommitDeletionEffectsOnFiber = 1 << 8,
+  CommitHostComponentMount = 1 << 9,
+
+  MountSuspenseFallbackChildren = 1 << 10,
+  UpdateSuspenseFallbackChildren = 1 << 11,
+
+  CompleteWork = 1 << 12,
+  ReconcileChildFibers = 1 << 13,
+}
+
+type RerenderTriggerReason =
+  | RenderRootFiberReason
+  | RerenderFiberReason
+  | "SuspenseResumed"
+  | "RenderSuspended";
+
+type RerenderTrigger = {
+  point: ProtocolExecutionPoint;
+  reason: RerenderTriggerReason;
+};
+
+export interface RenderCommitTriggerPoint {
+  // Point within React which triggered a render.
+  point: ProtocolExecutionPoint;
+  reason: RerenderTriggerReason;
+
+  time: number;
+
+  // Starting point of commits associated with this trigger.
+  commitPoints: ProtocolExecutionPoint[];
+
+  // Points where the DOM was mutated as a result of this trigger.
+  mutationPoints: ProtocolExecutionPoint[];
+}
+
+export interface DependencyChainOrigin {
+  kind: "documentLoad" | "dispatchEvent" | "resize" | "other";
+  time: number;
+  eventType?: string;
+}
+
+interface FunctionInfo {
+  name?: string;
+  location: URLLocation;
+
+  // return for callers or for other precise points (like consume points)
+  point?: ProtocolExecutionPoint;
+
+  // returned for callees when
+  startPoint?: ProtocolExecutionPoint;
+  endPoint?: ProtocolExecutionPoint;
+}
+
+interface LibraryDependencyInfo {
+  point: ProtocolExecutionPoint;
+  library: string;
+  reason: string;
+  functionInfo: FunctionInfo | undefined;
+}
+
+interface LibraryEdgeInfo {
+  kind: "library";
+  info: LibraryDependencyInfo;
+}
+
+type DependencyGraphEdgeInfo = {
+  kind:
+    | "scheduler"
+    | "creator"
+    | "basePromise"
+    | "parentPromise"
+    | "adoptedPromise"
+    | "baseTimer"
+    | "loadEventDelay"
+    | "imageLoader";
+};
+
+type AnyEdgeInfo =
+  | DependencyGraphEdgeInfo
+  // Implicit edge when the source node was executing while the target was created.
+  | {
+      kind: "executionParent";
+      executionStartTime: number;
+    }
+  // Implicit edge when the source node was executing while an execution point
+  // associated with the target was hit.
+  | {
+      kind: "executionPoint";
+      point: ProtocolExecutionPoint;
+      executionStartTime: number;
+    }
+  // Implicit edge when the source is some data received over the network which
+  // triggers the target.
+  | {
+      kind: "networkReceiveData";
+
+      // Set if the data received is for the initial document loading. This initial
+      // load does not have an associated graph node for the request itself.
+      initialDocument?: boolean;
+    }
+  // Implicit edge when the source is a network request and the target is data
+  // being received for that request.
+  | { kind: "networkRequest" }
+  // Implicit edge from a websocket message that was sent to an associated response.
+  | { kind: "websocketMessage" }
+  // Implicit edge from a websocket creation to the point where connection finished.
+  | { kind: "websocketCreated" }
+  // Implicit edge from code called by a library with custom handling to application
+  // code which triggered the later call.
+  | LibraryEdgeInfo;
+
+interface RenderTriggerPointData extends RenderCommitTriggerPoint {
+  dependencies: unknown[]; // DependencyGraphEdge[];
+}
+
+// Information tracked about an originating event in the dependency graph.
+interface OriginData {
+  origin: DependencyChainOrigin;
+  triggers: RenderTriggerPointData[];
+}
+
+export enum ReactEventKind {
+  RenderFiber = "RenderFiber",
+  PassiveEffect = "PassiveEffect",
+  LayoutEffect = "LayoutEffect",
+}
+
+interface URLLocation {
+  sourceId: string;
   line: number;
   column: number;
   url: string;
 }
 
-// Summary information about all the times a react event occurred in a limiting path.
+// Information about an event that happens within a slice.
+export interface ReactEvent {
+  kind: ReactEventKind;
+  callerPoint: ProtocolExecutionPoint;
+  startPoint: ProtocolExecutionPoint;
+  endPoint: ProtocolExecutionPoint | undefined;
+  functionLocation: URLLocation | undefined;
+}
+
 interface ReactEventSummary {
   kind: ReactEventKind;
   functionLocation: URLLocation | undefined;
-  functionName: string | undefined;
 
   // Number of times the event occurred.
   count: number;
@@ -32,14 +226,20 @@ interface ReactEventSummary {
   elapsed: number;
 }
 
+type DependencyFunctionLocation = Omit<URLLocation, "sourceId">;
+
+type DependencyGraphNodeInfo = unknown;
+
+type AnyNodeInfo = DependencyGraphNodeInfo | { kind: "point" };
+
 type UnknownDependencyChainStepInfo =
   | {
       code: "UnknownNode";
-      node: unknown;
+      node: AnyNodeInfo;
     }
   | {
       code: "UnknownEdge";
-      edge: unknown;
+      edge: AnyEdgeInfo;
     };
 
 type ReactDependencyChainStepInfo =
@@ -54,7 +254,7 @@ type ReactDependencyChainStepInfo =
   | {
       // React has rendered a component.
       code: "ReactRender";
-      functionLocation?: URLLocation;
+      functionLocation?: DependencyFunctionLocation;
       functionName?: string;
     }
   | {
@@ -82,13 +282,13 @@ type ReactDependencyChainStepInfo =
   | {
       // An application render function called useEffect/useLayoutEffect/etc.
       code: "ReactCreateEffect";
-      functionLocation?: URLLocation;
+      functionLocation?: DependencyFunctionLocation;
       functionName?: string;
     }
   | {
       // An effect hook is called after the original useEffect/useLayoutEffect/etc created it in render.
       code: "ReactCallEffect";
-      functionLocation?: URLLocation;
+      functionLocation?: DependencyFunctionLocation;
       functionName?: string;
     }
   | {
@@ -116,6 +316,10 @@ type DependencyChainStepInfo =
   | {
       // A script in a document has been scheduled for async compilation.
       code: "DocumentAsyncCompileScript";
+      url: string;
+    }
+  | {
+      code: "DocumentScriptLoaded";
       url: string;
     }
   | {
@@ -163,9 +367,16 @@ type DependencyChainStepInfo =
       code: "PostMessageReceived";
       time: number;
     }
+  | { code: "CreatePromise" }
   | {
-      // A promise settled and its then/catch hooks were called.
+      // A promise settled and its then/catch/finally hooks were called.
       code: "PromiseSettled";
+    }
+  | {
+      code: "CreateTimer";
+    }
+  | {
+      code: "TimerFired";
     }
   | ReactDependencyChainStepInfo
   | UnknownDependencyChainStepInfo;
@@ -175,13 +386,12 @@ export type DependencyChainStep = DependencyChainStepInfo & {
   point?: ProtocolExecutionPoint;
 };
 
-// Summary of the time contributing to the delay involved in the limiting path
-// for an event.
-export interface LimitingPathSummary {
+interface LimitingPathSummary {
   // Time when the event was initiated.
   startTime: number;
 
-  // Time when the event occurred.
+  // Point and time when the event occurred.
+  endPoint: ProtocolExecutionPoint;
   endTime: number;
 
   // Total time elapsed between startTime and endTime.
@@ -209,16 +419,15 @@ export interface LimitingPathSummary {
   dependencySteps: DependencyChainStep[];
 }
 
-export interface DependencyChainOrigin {
-  kind: "documentLoad" | "dispatchEvent" | "resize" | "other";
-  time: number;
-  eventType?: string;
-}
-
 export interface ScaledScreenShot {
   screen: string;
+
+  // Original screen dimensions before scaling.
   originalHeight: number;
   originalWidth: number;
+
+  // Dimensions after scaling. This can be determined from the base64 data
+  // but doing this synchronously in JS is annoying.
   scaledHeight: number;
   scaledWidth: number;
 }
@@ -230,19 +439,58 @@ export interface MouseLocation {
 
 export interface OriginSummary extends LimitingPathSummary {
   origin: DependencyChainOrigin;
+
+  // base64 screenshot at the point of the origin, present except for
+  // document load origins.
   originScreenShot?: ScaledScreenShot;
+
+  // For mouse related origins, the point on the screen where the mouse was.
   originMouseLocation?: MouseLocation;
+
+  // base64 screenshot after the final commit in the limiting path.
   commitScreenShot: ScaledScreenShot;
 }
 
-export interface AnalysisPointError {
+export interface RequestSummary {
+  url: string;
+  time: number;
   point: ProtocolExecutionPoint;
+  sentBytes: number;
+  receivedBytes: number;
+}
+
+interface AnalysisPointError {
+  point: ProtocolExecutionPoint;
+  time: number;
   why: string;
 }
 
+type PerformanceAnalysisSpec = {
+  recordingId: string;
+  metadata?:
+    | {
+        workspaceId?: string | undefined;
+        workspaceName?: string | undefined;
+        testTitle?: string | undefined;
+        repo?: string | undefined;
+        pullRequest?: number | undefined;
+        branch?: string | undefined;
+        commit?: string | undefined;
+      }
+    | undefined;
+};
+
+// Result of running the performance analysis.
 export interface PerformanceAnalysisResult {
   spec: PerformanceAnalysisSpec;
   summaries: OriginSummary[];
+  requests: RequestSummary[];
   errors: AnalysisPointError[];
   recordingURL: string;
+}
+
+export interface PerformanceAnalysisResultFile {
+  version: number;
+  result: string;
+  analysisResult: PerformanceAnalysisResult;
 }

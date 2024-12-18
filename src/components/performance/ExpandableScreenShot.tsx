@@ -1,4 +1,4 @@
-import { MouseLocation, ScaledScreenShot } from "../../performance/interfaceTypes";
+import { MouseLocation, ScaledScreenShot } from "@/performance/interfaceTypes";
 import React, { useState } from "react";
 
 // Displays a screen shot with optional annotations that can be expanded
@@ -7,6 +7,7 @@ import React, { useState } from "react";
 interface ExpandableScreenShotProps {
   title: string;
   scaledScreenShot: ScaledScreenShot;
+  initialExpanded?: boolean;
   mouseLocation?: MouseLocation;
 }
 
@@ -14,13 +15,13 @@ interface ExpandableScreenShotProps {
 const CollapsedHeightPx = 150;
 
 export function ExpandableScreenShot(props: ExpandableScreenShotProps) {
-  const [screenExpanded, setScreenExpanded] = useState(false);
+  const { title, scaledScreenShot, mouseLocation, initialExpanded = false } = props;
+  const [screenExpanded, setScreenExpanded] = useState(initialExpanded);
 
   function toggleScreenExpanded() {
     setScreenExpanded(!screenExpanded);
   }
 
-  const { title, scaledScreenShot, mouseLocation } = props;
   const { screen, originalHeight, originalWidth, scaledHeight, scaledWidth } = scaledScreenShot;
 
   const heightPx = screenExpanded ? scaledHeight : CollapsedHeightPx;

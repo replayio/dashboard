@@ -1,8 +1,17 @@
 import { PropsWithChildren } from "react";
+import classnames from "classnames";
 
-export function VerticalLayout({ children }: PropsWithChildren) {
+type LayoutProps = {
+  classNames?: Parameters<typeof classnames>;
+};
+
+export function VerticalLayout({ children, classNames }: PropsWithChildren<LayoutProps>) {
+  const outerClassnames = classnames(
+    "h-screen w-screen flex flex-row bg-slate-900 text-white",
+    classNames
+  );
   return (
-    <div className="h-screen w-screen flex flex-row bg-slate-900 text-white">
+    <div className={outerClassnames}>
       <main className="flex flex-col  grow overflow-auto h-screen w-screen">{children}</main>
     </div>
   );
