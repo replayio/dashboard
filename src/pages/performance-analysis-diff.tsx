@@ -7,6 +7,11 @@ import {
   fetchWorkspacePerformanceAnalysis,
 } from "@/performance/performanceResult";
 import { VerticalLayout } from "@/components/VerticalLayout";
+import {
+  calculateAnalysisNetworkTotals,
+  SummaryNetworkComparisonResult,
+  NetworkTotals,
+} from "@/performance/compare";
 
 // Dynamically import your CRA's App component with SSR disabled
 const PerformanceAnalysisDiff = dynamic(
@@ -23,7 +28,7 @@ type PAProps =
       status: "success";
       recordingId: string;
       current: PerformanceAnalysisResult;
-      previous: PerformanceAnalysisResult;
+      previous: PerformanceAnalysisResult[];
     };
 
 export default function PerformanceAnalysisDiffPage(props: PAProps) {
@@ -88,14 +93,12 @@ export const getServerSideProps: GetServerSideProps<PAProps> = async function ({
       recentMainRecordings.map(entry => fetchPerformanceResult(entry.recordingId))
     );
 
-    const [previousResult] = recentResults.slice(-1);
-
     return {
       props: {
         status: "success",
         recordingId,
         current: currentResult.analysisResult as PerformanceAnalysisResult,
-        previous: previousResult.analysisResult as PerformanceAnalysisResult,
+        previous: recentResults.map(result => result.analysisResult as PerformanceAnalysisResult),
       },
     };
   } catch (e: any) {

@@ -1,18 +1,21 @@
 import assert from "assert";
 import {
   DependencyChainOrigin,
+  OriginSummary,
   PerformanceAnalysisResult,
   ScaledScreenShot,
 } from "./interfaceTypes";
 
+type NetworkRequestBasicTotals = {
+  url: string;
+  time: number;
+  receivedBytes: number;
+};
+
 function getLimitingNetworkRequests(
   steps: PerformanceAnalysisResult["summaries"][number]["dependencySteps"]
 ) {
-  const limitingRequests: {
-    url: string;
-    time: number;
-    numBytes: number;
-  }[] = [];
+  const limitingRequests: NetworkRequestBasicTotals[] = [];
   for (let i = 0; i < steps.length - 1; i++) {
     const step = steps[i];
     const nextStep = steps[i + 1];
@@ -24,7 +27,7 @@ function getLimitingNetworkRequests(
           limitingRequests.push({
             url: step.url,
             time: (nextStep.time ?? 0) - (step.time ?? 0),
-            numBytes: "numBytes" in nextStep ? nextStep.numBytes : 0,
+            receivedBytes: "numBytes" in nextStep ? nextStep.numBytes : 0,
           });
         }
       }
@@ -58,6 +61,7 @@ export type RequestComparisonResult = ComparisonResult<
 
 export type SummaryNetworkComparisonResult = ComparisonResult<
   {
+    maxPreviousNetworkTotals: NetworkTotals;
     requests: RequestComparisonResult[];
   },
   {
@@ -97,50 +101,131 @@ export type PerformanceComparisonResult = ComparisonResult<
   }
 >;
 
-export function compare(
+export type NetworkTotals = {
+  time: number;
+  receivedBytes: number;
+  roundTrips: number;
+};
+
+export function comparePerformanceAnalysisResults(
   current: PerformanceAnalysisResult,
-  previous: PerformanceAnalysisResult
+  previousResults: PerformanceAnalysisResult[]
 ): PerformanceComparisonResult {
   const errors: string[] = [];
+
+  assert(previousResults.length > 0, "No previous results to compare to");
+
   let currentSummaries = current.summaries;
-  let previousSummaries = previous.summaries;
-  if (current.summaries.length !== previous.summaries.length) {
-    const min = Math.min(currentSummaries.length, previousSummaries.length);
-    const max = Math.max(currentSummaries.length, previousSummaries.length);
+  const currentSummaryCount = currentSummaries.length;
+  let numSummariesToCompare = currentSummaryCount;
+
+  console.log("Performance results: ", { current, previousResults });
+
+  const previousResultSummaryCounts = previousResults.map(result => result.summaries.length);
+
+  // TODO Handling of mismatched number of summaries
+  if (!previousResultSummaryCounts.every(previousCount => currentSummaryCount === previousCount)) {
+    const min = Math.min(currentSummaryCount, ...previousResultSummaryCounts);
+    const max = Math.max(currentSummaryCount, ...previousResultSummaryCounts);
     errors.push(
       `Runs have a different number of summaries. Only first ${min} summaries were compared. Ignoring the last ${max - min} summaries.`
     );
+
+    numSummariesToCompare = min;
     currentSummaries = currentSummaries.slice(0, min);
-    previousSummaries = previousSummaries.slice(0, min);
   }
 
   const summaryComparisons = currentSummaries.map((currentSummary, i): SummaryComparisonResult => {
-    const previousSummary = previousSummaries[i];
     const summaryErrors: string[] = [];
     const networkErrors: string[] = [];
 
     let currentLimitingNetworkRequests = getLimitingNetworkRequests(currentSummary.dependencySteps);
-    let previousLimitingNetworkRequests = getLimitingNetworkRequests(
-      previousSummary.dependencySteps
+    const currentRequestsCount = currentLimitingNetworkRequests.length;
+    let numRequestsToCompare = currentRequestsCount;
+
+    const currentInteractionNetworkTotals = calculateInteractionNetworkTotals(
+      currentSummary,
+      currentLimitingNetworkRequests
     );
 
-    if (currentLimitingNetworkRequests.length !== previousLimitingNetworkRequests.length) {
-      const min = Math.min(currentSummaries.length, previousSummaries.length);
-      const max = Math.max(currentSummaries.length, previousSummaries.length);
+    const allPreviousNetworkRequestDetails = previousResults.map(result => {
+      const previousCorrespondingSummary = result.summaries[i];
+      const previousLimitingNetworkRequests = getLimitingNetworkRequests(
+        previousCorrespondingSummary.dependencySteps
+      );
+
+      const networkTotals = calculateInteractionNetworkTotals(
+        previousCorrespondingSummary,
+        previousLimitingNetworkRequests
+      );
+      return {
+        summary: previousCorrespondingSummary,
+        networkRequests: previousLimitingNetworkRequests,
+        networkTotals,
+      };
+    });
+
+    const maxPreviousNetworkTotals = allPreviousNetworkRequestDetails.reduce(
+      (acc, current) => {
+        return {
+          time: Math.max(acc.time, current.networkTotals.time),
+          receivedBytes: Math.max(acc.receivedBytes, current.networkTotals.receivedBytes),
+          roundTrips: Math.max(acc.roundTrips, current.networkTotals.roundTrips),
+        };
+      },
+      { time: 0, receivedBytes: 0, roundTrips: 0 } as NetworkTotals
+    );
+
+    const previousRequestCounts = allPreviousNetworkRequestDetails.map(
+      details => details.networkRequests.length
+    );
+    if (
+      !previousRequestCounts.every(
+        previousRequestsCount => currentRequestsCount === previousRequestsCount
+      )
+    ) {
+      const min = Math.min(currentSummaryCount, ...previousResultSummaryCounts);
+      const max = Math.max(currentSummaryCount, ...previousResultSummaryCounts);
       summaryErrors.push(
         `Summaries ${i} have a different number of network requests. Only first ${min} requests were compared. Ignoring the last ${max - min} requests.`
       );
+
+      numRequestsToCompare = min;
       currentLimitingNetworkRequests = currentLimitingNetworkRequests.slice(0, min);
-      previousLimitingNetworkRequests = previousLimitingNetworkRequests.slice(0, min);
     }
+
+    // TODO Handling of mismatched number of requests
+    // if (currentLimitingNetworkRequests.length !== previousLimitingNetworkRequests.length) {
+    //   const min = Math.min(currentSummaries.length, previousSummaries.length);
+    //   const max = Math.max(currentSummaries.length, previousSummaries.length);
+    //   summaryErrors.push(
+    //     `Summaries ${i} have a different number of network requests. Only first ${min} requests were compared. Ignoring the last ${max - min} requests.`
+    //   );
+    //   currentLimitingNetworkRequests = currentLimitingNetworkRequests.slice(0, min);
+    //   previousLimitingNetworkRequests = previousLimitingNetworkRequests.slice(0, min);
+    // }
 
     const requestComparisons = currentLimitingNetworkRequests.map(
       (currentRequest, j): RequestComparisonResult => {
-        const previousRequest = previousLimitingNetworkRequests[j];
+        const correspondingPreviousRequests = allPreviousNetworkRequestDetails.map(
+          details => details.networkRequests[j]
+        );
+
+        const maxValues = correspondingPreviousRequests.reduce(
+          (acc, current) => {
+            return {
+              time: Math.max(acc.time, current.time),
+              receivedBytes: Math.max(acc.receivedBytes, current.receivedBytes),
+            };
+          },
+          { time: 0, receivedBytes: 0 }
+        );
+
+        const previousRequest = correspondingPreviousRequests[j];
         return {
           diffs: {
-            time: currentRequest.time - previousRequest.time,
-            receivedBytes: currentRequest.numBytes - previousRequest.numBytes,
+            time: currentRequest.time - maxValues.time,
+            receivedBytes: currentRequest.receivedBytes - maxValues.receivedBytes,
           },
           urls: {
             previous: previousRequest.url,
@@ -151,20 +236,38 @@ export function compare(
       }
     );
 
+    const previousElapsed = allPreviousNetworkRequestDetails.map(
+      details => details.summary.elapsed
+    );
+    const maxPreviousElapsed = Math.max(...previousElapsed);
+
+    console.log(`Summary ${i}: `, {
+      current: {
+        summary: currentSummary,
+        networkRequests: currentLimitingNetworkRequests,
+      },
+      allPreviousNetworkRequestDetails,
+      currentInteractionNetworkTotals,
+      currentElapsed: currentSummary.elapsed,
+      maxPreviousNetworkTotals,
+      maxPreviousElapsed,
+    });
+
     return {
       diffs: {
-        time: currentSummary.elapsed - previousSummary.elapsed,
+        time: currentSummary.elapsed - maxPreviousElapsed,
       },
       origin: currentSummary.origin,
       screenshot: currentSummary.commitScreenShot,
       network: {
+        maxPreviousNetworkTotals,
         diffs: {
-          time: currentSummary.networkTime - previousSummary.networkTime,
+          time: currentSummary.networkTime - maxPreviousNetworkTotals.time,
           // this isn't precomputed in the performance analysis result, it could be added there
           receivedBytes:
-            currentLimitingNetworkRequests.reduce(addNumBytes, 0) -
-            previousLimitingNetworkRequests.reduce(addNumBytes, 0),
-          roundTrips: currentSummary.numNetworkRoundTrips - previousSummary.numNetworkRoundTrips,
+            currentInteractionNetworkTotals.receivedBytes - maxPreviousNetworkTotals.receivedBytes,
+          roundTrips:
+            currentInteractionNetworkTotals.roundTrips - maxPreviousNetworkTotals.roundTrips,
         },
         requests: requestComparisons,
         errors: networkErrors,
@@ -173,24 +276,70 @@ export function compare(
     };
   });
 
+  const currentAnalysisNetworkTotals = calculateAnalysisNetworkTotals(current);
+  const previousAnalysisNetworkTotals = previousResults.map(result =>
+    calculateAnalysisNetworkTotals(result)
+  );
+  const maxPreviousAnalysisNetworkTotals = previousAnalysisNetworkTotals.reduce(
+    (acc, current) => {
+      return {
+        time: Math.max(acc.time, current.time),
+        receivedBytes: Math.max(acc.receivedBytes, current.receivedBytes),
+        roundTrips: Math.max(acc.roundTrips, current.roundTrips),
+      };
+    },
+    { time: 0, receivedBytes: 0, roundTrips: 0 } as NetworkTotals
+  );
+
+  const currentEndTime = last(current.summaries).endTime;
+  const maxEndTimes = previousResults.map(result => last(result.summaries).endTime);
+  const maxEndTime = Math.max(...maxEndTimes);
+
+  console.log("End times: ", {
+    currentEndTime,
+    maxEndTimes,
+    maxEndTime,
+  });
+
+  console.log("Final network totals: ");
   return {
     diffs: {
       // this truly compares *last* end times, if the number of summaries is different, this will likely be way off
       // it feels like we should compute this value though and not rely on the last summary that is available in both
-      time: last(current.summaries).endTime - last(current.summaries).endTime,
+      time: currentEndTime - maxEndTime,
     },
     summaries: summaryComparisons,
     network: {
       diffs: {
-        time: current.requests.reduce(addTime, 0) - previous.requests.reduce(addTime, 0),
+        time: currentAnalysisNetworkTotals.time - maxPreviousAnalysisNetworkTotals.time,
         receivedBytes:
-          current.requests.reduce(addReceivedBytes, 0) -
-          previous.requests.reduce(addReceivedBytes, 0),
-        roundTrips: current.requests.length - previous.requests.length,
+          currentAnalysisNetworkTotals.receivedBytes -
+          maxPreviousAnalysisNetworkTotals.receivedBytes,
+        roundTrips:
+          currentAnalysisNetworkTotals.roundTrips - maxPreviousAnalysisNetworkTotals.roundTrips,
       },
       errors: [],
     },
     errors,
+  };
+}
+
+function calculateInteractionNetworkTotals(
+  summary: OriginSummary,
+  requests: NetworkRequestBasicTotals[]
+): NetworkTotals {
+  return {
+    time: summary.networkTime,
+    receivedBytes: requests.reduce(addReceivedBytes, 0),
+    roundTrips: requests.length,
+  };
+}
+
+export function calculateAnalysisNetworkTotals(result: PerformanceAnalysisResult): NetworkTotals {
+  return {
+    time: result.requests.reduce(addTime, 0),
+    receivedBytes: result.requests.reduce(addReceivedBytes, 0),
+    roundTrips: result.requests.length,
   };
 }
 

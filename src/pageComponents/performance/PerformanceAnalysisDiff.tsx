@@ -1,7 +1,7 @@
 import React from "react";
 
 import { PerformanceAnalysisResult } from "@/performance/interfaceTypes";
-import { compare, SummaryComparisonResult } from "@/performance/compare";
+import { comparePerformanceAnalysisResults, SummaryComparisonResult } from "@/performance/compare";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -79,11 +79,11 @@ const SummaryComparison = ({ summary }: SummaryComparisonProps) => {
 
 interface PerformanceDiffPageProps {
   current: PerformanceAnalysisResult;
-  previous: PerformanceAnalysisResult;
+  previous: PerformanceAnalysisResult[];
 }
 
 const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, previous }) => {
-  const comparisonResult = compare(current, previous);
+  const comparisonResult = comparePerformanceAnalysisResults(current, previous);
 
   console.log("Comparison result: ", comparisonResult);
 
@@ -99,8 +99,8 @@ const PerformanceDiffPage: React.FC<PerformanceDiffPageProps> = ({ current, prev
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Previous Recording</CardTitle>
-            <CardDescription>{previous.spec.recordingId}</CardDescription>
+            <CardTitle>Previous Recordings</CardTitle>
+            <CardDescription>{previous.map(p => p.spec.recordingId).join(", ")}</CardDescription>
           </CardHeader>
         </Card>
       </div>
