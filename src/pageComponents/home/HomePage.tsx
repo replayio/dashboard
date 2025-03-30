@@ -17,7 +17,7 @@ export function HomePage() {
         >
           Filled with examples to help you on your way
         </Block>
-        <Block href="https://www.replay.io/support" title="Support" imageUrl={supportImage.src}>
+        <Block href="https://www.replay.io/discord" title="Support" imageUrl={supportImage.src}>
           Contact us on Discord, we&apos;re here to help!
         </Block>
         <Block
