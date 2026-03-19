@@ -21,9 +21,9 @@ test("team-settings-default-tab-subscription-canceled: should show the billing t
   const navLink = getLeftNavLink(page, "Billing");
   await expect(await navLink.getAttribute("data-is-active")).toBe("true");
 
-  // UI should show "Resume Subscription" prompt
+  // UI should show "Resume subscription" prompt
   const header = page.locator('[data-test-name="Header"]');
-  await expect(header).toContainText("Resume Subscription");
+  await expect(header).toContainText("Resume subscription");
 });
 
 const mockWorkspaceMembers = mockGetWorkspaceMembers([
