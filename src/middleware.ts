@@ -191,10 +191,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
   }
 }
 
-async function redirectToIntakeIfNeeded(
-  request: NextRequest,
-  accessToken: string
-) {
+async function redirectToIntakeIfNeeded(request: NextRequest, accessToken: string) {
   const { pathname } = request.nextUrl;
 
   if (

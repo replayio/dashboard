@@ -7,7 +7,10 @@ import { NextResponse } from "next/server";
 const INTAKE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 /** Sets intake-completed on the API response so middleware sees it (more reliable than `document.cookie` alone). */
-export function appendIntakeCompletedCookieOnApiResponse(res: NextApiResponse, authSub: string | null) {
+export function appendIntakeCompletedCookieOnApiResponse(
+  res: NextApiResponse,
+  authSub: string | null
+) {
   if (!authSub) return;
   const serialized = cookie.serialize(
     COOKIES.intakeCompleted,
@@ -45,11 +48,7 @@ export function getCookieValueServer<Type = string>(
   return value != null ? (JSON.parse(value) as Type) : null;
 }
 
-export function setCookieValueClient(
-  name: string,
-  value: unknown,
-  options?: { maxAge?: number }
-) {
+export function setCookieValueClient(name: string, value: unknown, options?: { maxAge?: number }) {
   let cookie = `${name}=${JSON.stringify(value)}; path=/; SameSite=Lax`;
   if (options?.maxAge) {
     cookie += `; max-age=${options.maxAge}`;

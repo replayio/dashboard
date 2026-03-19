@@ -91,7 +91,8 @@ async function resolveIntercomCompanyRecordId(companyName: string): Promise<stri
   if (searchRes.ok) {
     const list = listRaw as CompanyListPayload;
     const exact =
-      list.data?.find(c => c.name?.trim().toLowerCase() === trimmed.toLowerCase()) ?? list.data?.[0];
+      list.data?.find(c => c.name?.trim().toLowerCase() === trimmed.toLowerCase()) ??
+      list.data?.[0];
     if (exact?.id) return exact.id;
   }
 
@@ -110,7 +111,8 @@ async function resolveIntercomCompanyRecordId(companyName: string): Promise<stri
     throw e;
   }
 
-  const created = (await parseIntercomJson(createRes)) as CompanyOrContactPayload & IntercomErrorBody;
+  const created = (await parseIntercomJson(createRes)) as CompanyOrContactPayload &
+    IntercomErrorBody;
   if (!createRes.ok) {
     console.error("Intercom company create failed", created);
     return null;
@@ -118,7 +120,10 @@ async function resolveIntercomCompanyRecordId(companyName: string): Promise<stri
   return created.id ?? null;
 }
 
-async function attachCompanyToIntercomContact(contactId: string, companyName: string): Promise<void> {
+async function attachCompanyToIntercomContact(
+  contactId: string,
+  companyName: string
+): Promise<void> {
   const companyRecordId = await resolveIntercomCompanyRecordId(companyName);
   if (!companyRecordId) return;
 
@@ -277,8 +282,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             error: updateData?.errors?.[0]?.message || "Intercom API error",
           });
         }
-        const updatedContactId =
-          (updateData as CompanyOrContactPayload).id ?? existingId;
+        const updatedContactId = (updateData as CompanyOrContactPayload).id ?? existingId;
         await syncEngineerCompanyOnContact(updatedContactId, userType, companyName);
         appendIntakeCompletedCookieOnApiResponse(res, authSub);
         return res.status(200).json({ ...(updateData as object), authSub });

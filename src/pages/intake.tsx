@@ -107,8 +107,7 @@ export default function Page() {
 
       // Prefer server-derived `sub` — the access-token cookie is often HttpOnly, so JS cannot read it.
       const authSub =
-        (typeof data.authSub === "string" && data.authSub) ||
-        getAuth0SubFromAccessTokenCookie();
+        (typeof data.authSub === "string" && data.authSub) || getAuth0SubFromAccessTokenCookie();
       if (!authSub) {
         setError("Could not verify session. Please refresh and try again.");
         setSubmitting(false);
@@ -144,9 +143,7 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center justify-center min-h-full w-full max-w-md mx-auto px-6">
       <ReplayLogo className="h-8 w-8 shrink-0 mb-8" color="#F02D5E" />
-      <h1 className="text-2xl font-semibold text-foreground mb-2 text-center">
-        Welcome to Replay
-      </h1>
+      <h1 className="text-2xl font-semibold text-foreground mb-2 text-center">Welcome to Replay</h1>
       <p className="text-muted-foreground text-center mb-8">
         Help us personalize your experience with a quick question.
       </p>
@@ -204,9 +201,7 @@ export default function Page() {
 
         {userType === "engineer" && (
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Company name
-            </label>
+            <label className="block text-sm font-medium text-foreground mb-2">Company name</label>
             <Input
               placeholder="Your company"
               value={companyName}
@@ -215,15 +210,9 @@ export default function Page() {
           </div>
         )}
 
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
+        {error && <p className="text-sm text-destructive">{error}</p>}
 
-        <Button
-          className="w-full"
-          disabled={!canSubmit || submitting}
-          onClick={handleSubmit}
-        >
+        <Button className="w-full" disabled={!canSubmit || submitting} onClick={handleSubmit}>
           {submitting ? "Submitting..." : "Continue"}
         </Button>
       </div>
