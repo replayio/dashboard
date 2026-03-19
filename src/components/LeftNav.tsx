@@ -17,15 +17,15 @@ export function LeftNav({
   };
 }>) {
   return (
-    <div className="flex flex-col w-32 h-full p-0 pr-0 overflow-auto text-white bg-slate-800 shrink-0 md:w-72 ">
-      <div className="flex flex-row items-center gap-2 p-2">
-        <ReplayLogo className="pl-1 max-h-6 max-w-5" color="#ffffff" />
-        <div className="text-xl font-light">Replay</div>
+    <div className="flex flex-col w-32 h-full p-0 pr-0 overflow-auto text-foreground bg-card border-r border-border/50 shrink-0 md:w-72">
+      <div className="flex flex-row items-center gap-2 px-3 py-3 border-b border-border/50">
+        <ReplayLogo className="max-h-5 max-w-4" color="#F02D5E" />
+        <div className="text-base font-semibold">Replay</div>
       </div>
-      <nav className="relative flex flex-col px-1 overflow-auto shrink-0">
+      <nav className="relative flex flex-col px-2 py-2 overflow-auto shrink-0">
         <HomeNavLink />
         <MyLibraryNavLink />
-        <hr className="w-4/5 mx-auto my-3 border-slate-900" />
+        <hr className="w-4/5 mx-auto my-3 border-border" />
         <LeftNavLink
           href="/team/new/tests"
           iconType="create"
@@ -38,12 +38,12 @@ export function LeftNav({
           isActive={false}
           label="Create new team"
         />
-        <hr className="w-4/5 mx-auto my-3 border-slate-900" />
+        <hr className="w-4/5 mx-auto my-3 border-border" />
       </nav>
-      <nav className="relative flex flex-col px-1 overflow-auto grow">
+      <nav className="relative flex flex-col px-2 overflow-auto grow">
         {backLink && (
           <Link
-            className="flex flex-row items-center px-2 py-1 overflow-auto text-lg text-white truncate hover:text-sky-400 whitespace-nowrap shrink-0"
+            className="flex flex-row items-center gap-1 px-3 py-2 overflow-auto text-sm font-medium truncate text-foreground hover:text-foreground/70 whitespace-nowrap shrink-0"
             data-test-id="LeftNavLink-BackLink"
             href={backLink.href}
             title={backLink.label}

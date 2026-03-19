@@ -29,15 +29,15 @@ export function LeftNavLink({
 
   return (
     <Component
-      className={`flex flex-row gap-2 items-center text-white px-2 py-1 transition rounded ${
-        isActive ? "bg-sky-900 cursor-default" : "hover:text-sky-500"
+      className={`flex flex-row gap-2.5 items-center text-foreground text-sm px-3 py-1.5 rounded-md transition-colors ${
+        isActive ? "bg-accent font-medium cursor-default" : "hover:bg-accent"
       }`}
       data-is-active={isActive || undefined}
       data-test-name="LeftNavLink"
       href={href}
       {...rest}
     >
-      <Icon className="h-4 w-4 hidden md:block shrink-0" type={iconType} />
+      <Icon className="h-4 w-4 hidden md:block shrink-0 text-muted-foreground" type={iconType} />
       <div className="grow truncate">{label}</div>
     </Component>
   );

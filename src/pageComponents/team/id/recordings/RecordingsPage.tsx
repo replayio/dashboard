@@ -56,7 +56,7 @@ export default function RecordingPage({
   };
 
   return (
-    <div className="flex flex-col h-full gap-2 p-2 overflow-auto overflow-hidden">
+    <div className="flex flex-col h-full gap-5 p-5 overflow-auto overflow-hidden">
       <div className="flex flex-row items-center justify-between gap-2">
         <Input
           data-test-id="filter-input"
@@ -71,8 +71,8 @@ export default function RecordingPage({
 
         {showLaunchModal && <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />}
       </div>
-      <div className="flex flex-col gap-2 overflow-auto grow">
-        <div className="relative flex flex-col gap-px overflow-auto text-white rounded bg-slate-900 grow">
+      <div className="flex flex-col overflow-auto grow">
+        <div className="relative flex flex-col overflow-auto text-foreground rounded-lg border border-border bg-card grow">
           {isLoading && <LoadingProgressBar />}
           {user &&
             workspaces &&
@@ -85,10 +85,8 @@ export default function RecordingPage({
               />
             ))}
           {!isLoading && limit < numTotalRecords && (
-            <div
-              className={`flex flex-row items-center justify-center gap-2 px-4 py-2 bg-slate-800 font-bold cursor-pointer text-sky-300 ${
-                isPending ? "text-gray-500" : ""
-              }`}
+            <button
+              className="flex flex-row items-center justify-center gap-2 px-4 py-3 font-medium cursor-pointer text-sm text-primary hover:bg-accent transition-colors border-t border-border"
               onClick={onShowMoreClick}
             >
               <Icon
@@ -96,9 +94,13 @@ export default function RecordingPage({
                 type={isPending ? "loading-spinner" : "show-more"}
               />
               Show More
+            </button>
+          )}
+          {!isLoading && numTotalRecords === 0 && (
+            <div className="p-6 text-sm text-muted-foreground text-center">
+              No recordings have been uploaded yet.
             </div>
           )}
-          {!isLoading && numTotalRecords === 0 && <div>No recordings have been uploaded yet.</div>}
         </div>
       </div>
     </div>

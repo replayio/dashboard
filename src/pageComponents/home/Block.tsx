@@ -12,7 +12,7 @@ export function Block({
 
   return (
     <Component
-      className="flex flex-col overflow-hidden text-white transition rounded-md lg:shadow-xl cursor-pointer lg:w-96 lg:bg-slate-950 lg:hover:bg-black"
+      className="flex flex-col overflow-hidden transition-all duration-200 rounded-xl cursor-pointer lg:w-96 lg:bg-muted lg:hover:shadow-md lg:hover:scale-[1.01] border border-transparent lg:border-border"
       href={href}
     >
       <div
@@ -20,9 +20,9 @@ export function Block({
         style={{ backgroundImage: `url(${imageUrl})` }}
       />
 
-      <div className="flex flex-col flex-wrap lg:gap-2 lg:p-6">
-        <div className="text-xl text-white underline lg:no-underline">{title}</div>
-        <div>{children}</div>
+      <div className="flex flex-col flex-wrap lg:gap-1.5 lg:p-5">
+        <div className="text-sm font-medium text-foreground">{title}</div>
+        <div className="text-sm text-muted-foreground">{children}</div>
       </div>
     </Component>
   );

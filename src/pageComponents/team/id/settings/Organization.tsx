@@ -22,9 +22,7 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
   const { settings } = workspace;
   const { features } = settings ?? {};
 
-  const { updateWorkspacePreferences } = useUpdateWorkspacePreferences(success => {
-    // No-op
-  });
+  const { updateWorkspacePreferences } = useUpdateWorkspacePreferences(() => {});
 
   const [name, setName] = useDebouncedState<string>(workspace.name, name => {
     updateWorkspacePreferences({
@@ -64,55 +62,62 @@ export function Organization({ workspaceId }: { workspaceId: string }) {
     }
   );
 
+  const fieldClass = "flex flex-col gap-1.5";
+  const labelClass = "text-sm font-medium";
+
   return (
-    <div className="flex flex-col gap-2 px-1 pb-1">
-      <div className="flex flex-row gap-2 items-start">
-        <div className="w-40 truncate">Name</div>
+    <div className="flex flex-col gap-6 py-4">
+      <div className={fieldClass}>
+        <label className={labelClass}>Name</label>
         <Input defaultValue={name} onChange={setName} placeholder="Your company name" />
       </div>
-      <div className="flex flex-row gap-2 items-start">
-        <div className="w-40 truncate"></div>
-        <Checkbox
-          checked={!recordingFeatures.public}
-          onChange={(value: boolean) =>
-            setRecordingFeatures({
-              ...recordingFeatures,
-              public: !value,
-            })
-          }
-          label="Disable public recordings"
-        />
+
+      <div className="py-4 border-t border-border">
+        <div className="text-sm font-medium mb-3">Recording settings</div>
+        <div className="flex flex-col gap-4">
+          <Checkbox
+            checked={!recordingFeatures.public}
+            onChange={(value: boolean) =>
+              setRecordingFeatures({
+                ...recordingFeatures,
+                public: !value,
+              })
+            }
+            label="Disable public recordings"
+          />
+          <div className={fieldClass}>
+            <label className={labelClass}>Allow from</label>
+            <TextArea
+              className="min-h-24"
+              defaultValue={recordingFeatures.allowList.join(", ") ?? ""}
+              onChange={value =>
+                setRecordingFeatures({
+                  ...recordingFeatures,
+                  allowList: value.split(",").map(v => v.trim()),
+                })
+              }
+              placeholder="Recorded URLs must match one of these domains (if set)"
+            />
+          </div>
+          <div className={fieldClass}>
+            <label className={labelClass}>Block from</label>
+            <TextArea
+              className="min-h-24"
+              defaultValue={recordingFeatures.blockList.join(", ") ?? ""}
+              onChange={value =>
+                setRecordingFeatures({
+                  ...recordingFeatures,
+                  blockList: value.split(",").map(v => v.trim()),
+                })
+              }
+              placeholder="Recorded URLs must not match any of these domains (if set)"
+            />
+          </div>
+        </div>
       </div>
-      <div className="flex flex-row gap-2 items-start">
-        <div className="w-40 truncate">Allow from</div>
-        <TextArea
-          className="h-24"
-          defaultValue={recordingFeatures.allowList.join(", ") ?? ""}
-          onChange={value =>
-            setRecordingFeatures({
-              ...recordingFeatures,
-              allowList: value.split(",").map(value => value.trim()),
-            })
-          }
-          placeholder="Recorded URLs must match one of these domains (if set)"
-        />
-      </div>
-      <div className="flex flex-row gap-2 items-start">
-        <div className="w-40 truncate">Block from</div>
-        <TextArea
-          className="h-24"
-          defaultValue={recordingFeatures.blockList.join(", ") ?? ""}
-          onChange={value =>
-            setRecordingFeatures({
-              ...recordingFeatures,
-              blockList: value.split(",").map(value => value.trim()),
-            })
-          }
-          placeholder="Recorded URLs must not match any of these domains (if set)"
-        />
-      </div>
-      <div className="flex flex-row gap-2 items-start">
-        <div className="w-40 truncate">Default permission</div>
+
+      <div className="py-4 border-t border-border">
+        <div className="text-sm font-medium mb-3">Default member permission</div>
         <Select
           onChange={option =>
             setUserFeatures({

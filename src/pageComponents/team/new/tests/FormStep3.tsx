@@ -100,7 +100,7 @@ export default function FormStep3({
       {hasTestData ? (
         <div>
           We recommend configuring your CI to record tests with Replay.{" "}
-          <ExternalLink className="text-white underline" href={githubDocsLink}>
+          <ExternalLink className="underline" href={githubDocsLink}>
             Check out our docs
           </ExternalLink>{" "}
           to see how.
@@ -118,12 +118,12 @@ export default function FormStep3({
             </li>
             <li>
               Refer to the{" "}
-              <ExternalLink className="text-white underline" href={quickStartGuideLink}>
+              <ExternalLink className="underline" href={quickStartGuideLink}>
                 {testRunner === "cypress" ? "Cypress" : "Playwright"} quickstart guide
               </ExternalLink>
             </li>
             <li>
-              <ExternalLink className="text-white underline" href={githubDocsLink}>
+              <ExternalLink className="underline" href={githubDocsLink}>
                 Get Replay working with CI
               </ExternalLink>
             </li>

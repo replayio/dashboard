@@ -36,7 +36,13 @@ export function ApiKeyRow({
   );
 
   return (
-    <div className="flex flex-row items-center gap-2">
+    <div className="flex flex-row items-center gap-3 px-3 py-2 rounded-md border border-border bg-card">
+      <div className="flex flex-col grow truncate">
+        <div className="truncate text-sm font-medium">{apiKey.label}</div>
+        <div className="text-xs text-muted-foreground">
+          {apiKey.recordingCount} / {apiKey.maxRecordings} recordings
+        </div>
+      </div>
       <Button
         disabled={isPending}
         color="secondary"
@@ -46,10 +52,6 @@ export function ApiKeyRow({
       >
         Delete
       </Button>
-      <div className="truncate">{apiKey.label}</div>
-      <div className="text-slate-500 text-sm grow">
-        ({apiKey.recordingCount} / {apiKey.maxRecordings} recordings)
-      </div>
       {confirmationDialog}
     </div>
   );

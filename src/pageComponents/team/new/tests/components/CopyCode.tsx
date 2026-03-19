@@ -66,11 +66,11 @@ export function CopyCode({
       />
       <div className="absolute right-0 flex flex-row items-center text-xs pointer-events-none top-1">
         {state === "copied" ? (
-          <span className="px-1 bg-slate-950 round text-sky-400">Copied</span>
+          <span className="px-1 bg-muted round text-blue-400">Copied</span>
         ) : state === "hover" ? (
-          <div className="px-1 bg-slate-950 round">Copy</div>
+          <div className="px-1 bg-muted round">Copy</div>
         ) : (
-          <div className="px-1 bg-slate-950 round">
+          <div className="px-1 bg-muted round">
             <Icon className={size === "normal" ? "w-5 h-5" : "w-4 h-4"} type="copy" />
           </div>
         )}

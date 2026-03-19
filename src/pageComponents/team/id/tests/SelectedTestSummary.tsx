@@ -30,7 +30,7 @@ export function SelectedTestSummary() {
         ))}
         {showOverflowMessage && (
           <div
-            className="bg-slate-900 text-slate-300 mx-2 p-2 rounded"
+            className="bg-muted text-muted-foreground mx-2 p-2 rounded"
             data-test-name="TestExecution-RetentionMessage"
           >
             <Icon className="w-4 h-4 inline" type="info" /> Test data older than one week may not be

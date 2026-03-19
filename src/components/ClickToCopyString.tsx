@@ -8,7 +8,7 @@ export function ClickToCopyString({ header, value }: { header?: ReactNode; value
 
   return (
     <div
-      className="flex flex-col px-2 py-1 bg-slate-900 hover:bg-slate-950 rounded cursor-pointer shrink-0"
+      className="flex flex-col px-3 py-2 bg-muted hover:bg-accent rounded-md border border-border cursor-pointer shrink-0 text-sm transition-colors"
       onClick={onClick}
     >
       {header}

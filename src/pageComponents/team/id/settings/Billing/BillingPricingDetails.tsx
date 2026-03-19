@@ -17,14 +17,14 @@ import {
 import { isPlanBeta, isPlanPricingPerSeat } from "@/utils/test-suites";
 import assert from "assert";
 import { format } from "date-fns/format";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 
 export function BillingPriceDetails() {
   const { subscription } = useContext(BillingContext);
 
   if (!subscription) {
     return (
-      <div className="flex flex-col px-2 py-1 rounded bg-slate-900 text-sm">
+      <div className="flex flex-col p-6 rounded-lg border border-border bg-card">
         <LoadingSpinner />
       </div>
     );
@@ -45,7 +45,7 @@ export function BillingPriceDetails() {
 
 function SubscriptionDefaultView({ subscription }: { subscription: WorkspaceSubscription }) {
   return (
-    <div className="flex flex-col gap-2 h-full">
+    <div className="flex flex-col gap-6 h-full py-4">
       <PricingDetailsPanel subscription={subscription} />
     </div>
   );
@@ -77,23 +77,22 @@ function SubscriptionStatusCanceled({ subscription }: { subscription: WorkspaceS
   };
 
   return (
-    <div className="flex flex-col gap-2 h-full">
+    <div className="flex flex-col gap-6 h-full py-4">
       {isPast && (
         <div
-          className="bg-yellow-300 text-yellow-950 px-2 py-1 rounded flex flex-row items-center gap-1 truncate"
+          className="rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 flex flex-row items-center gap-2"
           data-test-name="Header"
         >
-          <Icon className="w-4 h-4" type="clock" />
-          <div className="truncate">Subscription expired</div>
-          <div className="grow" />
+          <Icon className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400" type="clock" />
+          <div className="grow text-sm font-medium">Subscription expired</div>
           <button
-            className="text-black underline"
+            className="text-sm font-medium text-primary hover:underline shrink-0"
             data-test-id={
               workspace.hasPaymentMethod ? "ResumeSubscriptionLink" : "AddPaymentMethodLink"
             }
             onClick={onClick}
           >
-            {workspace.hasPaymentMethod ? "Resume Subscription" : "Add payment method"}
+            {workspace.hasPaymentMethod ? "Resume subscription" : "Add payment method"}
           </button>
         </div>
       )}
@@ -108,20 +107,29 @@ function SubscriptionStatusTrialing({ subscription }: { subscription: WorkspaceS
   assert(workspace);
 
   return (
-    <div className="flex flex-col gap-2 h-full">
+    <div className="flex flex-col gap-6 h-full py-4">
       <div
-        className="bg-yellow-300 text-yellow-950 px-2 py-1 flex flex-row items-center gap-1 rounded"
+        className="rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 flex flex-row items-center gap-2"
         data-test-name="Header"
       >
-        <Icon className="w-4 h-4 shrink-0" type="clock" />
-        Trial ends {formatRelativeDate(subscription.trialEnds)}
+        <Icon className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400" type="clock" />
+        <div className="text-sm font-medium">
+          Trial ends {formatRelativeDate(subscription.trialEnds)}
+        </div>
       </div>
-      <div>
+      <p className="text-sm text-muted-foreground">
         Existing replays will continue to be debuggable. New replays will require an active
-        subscription. <a href="mailto:support@replay.io">Email us</a> if you have any questions.
-      </div>
+        subscription.{" "}
+        <a href="mailto:support@replay.io" className="text-primary hover:underline">
+          Email us
+        </a>{" "}
+        if you have any questions.
+      </p>
       <PricingDetailsPanel subscription={subscription} />
-      <ExternalLink href="https://www.replay.io/terms-of-use">
+      <ExternalLink
+        className="text-sm text-muted-foreground hover:text-foreground"
+        href="https://www.replay.io/terms-of-use"
+      >
         Terms of service and cancellation policy
       </ExternalLink>
     </div>
@@ -185,82 +193,86 @@ function PricingDetailsPanel({
       break;
   }
 
+  const DetailRow = ({ label, value }: { label: string; value: ReactNode }) => (
+    <div className="flex flex-row items-center justify-between px-4 py-3 border-b border-border last:border-b-0">
+      <div className="text-sm text-muted-foreground">{label}</div>
+      <div className="text-sm font-medium">{value}</div>
+    </div>
+  );
+
   return pricingDetails ? (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-6">
       {isPlanBeta(subscription) && (
         <div
-          className="bg-yellow-300 text-yellow-950 px-2 py-1 rounded flex flex-row items-center gap-1 truncate"
+          className="rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 flex flex-row items-center gap-2"
           data-test-name="Header"
         >
-          <Icon className="w-4 h-4" type="warning" />
-          <div className="truncate">
+          <Icon className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400" type="warning" />
+          <div className="text-sm">
             You&apos;re currently on a beta plan offered at no cost. We&apos;ll inform you of any
             updates or changes.
           </div>
         </div>
       )}
-      <div
-        className="flex flex-col gap-px rounded overflow-hidden"
-        data-test-id="PricingDetailsTable"
-      >
-        <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-          <div className="grow">{effectiveUntilLabel}</div>
-          <div>
-            {subscription?.effectiveUntil ? format(subscription?.effectiveUntil, "MMM d, y") : ""}
-          </div>
-        </div>
-        <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-          <div className="grow">Renewal schedule</div>
-          <div className="capitalize">{pricingDetails?.billingSchedule ?? "monthly"}</div>
-        </div>
-        {isPlanPricingPerSeat(subscription) && (
-          <>
-            <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-              <div className="grow">Number of seats</div>
-              <div>{subscription.seatCount}</div>
-            </div>
-            <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-              <div className="grow">Cost per seat</div>
-              <div>
-                {pricingDetails?.seatPrice != null ? formatCurrency(pricingDetails.seatPrice) : ""}
-              </div>
-            </div>
-          </>
-        )}
-        <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-          <div className="grow">Monthly charge</div>
-          <div>{formatCurrency(calculateMonthlyCost(subscription, pricingDetails))}</div>
-        </div>
-        {paymentMethod && (
-          <div className="flex flex-row items-center px-2 py-1 bg-slate-900">
-            <div className="grow">Payment method</div>
-            <div>
+      <div>
+        <div className="text-sm font-medium mb-3">Billing summary</div>
+        <div
+          className="rounded-lg border border-border bg-card overflow-hidden"
+          data-test-id="PricingDetailsTable"
+        >
+          <DetailRow
+            label={effectiveUntilLabel}
+            value={
+              subscription?.effectiveUntil ? format(subscription.effectiveUntil, "MMM d, y") : "—"
+            }
+          />
+          <DetailRow
+            label="Renewal schedule"
+            value={
+              pricingDetails?.billingSchedule
+                ? pricingDetails.billingSchedule.charAt(0).toUpperCase() +
+                  pricingDetails.billingSchedule.slice(1)
+                : "Monthly"
+            }
+          />
+          {isPlanPricingPerSeat(subscription) && (
+            <>
+              <DetailRow label="Number of seats" value={subscription.seatCount} />
+              <DetailRow
+                label="Cost per seat"
+                value={
+                  pricingDetails?.seatPrice != null ? formatCurrency(pricingDetails.seatPrice) : "—"
+                }
+              />
+            </>
+          )}
+          <DetailRow
+            label="Monthly charge"
+            value={formatCurrency(calculateMonthlyCost(subscription, pricingDetails))}
+          />
+          {paymentMethod && (
+            <div className="flex flex-row items-center justify-between px-4 py-3">
+              <div className="text-sm text-muted-foreground">Payment method</div>
               <button
-                className="text-sky-500 outline-0 hover:underline focus:underline"
+                className="text-sm font-medium text-primary hover:underline"
                 data-test-id="RemovePaymentMethodButton"
                 onClick={showConfirmationDialog}
               >
-                {cardToDisplayName(paymentMethod.card.brand)} ending with {paymentMethod.card.last4}
+                {cardToDisplayName(paymentMethod.card.brand)} •••• {paymentMethod.card.last4}
               </button>
+              {confirmationDialog}
             </div>
-
-            {confirmationDialog}
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {!paymentMethod && !hideAddPaymentMethodFooter && (
-        <div>
-          <Button
-            data-test-id="AddPaymentMethodButton"
-            onClick={() => setView("add-payment-method")}
-          >
-            Add payment method
-          </Button>
-        </div>
+        <Button data-test-id="AddPaymentMethodButton" onClick={() => setView("add-payment-method")}>
+          Add payment method
+        </Button>
       )}
     </div>
   ) : (
-    <div className="flex flex-col px-2 py-1 rounded bg-slate-900 text-sm">
+    <div className="flex flex-col p-6 rounded-lg border border-border bg-card">
       <LoadingSpinner />
     </div>
   );

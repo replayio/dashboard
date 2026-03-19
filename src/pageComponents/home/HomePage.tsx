@@ -7,8 +7,8 @@ import supportImage from "@/pageComponents/home/support.png";
 export function HomePage() {
   return (
     <div className="flex items-start justify-start h-full p-6 overflow-auto lg:justify-center lg:items-center">
-      <div className="flex flex-col gap-2 lg:grid lg:grid-cols-2 lg:p-6 lg:gap-6 lg:shadow-lg bg-none rounded-xl lg:bg-slate-800">
-        <div className="hidden text-2xl font-medium col-span-full lg:block">Home</div>
+      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:p-8 lg:gap-6 bg-none rounded-2xl lg:bg-card lg:border lg:border-border lg:shadow-sm">
+        <div className="hidden text-xl font-semibold col-span-full lg:block">Home</div>
 
         <Block
           href="https://docs.replay.io/basics/getting-started/record-your-app"

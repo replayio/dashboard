@@ -56,23 +56,30 @@ export function EditMemberRoleDialog({
 
   return (
     <ModalDialog data-test-id="Dialog-EditMemberRole" onDismiss={onDismiss} title={member.name}>
-      <Select
-        onChange={onSelectChange}
-        disabled={isPending}
-        options={MEMBER_ROLE_OPTIONS}
-        value={getPrimaryRole(roles)}
-      />
-      <Checkbox
-        checked={roles.includes(Roles.Admin.graphQLValue)}
-        disabled={isPending || currentUserId === member.id}
-        label="Give admin permissions?"
-        onChange={onCheckboxChange}
-      />
-      <div className="flex flex-row gap-2 justify-end">
-        <Button color="secondary" onClick={onDismiss} variant="outline">
-          Cancel
-        </Button>
-        <Button onClick={updateRoles}>Update Role</Button>
+      <div className="flex flex-col gap-4">
+        <div>
+          <label className="text-sm font-medium mb-2 block">Role</label>
+          <Select
+            onChange={onSelectChange}
+            disabled={isPending}
+            options={MEMBER_ROLE_OPTIONS}
+            value={getPrimaryRole(roles)}
+          />
+        </div>
+        <Checkbox
+          checked={roles.includes(Roles.Admin.graphQLValue)}
+          disabled={isPending || currentUserId === member.id}
+          label="Give admin permissions?"
+          onChange={onCheckboxChange}
+        />
+        <div className="flex flex-row gap-2 justify-end pt-2">
+          <Button color="secondary" onClick={onDismiss} variant="outline">
+            Cancel
+          </Button>
+          <Button disabled={isPending} onClick={updateRoles}>
+            Update role
+          </Button>
+        </div>
       </div>
     </ModalDialog>
   );

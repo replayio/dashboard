@@ -25,13 +25,13 @@ export function ModalDialog({
       {...rest}
     >
       <div
-        className="min-w-96 max-h-full rounded-lg shadow bg-slate-800 text-white flex flex-col gap-4 p-4 pt-2 relative"
+        className="min-w-96 max-h-full rounded-lg border border-border bg-muted text-foreground shadow-lg flex flex-col gap-4 p-5 pt-4 relative"
         onClick={stopPropagation}
         ref={modalRef}
       >
         {title && (
           <>
-            <div className="text-xl font-bold">{title}</div>
+            <div className="text-lg font-semibold">{title}</div>
             <IconButton
               autoFocus
               className="absolute top-3 right-3"

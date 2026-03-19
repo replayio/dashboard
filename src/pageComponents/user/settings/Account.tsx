@@ -1,5 +1,6 @@
 import { Button } from "@/components/Button";
 import { SessionContext } from "@/components/SessionContext";
+import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { COOKIES } from "@/constants";
 import { deleteCookieValueClient } from "@/utils/cookie";
 import { setAccessTokenInBrowserPrefs } from "@/utils/replayBrowser";
@@ -21,15 +22,20 @@ export function Account() {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div>
-        Signed in as <span className="font-bold">{user.name}</span> ({user.email})
-      </div>
-      <div>
-        <Button disabled={isPending} onClick={onClick}>
+    <div className="flex flex-col gap-0">
+      <div className="flex items-center justify-between py-4 border-b border-border">
+        <div className="flex flex-col gap-1">
+          <div className="text-sm font-medium">Account</div>
+          <div className="text-sm text-muted-foreground">
+            Signed in as <span className="font-medium text-foreground">{user.name}</span> (
+            {user.email})
+          </div>
+        </div>
+        <Button disabled={isPending} onClick={onClick} variant="outline" size="small">
           Sign out
         </Button>
       </div>
+      <ThemeSwitch />
     </div>
   );
 }

@@ -81,7 +81,7 @@ export function OriginDisplay(props: OriginDisplayProps) {
   }
 
   return (
-    <div className="m-2 gap-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg">
+    <div className="m-2 gap-4 px-4 py-2 bg-muted hover:bg-accent text-foreground rounded-lg">
       <OriginSummaryDisplay summary={summary}></OriginSummaryDisplay>
       <ExpandableSection
         grow={false}

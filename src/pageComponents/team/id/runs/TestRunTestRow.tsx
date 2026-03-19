@@ -17,14 +17,14 @@ export function TestRunTestRow({
     <Component
       className={`block w-full px-2 py-1 outline-0 ${
         isActive
-          ? "text-sky-500 cursor-default"
-          : "focus:text-sky-500 hover:text-sky-500 cursor-pointer text-white"
+          ? "text-blue-400 cursor-default"
+          : "focus:text-blue-400 hover:text-blue-400 cursor-pointer text-foreground"
       }`}
       data-selected={isActive || undefined}
       data-test-name="TestRunTests-Row"
       onClick={() => selectTest(test.id)}
     >
-      <div className="truncate shrink grow text-slate-400 text-xs">{test.sourcePath}</div>
+      <div className="truncate shrink grow text-neutral-400 text-xs">{test.sourcePath}</div>
       <div className="truncate shrink grow">{test.title}</div>
     </Component>
   );

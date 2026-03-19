@@ -38,7 +38,7 @@ export function CreateStandardTeam({ type }: { type: WorkspaceType }) {
         router.replace(`/team/${id}/recordings`);
       }
 
-      setIsPending(true);
+      setIsPending(false);
     }
   };
 
@@ -47,13 +47,15 @@ export function CreateStandardTeam({ type }: { type: WorkspaceType }) {
   };
 
   return (
-    <Message className="p-8 gap-4 text-center">
-      <div className="flex flex-row gap-2">
+    <Message className="p-8 lg:p-10 gap-6 text-center max-w-md">
+      <div className="flex flex-row gap-2 justify-center items-center">
         <ReplayLogo className="h-8 w-8 text-[#F02D5E]" />
-        <div className="font-bold text-xl">Welcome to Replay</div>
+        <h1 className="font-semibold text-xl">Welcome to Replay</h1>
       </div>
-      <div>What would you like your {isOrg ? "organization" : "team"} name to be?</div>
-      <div className="w-full flex flex-col gap-2">
+      <p className="text-sm text-muted-foreground">
+        What would you like your {isOrg ? "organization" : "team"} name to be?
+      </p>
+      <div className="w-full min-w-0 flex flex-col gap-4">
         <Input
           className="w-full"
           data-test-id="CreateTeam-TeamName-Input"
@@ -68,7 +70,7 @@ export function CreateStandardTeam({ type }: { type: WorkspaceType }) {
             disabled={isPending}
             label={
               <>
-                Bypass trial <small className="text-yellow-300">(internal only)</small>
+                Bypass trial <small className="text-gray-500">(internal only)</small>
               </>
             }
             onChange={value => setBypassTrial(value)}
@@ -76,15 +78,15 @@ export function CreateStandardTeam({ type }: { type: WorkspaceType }) {
         )}
         {error && (
           <div
-            className="bg-rose-950 text-rose-300 px-2 py-1 rounded font-bold w-full flex flex-row gap-2 items-center"
+            className="bg-destructive/20 text-destructive px-3 py-2 rounded-md font-medium w-full flex flex-row gap-2 items-center text-sm"
             data-test-id="CreateTeam-Error"
             role="alert"
           >
-            <Icon className="h-4 w-4" type="warning" /> {error.message}
+            <Icon className="h-4 w-4 shrink-0" type="warning" /> {error.message}
           </div>
         )}
       </div>
-      <div className="flex flex-row gap-2 items-center">
+      <div className="flex flex-row gap-3 justify-center">
         <Button disabled={isPending} variant="outline" onClick={onGoBack} size="large">
           Go back
         </Button>

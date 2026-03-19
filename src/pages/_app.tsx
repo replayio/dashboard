@@ -3,6 +3,7 @@ import { initializeMixPanel } from "@/utils/mixpanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { COOKIES, HEADERS } from "@/constants";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { User } from "@/graphql/types";
@@ -88,15 +89,17 @@ export default class MyApp extends App<AppProps<PageProps>> {
     }
 
     let children = (
-      <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
-        <SessionContextProvider accessToken={accessToken} user={user}>
-          <ApolloContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ApolloContextProvider>
-        </SessionContextProvider>
-      </EndToEndTestContextProvider>
+      <ThemeProvider>
+        <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
+          <SessionContextProvider accessToken={accessToken} user={user}>
+            <ApolloContextProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ApolloContextProvider>
+          </SessionContextProvider>
+        </EndToEndTestContextProvider>
+      </ThemeProvider>
     );
 
     return (
@@ -115,8 +118,8 @@ function ErrorFallback() {
     <section role="alert">
       <div className="flex flex-col gap-2 p-4 items-center">
         <h1 className="text-6xl font-bold text-red-500">We&apos;re sorry</h1>
-        <p className="font-bold text-3xl text-white">Something went wrong.</p>
-        <p className="text-lg font-light text-slate-400">
+        <p className="font-bold text-3xl text-foreground">Something went wrong.</p>
+        <p className="text-lg font-light text-muted-foreground">
           While we look into it, try reloading the page.
         </p>
       </div>

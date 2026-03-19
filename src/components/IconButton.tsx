@@ -16,11 +16,11 @@ export function IconButton({
 }) {
   return (
     <button
-      className={`${className} flex items-center gap-1 text-xs bg-white/10 p-1 rounded transition ${disabled ? "opacity-50 cursor-default" : "hover:bg-white/20"}`}
+      className={`${className} flex items-center gap-1 text-xs text-muted-foreground bg-muted p-1.5 rounded-md transition-all duration-200 ${disabled ? "opacity-50 cursor-default" : "hover:bg-accent hover:text-foreground cursor-pointer"}`}
       disabled={disabled}
       {...rest}
     >
-      <Icon className={`w-4 h-4 fill-slate-300 ${iconClassName}`} type={iconType} />
+      <Icon className={`w-4 h-4 ${iconClassName}`} type={iconType} />
       {label || children || null}
     </button>
   );

@@ -27,10 +27,10 @@ export function TestRunRow({
 
   return (
     <Component
-      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 outline-0 ${
+      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap text-foreground px-2 py-1 outline-0 ${
         isActive
-          ? "bg-slate-700 cursor-default"
-          : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
+          ? "bg-neutral-700 cursor-default"
+          : "focus:text-blue-400 hover:bg-accent cursor-pointer"
       }`}
       data-selected={isActive || undefined}
       data-test-name="TestRuns-Row"
@@ -39,7 +39,7 @@ export function TestRunRow({
       <div className="w-6 h-6 shrink-0 flex justify-center">{icon}</div>
       <div className="grow truncate">{getTestRunTitle(testRun)}</div>
       <div
-        className="flex flex-row gap-1 items-center shrink-0 text-sm text-slate-300"
+        className="flex flex-row gap-1 items-center shrink-0 text-sm text-neutral-300"
         suppressHydrationWarning
       >
         <Icon className="w-4 h-4" type="clock" />

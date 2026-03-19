@@ -89,7 +89,7 @@ export function TestRunStatsGraph({ testRuns }: { testRuns: TestRun[] }) {
   const testFailureRate = numTests > 0 ? numFailedTests / numTests : 0;
 
   return (
-    <div className="flex flex-col items-center gap-2 px-2 pt-2 py-1 bg-slate-900 rounded">
+    <div className="flex flex-col items-center gap-2 px-2 pt-2 py-1 bg-muted rounded">
       <div className="inline-flex flex-row gap-2 h-10 overflow-x-auto max-w-full w-auto">
         {dataByDay.map((data, index) => (
           <ChartItem data={data} key={index} mostTestsRunsInDay={mostTestsRunsInDay} />
@@ -141,7 +141,7 @@ function Stats({
   return (
     <div {...rest} className="flex flex-row flex-wrap items-center">
       <div className="mr-1 capitalize">{primaryLabel} </div>
-      <div className="text-xs text-slate-300">({secondaryLabel})</div>
+      <div className="text-xs text-neutral-300">({secondaryLabel})</div>
     </div>
   );
 }

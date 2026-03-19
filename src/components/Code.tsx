@@ -24,7 +24,7 @@ export function Code({
 
   return (
     <code
-      className={`bg-slate-950 text-white px-2 py-1 rounded whitespace-pre-wrap text-sm ${className}`}
+      className={`bg-code text-code-foreground px-2 py-1 rounded-md whitespace-pre-wrap text-sm ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
       {...rest}
     />

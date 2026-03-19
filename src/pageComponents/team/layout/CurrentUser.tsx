@@ -7,20 +7,20 @@ export function CurrentUser() {
 
   return (
     <Link
-      className="flex flex-row items-center gap-3 px-3 py-2 text-white truncate cursor-pointer shrink-0 bg-slate-950 whitespace-nowrap"
+      className="flex flex-row items-center gap-3 px-3 py-3 text-foreground truncate cursor-pointer shrink-0 border-t border-border whitespace-nowrap hover:bg-accent transition-colors"
       href="/user/settings/account"
     >
       {user.picture && (
         <img
           alt={`${user.name} avatar`}
-          className="hidden w-10 h-10 rounded-full md:block"
+          className="hidden w-8 h-8 rounded-full md:block"
           referrerPolicy="no-referrer"
           src={user.picture}
         />
       )}
       <div className="truncate">
-        <div className="truncate">{user.name}</div>
-        <div className="text-sm truncate text-slate-400">View settings</div>
+        <div className="truncate text-sm font-medium">{user.name}</div>
+        <div className="text-xs truncate text-muted-foreground">View settings</div>
       </div>
     </Link>
   );

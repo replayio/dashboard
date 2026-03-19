@@ -10,7 +10,7 @@ import { ButtonHTMLAttributes, useContext } from "react";
 
 function TestExecutionMessage({ children, ...rest }: ButtonHTMLAttributes<HTMLDivElement>) {
   return (
-    <div {...rest} className="bg-slate-900 text-slate-300 p-2 rounded">
+    <div {...rest} className="bg-muted text-muted-foreground p-2 rounded">
       <Icon className="w-4 h-4 inline" type="info" /> {children}
     </div>
   );
@@ -52,7 +52,7 @@ export function TestsAndExecutions() {
       {isWithinRetentionLimit ? (
         recordings.length > 0 ? (
           <div
-            className="bg-slate-900 text-white p-2 rounded"
+            className="bg-background text-foreground p-2 rounded"
             data-test-id="TestExecution-Recordings"
           >
             <ExpandableSection label="Replays" openByDefault>

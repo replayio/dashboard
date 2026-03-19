@@ -210,7 +210,7 @@ export function CreateTestSuitesTeam({ apiKey }: { apiKey: string }) {
     <div className="flex flex-row w-screen h-screen" data-test-id="CreateTestSuitesTeam">
       <div className="flex flex-row justify-center w-full px-16 py-16 overflow-auto md:w-3/5 grow">
         <div className="flex flex-col w-full gap-10 text-lg center-items">
-          <Link className="flex flex-row items-center text-2xl text-white" href="/home">
+          <Link className="flex flex-row items-center text-2xl text-foreground" href="/home">
             <Icon className="w-5 h-5" type="back-arrow" /> Back to library
           </Link>
           <MultiStepForm currentIndex={state.step - 1} steps={STEPS} />

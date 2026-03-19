@@ -93,11 +93,11 @@ function Collaborator({
       className={`flex flex-row items-center gap-2 ${isLoading ? "opacity-50" : ""}`}
       data-test-name="collaborator-row"
     >
-      <div className="shrink-0 w-8 h-8 bg-slate-700 flex items-center justify-center rounded-full overflow-hidden">
+      <div className="shrink-0 w-8 h-8 bg-neutral-700 flex items-center justify-center rounded-full overflow-hidden">
         {picture ? (
           <img alt={name} className="w-full h-full" referrerPolicy="no-referrer" src={picture} />
         ) : (
-          <Icon className="w-6 h-6 fill-slate-300" type="email" />
+          <Icon className="w-6 h-6 fill-neutral-300" type="email" />
         )}
       </div>
       <div className="truncate">{name}</div>

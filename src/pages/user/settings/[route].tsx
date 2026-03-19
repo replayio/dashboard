@@ -28,8 +28,8 @@ export default function Page({ route }: InferGetServerSidePropsType<typeof getSe
   }
 
   return (
-    <div className="flex flex-col overflow-auto bg-slate-800 rounded grow relative m-2 px-2 py-1">
-      {panel}
+    <div className="flex flex-col overflow-auto grow relative p-6 lg:p-10">
+      <div className="max-w-3xl w-full">{panel}</div>
     </div>
   );
 }
