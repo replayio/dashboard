@@ -38,7 +38,7 @@ export function ThemeSwitch() {
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center gap-2 px-3 py-2 text-sm rounded-md border border-border bg-card text-foreground hover:border-ring min-w-[160px] justify-between transition-colors cursor-pointer"
         >
-          <span>{current.label}</span>
+          <span>{current?.label ?? "light"}</span>
           <svg
             className={`w-4 h-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
             fill="none"

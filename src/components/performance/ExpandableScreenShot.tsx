@@ -68,7 +68,7 @@ export function ExpandableScreenShot(props: ExpandableScreenShotProps) {
     <div className="m-2">
       <div className="ScreenShotTitle">{title}</div>
       <div className="ScreenShot" style={containerStyle}>
-        <img style={imageStyle} src={imageSource} onClick={toggleScreenExpanded}></img>;
+        <img style={imageStyle} src={imageSource} onClick={toggleScreenExpanded} alt={title} />;
         {mouseLocationDiv}
       </div>
     </div>
