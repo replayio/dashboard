@@ -52,6 +52,7 @@ export function WorkspaceNavLink({
           <div className="truncate">{name}</div>
         </div>
       }
+      title={name}
     />
   );
 }

@@ -657,6 +657,9 @@ module.exports = {
       transformOrigin: {
         "left-right": "0% 50%",
       },
+      boxShadow: {
+        "3xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+      },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },

@@ -4,6 +4,7 @@ import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { SidebarProvider } from "@/components/SidebarContext";
 import { UserSettingsProvider } from "@/pageComponents/user/settings/UserSettingsContext";
 import { COOKIES, HEADERS } from "@/constants";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
@@ -94,11 +95,13 @@ export default class MyApp extends App<AppProps<PageProps>> {
         <EndToEndTestContextProvider mockGraphQLData={mockGraphQLData}>
           <SessionContextProvider accessToken={accessToken} user={user}>
             <ApolloContextProvider>
-              <UserSettingsProvider>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-              </UserSettingsProvider>
+              <SidebarProvider>
+                <UserSettingsProvider>
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
+                </UserSettingsProvider>
+              </SidebarProvider>
             </ApolloContextProvider>
           </SessionContextProvider>
         </EndToEndTestContextProvider>

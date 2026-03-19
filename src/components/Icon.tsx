@@ -49,6 +49,7 @@ export type IconType =
   | "secondary-branch"
   | "settings"
   | "show-more"
+  | "sidebar"
   | "support"
   | "team-members"
   | "test-suite"
@@ -246,6 +247,20 @@ export function Icon({
       break;
     case "show-more":
       path = "M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z";
+      break;
+    case "sidebar":
+      path = (
+        <g
+          stroke="currentColor"
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+          <path d="M9 4v16" />
+        </g>
+      );
       break;
     case "step-complete":
       path =

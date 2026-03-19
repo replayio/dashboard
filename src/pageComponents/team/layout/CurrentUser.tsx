@@ -1,4 +1,6 @@
+import { NavTooltip } from "@/components/NavTooltip";
 import { Icon, IconType } from "@/components/Icon";
+import { useSidebar } from "@/components/SidebarContext";
 import { useUserSettings } from "@/pageComponents/user/settings/UserSettingsContext";
 import { SessionContext } from "@/components/SessionContext";
 import { COOKIES } from "@/constants";
@@ -21,6 +23,7 @@ const MENU_ITEMS: {
 export function CurrentUser() {
   const { user } = useContext(SessionContext);
   const { openModal } = useUserSettings();
+  const { isCollapsed } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
   const [menuStyle, setMenuStyle] = useState<{ bottom: number; left: number }>({
     bottom: 0,
@@ -70,7 +73,7 @@ export function CurrentUser() {
   const menu = isOpen && (
     <div
       ref={menuRef}
-      className="fixed z-50 min-w-[220px] rounded-lg border border-border bg-card py-2 shadow-lg"
+      className="fixed z-50 ml-2 min-w-[220px] rounded-lg border border-border bg-card py-2 shadow-lg"
       style={{
         bottom: menuStyle.bottom,
         left: menuStyle.left,
@@ -106,31 +109,49 @@ export function CurrentUser() {
     </div>
   );
 
-  return (
-    <div className="relative shrink-0 border-t border-border">
-      <button
-        ref={triggerRef}
-        className="flex w-full flex-row items-center gap-3 px-3 py-3 text-foreground transition-colors hover:bg-accent"
-        onClick={() => setIsOpen(o => !o)}
-        type="button"
-      >
-        {user.picture ? (
-          <img
-            alt={`${user.name} avatar`}
-            className="hidden h-8 w-8 rounded-full md:block"
-            referrerPolicy="no-referrer"
-            src={user.picture}
-          />
-        ) : (
-          <div className="hidden h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-sm font-medium text-primary md:flex">
-            {user.name?.charAt(0) ?? "?"}
-          </div>
-        )}
+  const triggerButton = (
+    <button
+      ref={triggerRef}
+      className={`flex w-full text-foreground transition-colors hover:bg-accent ${
+        isCollapsed ? "justify-center px-2 py-3" : "flex-row items-center gap-3 px-3 py-3"
+      }`}
+      onClick={() => setIsOpen(o => !o)}
+      type="button"
+    >
+      {user.picture ? (
+        <img
+          alt={`${user.name} avatar`}
+          className={`h-8 w-8 rounded-full shrink-0 ${isCollapsed ? "" : "hidden md:block"}`}
+          referrerPolicy="no-referrer"
+          src={user.picture}
+        />
+      ) : (
+        <div
+          className={`shrink-0 items-center justify-center rounded-full bg-primary/20 text-sm font-medium text-primary ${
+            isCollapsed ? "flex h-8 w-8" : "hidden h-8 w-8 md:flex"
+          }`}
+        >
+          {user.name?.charAt(0) ?? "?"}
+        </div>
+      )}
+      {!isCollapsed && (
         <div className="min-w-0 flex-1 truncate text-left">
           <div className="truncate text-sm font-medium">{user.name}</div>
           <div className="truncate text-xs text-muted-foreground">View settings</div>
         </div>
-      </button>
+      )}
+    </button>
+  );
+
+  return (
+    <div className="relative shrink-0 border-t border-border">
+      {isCollapsed ? (
+        <NavTooltip tooltip="Account" side="right">
+          {triggerButton}
+        </NavTooltip>
+      ) : (
+        triggerButton
+      )}
       {typeof document !== "undefined" && createPortal(menu, document.body)}
     </div>
   );
