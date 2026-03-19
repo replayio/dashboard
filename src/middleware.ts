@@ -23,6 +23,8 @@ export async function middleware(request: NextRequest) {
     await redirectIfMobile(request);
     if (!accessToken) {
       await redirectIfProtectedRoute(request);
+    } else {
+      await redirectToIntakeIfNeeded(request, accessToken);
     }
   } catch (thrown) {
     if (thrown instanceof URL) {
@@ -177,6 +179,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
   if (
     pathname === "/" ||
     pathname === "/home" ||
+    pathname === "/intake" ||
     pathname.startsWith("/org") ||
     pathname.startsWith("/team") ||
     pathname.startsWith("/user")
@@ -185,5 +188,43 @@ async function redirectIfProtectedRoute(request: NextRequest) {
     loginUrl.searchParams.set("returnTo", pathname + search);
 
     throw loginUrl;
+  }
+}
+
+async function redirectToIntakeIfNeeded(
+  request: NextRequest,
+  accessToken: string
+) {
+  const { pathname } = request.nextUrl;
+
+  if (
+    pathname === "/intake" ||
+    pathname === "/login" ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/browser") ||
+    pathname === "/mobile-warning" ||
+    pathname === "/releases" ||
+    pathname === "/performance-analysis" ||
+    pathname.startsWith("/recording")
+  ) {
+    return;
+  }
+
+  const cookieStore = cookies();
+  const intakeCookie = cookieStore.get(COOKIES.intakeCompleted);
+  let intakeCompleted: { userId?: string } | null = null;
+  if (intakeCookie?.value) {
+    try {
+      intakeCompleted = JSON.parse(intakeCookie.value) as { userId?: string };
+    } catch {
+      // invalid cookie, treat as not completed
+    }
+  }
+
+  const decoded = jwt.decode(accessToken, { json: true }) as { sub?: string } | null;
+  const userId = decoded?.sub;
+
+  if (!intakeCompleted?.userId || intakeCompleted.userId !== userId) {
+    throw new URL("/intake", request.url);
   }
 }

@@ -3,7 +3,7 @@ import Checkbox from "@/components/Checkbox";
 import { ClickToCopyString } from "@/components/ClickToCopyString";
 import { Input } from "@/components/Input";
 import { ApiKeyScope } from "@/graphql/types";
-import { ApolloError } from "@apollo/client";
+import type { ApolloError } from "@apollo/client/errors";
 import { useState } from "react";
 
 export function CreateNewKey({

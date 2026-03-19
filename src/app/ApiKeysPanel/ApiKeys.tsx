@@ -1,7 +1,7 @@
 import { ApiKeyRow } from "@/app/ApiKeysPanel/ApiKeyRow";
 import { CreateNewKey } from "@/app/ApiKeysPanel/CreateNewKey";
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
-import { ApolloError } from "@apollo/client";
+import type { ApolloError } from "@apollo/client/errors";
 
 export function ApiKeys({
   apiKeys,

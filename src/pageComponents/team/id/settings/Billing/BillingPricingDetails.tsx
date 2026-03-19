@@ -16,7 +16,7 @@ import {
 } from "@/utils/subscription";
 import { isPlanBeta, isPlanPricingPerSeat } from "@/utils/test-suites";
 import assert from "assert";
-import { format } from "date-fns/format";
+import { format } from "date-fns";
 import { ReactNode, useContext } from "react";
 
 export function BillingPriceDetails() {
