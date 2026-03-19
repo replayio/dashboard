@@ -1,35 +1,38 @@
-import { Block } from "@/pageComponents/home/Block";
-import blogImage from "@/pageComponents/home/blog.png";
-import courseImage from "@/pageComponents/home/course.png";
-import documentationImage from "@/pageComponents/home/documentation.png";
-import supportImage from "@/pageComponents/home/support.png";
+import { ResourceLink } from "@/pageComponents/home/ResourceLink";
 
 export function HomePage() {
   return (
-    <div className="flex items-start justify-start h-full p-6 overflow-auto lg:justify-center lg:items-center">
-      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:p-8 lg:gap-6 bg-none rounded-2xl lg:bg-card lg:border lg:border-border lg:shadow-sm">
-        <div className="hidden text-xl font-semibold col-span-full lg:block">Home</div>
+    <div className="flex h-full flex-col overflow-auto p-6 lg:p-10">
+      <div className="mx-auto w-full max-w-4xl">
+        <header className="mb-8">
+          <h1 className="text-2xl font-semibold text-foreground lg:text-3xl">Home</h1>
+          <p className="mt-1 text-base text-muted-foreground">
+            Resources to help you get the most out of Replay
+          </p>
+        </header>
 
-        <Block
-          href="https://docs.replay.io/basics/getting-started/record-your-app"
-          title="Documentation"
-          imageUrl={documentationImage.src}
-        >
-          Filled with examples to help you on your way
-        </Block>
-        <Block href="https://www.replay.io/discord" title="Support" imageUrl={supportImage.src}>
-          Contact us on Discord, we&apos;re here to help!
-        </Block>
-        <Block
-          href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
-          title="Replay Course"
-          imageUrl={courseImage.src}
-        >
-          Our course on YouTube is great for learning the basics
-        </Block>
-        <Block href="https://blog.replay.io" title="Replay Blog" imageUrl={blogImage.src}>
-          See how other teams perform time travel miracles with Replay
-        </Block>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ResourceLink
+            href="https://docs.replay.io/basics/getting-started/record-your-app"
+            iconType="folder"
+            title="Documentation"
+          >
+            Filled with examples to help you on your way
+          </ResourceLink>
+          <ResourceLink href="https://www.replay.io/discord" iconType="support" title="Support">
+            Contact us on Discord, we&apos;re here to help!
+          </ResourceLink>
+          <ResourceLink
+            href="https://www.youtube.com/playlist?list=PLOHkr6ZaQDlH5M0PZzjVG9ohyqw7avwPa"
+            iconType="processed-recording"
+            title="Replay Course"
+          >
+            Our course on YouTube is great for learning the basics
+          </ResourceLink>
+          <ResourceLink href="https://blog.replay.io" iconType="create" title="Replay Blog">
+            See how other teams perform time travel miracles with Replay
+          </ResourceLink>
+        </div>
       </div>
     </div>
   );
