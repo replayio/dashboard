@@ -1,43 +1,27 @@
-import { Account } from "@/pageComponents/user/settings/Account";
-import { Legal } from "@/pageComponents/user/settings/Legal";
-import { SettingsLayout } from "@/pageComponents/user/settings/SettingsLayout";
-import { Support } from "@/pageComponents/user/settings/Support";
-import { UserApiKeys } from "@/pageComponents/user/settings/UserApiKeys";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { ReactNode } from "react";
+import { DefaultLayout } from "@/components/layout/DefaultLayout";
+import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-export default function Page({ route }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  let panel: ReactNode = null;
-  switch (route) {
-    case "account": {
-      panel = <Account />;
-      break;
-    }
-    case "api-keys": {
-      panel = <UserApiKeys />;
-      break;
-    }
-    case "legal": {
-      panel = <Legal />;
-      break;
-    }
-    case "support": {
-      panel = <Support />;
-      break;
-    }
-  }
+const VALID_ROUTES = ["account", "api-keys", "support", "legal"];
 
-  return (
-    <div className="flex flex-col overflow-auto grow relative p-6 lg:p-10">
-      <div className="max-w-3xl w-full">{panel}</div>
-    </div>
-  );
+export default function Page() {
+  const router = useRouter();
+  const route = router.query.route as string;
+
+  useEffect(() => {
+    if (route && VALID_ROUTES.includes(route)) {
+      router.replace(`/home?openSettings=${route}`);
+    } else if (route !== undefined) {
+      router.replace("/home");
+    }
+  }, [route, router]);
+
+  return null;
 }
 
-Page.Layout = SettingsLayout;
+Page.Layout = DefaultLayout;
 
 export async function getServerSideProps({ params }: GetServerSidePropsContext<{ route: string }>) {
-  return {
-    props: { route: params?.route as string },
-  };
+  return { props: {} };
 }

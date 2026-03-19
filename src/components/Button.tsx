@@ -87,7 +87,7 @@ export function Button({
 
   return (
     <button
-      className={`font-medium inline-flex flex-row items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 ${colorClassName} ${sizeClassName} ${className}`}
+      className={`font-medium inline-flex flex-row items-center justify-center whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 ${colorClassName} ${sizeClassName} ${className}`}
       disabled={disabled}
       {...rest}
     />
