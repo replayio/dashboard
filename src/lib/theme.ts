@@ -1,7 +1,7 @@
 export type Theme = "dark" | "light" | "system";
 
 const STORAGE_KEY = "replay_theme";
-const DEFAULT_THEME: Theme = "dark";
+const DEFAULT_THEME: Theme = "system";
 
 export function getStoredTheme(): Theme {
   if (typeof window === "undefined") return DEFAULT_THEME;

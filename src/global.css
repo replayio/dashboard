@@ -120,12 +120,16 @@
   }
 
   h1 {
-    @apply text-xl;
+    @apply text-3xl font-semibold;
     @apply my-4;
   }
   h2 {
-    @apply text-lg;
+    @apply text-2xl font-medium;
     @apply my-4;
+  }
+  h3 {
+    @apply text-xl font-medium;
+    @apply my-3;
   }
   p {
     @apply mb-4;
@@ -254,12 +258,12 @@
 }
 
 :root {
-  font-size: 14px;
+  font-size: 16px;
   color-scheme: light dark;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 
-  --context-menu-item-font-size: 14px;
+  --context-menu-item-font-size: 0.9375rem; /* 15px - matches text-sm */
   --context-menu-item-padding: 0.5rem 1rem;
 
   --header-height: 54px;

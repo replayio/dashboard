@@ -660,6 +660,17 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
+      fontSize: {
+        xs: ["0.8125rem", { lineHeight: "1.25rem" }] /* 13px - captions, labels */,
+        sm: ["0.9375rem", { lineHeight: "1.375rem" }] /* 15px - secondary text */,
+        base: ["1rem", { lineHeight: "1.5rem" }] /* 16px - body */,
+        lg: ["1.125rem", { lineHeight: "1.625rem" }] /* 18px - lead text */,
+        xl: ["1.25rem", { lineHeight: "1.75rem" }] /* 20px - subtitles */,
+        "2xl": ["1.5rem", { lineHeight: "2rem" }] /* 24px - h3 */,
+        "3xl": ["1.875rem", { lineHeight: "2.25rem" }] /* 30px - h2 */,
+        "4xl": ["2.25rem", { lineHeight: "2.5rem" }] /* 36px - h1 */,
+        "5xl": ["3rem", { lineHeight: "1.1" }] /* 48px - display */,
+      },
     },
   },
   plugins: [
