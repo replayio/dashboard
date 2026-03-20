@@ -13,7 +13,7 @@ export function HomePage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <ResourceLink
-            href="https://docs.replay.io/basics/getting-started/record-your-app"
+            href="https://docs.replay.io/basics/replay-mcp/overview"
             iconType="folder"
             title="Documentation"
           >
