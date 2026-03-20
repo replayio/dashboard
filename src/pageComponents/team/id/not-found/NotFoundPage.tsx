@@ -41,7 +41,7 @@ export default function Page({ workspaceId }: { workspaceId: string }) {
   return (
     <div className="flex flex-col items-center gap-6 text-center p-4">
       <div className="flex flex-row gap-4 items-center">
-        <ReplayLogo className="text-slate-500 min-w-12 min-h-12" />
+        <ReplayLogo className="text-neutral-500 min-w-12 min-h-12" />
         <div className="text-2xl font-bold">Sorry, you don&apos;t have permission!</div>
       </div>
       <div>Maybe you haven&apos;t been invited to this team yet?</div>

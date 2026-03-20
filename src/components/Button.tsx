@@ -10,17 +10,21 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: "primary" | "secondary";
   size?: "large" | "normal" | "small";
-  variant?: "outline" | "solid";
+  variant?: "outline" | "solid" | "ghost";
 }) {
-  let defaultColorsClassName = "";
+  let colorClassName = "";
   if (disabled) {
     switch (variant) {
       case "outline": {
-        defaultColorsClassName = "border border-gray-500 text-gray-700";
+        colorClassName = "border border-input text-muted-foreground";
+        break;
+      }
+      case "ghost": {
+        colorClassName = "text-muted-foreground";
         break;
       }
       case "solid": {
-        defaultColorsClassName = "bg-gray-500 text-white";
+        colorClassName = "bg-muted text-muted-foreground";
         break;
       }
     }
@@ -29,11 +33,16 @@ export function Button({
       case "primary":
         switch (variant) {
           case "outline": {
-            defaultColorsClassName = "border border-sky-600 hover:border-sky-700 text-white";
+            colorClassName =
+              "border border-input bg-background hover:bg-accent hover:text-accent-foreground";
+            break;
+          }
+          case "ghost": {
+            colorClassName = "hover:bg-accent hover:text-accent-foreground";
             break;
           }
           case "solid": {
-            defaultColorsClassName = "bg-sky-600 hover:bg-sky-700 text-white";
+            colorClassName = "bg-primary text-primary-foreground hover:bg-primary/90";
             break;
           }
         }
@@ -41,39 +50,44 @@ export function Button({
       case "secondary":
         switch (variant) {
           case "outline": {
-            defaultColorsClassName = "border border-rose-600 hover:border-rose-700 text-white";
+            colorClassName =
+              "border border-destructive/50 text-destructive hover:bg-destructive/10";
+            break;
+          }
+          case "ghost": {
+            colorClassName = "text-destructive hover:bg-destructive/10";
             break;
           }
           case "solid": {
-            defaultColorsClassName = "bg-rose-600 hover:bg-rose-700 text-white";
+            colorClassName = "bg-destructive text-destructive-foreground hover:bg-destructive/90";
             break;
           }
         }
         break;
     }
 
-    defaultColorsClassName += " cursor-pointer";
+    colorClassName += " cursor-pointer";
   }
 
-  let defaultSizeClassName = "";
+  let sizeClassName = "";
   switch (size) {
     case "large": {
-      defaultSizeClassName = "gap-4 rounded-md px-6 py-3";
+      sizeClassName = "gap-4 rounded-md px-6 py-3";
       break;
     }
     case "normal": {
-      defaultSizeClassName = "gap-2 rounded px-2 py-1";
+      sizeClassName = "gap-2 rounded-md px-4 py-2";
       break;
     }
     case "small": {
-      defaultSizeClassName = "gap-2 rounded px-2 py-1 text-sm";
+      sizeClassName = "gap-2 rounded-md px-3 py-1.5 text-sm";
       break;
     }
   }
 
   return (
     <button
-      className={`font-bold inline-flex flex-row items-center transition outline outline-2 outline-transparent ${defaultColorsClassName} ${defaultSizeClassName} ${className}`}
+      className={`font-medium inline-flex flex-row items-center justify-center whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 ${colorClassName} ${sizeClassName} ${className}`}
       disabled={disabled}
       {...rest}
     />

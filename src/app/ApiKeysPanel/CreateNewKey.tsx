@@ -3,7 +3,7 @@ import Checkbox from "@/components/Checkbox";
 import { ClickToCopyString } from "@/components/ClickToCopyString";
 import { Input } from "@/components/Input";
 import { ApiKeyScope } from "@/graphql/types";
-import { ApolloError } from "@apollo/client";
+import type { ApolloError } from "@apollo/client/errors";
 import { useState } from "react";
 
 export function CreateNewKey({
@@ -57,7 +57,7 @@ export function CreateNewKey({
 
     return (
       <div className="flex flex-col gap-1">
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row items-center gap-2 min-w-0">
           <Input
             autoFocus
             disabled={isPending}

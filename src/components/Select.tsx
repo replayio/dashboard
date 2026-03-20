@@ -23,7 +23,7 @@ export function Select<Type extends Option>({
 }) {
   return (
     <div
-      className={`relative outline outline-2 outline-transparent focus-within:outline-sky-500 rounded ${className}`}
+      className={`relative rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background ${className}`}
     >
       <select
         className={`opacity-0 absolute top-0 left-0 w-full h-full ${
@@ -47,7 +47,7 @@ export function Select<Type extends Option>({
         ))}
       </select>
       <DropDownTrigger
-        className={`pointer-events-none h-auto ${!value?.label ? "text-slate-500" : "text-white"}`}
+        className={`pointer-events-none h-auto ${!value?.label ? "text-muted-foreground" : "text-foreground"}`}
         disabled={disabled}
         label={value?.label ?? placeholder ?? ""}
         onClick={noop}

@@ -1,10 +1,15 @@
 import { Button } from "@/components/Button";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { ReplayLogo } from "@/components/ReplayLogo";
-import { Hoverboard } from "@replayio/overboard";
 import assert from "assert";
+import dynamic from "next/dynamic";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/navigation";
+
+const Hoverboard = dynamic(
+  () => import("@replayio/overboard").then(mod => ({ default: mod.Hoverboard })),
+  { ssr: false }
+);
 
 export default function Page({
   message,

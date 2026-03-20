@@ -16,7 +16,7 @@ export function TabContainer({
 
   return (
     <div className="flex flex-col">
-      <ul className="flex flex-row text-sm bg-slate-800 rounded-t">
+      <ul className="flex flex-row text-sm bg-muted rounded-md p-1">
         {tabs.map(tab => (
           <Tab
             isActive={selectedTab === tab}
@@ -25,7 +25,6 @@ export function TabContainer({
             onClick={() => setSelectedTab(tab)}
           />
         ))}
-        <ul className="grow border-b-2 border-slate-700"></ul>
       </ul>
       {children(selectedTab)}
     </div>
@@ -43,10 +42,10 @@ function Tab({
 }) {
   return (
     <li
-      className={`cursor-pointer inline-block px-2 py-1 rounded-t border-b-2 border-slate-700 ${
+      className={`cursor-pointer inline-flex items-center justify-center px-3 py-1.5 rounded-md transition-all ${
         isActive
-          ? "border-sky-300 text-sky-300"
-          : "hover:border-white text-slate-300 hover:text-white"
+          ? "bg-background text-foreground shadow-sm font-medium"
+          : "text-muted-foreground hover:text-foreground"
       }`}
       onClick={onClick}
     >

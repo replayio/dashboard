@@ -67,5 +67,9 @@ export function WorkspaceSettings({
     }
   }, [content, router, workspaceId]);
 
-  return <div className="h-full w-full overflow-auto bg-slate-800 p-2 rounded">{content}</div>;
+  return (
+    <div className="h-full w-full overflow-auto p-6 lg:p-10">
+      <div className="max-w-3xl w-full">{content}</div>
+    </div>
+  );
 }

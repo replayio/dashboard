@@ -23,7 +23,7 @@ export function SettingsButton({ id }: { id: string }) {
   return (
     <Link href={href}>
       <IconButton
-        className={isActive ? "outline outline-2 outline-sky-500" : ""}
+        className={isActive ? "outline outline-2 outline-blue-500" : ""}
         iconClassName={isActive ? "fill-white" : ""}
         iconType="settings"
       />

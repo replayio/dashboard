@@ -14,9 +14,9 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      <ReplayLogo className="text-slate-500 min-w-12 min-h-12" />
+      <ReplayLogo className="text-neutral-500 min-w-12 min-h-12" />
       <div className="text-xl font-bold">Replay is designed for desktop displays.</div>
-      <div className="font-bold underline text-sky-300 cursor-pointer" onClick={onClick}>
+      <div className="font-bold underline text-blue-400 cursor-pointer" onClick={onClick}>
         Take me there anyway →
       </div>
     </div>

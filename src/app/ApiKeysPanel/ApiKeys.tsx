@@ -1,7 +1,7 @@
 import { ApiKeyRow } from "@/app/ApiKeysPanel/ApiKeyRow";
 import { CreateNewKey } from "@/app/ApiKeysPanel/CreateNewKey";
 import { ApiKey, ApiKeyScope } from "@/graphql/types";
-import { ApolloError } from "@apollo/client";
+import type { ApolloError } from "@apollo/client/errors";
 
 export function ApiKeys({
   apiKeys,
@@ -17,20 +17,24 @@ export function ApiKeys({
   scopes?: ApiKeyScope[];
 }) {
   return (
-    <div className="flex flex-col gap-4 h-full overflow-auto">
-      <div className="shrink-0">API Keys allow you to upload recordings programmatically.</div>
-      <div className="shrink-0">
+    <div className="flex flex-col gap-0 h-full overflow-auto">
+      <div className="py-4 border-b border-border p-1">
+        <div className="text-sm font-medium mb-1">Create API Key</div>
+        <div className="text-sm text-muted-foreground mb-3">
+          API Keys allow you to upload recordings programmatically.
+        </div>
         <CreateNewKey createKey={createKey} createKeyError={createKeyError} scopes={scopes} />
       </div>
-      <div className="flex flex-col gap-1 overflow-auto shrink">
-        {apiKeys && apiKeys.length > 0 && (
+      {apiKeys && apiKeys.length > 0 && (
+        <div className="py-4">
+          <div className="text-sm font-medium mb-3">Your API Keys</div>
           <div className="flex flex-col gap-2">
-            {apiKeys?.map(apiKey => (
+            {apiKeys.map(apiKey => (
               <ApiKeyRow deleteKey={deleteKey} key={apiKey.id} apiKey={apiKey} />
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ type TooltipProps = {
 function Tooltip({ children, className, forwardedRef, style }: TooltipProps) {
   return createPortal(
     <div
-      className={`absolute z-50 bg-black text-white px-2 py-1 rounded ${className}`}
+      className={`absolute z-50 bg-accent text-foreground px-2.5 py-1.5 rounded-md text-sm shadow-lg ${className}`}
       style={style}
       ref={forwardedRef}
     >

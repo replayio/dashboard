@@ -86,9 +86,9 @@ export function BillingAddPaymentMethod() {
           options={{
             hidePostalCode: true,
             classes: {
-              base: "bg-slate-950 text-white px-2 py-1 rounded placeholder:text-slate-500",
-              empty: "text-slate-500 placeholder:text-slate-500",
-              focus: "outline outline-2 outline-sky-500",
+              base: "bg-background text-foreground px-2 py-1 rounded placeholder:text-neutral-500",
+              empty: "text-neutral-500 placeholder:text-neutral-500",
+              focus: "outline outline-2 outline-blue-500",
               invalid: "text-red-500",
             },
             style: {

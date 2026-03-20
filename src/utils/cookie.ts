@@ -19,8 +19,12 @@ export function getCookieValueServer<Type = string>(
   return value != null ? (JSON.parse(value) as Type) : null;
 }
 
-export function setCookieValueClient(name: string, value: any) {
-  document.cookie = `${name}=${JSON.stringify(value)}; path=/; SameSite=Lax`;
+export function setCookieValueClient(name: string, value: unknown, options?: { maxAge?: number }) {
+  let cookie = `${name}=${JSON.stringify(value)}; path=/; SameSite=Lax`;
+  if (options?.maxAge) {
+    cookie += `; max-age=${options.maxAge}`;
+  }
+  document.cookie = cookie;
 }
 
 export function setCookieValueServer(

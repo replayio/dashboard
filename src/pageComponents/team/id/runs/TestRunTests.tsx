@@ -111,7 +111,7 @@ export function TestRunTests() {
             />
           </div>
           <div
-            className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-slate-900 rounded"
+            className="flex flex-row flex-wrap gap-x-4 px-2 py-1 bg-muted rounded"
             data-test-id="TestRunTests-Metadata"
           >
             <div className="flex flex-row items-center gap-1" suppressHydrationWarning>
@@ -168,7 +168,7 @@ export function TestRunTests() {
           {Object.values(categorizedTests).map(({ color, count, label, tests }) =>
             tests.length > 0 ? (
               <div
-                className="bg-slate-900 text-white p-2 rounded"
+                className="bg-background text-foreground p-2 rounded"
                 data-test-name="TestRunTests-Section"
                 data-test-id={`TestRunTests-Section-${label}`}
                 key={label}

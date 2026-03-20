@@ -29,9 +29,7 @@ export function TextArea({
 
   return (
     <textarea
-      className={`resize-none bg-slate-950 text-white px-2 py-1 outline outline-2 outline-transparent placeholder:text-slate-500 focus:outline-sky-500 rounded grow ${className} ${
-        disabled ? "opacity-50" : ""
-      }`}
+      className={`resize-none flex w-full rounded-md border border-input bg-background text-foreground px-3 py-2 text-sm placeholder:text-muted-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background disabled:pointer-events-none disabled:opacity-50 grow ${className}`}
       disabled={disabled}
       onChange={event => {
         if (onChange) {

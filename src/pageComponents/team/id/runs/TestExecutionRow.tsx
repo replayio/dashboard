@@ -19,14 +19,14 @@ export function TestExecutionRow({
 
   return (
     <Link
-      className="flex flex-row items-center gap-2 text-white px-2 py-1 hover:text-sky-500"
+      className="flex flex-row items-center gap-2 text-foreground px-2 py-1 hover:text-blue-400"
       data-test-name="TestExecution-RecordingRow"
       href={url ?? ""}
     >
       <Icon className={`w-6 h-6 shrink-0 ${colorClassName}`} type={iconType} />
       <div className="truncate shrink">View replay</div>
       <div
-        className="flex flex-row gap-1 items-center shrink-0 text-sm text-slate-300"
+        className="flex flex-row gap-1 items-center shrink-0 text-sm text-neutral-300"
         suppressHydrationWarning
       >
         <Icon className="w-4 h-4" type="clock" />

@@ -40,10 +40,10 @@ export function TestSummaryRow({
 
   return (
     <Component
-      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap text-white px-2 py-1 outline-0 ${
+      className={`w-full flex flex-row items-center gap-2 whitespace-nowrap text-foreground px-2 py-1 outline-0 ${
         isActive
-          ? "bg-slate-700 cursor-default"
-          : "focus:text-sky-500 hover:bg-slate-700 cursor-pointer"
+          ? "bg-neutral-700 cursor-default"
+          : "focus:text-blue-400 hover:bg-accent cursor-pointer"
       }`}
       data-selected={isActive || undefined}
       data-test-name="TestSummary-Row"

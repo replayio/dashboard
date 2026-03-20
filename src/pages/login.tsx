@@ -1,4 +1,4 @@
-import { EmptyLayout } from "@/components/EmptyLayout";
+import { LoginLayout } from "@/components/LoginLayout";
 import { SessionContext } from "@/components/SessionContext";
 import { AccountSwitcherForm } from "@/pageComponents/login/AccountSwitcherForm";
 import { DefaultLoginForm } from "@/pageComponents/login/DefaultLoginForm";
@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 const defaultConnection = "google-oauth2";
+const emailConnection = "Username-Password-Authentication";
 
 export default function Page() {
   const router = useRouter();
@@ -62,10 +63,11 @@ export default function Page() {
     return (
       <DefaultLoginForm
         onLogin={() => onLogin(defaultConnection)}
+        onEmailLogin={() => onLogin(emailConnection)}
         onSSOLogin={() => setSSOLogin(true)}
       />
     );
   }
 }
 
-Page.Layout = EmptyLayout;
+Page.Layout = LoginLayout;
