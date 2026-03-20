@@ -187,4 +187,3 @@ async function redirectIfProtectedRoute(request: NextRequest) {
     throw loginUrl;
   }
 }
-
