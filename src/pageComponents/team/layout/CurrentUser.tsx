@@ -25,6 +25,8 @@ export function CurrentUser() {
   const { openModal } = useUserSettings();
   const { isCollapsed } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const signingOutRef = useRef(false);
   const [menuStyle, setMenuStyle] = useState<{ bottom: number; left: number }>({
     bottom: 0,
     left: 0,
@@ -32,7 +34,10 @@ export function CurrentUser() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const closeMenu = useCallback(() => setIsOpen(false), []);
+  const closeMenu = useCallback(() => {
+    if (signingOutRef.current) return;
+    setIsOpen(false);
+  }, []);
 
   useLayoutEffect(() => {
     if (!isOpen || !triggerRef.current) return;
@@ -62,8 +67,10 @@ export function CurrentUser() {
     };
   }, [isOpen, closeMenu]);
 
-  const onSignOut = async () => {
-    closeMenu();
+  const onSignOut = () => {
+    if (signingOutRef.current) return;
+    signingOutRef.current = true;
+    setSigningOut(true);
     setAccessTokenInBrowserPrefs(null);
     deleteCookieValueClient(COOKIES.defaultPathname);
     deleteCookieValueClient(COOKIES.accessToken);
@@ -88,7 +95,9 @@ export function CurrentUser() {
         {MENU_ITEMS.map(({ route, label, iconType }) => (
           <button
             key={route}
-            className="flex w-full items-center gap-2.5 px-4 py-2 text-left text-sm font-medium text-foreground hover:bg-accent"
+            type="button"
+            disabled={signingOut}
+            className="flex w-full items-center gap-2.5 px-4 py-2 text-left text-sm font-medium text-foreground hover:bg-accent disabled:pointer-events-none disabled:opacity-50"
             onClick={() => {
               closeMenu();
               openModal(route);
@@ -99,11 +108,25 @@ export function CurrentUser() {
           </button>
         ))}
         <button
-          className="flex w-full items-center gap-2.5 px-4 py-2 text-left text-sm font-medium text-foreground hover:bg-accent"
+          type="button"
+          disabled={signingOut}
+          className="flex w-full items-center gap-2.5 px-4 py-2 text-left text-sm font-medium text-foreground hover:bg-accent disabled:pointer-events-none disabled:opacity-70"
           onClick={onSignOut}
         >
-          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" type="logout" />
-          Sign out
+          {signingOut ? (
+            <>
+              <Icon
+                className="h-4 w-4 shrink-0 animate-spin text-muted-foreground"
+                type="loading-spinner"
+              />
+              Signing out…
+            </>
+          ) : (
+            <>
+              <Icon className="h-4 w-4 shrink-0 text-muted-foreground" type="logout" />
+              Sign out
+            </>
+          )}
         </button>
       </div>
     </div>
@@ -112,10 +135,14 @@ export function CurrentUser() {
   const triggerButton = (
     <button
       ref={triggerRef}
-      className={`flex w-full text-foreground transition-colors hover:bg-accent ${
+      className={`flex w-full text-foreground transition-colors hover:bg-accent disabled:pointer-events-none disabled:opacity-60 ${
         isCollapsed ? "justify-center px-2 py-3" : "flex-row items-center gap-3 px-3 py-3"
       }`}
-      onClick={() => setIsOpen(o => !o)}
+      disabled={signingOut}
+      onClick={() => {
+        if (signingOutRef.current) return;
+        setIsOpen(o => !o);
+      }}
       type="button"
     >
       {user.picture ? (
