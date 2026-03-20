@@ -10,13 +10,23 @@ import { getAuth0SubFromAccessTokenCookie, setCookieValueClient } from "@/utils/
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 
-function completeIntakeAndGoHome(authSub: string) {
+/** Same-origin path only — avoids open redirects. */
+function getSafeReturnPath(returnTo: unknown): string {
+  if (typeof returnTo !== "string") return "/home";
+  const t = returnTo.trim();
+  if (!t.startsWith("/") || t.startsWith("//") || t.includes("://") || t.includes("\\")) {
+    return "/home";
+  }
+  return t;
+}
+
+function completeIntakeAndRedirect(authSub: string, nextPath: string) {
   setCookieValueClient(
     COOKIES.intakeCompleted,
     { userId: authSub },
     { maxAge: 60 * 60 * 24 * 365 }
   );
-  window.location.assign("/home");
+  window.location.assign(nextPath);
 }
 
 const VIBE_TOOLS = ["Lovable", "Base44", "Bolt", "Replit", "Other"] as const;
@@ -39,12 +49,16 @@ export default function Page() {
       return;
     }
     if (!user) return;
+    if (!router.isReady) return;
 
     let cancelled = false;
 
     (async () => {
       try {
-        const res = await fetch("/api/intake-status");
+        const res = await fetch(`/api/intake-status?_=${Date.now()}`, {
+          cache: "no-store",
+          credentials: "same-origin",
+        });
         const data = await res.json();
         if (cancelled) return;
         if (
@@ -53,7 +67,7 @@ export default function Page() {
           typeof data.authSub === "string" &&
           data.authSub.length > 0
         ) {
-          completeIntakeAndGoHome(data.authSub);
+          completeIntakeAndRedirect(data.authSub, getSafeReturnPath(router.query.returnTo));
           return;
         }
       } catch (e) {
@@ -65,7 +79,7 @@ export default function Page() {
     return () => {
       cancelled = true;
     };
-  }, [user, router]);
+  }, [user, router, router.isReady, router.query.returnTo]);
 
   const canSubmit =
     userType === "vibe_coder"
@@ -114,7 +128,7 @@ export default function Page() {
         return;
       }
 
-      completeIntakeAndGoHome(authSub);
+      completeIntakeAndRedirect(authSub, getSafeReturnPath(router.query.returnTo));
     } catch (err) {
       console.error("Intake submit error:", err);
       setError("Something went wrong. Please try again.");

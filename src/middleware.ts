@@ -222,6 +222,9 @@ async function redirectToIntakeIfNeeded(request: NextRequest, accessToken: strin
   const userId = decoded?.sub;
 
   if (!intakeCompleted?.userId || intakeCompleted.userId !== userId) {
-    throw new URL("/intake", request.url);
+    const returnTo = `${pathname}${request.nextUrl.search}`;
+    const intakeUrl = new URL("/intake", request.url);
+    intakeUrl.searchParams.set("returnTo", returnTo);
+    throw intakeUrl;
   }
 }
