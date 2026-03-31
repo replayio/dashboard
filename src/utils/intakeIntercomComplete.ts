@@ -80,3 +80,54 @@ export function isIntakeComplete(attrs: Record<string, unknown> | undefined): bo
   }
   return false;
 }
+
+export type IntercomContactForIntakePick = {
+  custom_attributes?: Record<string, unknown>;
+  updated_at?: number;
+};
+
+function contactUpdatedAt(c: IntercomContactForIntakePick): number {
+  return typeof c.updated_at === "number" ? c.updated_at : 0;
+}
+
+/** Rough score when no contact is “complete” yet — prefer the record intake/Stripe actually use. */
+function intakeSignalsScore(attrs: Record<string, unknown> | undefined): number {
+  if (!attrs) return 0;
+  let s = 0;
+  if (attrs.source === "dashboard-intake") s += 100;
+  if (stringFromCustomAttribute(attrs[INTERCOM_CONTACT_ATTR.userType])) s += 40;
+  if (stringFromCustomAttribute(attrs[INTERCOM_CONTACT_ATTR.vibeTool])) s += 20;
+  const ck = intercomCompanyNameAttributeKey();
+  if (
+    stringFromCustomAttribute(attrs[ck]) ||
+    stringFromCustomAttribute(attrs.company_name) ||
+    stringFromCustomAttribute(attrs.Company_name)
+  ) {
+    s += 20;
+  }
+  return s;
+}
+
+/**
+ * Intercom allows duplicate users with the same email. Search order is not stable; pick the contact
+ * that already satisfies intake, otherwise the richest / most recently updated profile.
+ */
+export function pickBestIntercomContactForIntake<T extends IntercomContactForIntakePick>(
+  contacts: T[]
+): T | null {
+  if (contacts.length === 0) return null;
+  if (contacts.length === 1) return contacts[0] ?? null;
+
+  const complete = contacts.filter(c => isIntakeComplete(c.custom_attributes));
+  if (complete.length > 0) {
+    const best = [...complete].sort((a, b) => contactUpdatedAt(b) - contactUpdatedAt(a))[0];
+    return best ?? null;
+  }
+
+  const best = [...contacts].sort(
+    (a, b) =>
+      intakeSignalsScore(b.custom_attributes) - intakeSignalsScore(a.custom_attributes) ||
+      contactUpdatedAt(b) - contactUpdatedAt(a)
+  )[0];
+  return best ?? null;
+}

@@ -1,4 +1,6 @@
+import { Icon } from "@/components/Icon";
 import { LoginLayout } from "@/components/LoginLayout";
+import { ReplayLogo } from "@/components/ReplayLogo";
 import { COOKIES } from "@/constants";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
 import { setCookieValueClient } from "@/utils/cookie";
@@ -51,6 +53,7 @@ export default function IntakePage() {
     if (!mounted) return;
     let cancelled = false;
     (async () => {
+      let leaveLoadingVisible = false;
       try {
         const res = await fetch("/api/intake-status", {
           cache: "no-store",
@@ -65,13 +68,14 @@ export default function IntakePage() {
         const data = (await res.json()) as { completed?: boolean; authSub?: string | null };
         if (cancelled) return;
         if (data.completed) {
+          leaveLoadingVisible = true;
           finishAndRedirect(data.authSub);
           return;
         }
       } catch {
         if (!cancelled) setError("Could not verify intake status. You can still submit the form.");
       } finally {
-        if (!cancelled) setStatusLoading(false);
+        if (!cancelled && !leaveLoadingVisible) setStatusLoading(false);
       }
     })();
     return () => {
@@ -135,8 +139,24 @@ export default function IntakePage() {
 
   if (!mounted || statusLoading) {
     return (
-      <div className="w-full max-w-[420px] flex flex-col items-center justify-center min-h-[200px] text-login-fg-secondary text-sm">
-        Loading…
+      <div
+        className="w-full max-w-[420px] bg-login-card border border-login-card-border rounded-3xl shadow-lg px-10 pt-10 pb-10 flex flex-col items-center gap-6 text-center min-h-[280px] justify-center"
+        role="status"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <ReplayLogo className="h-12 w-12 shrink-0" color="#F02D5E" />
+        <div className="flex flex-col gap-3 items-center">
+          <h2 className="text-2xl font-bold text-login-fg my-0">Signing you in</h2>
+          <p className="text-login-fg-secondary text-sm mb-0 max-w-[280px] leading-snug">
+            Checking whether we need a few details for your account…
+          </p>
+          <Icon
+            type="loading-spinner"
+            className="w-8 h-8 shrink-0 animate-spin text-login-fg-secondary"
+            aria-hidden
+          />
+        </div>
       </div>
     );
   }

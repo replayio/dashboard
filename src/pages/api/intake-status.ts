@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { appendIntakeCompletedCookieOnApiResponse } from "@/utils/cookie";
-import { isIntakeComplete } from "@/utils/intakeIntercomComplete";
+import { isIntakeComplete, pickBestIntercomContactForIntake } from "@/utils/intakeIntercomComplete";
 import {
   getAccessTokenFromRequest,
   getAuthSubFromAccessToken,
@@ -15,6 +15,7 @@ type Contact = {
   id?: string;
   email?: string;
   custom_attributes?: Record<string, unknown>;
+  updated_at?: number;
 };
 
 type SearchBody = { data?: Contact[] };
@@ -52,7 +53,7 @@ async function findContactByEmail(email: string): Promise<Contact | null> {
         operator: "AND",
         value: [{ field: "email", operator: "=", value: email.trim() }],
       },
-      pagination: { per_page: 10 },
+      pagination: { per_page: 50 },
     }),
   });
   const text = await res.text();
@@ -66,12 +67,17 @@ async function findContactByEmail(email: string): Promise<Contact | null> {
   }
   if (!res.ok) return null;
   const list = body.data ?? [];
-  const row =
-    list.find(c => typeof c.email === "string" && c.email.trim().toLowerCase() === normalized) ??
-    list[0];
-  if (!row?.id) return null;
-  const full = await fetchContactById(row.id, h);
-  return full ?? row;
+  const sameEmail = list.filter(
+    c => typeof c.email === "string" && c.email.trim().toLowerCase() === normalized
+  );
+  if (sameEmail.length === 0) {
+    return null;
+  }
+  const fullRows = await Promise.all(
+    sameEmail.map(row => (row.id ? fetchContactById(row.id, h) : Promise.resolve(null)))
+  );
+  const resolved = sameEmail.map((row, i) => fullRows[i] ?? row);
+  return pickBestIntercomContactForIntake(resolved);
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
