@@ -162,17 +162,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const companyKey = intercomCompanyNameAttributeKey();
+  const companyTrimmed = companyName?.trim() ?? "";
+
   const custom_attributes: Record<string, string | null> = {
     [INTERCOM_CONTACT_ATTR.userType]: userType,
     [INTERCOM_CONTACT_ATTR.source]: "dashboard-intake",
   };
   if (userType === "vibe_coder" && vibeTool?.trim()) {
     custom_attributes[INTERCOM_CONTACT_ATTR.vibeTool] = vibeTool.trim();
-    custom_attributes[companyKey] = null;
+    if (companyTrimmed) {
+      custom_attributes[companyKey] = companyTrimmed;
+    }
   }
-  if (userType === "engineer" && companyName?.trim()) {
-    custom_attributes[companyKey] = companyName.trim();
+  if (userType === "engineer") {
     custom_attributes[INTERCOM_CONTACT_ATTR.vibeTool] = null;
+    custom_attributes[companyKey] = companyTrimmed;
   }
 
   const payload = {
@@ -230,8 +234,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         const cid = (putData as { id?: string }).id ?? dupId;
-        if (userType === "engineer" && companyName?.trim()) {
-          await attachCompanyToContact(cid, companyName.trim());
+        if (companyTrimmed) {
+          await attachCompanyToContact(cid, companyTrimmed);
         }
         appendIntakeCompletedCookieOnApiResponse(res, authSub);
         return res.status(200).json({ ...(putData as object), authSub });
@@ -242,8 +246,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const createdId = (data as { id?: string }).id;
-    if (userType === "engineer" && companyName?.trim() && createdId) {
-      await attachCompanyToContact(createdId, companyName.trim());
+    if (companyTrimmed && createdId) {
+      await attachCompanyToContact(createdId, companyTrimmed);
     }
     appendIntakeCompletedCookieOnApiResponse(res, authSub);
     return res.status(200).json({ ...(data as object), authSub });

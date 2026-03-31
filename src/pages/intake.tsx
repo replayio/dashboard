@@ -9,6 +9,23 @@ import { useCallback, useEffect, useState } from "react";
 
 const VIBE_TOOLS = ["Lovable", "Replit", "Bolt", "Base44", "Other"] as const;
 
+function buildVibeToolString(
+  selected: Set<(typeof VIBE_TOOLS)[number]>,
+  otherTool: string
+): string | null {
+  const parts: string[] = [];
+  for (const t of VIBE_TOOLS) {
+    if (t === "Other") continue;
+    if (selected.has(t)) parts.push(t);
+  }
+  if (selected.has("Other")) {
+    const custom = otherTool.trim();
+    if (custom) parts.push(custom);
+  }
+  if (parts.length === 0) return null;
+  return parts.join(", ");
+}
+
 function getSafeReturnPath(raw: string | null): string {
   if (!raw || typeof raw !== "string") return "/home";
   const t = raw.trim();
@@ -27,7 +44,9 @@ export default function IntakePage() {
   const [mounted, setMounted] = useState(false);
   const [statusLoading, setStatusLoading] = useState(true);
   const [userType, setUserType] = useState<"vibe_coder" | "engineer" | null>(null);
-  const [tool, setTool] = useState<(typeof VIBE_TOOLS)[number]>("Lovable");
+  const [selectedTools, setSelectedTools] = useState<Set<(typeof VIBE_TOOLS)[number]>>(
+    () => new Set()
+  );
   const [otherTool, setOtherTool] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -91,9 +110,13 @@ export default function IntakePage() {
       return;
     }
     if (userType === "vibe_coder") {
-      const resolved = tool === "Other" ? otherTool.trim() : tool;
-      if (!resolved) {
-        setError("Enter which tool you use.");
+      const vibeStr = buildVibeToolString(selectedTools, otherTool);
+      if (!vibeStr) {
+        if (selectedTools.has("Other") && !otherTool.trim()) {
+          setError("Add a tool name for Other, or uncheck it.");
+        } else {
+          setError("Select at least one tool.");
+        }
         return;
       }
     } else if (!companyName.trim()) {
@@ -103,13 +126,15 @@ export default function IntakePage() {
 
     setSubmitting(true);
     try {
+      const companyTrimmed = companyName.trim();
       const body =
         userType === "vibe_coder"
           ? {
               userType: "vibe_coder" as const,
-              vibeTool: tool === "Other" ? otherTool.trim() : tool,
+              vibeTool: buildVibeToolString(selectedTools, otherTool)!,
+              ...(companyTrimmed ? { companyName: companyTrimmed } : {}),
             }
-          : { userType: "engineer" as const, companyName: companyName.trim() };
+          : { userType: "engineer" as const, companyName: companyTrimmed };
 
       const res = await fetch("/api/intercom", {
         method: "POST",
@@ -202,38 +227,58 @@ export default function IntakePage() {
         </div>
 
         {userType === "vibe_coder" && (
-          <div className="flex flex-col gap-2">
-            <label htmlFor="intake-tool" className="text-login-fg text-sm font-medium">
+          <fieldset className="flex flex-col gap-3 border-0 p-0 m-0 min-w-0">
+            <legend className="text-login-fg text-sm font-medium mb-0.5">
               Which tools do you use?
-            </label>
-            <select
-              id="intake-tool"
-              value={tool}
-              onChange={e => setTool(e.target.value as (typeof VIBE_TOOLS)[number])}
-              className="w-full rounded-xl border border-login-btn-outline-border bg-login-input-bg px-4 py-3 text-sm text-login-fg"
-            >
-              {VIBE_TOOLS.map(t => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-            {tool === "Other" && (
+            </legend>
+            <div className="flex flex-col gap-2.5">
+              {VIBE_TOOLS.map(t => {
+                const id = `intake-tool-${t}`;
+                return (
+                  <label
+                    key={t}
+                    htmlFor={id}
+                    className="flex items-center gap-3 cursor-pointer text-sm text-login-fg rounded-xl border border-login-btn-outline-border bg-login-input-bg px-4 py-3 focus-within:ring-2 focus-within:ring-login-btn-primary-bg"
+                  >
+                    <input
+                      id={id}
+                      type="checkbox"
+                      checked={selectedTools.has(t)}
+                      onChange={() => {
+                        setSelectedTools(prev => {
+                          const next = new Set(prev);
+                          if (next.has(t)) next.delete(t);
+                          else next.add(t);
+                          return next;
+                        });
+                      }}
+                      className="h-4 w-4 shrink-0 rounded border-login-btn-outline-border text-login-btn-primary-bg focus:ring-login-btn-primary-bg"
+                    />
+                    <span>{t}</span>
+                  </label>
+                );
+              })}
+            </div>
+            {selectedTools.has("Other") && (
               <input
                 type="text"
                 value={otherTool}
                 onChange={e => setOtherTool(e.target.value)}
                 placeholder="Tool name"
+                aria-label="Other tool name"
                 className="w-full rounded-xl border border-login-btn-outline-border bg-login-input-bg px-4 py-3 text-sm text-login-fg placeholder:text-login-fg-secondary"
               />
             )}
-          </div>
+          </fieldset>
         )}
 
-        {userType === "engineer" && (
+        {(userType === "vibe_coder" || userType === "engineer") && (
           <div className="flex flex-col gap-2">
             <label htmlFor="intake-company" className="text-login-fg text-sm font-medium">
               Company name
+              {userType === "vibe_coder" && (
+                <span className="text-login-fg-secondary font-normal"> (optional)</span>
+              )}
             </label>
             <input
               id="intake-company"
