@@ -187,6 +187,10 @@ function redirectToIntakeIfNeeded(request: NextRequest, accessToken: string) {
     return;
   }
 
+  if (request.cookies.get(COOKIES.e2eSkipIntake)?.value === "1") {
+    return;
+  }
+
   let cookieUserId: string | null = null;
   const raw = request.cookies.get(COOKIES.intakeCompleted)?.value;
   if (raw) {
