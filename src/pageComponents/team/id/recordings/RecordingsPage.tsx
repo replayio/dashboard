@@ -1,13 +1,13 @@
 import { Icon } from "@/components/Icon";
 import { Input } from "@/components/Input";
-import { LoadingProgressBar } from "@/components/LoadingProgressBar";
+import { RecordingsListLoading } from "@/components/RecordingsListLoading";
 import { SessionContext } from "@/components/SessionContext";
 import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { WorkspaceRecording } from "@/graphql/types";
 import { LaunchReplayModal } from "@/pageComponents/team/id/recordings/LaunchReplayModal";
 import { RecordingRow } from "@/pageComponents/team/id/recordings/RecordingRow";
 import { formatNumber } from "@/utils/number";
-import { useContext, useMemo, useState, useTransition } from "react";
+import { useContext, useEffect, useMemo, useState, useTransition } from "react";
 
 const PAGE_SIZE = 25;
 
@@ -26,6 +26,14 @@ export default function RecordingPage({
   const [filter, setFilter] = useState("");
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [showLaunchModal, setShowLaunchModal] = useState(false);
+  const [navigationPendingUuid, setNavigationPendingUuid] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!navigationPendingUuid) return;
+    const clearAfterMs = 20_000;
+    const id = window.setTimeout(() => setNavigationPendingUuid(null), clearAfterMs);
+    return () => window.clearTimeout(id);
+  }, [navigationPendingUuid]);
 
   const [filteredRecordings, numTotalRecords] = useMemo(() => {
     let recordings = allRecordings;
@@ -61,7 +69,7 @@ export default function RecordingPage({
         <Input
           data-test-id="filter-input"
           defaultValue={filter}
-          disabled={isPending}
+          disabled={isPending || navigationPendingUuid !== null}
           onConfirm={onFilterConfirm}
           placeholder={
             isLoading ? "Search recordings" : `Search ${formatNumber(numTotalRecords)} recordings`
@@ -72,13 +80,18 @@ export default function RecordingPage({
         {showLaunchModal && <LaunchReplayModal onDismiss={() => setShowLaunchModal(false)} />}
       </div>
       <div className="flex flex-col overflow-auto grow">
-        <div className="relative flex flex-col overflow-auto text-foreground rounded-lg border border-border bg-card grow">
-          {isLoading && <LoadingProgressBar />}
+        <div
+          className="relative flex flex-col overflow-auto text-foreground rounded-lg border border-border bg-card grow"
+          aria-busy={navigationPendingUuid !== null}
+        >
+          {isLoading && <RecordingsListLoading />}
           {user &&
             workspaces &&
             filteredRecordings?.map(recording => (
               <RecordingRow
                 key={recording.uuid}
+                navigationPendingUuid={navigationPendingUuid}
+                onNavigationIntent={setNavigationPendingUuid}
                 recording={recording}
                 user={user}
                 workspaces={workspaces}
@@ -86,7 +99,9 @@ export default function RecordingPage({
             ))}
           {!isLoading && limit < numTotalRecords && (
             <button
-              className="flex flex-row items-center justify-center gap-2 px-4 py-3 font-medium cursor-pointer text-sm text-primary hover:bg-accent transition-colors border-t border-border"
+              type="button"
+              disabled={navigationPendingUuid !== null}
+              className="flex flex-row items-center justify-center gap-2 px-4 py-3 font-medium cursor-pointer text-sm text-primary hover:bg-accent transition-colors border-t border-border disabled:pointer-events-none disabled:opacity-40"
               onClick={onShowMoreClick}
             >
               <Icon

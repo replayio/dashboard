@@ -1,8 +1,19 @@
+/** Intercom people custom attribute API names (dashboard intake). */
+export const INTERCOM_CONTACT_ATTR = {
+  userType: "user_type",
+  vibeTool: "vibe_tool",
+  companyName: "Company_name",
+  source: "source",
+} as const;
+
 export const COOKIES = {
   accessToken: "replay:access-token",
   authReturnTo: "replay:auth-return-to",
   browserAuth: "replay:browser-auth",
+  /** Set by Playwright via navigateToPage so CI e2e skips intake (no Intercom fixture for test users). */
+  e2eSkipIntake: "replay:dashboard:e2e-skip-intake",
   defaultPathname: "replay:dashboard:default-pathname",
+  intakeCompleted: "replay:dashboard:intake-completed",
   mobileWarningDismissed: "replay:dashboard:mobile-warning-dismissed",
   mockGraphQLData: "replay:mock-graphql-data",
   testRunsFilters: "replay:dashboard:test-runs-filters",

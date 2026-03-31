@@ -1,4 +1,6 @@
+import { COOKIES } from "@/constants";
 import cookie, { CookieSerializeOptions } from "cookie";
+import type { NextApiResponse } from "next";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { NextResponse } from "next/server";
 
@@ -46,4 +48,30 @@ export function setCookieValueServer(
 export interface AccessTokenCookie {
   token: string;
   source: string;
+}
+
+const INTAKE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+
+export function appendIntakeCompletedCookieOnApiResponse(
+  res: NextApiResponse,
+  authSub: string | null
+) {
+  if (!authSub) return;
+  const serialized = cookie.serialize(
+    COOKIES.intakeCompleted,
+    JSON.stringify({ userId: authSub }),
+    {
+      path: "/",
+      sameSite: "lax",
+      maxAge: INTAKE_COOKIE_MAX_AGE,
+    }
+  );
+  const existing = res.getHeader("Set-Cookie");
+  if (!existing) {
+    res.setHeader("Set-Cookie", serialized);
+  } else if (Array.isArray(existing)) {
+    res.setHeader("Set-Cookie", [...existing, serialized]);
+  } else {
+    res.setHeader("Set-Cookie", [String(existing), serialized]);
+  }
 }

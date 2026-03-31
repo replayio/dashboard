@@ -1,5 +1,5 @@
 import { LeftNav } from "@/components/LeftNav";
-import { LoadingProgressBar } from "@/components/LoadingProgressBar";
+import { WorkspaceNavLoading } from "@/components/WorkspaceNavLoading";
 import { WorkspaceNavLink } from "@/components/layout/WorkspaceNavLink";
 import { useWorkspaces } from "@/graphql/queries/useWorkspaces";
 import { Workspace } from "@/graphql/types";
@@ -35,7 +35,7 @@ export function DefaultNav() {
   if (!workspaces) {
     return (
       <LeftNav>
-        <LoadingProgressBar />
+        <WorkspaceNavLoading />
       </LeftNav>
     );
   }

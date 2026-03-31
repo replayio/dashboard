@@ -1,3 +1,4 @@
+import { COOKIES } from "@/constants";
 import { compress } from "@/utils/compression";
 import { Page } from "@playwright/test";
 import assert from "assert";
@@ -45,5 +46,12 @@ export async function navigateToPage({
   }
 
   await debugPrint(page, `Navigating to ${chalk.blueBright(url)}`, "navigateToPage");
+  await page.context().addCookies([
+    {
+      name: COOKIES.e2eSkipIntake,
+      value: "1",
+      url: `${host}/`,
+    },
+  ]);
   await page.goto(url.toString());
 }
