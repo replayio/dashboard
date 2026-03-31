@@ -23,6 +23,8 @@ export async function middleware(request: NextRequest) {
     await redirectIfMobile(request);
     if (!accessToken) {
       await redirectIfProtectedRoute(request);
+    } else {
+      redirectToIntakeIfNeeded(request, accessToken);
     }
   } catch (thrown) {
     if (thrown instanceof URL) {
@@ -170,6 +172,42 @@ async function redirectIfMobile(request: NextRequest) {
   }
 }
 
+/**
+ * Intake gating uses a cookie as a fast path only. Intercom (via GET /api/intake-status on /intake)
+ * is authoritative; a missing or stale cookie still sends the user through /intake once to re-sync.
+ */
+function redirectToIntakeIfNeeded(request: NextRequest, accessToken: string) {
+  const { pathname, search } = request.nextUrl;
+  if (
+    pathname === "/intake" ||
+    pathname === "/login" ||
+    pathname.startsWith("/api/") ||
+    pathname === "/mobile-warning"
+  ) {
+    return;
+  }
+
+  let cookieUserId: string | null = null;
+  const raw = request.cookies.get(COOKIES.intakeCompleted)?.value;
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw) as { userId?: string };
+      cookieUserId = typeof parsed?.userId === "string" ? parsed.userId : null;
+    } catch {
+      // ignore invalid cookie
+    }
+  }
+
+  const decoded = jwt.decode(accessToken, { json: true }) as { sub?: string } | null;
+  const sub = typeof decoded?.sub === "string" ? decoded.sub : null;
+  if (!sub) return;
+  if (cookieUserId === sub) return;
+
+  const intakeUrl = new URL("/intake", request.url);
+  intakeUrl.searchParams.set("returnTo", pathname + search);
+  throw intakeUrl;
+}
+
 async function redirectIfProtectedRoute(request: NextRequest) {
   const { nextUrl } = request;
   const { pathname, search } = nextUrl;
@@ -177,6 +215,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
   if (
     pathname === "/" ||
     pathname === "/home" ||
+    pathname === "/intake" ||
     pathname.startsWith("/org") ||
     pathname.startsWith("/team") ||
     pathname.startsWith("/user")

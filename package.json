@@ -12,6 +12,7 @@
     "graphql-schema": "gq https://graphql.replay.io/v1/graphql -H \"X-Hasura-Admin-Secret: $HASURA_KEY\" --introspect > schema.graphql",
     "graphql-types": "graphql-codegen --config codegen.ts",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "prettier": "prettier . --write",
     "prettier:ci": "prettier . --check",
     "start": "next start",
