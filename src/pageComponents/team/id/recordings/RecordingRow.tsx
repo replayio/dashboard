@@ -43,6 +43,7 @@ export function RecordingRow({
         }
         if (e.button !== 0) return;
         if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        if (!e.currentTarget.contains(e.target as Node)) return;
         if ((e.target as HTMLElement).closest("[data-recording-row-menu]")) return;
         flushSync(() => onNavigationIntent(recording.uuid));
       }}
