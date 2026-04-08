@@ -1,10 +1,13 @@
 import { IconButton } from "@/components/IconButton";
 import { User, Workspace, WorkspaceRecording } from "@/graphql/types";
 import { DeleteDialog } from "@/pageComponents/team/id/recordings/DeleteDialog";
+import { RenameDialog } from "@/pageComponents/team/id/recordings/RenameDialog";
 import { ShareDialog } from "@/pageComponents/team/id/recordings/ShareDialog";
 import { canDeleteRecording } from "@/utils/user";
 import { MouseEvent, useState } from "react";
 import { ContextMenuItem, useContextMenu } from "use-context-menu";
+
+type DialogKind = "delete" | "rename" | "share" | null;
 
 export function RecordingDropdown({
   recording,
@@ -15,31 +18,22 @@ export function RecordingDropdown({
   user: User;
   workspaces: Workspace[];
 }) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState<DialogKind>(null);
 
-  const onDelete = () => {
-    setShowDeleteDialog(true);
-  };
-
-  const onDismissShareDialog = () => {
-    setShowDeleteDialog(false);
-    setShowShareDialog(false);
-  };
-
-  const onShare = () => {
-    setShowShareDialog(true);
-  };
+  const onDismiss = () => setOpenDialog(null);
 
   const canDelete = canDeleteRecording(recording, user.id, workspaces);
 
   const { contextMenu, onContextMenu } = useContextMenu(
     <>
-      <ContextMenuItem className="text-sm px-4 py-2" onSelect={onShare}>
+      <ContextMenuItem className="text-sm px-4 py-2" onSelect={() => setOpenDialog("rename")}>
+        Rename
+      </ContextMenuItem>
+      <ContextMenuItem className="text-sm px-4 py-2" onSelect={() => setOpenDialog("share")}>
         Share
       </ContextMenuItem>
       {canDelete && (
-        <ContextMenuItem className="text-sm px-4 py-2" onSelect={onDelete}>
+        <ContextMenuItem className="text-sm px-4 py-2" onSelect={() => setOpenDialog("delete")}>
           Delete
         </ContextMenuItem>
       )}
@@ -59,8 +53,11 @@ export function RecordingDropdown({
         iconType="vertical-dots"
       />
       {contextMenu}
-      {showDeleteDialog && <DeleteDialog onDismiss={onDismissShareDialog} recording={recording} />}
-      {showShareDialog && <ShareDialog onDismiss={onDismissShareDialog} recording={recording} />}
+      {openDialog === "delete" && <DeleteDialog onDismiss={onDismiss} recording={recording} />}
+      {openDialog === "rename" && <RenameDialog onDismiss={onDismiss} recording={recording} />}
+      {openDialog === "share" && (
+        <ShareDialog onDismiss={onDismiss} recording={recording} workspaces={workspaces} />
+      )}
     </>
   );
 }
