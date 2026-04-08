@@ -97,7 +97,7 @@ export function ShareDialog({
           onClick={() => setDropdownOpen(o => !o)}
           className="w-full flex items-center justify-between rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground cursor-pointer hover:bg-accent transition-colors"
         >
-          <span className="truncate">{selected.label} can view</span>
+          <span className="truncate">{selected.label} can view this recording</span>
           <Icon className="w-4 h-4 shrink-0 ml-2" type="drop-down-caret-down" />
         </button>
         {dropdownOpen && (
@@ -199,7 +199,7 @@ function Collaborator({
       <div className="truncate">{name}</div>
       <div className="grow" />
       <div className="text-gray-500 text-sm">
-        {collaborationId === null ? "Author" : "Collaborator"}
+        {collaborationId === null ? "Owner" : "Collaborator"}
       </div>
       <div className="shrink-0 w-4 text-right">
         {collaborationId != null && (
