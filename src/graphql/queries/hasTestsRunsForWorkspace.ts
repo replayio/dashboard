@@ -5,7 +5,7 @@ import {
 import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { getRelativeDate } from "@/utils/date";
 import { gql } from "@apollo/client";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 
 export async function hasTestsRunsForWorkspace(
   accessToken: string,

@@ -2,8 +2,8 @@ import { URLS } from "@/constants";
 import { ApolloQueryResult, OperationVariables, TypedDocumentNode } from "@apollo/client";
 import assert from "assert";
 import { DocumentNode } from "graphql";
-import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
-import { MockGraphQLData } from "tests/mocks/types";
+import { getMockGraphQLResponse } from "@/testing/getMockGraphQLResponse";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 
 export async function graphQLQuery<Query, Variables extends OperationVariables = {}>({
   accessToken,
@@ -43,6 +43,10 @@ export async function graphQLQuery<Query, Variables extends OperationVariables =
       variables,
     }),
   });
+
+  if (!response.ok) {
+    throw new Error(`GraphQL request failed: ${response.status} ${response.statusText}`);
+  }
 
   return await response.json();
 }

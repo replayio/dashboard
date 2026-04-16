@@ -1,5 +1,5 @@
 import { compress, decompress } from "@/utils/compression";
-import { expect } from "@playwright/test";
+import { describe, expect, it } from "@jest/globals";
 
 describe("compression utils", () => {
   it("should compress empty values", () => {

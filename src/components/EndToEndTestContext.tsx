@@ -1,6 +1,6 @@
 import { decompress } from "@/utils/compression";
 import { PropsWithChildren, createContext, useMemo } from "react";
-import { MockGraphQLData } from "../../tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 
 export type EndToEndTestContextType = {
   mockGraphQLData: MockGraphQLData | null;

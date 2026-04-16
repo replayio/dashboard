@@ -36,12 +36,20 @@ export async function middleware(request: NextRequest) {
 
   switch (pathname) {
     case "/": {
-      // Redirect them to the most recently viewed path
       const cookieStore = cookies();
       const cookie = cookieStore.get(COOKIES.defaultPathname);
 
+      let pathname = "/home";
+      if (cookie) {
+        try {
+          pathname = JSON.parse(cookie.value);
+        } catch {
+          // Malformed cookie — fall back to /home
+        }
+      }
+
       const redirectURL = new URL(request.url);
-      redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/home";
+      redirectURL.pathname = pathname;
 
       return NextResponse.redirect(redirectURL);
     }

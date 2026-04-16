@@ -12,7 +12,7 @@ import {
 } from "@apollo/client";
 import { GraphQLError } from "graphql";
 import { useContext } from "react";
-import { getMockGraphQLResponse } from "tests/mocks/getMockGraphQLResponse";
+import { getMockGraphQLResponse } from "@/testing/getMockGraphQLResponse";
 
 export function useGraphQLMutation<Query, Variables extends OperationVariables = {}>(
   query: DocumentNode | TypedDocumentNode<Query, Variables>,

@@ -4,7 +4,7 @@ import { decompress } from "@/utils/compression";
 import { getCookieValueServer } from "@/utils/cookie";
 import assert from "assert";
 import { GetServerSidePropsContext } from "next";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 
 export async function getServerSideWorkspaceProps({
   params,
