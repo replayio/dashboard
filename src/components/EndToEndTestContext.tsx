@@ -14,10 +14,9 @@ export function EndToEndTestContextProvider({
 }: PropsWithChildren<{ mockGraphQLData: string | null }>) {
   const value = useMemo<EndToEndTestContextType>(
     () => ({
-      mockGraphQLData:
-        process.env.NODE_ENV !== "production" && mockGraphQLDataString
-          ? decompress<MockGraphQLData>(mockGraphQLDataString)
-          : null,
+      mockGraphQLData: mockGraphQLDataString
+        ? decompress<MockGraphQLData>(mockGraphQLDataString)
+        : null,
     }),
     [mockGraphQLDataString]
   );

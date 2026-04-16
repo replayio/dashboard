@@ -23,8 +23,8 @@ export async function graphQLQuery<Query, Variables extends OperationVariables =
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  // Support e2e tests (disabled in production builds)
-  if (process.env.NODE_ENV !== "production") {
+  // Support e2e tests (disabled in production, allowed in Vercel preview for CI)
+  if (process.env.NODE_ENV !== "production" || process.env.VERCEL_ENV === "preview") {
     const mockResponse = mockGraphQLData
       ? getMockGraphQLResponse(mockGraphQLData, query)
       : undefined;

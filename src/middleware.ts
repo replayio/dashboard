@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
     response.headers.set(HEADERS.accessTokenSource, accessTokenSource);
   }
 
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== "production" || process.env.VERCEL_ENV === "preview") {
     const url = new URL(request.nextUrl);
     const mockGraphQLData = url.searchParams.get("mockGraphQLData");
     if (mockGraphQLData) {
