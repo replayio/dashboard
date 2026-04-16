@@ -61,17 +61,19 @@ export async function middleware(request: NextRequest) {
     response.headers.set(HEADERS.accessTokenSource, accessTokenSource);
   }
 
-  const url = new URL(request.nextUrl);
-  const mockGraphQLData = url.searchParams.get("mockGraphQLData");
-  if (mockGraphQLData) {
-    setCookieValueServer(response, COOKIES.mockGraphQLData, mockGraphQLData);
-
-    response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData);
-  } else {
-    const cookieStore = cookies();
-    const mockGraphQLData = cookieStore.get(COOKIES.mockGraphQLData);
+  if (process.env.NODE_ENV !== "production") {
+    const url = new URL(request.nextUrl);
+    const mockGraphQLData = url.searchParams.get("mockGraphQLData");
     if (mockGraphQLData) {
-      response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData.value);
+      setCookieValueServer(response, COOKIES.mockGraphQLData, mockGraphQLData);
+
+      response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData);
+    } else {
+      const cookieStore = cookies();
+      const mockGraphQLData = cookieStore.get(COOKIES.mockGraphQLData);
+      if (mockGraphQLData) {
+        response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData.value);
+      }
     }
   }
 

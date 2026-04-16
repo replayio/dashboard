@@ -1,11 +1,20 @@
-import { COOKIES } from "@/constants";
+import { COOKIES, URLS } from "@/constants";
 import cookie, { CookieSerializeOptions } from "cookie";
 import type { NextApiResponse } from "next";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { NextResponse } from "next/server";
 
+export function isSecureEnvironment(): boolean {
+  return URLS.app?.startsWith("https://") ?? false;
+}
+
+function isSecureClient(): boolean {
+  return typeof window !== "undefined" && window.location.protocol === "https:";
+}
+
 export function deleteCookieValueClient(name: string) {
-  document.cookie = name + "=; expires=-1; Max-Age=-99999999; path=/; SameSite=Lax";
+  const secure = isSecureClient() ? "; Secure" : "";
+  document.cookie = name + "=; expires=-1; Max-Age=-99999999; path=/; SameSite=Lax" + secure;
 }
 
 export function getCookieValueClient<Type = string>(name: string): Type | null {
@@ -22,11 +31,12 @@ export function getCookieValueServer<Type = string>(
 }
 
 export function setCookieValueClient(name: string, value: unknown, options?: { maxAge?: number }) {
-  let cookie = `${name}=${JSON.stringify(value)}; path=/; SameSite=Lax`;
+  const secure = isSecureClient() ? "; Secure" : "";
+  let raw = `${name}=${JSON.stringify(value)}; path=/; SameSite=Lax${secure}`;
   if (options?.maxAge) {
-    cookie += `; max-age=${options.maxAge}`;
+    raw += `; max-age=${options.maxAge}`;
   }
-  document.cookie = cookie;
+  document.cookie = raw;
 }
 
 export function setCookieValueServer(
@@ -40,6 +50,7 @@ export function setCookieValueServer(
     cookie.serialize(name, JSON.stringify(value), {
       path: "/",
       sameSite: "lax",
+      secure: isSecureEnvironment(),
       ...options,
     })
   );
@@ -63,6 +74,7 @@ export function appendIntakeCompletedCookieOnApiResponse(
     {
       path: "/",
       sameSite: "lax",
+      secure: isSecureEnvironment(),
       maxAge: INTAKE_COOKIE_MAX_AGE,
     }
   );

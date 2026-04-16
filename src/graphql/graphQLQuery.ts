@@ -23,10 +23,14 @@ export async function graphQLQuery<Query, Variables extends OperationVariables =
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  // Support e2e tests
-  const mockResponse = mockGraphQLData ? getMockGraphQLResponse(mockGraphQLData, query) : undefined;
-  if (mockResponse) {
-    return mockResponse;
+  // Support e2e tests (disabled in production builds)
+  if (process.env.NODE_ENV !== "production") {
+    const mockResponse = mockGraphQLData
+      ? getMockGraphQLResponse(mockGraphQLData, query)
+      : undefined;
+    if (mockResponse) {
+      return mockResponse;
+    }
   }
 
   assert(query.loc?.source.body);

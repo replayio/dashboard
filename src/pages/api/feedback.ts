@@ -3,16 +3,20 @@ import { NextApiRequest, NextApiResponse } from "next";
 const { FORM_CARRY_TOKEN } = process.env;
 
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+  if (request.method !== "POST") {
+    return response.status(405).json({ error: "Method not allowed" });
+  }
+
+  if (!FORM_CARRY_TOKEN) {
+    return response.status(500).json({ error: "Feedback service is not configured" });
+  }
+
   try {
     const { body } = request;
     const { text: message, userEmail: email, userName: name, ...rest } = body;
 
     const url = `https://formcarry.com/s/${FORM_CARRY_TOKEN}`;
 
-    console.log("[/api/feedback] request");
-    console.log(body);
-
-    // https://formcarry.com/form/nextjs-contact-form
     const formCarryResponse = await fetch(url, {
       method: "POST",
       headers: {
@@ -28,17 +32,9 @@ export default async function handler(request: NextApiRequest, response: NextApi
     });
 
     if (formCarryResponse.status !== 200) {
-      const text = await formCarryResponse.text();
-
-      console.log(`[/api/feedback] response ${formCarryResponse.status}`);
-      console.log(text);
-
       response.status(formCarryResponse.status).send({ error: true });
     } else {
       const json = await formCarryResponse.json();
-
-      console.log(`[/api/feedback] response ${formCarryResponse.status}`);
-      console.log(json);
 
       if (json.code === 200) {
         response.status(200).send({ success: true });
@@ -47,7 +43,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
       }
     }
   } catch (error) {
-    console.error(error);
+    console.error("[/api/feedback] internal error");
 
     response.status(500).send({ error: true });
   }
