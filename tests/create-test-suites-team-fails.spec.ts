@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { createApolloError } from "tests/mocks/utils/createApolloError";
 import { mockCreateWorkspaceAPIKey } from "tests/mocks/utils/mockCreateWorkspaceAPIKey";
 import { mockGetUser } from "tests/mocks/utils/mockGetUser";

@@ -3,7 +3,7 @@ import { compress } from "@/utils/compression";
 import { Page } from "@playwright/test";
 import assert from "assert";
 import chalk from "chalk";
-import { MockGraphQLData } from "../mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { debugPrint } from "./debugPrint";
 
 export async function navigateToPage({

@@ -1,7 +1,7 @@
 import { GetTestsRunsForWorkspaceQuery } from "@/graphql/generated/graphql";
 import { TestRun } from "@/graphql/types";
 import { getRelativeDate } from "@/utils/date";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 import { getUID } from "./getUID";
 

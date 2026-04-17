@@ -2,7 +2,7 @@ import { GetWorkspaceSubscriptionQuery } from "@/graphql/generated/graphql";
 import { WorkspaceSubscription } from "@/graphql/types";
 import { getRelativeDate } from "@/utils/date";
 import { DeepPartial } from "@apollo/client/utilities";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 import { getUID } from "./getUID";
 

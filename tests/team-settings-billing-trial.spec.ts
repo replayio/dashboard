@@ -5,7 +5,7 @@ import { mockGetUser } from "tests/mocks/utils/mockGetUser";
 import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembers";
 import { mockGetWorkspaceSubscription } from "tests/mocks/utils/mockGetWorkspaceSubscription";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockGraphQLData } from "./mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { navigateToPage } from "./utils/navigateToPage";
 
 test("team-settings-billing-trial: should prompt the user to add payment information if none has been entered", async ({

@@ -5,7 +5,7 @@ import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembe
 import { mockGetWorkspaceSubscription } from "tests/mocks/utils/mockGetWorkspaceSubscription";
 import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockGraphQLData } from "./mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { navigateToPage } from "./utils/navigateToPage";
 
 test("team-settings-billing-subscription-active: should show information about the subscription and payment method on file", async ({

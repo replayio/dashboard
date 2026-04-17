@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
+import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
 import { getAllowedAuthOrigins, sanitizeReturnToPath } from "@/utils/authValidation";
 
 const savedEnv: Record<string, string | undefined> = {};
@@ -10,11 +10,11 @@ const envKeys = [
   "AUTH0_ALLOWED_ORIGINS",
 ];
 
-beforeAll(() => {
+beforeEach(() => {
   for (const key of envKeys) savedEnv[key] = process.env[key];
 });
 
-afterAll(() => {
+afterEach(() => {
   for (const key of envKeys) {
     if (savedEnv[key] !== undefined) {
       process.env[key] = savedEnv[key];
