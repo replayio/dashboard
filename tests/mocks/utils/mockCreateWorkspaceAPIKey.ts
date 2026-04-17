@@ -1,5 +1,5 @@
 import { CreateWorkspaceApiKeyMutation } from "@/graphql/generated/graphql";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { getUID } from "tests/mocks/utils/getUID";
 
 export function mockCreateWorkspaceAPIKey(

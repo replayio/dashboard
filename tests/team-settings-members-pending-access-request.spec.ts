@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembers";
 import { DEFAULT_WORKSPACE_ID, TEST_USER_PICTURES } from "./mocks/constants";
-import { MockGraphQLData } from "./mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { navigateToPage } from "./utils/navigateToPage";
 import { mockGetWorkspaceMembershipRequests } from "tests/mocks/utils/mockGetWorkspaceMembershipRequests";
 

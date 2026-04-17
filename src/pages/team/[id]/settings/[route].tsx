@@ -40,6 +40,7 @@ export async function getServerSideProps({
 
   const stripeKey = process.env.STRIPE_KEY;
   assert(stripeKey != null, "STRIPE_KEY is required");
+  assert(stripeKey.startsWith("pk_"), "STRIPE_KEY must be a publishable key (pk_ prefix)");
 
   return {
     props: { route: query.route as string, stripeKey, workspaceId: params.id },

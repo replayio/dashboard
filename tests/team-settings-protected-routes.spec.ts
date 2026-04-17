@@ -4,7 +4,7 @@ import { mockGetWorkspaceMembers } from "tests/mocks/utils/mockGetWorkspaceMembe
 import { mockGetWorkspaceSubscription } from "tests/mocks/utils/mockGetWorkspaceSubscription";
 import { mockGetWorkspaces } from "tests/mocks/utils/mockGetWorkspaces";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockGraphQLData } from "./mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { navigateToPage } from "./utils/navigateToPage";
 
 test("team-settings-protected-routes: should restrict certain routes from non-developer or non-admin roles", async ({

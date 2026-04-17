@@ -2,7 +2,7 @@ import { CreateNewWorkspaceMutation } from "@/graphql/generated/graphql";
 import { Workspace } from "@/graphql/types";
 import { DeepPartial } from "@apollo/client/utilities";
 import { DEFAULT_WORKSPACE_ID } from "tests/mocks/constants";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 
 export function mockCreateNewWorkspace(
   workspace: DeepPartial<Workspace>

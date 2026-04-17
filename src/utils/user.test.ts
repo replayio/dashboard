@@ -6,7 +6,7 @@ import {
   getPrimaryRole,
   toggleAdminRole,
 } from "@/utils/user";
-import { expect } from "@playwright/test";
+import { describe, expect, it } from "@jest/globals";
 
 describe("utils/user", () => {
   describe("getDefaultPermissionBitmask", () => {

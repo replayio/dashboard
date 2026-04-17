@@ -11,7 +11,7 @@ import {
   useQuery,
 } from "@apollo/client";
 import { useContext } from "react";
-import { getMockGraphQLResponse } from "../../tests/mocks/getMockGraphQLResponse";
+import { getMockGraphQLResponse } from "@/testing/getMockGraphQLResponse";
 
 export function useGraphQLQuery<Query, Variables extends OperationVariables = {}>(
   query: DocumentNode | TypedDocumentNode<Query, Variables>,

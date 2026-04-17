@@ -1,7 +1,7 @@
 import { GetUserQuery } from "@/graphql/generated/graphql";
 import { User } from "@/graphql/types";
 import { DeepPartial } from "@apollo/client/utilities";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { DEFAULT_USER_ID } from "../constants";
 
 export function mockGetUser(

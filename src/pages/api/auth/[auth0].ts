@@ -44,7 +44,6 @@ export default handleAuth({
 // This app also handles auth for the domain of the devtools app.
 function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse) {
   const origin = getValueFromArrayOrString(req.query.origin) || process.env.AUTH0_BASE_URL!;
-
   const returnTo = origin + (getValueFromArrayOrString(req.query.returnTo) || "/");
 
   // We'll need to pass returnTo to the callback handler, otherwise

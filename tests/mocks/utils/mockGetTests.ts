@@ -1,6 +1,6 @@
 import { GetTestsQuery } from "@/graphql/generated/graphql";
 import { TestSuiteTest } from "@/graphql/types";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 
 export function mockGetTests(

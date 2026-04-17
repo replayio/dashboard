@@ -3,7 +3,7 @@ import { WorkspaceRecording } from "@/graphql/types";
 import { getRelativeDate } from "@/utils/date";
 import { DeepPartial } from "@apollo/client/utilities";
 import { DEFAULT_WORKSPACE_ID } from "tests/mocks/constants";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { getUID } from "tests/mocks/utils/getUID";
 
 export function mockWorkspaceRecordings(

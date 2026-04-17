@@ -4,7 +4,7 @@ import { mockGetWorkspaceTests } from "tests/mocks/utils/mockGetWorkspaceTests";
 import { partialToTestSuiteTestExecutionRecording } from "tests/mocks/utils/partialToTestSuiteTestExecutionRecording";
 import { submitInputText } from "tests/utils/submitInputText";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockGraphQLData } from "./mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { getRecordingRow } from "./utils/getRecordingRow";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
 import { navigateToPage } from "./utils/navigateToPage";

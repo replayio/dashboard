@@ -1,7 +1,7 @@
 import { GetWorkspacesQuery } from "@/graphql/generated/graphql";
 import { Workspace } from "@/graphql/types";
 import { DeepPartial } from "@apollo/client/utilities";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { DEFAULT_WORKSPACE_ID } from "../constants";
 import { getUID } from "./getUID";
 

@@ -1,6 +1,6 @@
 import { GetWorkspaceMembershipRequestsQuery } from "@/graphql/generated/graphql";
 import { WorkspaceMember } from "@/graphql/types";
-import { MockGraphQLResponse } from "tests/mocks/types";
+import { MockGraphQLResponse } from "@/testing/mockGraphQLTypes";
 import { DEFAULT_USER_ID, DEFAULT_WORKSPACE_ID } from "../constants";
 
 export function mockGetWorkspaceMembershipRequests(

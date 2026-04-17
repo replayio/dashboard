@@ -7,7 +7,7 @@ import { partialToTestSuiteTestExecutionRecording } from "tests/mocks/utils/part
 import { getContextMenuItem } from "tests/utils/getContextMenuItem";
 import { openContextMenu } from "tests/utils/openContextMenu";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
-import { MockGraphQLData } from "./mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { getRecordingRow } from "./utils/getRecordingRow";
 import { getTestExecutionRow } from "./utils/getTestExecutionRow";
 import { getTestSummaryRow } from "./utils/getTestSummaryRow";
