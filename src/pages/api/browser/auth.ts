@@ -6,6 +6,17 @@ import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
 import cookie from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+const AD_ATTR_KEYS = [
+  "li_fat_id",
+  "twclid",
+  "rdt_cid",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const key = getValueFromArrayOrString(req.query.key);
   const source = getValueFromArrayOrString(req.query.source) || "browser";
@@ -25,7 +36,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       );
 
-      res.redirect("/login?returnTo=/api/browser/auth");
+      // carry ad-attribution query params through to /login so they flow
+      // into auth0's authorizationParams via /api/auth/login.
+      const loginParams: Record<string, string> = {
+        returnTo: "/api/browser/auth",
+      };
+      for (const k of AD_ATTR_KEYS) {
+        const v = getValueFromArrayOrString(req.query[k]);
+        if (v) loginParams[k] = v;
+      }
+      res.redirect(`/login?${new URLSearchParams(loginParams)}`);
     } else {
       const browserAuth = req.cookies[COOKIES.browserAuth];
 

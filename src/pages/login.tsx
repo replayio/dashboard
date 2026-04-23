@@ -10,6 +10,17 @@ import { useContext, useEffect, useState } from "react";
 const defaultConnection = "google-oauth2";
 const emailConnection = "Username-Password-Authentication";
 
+const AD_ATTR_KEYS = [
+  "li_fat_id",
+  "twclid",
+  "rdt_cid",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
+
 export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,11 +32,19 @@ export default function Page() {
   const [isMounted, setIsMounted] = useState(false);
 
   function onLogin(connection: string) {
-    let authUrl = `/api/auth/login?${new URLSearchParams({
+    const params: Record<string, string> = {
       connection,
       returnTo,
       origin: location.origin,
-    })}`;
+    };
+    // forward any ad-attribution params the upstream caller (devtools
+    // login() or /api/browser/auth) put on the URL so /api/auth/login
+    // can include them as auth0 authorizationParams.
+    for (const k of AD_ATTR_KEYS) {
+      const v = searchParams?.get(k);
+      if (v) params[k] = v;
+    }
+    let authUrl = `/api/auth/login?${new URLSearchParams(params)}`;
     if (switchAccount || isExternalAuth) {
       authUrl += "&prompt=login";
     }
