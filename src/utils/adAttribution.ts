@@ -68,9 +68,7 @@ export function captureAdAttribution(): void {
 
 export function readAdAttribution(): AdAttribution | null {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(
-    new RegExp("(?:^|;\\s*)" + COOKIE_NAME + "=([^;]+)")
-  );
+  const match = document.cookie.match(new RegExp("(?:^|;\\s*)" + COOKIE_NAME + "=([^;]+)"));
   const raw = match?.[1];
   if (!raw) return null;
   try {
