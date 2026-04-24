@@ -39,9 +39,12 @@ export function ApiKeyRow({
     <div className="flex flex-row items-center gap-3 px-3 py-2 rounded-md border border-border bg-card">
       <div className="flex flex-col grow truncate">
         <div className="truncate text-sm font-medium">{apiKey.label}</div>
+        {/* Recording limits are currently disabled, but keeping this here makes it
+            easy to restore the usage UI if limits come back.
         <div className="text-xs text-muted-foreground">
           {apiKey.recordingCount} / {apiKey.maxRecordings} recordings
         </div>
+        */}
       </div>
       <Button
         disabled={isPending}
