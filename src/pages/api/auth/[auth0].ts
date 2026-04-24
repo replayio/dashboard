@@ -16,6 +16,10 @@ export default handleAuth({
         prompt: getValueFromArrayOrString(req.query.prompt),
         connection: getValueFromArrayOrString(req.query.connection),
         redirect_uri: `${origin}/api/auth/callback`,
+        // ad attribution - forwarded to auth0 /authorize as custom query
+        // params so the post-login action can read them from
+        // event.request.query and pass to ensureUserForAuth.
+        ...pickAdAttributionParams(req),
       },
       returnTo,
     });
@@ -40,6 +44,29 @@ export default handleAuth({
     }
   },
 });
+
+// extracts ad-attribution query params that the devtools /login handler
+// forwarded here. these become custom /authorize query params that the
+// auth0 post-login action reads and passes to the backend.
+const AD_ATTR_KEYS = [
+  "li_fat_id",
+  "twclid",
+  "rdt_cid",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
+
+function pickAdAttributionParams(req: NextApiRequest) {
+  const out: Record<string, string> = {};
+  for (const k of AD_ATTR_KEYS) {
+    const v = getValueFromArrayOrString(req.query[k]);
+    if (v) out[k] = v;
+  }
+  return out;
+}
 
 // This app also handles auth for the domain of the devtools app.
 function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse) {

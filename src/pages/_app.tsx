@@ -9,6 +9,7 @@ import { UserSettingsProvider } from "@/pageComponents/user/settings/UserSetting
 import { COOKIES, HEADERS } from "@/constants";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { User } from "@/graphql/types";
+import { captureAdAttribution } from "@/utils/adAttribution";
 import { decompress } from "@/utils/compression";
 import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
@@ -79,6 +80,11 @@ export default class MyApp extends App<AppProps<PageProps>> {
       });
     }
     initializeMixPanel();
+
+    // belt-and-suspenders: landing-page captures on replay.io first-touch,
+    // but users who land directly on app.replay.io (bookmark, direct ad
+    // URL) still need attribution captured here.
+    captureAdAttribution();
   }
 
   render() {

@@ -4,11 +4,23 @@ import { AccountSwitcherForm } from "@/pageComponents/login/AccountSwitcherForm"
 import { DefaultLoginForm } from "@/pageComponents/login/DefaultLoginForm";
 import { ReplayBrowserLoginForm } from "@/pageComponents/login/ReplayBrowserLoginForm";
 import { SSOLoginForm } from "@/pageComponents/login/SSOLoginForm";
+import { readAdAttribution } from "@/utils/adAttribution";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 const defaultConnection = "google-oauth2";
 const emailConnection = "Username-Password-Authentication";
+
+const AD_ATTR_KEYS = [
+  "li_fat_id",
+  "twclid",
+  "rdt_cid",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
 
 export default function Page() {
   const router = useRouter();
@@ -21,11 +33,22 @@ export default function Page() {
   const [isMounted, setIsMounted] = useState(false);
 
   function onLogin(connection: string) {
-    let authUrl = `/api/auth/login?${new URLSearchParams({
+    const params: Record<string, string> = {
       connection,
       returnTo,
       origin: location.origin,
-    })}`;
+    };
+    // prefer any ad-attribution params on the current URL (freshest),
+    // fall back to the .replay.io cookie (written by landing-page on
+    // first-touch or by this dashboard's _app.tsx on direct landings).
+    // these become /api/auth/login query params which [auth0].ts spreads
+    // into auth0 authorizationParams -> post-login action -> backend.
+    const cookieAttribution = readAdAttribution();
+    for (const k of AD_ATTR_KEYS) {
+      const v = searchParams?.get(k) ?? cookieAttribution?.[k];
+      if (v) params[k] = v;
+    }
+    let authUrl = `/api/auth/login?${new URLSearchParams(params)}`;
     if (switchAccount || isExternalAuth) {
       authUrl += "&prompt=login";
     }
