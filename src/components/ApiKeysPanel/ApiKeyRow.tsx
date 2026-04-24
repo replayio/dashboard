@@ -39,9 +39,11 @@ export function ApiKeyRow({
     <div className="flex flex-row items-center gap-3 px-3 py-2 rounded-md border border-border bg-card">
       <div className="flex flex-col grow truncate">
         <div className="truncate text-sm font-medium">{apiKey.label}</div>
-        <div className="text-xs text-muted-foreground">
-          {apiKey.recordingCount} / {apiKey.maxRecordings} recordings
-        </div>
+        {apiKey.maxRecordings !== 0 ? (
+          <div className="text-xs text-muted-foreground">
+            {apiKey.recordingCount} / {apiKey.maxRecordings} recordings
+          </div>
+        ) : null}
       </div>
       <Button
         disabled={isPending}
