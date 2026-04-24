@@ -71,9 +71,10 @@ export function readAdAttribution(): AdAttribution | null {
   const match = document.cookie.match(
     new RegExp("(?:^|;\\s*)" + COOKIE_NAME + "=([^;]+)")
   );
-  if (!match) return null;
+  const raw = match?.[1];
+  if (!raw) return null;
   try {
-    return JSON.parse(decodeURIComponent(match[1])) as AdAttribution;
+    return JSON.parse(decodeURIComponent(raw)) as AdAttribution;
   } catch {
     return null;
   }
