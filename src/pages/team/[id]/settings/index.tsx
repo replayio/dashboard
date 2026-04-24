@@ -7,7 +7,7 @@ import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { redirectWithState } from "@/utils/redirectWithState";
 import assert from "assert";
 import { GetServerSidePropsContext } from "next";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 
 export default function Page() {
   return null;

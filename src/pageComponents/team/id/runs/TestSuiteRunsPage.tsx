@@ -1,9 +1,13 @@
-import { DeepLinkWarningDialog } from "@/pageComponents/team/id/runs/DeepLinkWarningDialog";
+import { DeepLinkWarningDialog } from "@/components/DeepLinkWarningDialog";
+import { RunsViewContext } from "@/pageComponents/team/id/runs/TestRunsContext";
+import { useContext } from "react";
 import { TestRunTests } from "@/pageComponents/team/id/runs/TestRunTests";
 import TestRuns from "@/pageComponents/team/id/runs/TestRuns";
 import { TestsAndExecutions } from "@/pageComponents/team/id/runs/TestsAndExecutions";
 
 export function TestSuiteRunsPage() {
+  const { dismissDeepLinkWarning, showDeepLinkWarning } = useContext(RunsViewContext);
+
   return (
     <>
       <div className="flex flex-col md:flex-row gap-3 p-4 overflow-auto overflow-hidden h-full">
@@ -26,7 +30,7 @@ export function TestSuiteRunsPage() {
           <TestsAndExecutions />
         </div>
       </div>
-      <DeepLinkWarningDialog />
+      <DeepLinkWarningDialog onDismiss={dismissDeepLinkWarning} visible={showDeepLinkWarning} />
     </>
   );
 }

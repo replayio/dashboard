@@ -17,7 +17,7 @@ import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import "use-context-menu/styles.css";
 import "../global.css";
 import "../shiki.css";

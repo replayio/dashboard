@@ -2,7 +2,7 @@ import { GetWorkspaceQuery, GetWorkspaceQueryVariables } from "@/graphql/generat
 import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { gql } from "@apollo/client";
 import assert from "assert";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 
 const QUERY = gql`
   query GetWorkspace($workspaceId: ID!) {

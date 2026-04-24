@@ -1,6 +1,6 @@
 import { getRelativeDate } from "@/utils/date";
 import { expect, test } from "@playwright/test";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 import { mockGetTests } from "tests/mocks/utils/mockGetTests";
 import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRunsForWorkspace";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";

@@ -5,7 +5,7 @@ import {
 import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { WorkspaceSubscriptionStatus } from "@/graphql/types";
 import { gql } from "@apollo/client";
-import { MockGraphQLData } from "tests/mocks/types";
+import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
 
 export async function getWorkspaceSubscriptionStatus(
   workspaceId: string,

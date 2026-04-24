@@ -36,12 +36,20 @@ export async function middleware(request: NextRequest) {
 
   switch (pathname) {
     case "/": {
-      // Redirect them to the most recently viewed path
       const cookieStore = cookies();
       const cookie = cookieStore.get(COOKIES.defaultPathname);
 
+      let pathname = "/home";
+      if (cookie) {
+        try {
+          pathname = JSON.parse(cookie.value);
+        } catch {
+          // Malformed cookie — fall back to /home
+        }
+      }
+
       const redirectURL = new URL(request.url);
-      redirectURL.pathname = cookie ? JSON.parse(cookie.value) : "/home";
+      redirectURL.pathname = pathname;
 
       return NextResponse.redirect(redirectURL);
     }
@@ -61,17 +69,19 @@ export async function middleware(request: NextRequest) {
     response.headers.set(HEADERS.accessTokenSource, accessTokenSource);
   }
 
-  const url = new URL(request.nextUrl);
-  const mockGraphQLData = url.searchParams.get("mockGraphQLData");
-  if (mockGraphQLData) {
-    setCookieValueServer(response, COOKIES.mockGraphQLData, mockGraphQLData);
-
-    response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData);
-  } else {
-    const cookieStore = cookies();
-    const mockGraphQLData = cookieStore.get(COOKIES.mockGraphQLData);
+  if (process.env.NODE_ENV !== "production" || process.env.VERCEL_ENV === "preview") {
+    const url = new URL(request.nextUrl);
+    const mockGraphQLData = url.searchParams.get("mockGraphQLData");
     if (mockGraphQLData) {
-      response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData.value);
+      setCookieValueServer(response, COOKIES.mockGraphQLData, mockGraphQLData);
+
+      response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData);
+    } else {
+      const cookieStore = cookies();
+      const mockGraphQLData = cookieStore.get(COOKIES.mockGraphQLData);
+      if (mockGraphQLData) {
+        response.headers.set(HEADERS.mockGraphQLData, mockGraphQLData.value);
+      }
     }
   }
 
