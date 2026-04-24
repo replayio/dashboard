@@ -4,6 +4,7 @@ import { AccountSwitcherForm } from "@/pageComponents/login/AccountSwitcherForm"
 import { DefaultLoginForm } from "@/pageComponents/login/DefaultLoginForm";
 import { ReplayBrowserLoginForm } from "@/pageComponents/login/ReplayBrowserLoginForm";
 import { SSOLoginForm } from "@/pageComponents/login/SSOLoginForm";
+import { readAdAttribution } from "@/utils/adAttribution";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -37,11 +38,14 @@ export default function Page() {
       returnTo,
       origin: location.origin,
     };
-    // forward any ad-attribution params the upstream caller (devtools
-    // login() or /api/browser/auth) put on the URL so /api/auth/login
-    // can include them as auth0 authorizationParams.
+    // prefer any ad-attribution params on the current URL (freshest),
+    // fall back to the .replay.io cookie (written by landing-page on
+    // first-touch or by this dashboard's _app.tsx on direct landings).
+    // these become /api/auth/login query params which [auth0].ts spreads
+    // into auth0 authorizationParams -> post-login action -> backend.
+    const cookieAttribution = readAdAttribution();
     for (const k of AD_ATTR_KEYS) {
-      const v = searchParams?.get(k);
+      const v = searchParams?.get(k) ?? cookieAttribution?.[k];
       if (v) params[k] = v;
     }
     let authUrl = `/api/auth/login?${new URLSearchParams(params)}`;
