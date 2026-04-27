@@ -7,24 +7,7 @@ import { setCookieValueClient } from "@/utils/cookie";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-const VIBE_TOOLS = ["Lovable", "Replit", "Bolt", "Base44", "Other"] as const;
-
-function buildVibeToolString(
-  selected: Set<(typeof VIBE_TOOLS)[number]>,
-  otherTool: string
-): string | null {
-  const parts: string[] = [];
-  for (const t of VIBE_TOOLS) {
-    if (t === "Other") continue;
-    if (selected.has(t)) parts.push(t);
-  }
-  if (selected.has("Other")) {
-    const custom = otherTool.trim();
-    if (custom) parts.push(custom);
-  }
-  if (parts.length === 0) return null;
-  return parts.join(", ");
-}
+const SKIP_NO_RESPONSE_VALUE = "No Response";
 
 function getSafeReturnPath(raw: string | null): string {
   if (!raw || typeof raw !== "string") return "/home";
@@ -43,22 +26,25 @@ export default function IntakePage() {
 
   const [mounted, setMounted] = useState(false);
   const [statusLoading, setStatusLoading] = useState(true);
-  const [userType, setUserType] = useState<"vibe_coder" | "engineer" | null>(null);
-  const [selectedTools, setSelectedTools] = useState<Set<(typeof VIBE_TOOLS)[number]>>(
-    () => new Set()
-  );
-  const [otherTool, setOtherTool] = useState("");
+  const [authSub, setAuthSub] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState("");
+  const [dontShowAgain, setDontShowAgain] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [skipping, setSkipping] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Persistent cookie (matches server behavior): the user is "done" with intake going forward.
+   * Session cookie: bypass the middleware redirect for this browser session only — the next
+   * session will re-check Intercom and show the form again because Company_name is still empty.
+   */
   const finishAndRedirect = useCallback(
-    (authSub?: string | null) => {
-      if (authSub) {
+    (sub?: string | null, opts?: { sessionOnly?: boolean }) => {
+      if (sub) {
         setCookieValueClient(
           COOKIES.intakeCompleted,
-          { userId: authSub },
-          { maxAge: 60 * 60 * 24 * 365 }
+          { userId: sub },
+          opts?.sessionOnly ? undefined : { maxAge: 60 * 60 * 24 * 365 }
         );
       }
       window.location.assign(returnTo);
@@ -86,6 +72,7 @@ export default function IntakePage() {
         }
         const data = (await res.json()) as { completed?: boolean; authSub?: string | null };
         if (cancelled) return;
+        if (data.authSub) setAuthSub(data.authSub);
         if (data.completed) {
           leaveLoadingVisible = true;
           finishAndRedirect(data.authSub);
@@ -102,64 +89,71 @@ export default function IntakePage() {
     };
   }, [mounted, router, returnTo, finishAndRedirect]);
 
+  async function postIntercomCompanyName(value: string): Promise<{
+    ok: boolean;
+    authSub?: string | null;
+    unauthorized?: boolean;
+    errorMessage?: string;
+  }> {
+    try {
+      const res = await fetch("/api/intercom", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ companyName: value }),
+      });
+      const data = (await res.json()) as { error?: string; authSub?: string | null };
+      if (res.status === 401) return { ok: false, unauthorized: true };
+      if (!res.ok) return { ok: false, errorMessage: data.error };
+      return { ok: true, authSub: data.authSub };
+    } catch {
+      return { ok: false, errorMessage: "Network error. Please try again." };
+    }
+  }
+
+  function redirectToLogin() {
+    router.replace(
+      `/login?returnTo=${encodeURIComponent(`/intake?returnTo=${encodeURIComponent(returnTo)}`)}`
+    );
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!userType) {
-      setError("Choose VibeCoder or Engineer.");
-      return;
-    }
-    if (userType === "vibe_coder") {
-      const vibeStr = buildVibeToolString(selectedTools, otherTool);
-      if (!vibeStr) {
-        if (selectedTools.has("Other") && !otherTool.trim()) {
-          setError("Add a tool name for Other, or uncheck it.");
-        } else {
-          setError("Select at least one tool.");
-        }
-        return;
-      }
-    } else if (!companyName.trim()) {
+    const companyTrimmed = companyName.trim();
+    if (!companyTrimmed) {
       setError("Enter your company name.");
       return;
     }
 
     setSubmitting(true);
-    try {
-      const companyTrimmed = companyName.trim();
-      const body =
-        userType === "vibe_coder"
-          ? {
-              userType: "vibe_coder" as const,
-              vibeTool: buildVibeToolString(selectedTools, otherTool)!,
-              ...(companyTrimmed ? { companyName: companyTrimmed } : {}),
-            }
-          : { userType: "engineer" as const, companyName: companyTrimmed };
-
-      const res = await fetch("/api/intercom", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify(body),
-      });
-      const data = (await res.json()) as { error?: string; authSub?: string | null };
-
-      if (res.status === 401) {
-        router.replace(
-          `/login?returnTo=${encodeURIComponent(`/intake?returnTo=${encodeURIComponent(returnTo)}`)}`
-        );
-        return;
-      }
-      if (!res.ok) {
-        setError(data.error || "Something went wrong. Please try again.");
-        return;
-      }
-      finishAndRedirect(data.authSub);
-    } catch {
-      setError("Network error. Please try again.");
-    } finally {
-      setSubmitting(false);
+    const result = await postIntercomCompanyName(companyTrimmed);
+    setSubmitting(false);
+    if (result.unauthorized) return redirectToLogin();
+    if (!result.ok) {
+      setError(result.errorMessage || "Something went wrong. Please try again.");
+      return;
     }
+    finishAndRedirect(result.authSub);
+  }
+
+  async function handleSkip() {
+    setError(null);
+
+    if (dontShowAgain) {
+      setSkipping(true);
+      const result = await postIntercomCompanyName(SKIP_NO_RESPONSE_VALUE);
+      setSkipping(false);
+      if (result.unauthorized) return redirectToLogin();
+      if (!result.ok) {
+        setError(result.errorMessage || "Something went wrong. Please try again.");
+        return;
+      }
+      finishAndRedirect(result.authSub);
+      return;
+    }
+
+    finishAndRedirect(authSub, { sessionOnly: true });
   }
 
   if (!mounted || statusLoading) {
@@ -186,120 +180,68 @@ export default function IntakePage() {
     );
   }
 
+  const busy = submitting || skipping;
+
   return (
     <div className="w-full max-w-[420px] bg-login-card border border-login-card-border rounded-3xl shadow-lg px-10 pt-10 pb-8 flex flex-col items-center gap-6 text-center">
       <LoginMessaging
         title="Quick question"
         subtitle={
           <p className="text-login-fg-secondary text-sm mb-0 max-w-[320px] leading-snug">
-            Help us tailor Replay — are you more of a VibeCoder or a software engineer?
+            What company are you with? This helps us tailor Replay for your team.
           </p>
         }
       />
 
       <form className="w-full flex flex-col gap-5 text-left" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
-          <span className="text-login-fg text-sm font-medium">I identify as</span>
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={() => setUserType("vibe_coder")}
-              className={`${pillBase} border ${
-                userType === "vibe_coder"
-                  ? "border-login-btn-primary-bg bg-login-input-bg text-login-fg"
-                  : "border-login-btn-outline-border bg-login-input-bg text-login-fg hover:bg-login-btn-outline-hover"
-              } cursor-pointer`}
-            >
-              VibeCoder
-            </button>
-            <button
-              type="button"
-              onClick={() => setUserType("engineer")}
-              className={`${pillBase} border ${
-                userType === "engineer"
-                  ? "border-login-btn-primary-bg bg-login-input-bg text-login-fg"
-                  : "border-login-btn-outline-border bg-login-input-bg text-login-fg hover:bg-login-btn-outline-hover"
-              } cursor-pointer`}
-            >
-              Software engineer
-            </button>
-          </div>
+          <label htmlFor="intake-company" className="text-login-fg text-sm font-medium">
+            Company name
+          </label>
+          <input
+            id="intake-company"
+            type="text"
+            value={companyName}
+            onChange={e => setCompanyName(e.target.value)}
+            placeholder="Acme Inc."
+            autoFocus
+            className="w-full rounded-xl border border-login-btn-outline-border bg-login-input-bg px-4 py-3 text-sm text-login-fg placeholder:text-login-fg-secondary"
+          />
         </div>
-
-        {userType === "vibe_coder" && (
-          <fieldset className="flex flex-col gap-3 border-0 p-0 m-0 min-w-0">
-            <legend className="text-login-fg text-sm font-medium mb-0.5">
-              Which tools do you use?
-            </legend>
-            <div className="flex flex-col gap-2.5">
-              {VIBE_TOOLS.map(t => {
-                const id = `intake-tool-${t}`;
-                return (
-                  <label
-                    key={t}
-                    htmlFor={id}
-                    className="flex items-center gap-3 cursor-pointer text-sm text-login-fg rounded-xl border border-login-btn-outline-border bg-login-input-bg px-4 py-3 focus-within:ring-2 focus-within:ring-login-btn-primary-bg"
-                  >
-                    <input
-                      id={id}
-                      type="checkbox"
-                      checked={selectedTools.has(t)}
-                      onChange={() => {
-                        setSelectedTools(prev => {
-                          const next = new Set(prev);
-                          if (next.has(t)) next.delete(t);
-                          else next.add(t);
-                          return next;
-                        });
-                      }}
-                      className="h-4 w-4 shrink-0 rounded border-login-btn-outline-border text-login-btn-primary-bg focus:ring-login-btn-primary-bg"
-                    />
-                    <span>{t}</span>
-                  </label>
-                );
-              })}
-            </div>
-            {selectedTools.has("Other") && (
-              <input
-                type="text"
-                value={otherTool}
-                onChange={e => setOtherTool(e.target.value)}
-                placeholder="Tool name"
-                aria-label="Other tool name"
-                className="w-full rounded-xl border border-login-btn-outline-border bg-login-input-bg px-4 py-3 text-sm text-login-fg placeholder:text-login-fg-secondary"
-              />
-            )}
-          </fieldset>
-        )}
-
-        {(userType === "vibe_coder" || userType === "engineer") && (
-          <div className="flex flex-col gap-2">
-            <label htmlFor="intake-company" className="text-login-fg text-sm font-medium">
-              Company name
-              {userType === "vibe_coder" && (
-                <span className="text-login-fg-secondary font-normal"> (optional)</span>
-              )}
-            </label>
-            <input
-              id="intake-company"
-              type="text"
-              value={companyName}
-              onChange={e => setCompanyName(e.target.value)}
-              placeholder="Acme Inc."
-              className="w-full rounded-xl border border-login-btn-outline-border bg-login-input-bg px-4 py-3 text-sm text-login-fg placeholder:text-login-fg-secondary"
-            />
-          </div>
-        )}
 
         {error && <p className="text-sm text-red-600 m-0">{error}</p>}
 
         <button
           type="submit"
-          disabled={submitting || !userType}
+          disabled={busy || !companyName.trim()}
           className={`${pillBase} bg-login-btn-primary-bg text-login-btn-primary-fg hover:bg-login-btn-primary-hover cursor-pointer disabled:opacity-60 disabled:pointer-events-none shadow-sm`}
         >
           {submitting ? "Saving…" : "Continue"}
         </button>
+
+        <div className="flex flex-col items-center gap-2 pt-1">
+          <label
+            htmlFor="intake-dont-show"
+            className="flex items-center gap-2 text-sm text-login-fg-secondary cursor-pointer select-none"
+          >
+            <input
+              id="intake-dont-show"
+              type="checkbox"
+              checked={dontShowAgain}
+              onChange={e => setDontShowAgain(e.target.checked)}
+              className="h-4 w-4 shrink-0 rounded border-login-btn-outline-border text-login-btn-primary-bg focus:ring-login-btn-primary-bg"
+            />
+            Don&apos;t show this again
+          </label>
+          <button
+            type="button"
+            onClick={handleSkip}
+            disabled={busy}
+            className="text-sm text-login-fg-secondary hover:text-login-fg underline-offset-2 hover:underline cursor-pointer disabled:opacity-60 disabled:pointer-events-none"
+          >
+            {skipping ? "Skipping…" : "Skip"}
+          </button>
+        </div>
       </form>
     </div>
   );

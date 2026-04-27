@@ -144,40 +144,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(502).json({ error: "Could not resolve your email for Intercom." });
   }
 
-  const body = req.body as {
-    userType: "vibe_coder" | "engineer";
-    vibeTool?: string;
-    companyName?: string;
-  };
-  const { userType, vibeTool, companyName } = body;
+  const body = req.body as { companyName?: string };
+  const companyTrimmed = body.companyName?.trim() ?? "";
 
-  if (!userType || !["vibe_coder", "engineer"].includes(userType)) {
-    return res.status(400).json({ error: "userType must be vibe_coder or engineer" });
-  }
-  if (userType === "vibe_coder" && !vibeTool?.trim()) {
-    return res.status(400).json({ error: "Tool is required for VibeCoder" });
-  }
-  if (userType === "engineer" && !companyName?.trim()) {
-    return res.status(400).json({ error: "Company name is required for Engineer" });
+  if (!companyTrimmed) {
+    return res.status(400).json({ error: "Company name is required" });
   }
 
   const companyKey = intercomCompanyNameAttributeKey();
-  const companyTrimmed = companyName?.trim() ?? "";
 
   const custom_attributes: Record<string, string | null> = {
-    [INTERCOM_CONTACT_ATTR.userType]: userType,
+    [companyKey]: companyTrimmed,
     [INTERCOM_CONTACT_ATTR.source]: "dashboard-intake",
   };
-  if (userType === "vibe_coder" && vibeTool?.trim()) {
-    custom_attributes[INTERCOM_CONTACT_ATTR.vibeTool] = vibeTool.trim();
-    if (companyTrimmed) {
-      custom_attributes[companyKey] = companyTrimmed;
-    }
-  }
-  if (userType === "engineer") {
-    custom_attributes[INTERCOM_CONTACT_ATTR.vibeTool] = null;
-    custom_attributes[companyKey] = companyTrimmed;
-  }
 
   const payload = {
     role: "user" as const,
@@ -234,9 +213,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         const cid = (putData as { id?: string }).id ?? dupId;
-        if (companyTrimmed) {
-          await attachCompanyToContact(cid, companyTrimmed);
-        }
+        await attachCompanyToContact(cid, companyTrimmed);
         appendIntakeCompletedCookieOnApiResponse(res, authSub);
         return res.status(200).json({ ...(putData as object), authSub });
       }
@@ -246,7 +223,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const createdId = (data as { id?: string }).id;
-    if (companyTrimmed && createdId) {
+    if (createdId) {
       await attachCompanyToContact(createdId, companyTrimmed);
     }
     appendIntakeCompletedCookieOnApiResponse(res, authSub);
