@@ -1,6 +1,6 @@
 import { INTERCOM_CONTACT_ATTR } from "@/constants";
 
-/** Same key as POST /api/intercom uses for the engineer company people attribute. */
+/** Same key as POST /api/intercom uses for the company people attribute. */
 export function intercomCompanyNameAttributeKey(): string {
   return process.env.INTERCOM_COMPANY_NAME_ATTRIBUTE?.trim() || INTERCOM_CONTACT_ATTR.companyName;
 }
@@ -22,21 +22,6 @@ export function hasNonEmptyString(v: unknown): boolean {
   return stringFromCustomAttribute(v).length > 0;
 }
 
-/**
- * List options in Intercom often store labels like "Software engineer" → software_engineer after normalize.
- * Dashboard intake sends "engineer"; treat common aliases as engineer for completion checks.
- */
-export function normalizeUserType(v: unknown): string {
-  const raw = stringFromCustomAttribute(v);
-  if (!raw) return "";
-  const s = raw.toLowerCase().replace(/[\s-]+/g, "_");
-  if (s === "vibecoder") return "vibe_coder";
-  if (s === "software_engineer") return "engineer";
-  if (s.startsWith("software") && s.endsWith("_engineer")) return "engineer";
-  if (s === "sw_engineer") return "engineer";
-  return s;
-}
-
 function valueForPeopleAttribute(attrs: Record<string, unknown>, ...keys: string[]): string {
   for (const key of keys) {
     const v = stringFromCustomAttribute(attrs[key]);
@@ -52,33 +37,18 @@ function valueForPeopleAttribute(attrs: Record<string, unknown>, ...keys: string
   return "";
 }
 
-function userTypeFromAttributes(attrs: Record<string, unknown>): string {
-  return valueForPeopleAttribute(attrs, INTERCOM_CONTACT_ATTR.userType, "user_type", "User_type");
-}
-
-function vibeToolFromAttributes(attrs: Record<string, unknown>): string {
-  return valueForPeopleAttribute(attrs, INTERCOM_CONTACT_ATTR.vibeTool, "vibe_tool", "Vibe_tool");
-}
-
 function companyNameFromAttributes(attrs: Record<string, unknown>): string {
   const primary = intercomCompanyNameAttributeKey();
   return valueForPeopleAttribute(attrs, primary, "Company_name", "company_name");
 }
 
 /**
- * Intercom is source of truth: complete only when branch-specific data exists.
- * VibeCoder: non-empty vibe_tool. Engineer: non-empty company people attribute (several key spellings).
+ * Intercom is source of truth: complete only when the company people attribute is non-empty
+ * (several key spellings are accepted for legacy data).
  */
 export function isIntakeComplete(attrs: Record<string, unknown> | undefined): boolean {
   if (!attrs) return false;
-  const ut = normalizeUserType(userTypeFromAttributes(attrs));
-  if (ut === "vibe_coder") {
-    return hasNonEmptyString(vibeToolFromAttributes(attrs));
-  }
-  if (ut === "engineer") {
-    return hasNonEmptyString(companyNameFromAttributes(attrs));
-  }
-  return false;
+  return hasNonEmptyString(companyNameFromAttributes(attrs));
 }
 
 export type IntercomContactForIntakePick = {
@@ -90,21 +60,12 @@ function contactUpdatedAt(c: IntercomContactForIntakePick): number {
   return typeof c.updated_at === "number" ? c.updated_at : 0;
 }
 
-/** Rough score when no contact is “complete” yet — prefer the record intake/Stripe actually use. */
+/** Rough score when no contact is "complete" yet — prefer the record intake/Stripe actually use. */
 function intakeSignalsScore(attrs: Record<string, unknown> | undefined): number {
   if (!attrs) return 0;
   let s = 0;
   if (attrs.source === "dashboard-intake") s += 100;
-  if (stringFromCustomAttribute(attrs[INTERCOM_CONTACT_ATTR.userType])) s += 40;
-  if (stringFromCustomAttribute(attrs[INTERCOM_CONTACT_ATTR.vibeTool])) s += 20;
-  const ck = intercomCompanyNameAttributeKey();
-  if (
-    stringFromCustomAttribute(attrs[ck]) ||
-    stringFromCustomAttribute(attrs.company_name) ||
-    stringFromCustomAttribute(attrs.Company_name)
-  ) {
-    s += 20;
-  }
+  if (hasNonEmptyString(companyNameFromAttributes(attrs))) s += 20;
   return s;
 }
 
