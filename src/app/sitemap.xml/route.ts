@@ -3,7 +3,11 @@ import { NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
 
 function escapeXml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 export function GET(request: NextRequest) {
@@ -18,9 +22,7 @@ export function GET(request: NextRequest) {
     <loc>${escapeXml(loc)}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${
-      p === "/" || p === "/home" ? "1.0" : p === "/recording" ? "0.8" : "0.6"
-    }</priority>
+    <priority>${p === "/" || p === "/home" ? "1.0" : p === "/recording" ? "0.8" : "0.6"}</priority>
   </url>`;
     })
     .join("\n");

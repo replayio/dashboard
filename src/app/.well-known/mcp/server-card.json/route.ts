@@ -20,8 +20,8 @@ export async function GET(request: Request) {
     serverInfo: {
       name: "Replay Dashboard",
       version,
-    description:
-      "Web dashboard for Replay.io (recordings, tests, teams). The recording debugger UI is served under /recording/ (Replay DevTools). There is no hosted MCP server endpoint here; tools may be exposed in-browser via WebMCP where supported.",
+      description:
+        "Web dashboard for Replay.io (recordings, tests, teams). The recording debugger UI is served under /recording/ (Replay DevTools). There is no hosted MCP server endpoint here; tools may be exposed in-browser via WebMCP where supported.",
     },
     capabilities: {
       tools: false,

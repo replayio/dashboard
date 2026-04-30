@@ -1,6 +1,6 @@
 # Replay DevTools (recording viewer)
 
-**Canonical path on this host:** `/recording/`  
+**Canonical path on this host:** `/recording/`
 
 This URL is **proxied** from the dashboard to the **Replay DevTools** Next.js app (`recordreplay-devtools` in the devtools repo). That app uses `basePath: "/recording"` so paths align when embedded behind the dashboard.
 
@@ -17,5 +17,5 @@ This URL is **proxied** from the dashboard to the **Replay DevTools** Next.js ap
 
 ## Related
 
-- Product docs: https://docs.replay.io  
+- Product docs: https://docs.replay.io
 - Dashboard entry points: `/home`, `/login`; see also `/.well-known/api-catalog` on this host for a linkset that includes this anchor.
