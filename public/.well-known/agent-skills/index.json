@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agentskills.io/schemas/agent-skills-index/v0.2.0/agent-skills-index.schema.json",
+  "version": "0.2.0",
+  "skills": [
+    {
+      "name": "replay-dashboard",
+      "type": "text/markdown",
+      "description": "Replay Dashboard — Agent context",
+      "url": "/.well-known/agent-skills/sources/replay-dashboard/SKILL.md",
+      "digest": {
+        "sha256": "05e7a8eaf4d4c3892f34bda9802bd2b41f6569a62a4b0e707db6d5b175b298b5"
+      }
+    },
+    {
+      "name": "replay-devtools",
+      "type": "text/markdown",
+      "description": "Replay DevTools (web)",
+      "url": "/.well-known/agent-skills/sources/replay-devtools/SKILL.md",
+      "digest": {
+        "sha256": "115016e04b3a983c65bb898a0ffc22ce5e8a0aa0386ccf91d422a7c17221e8a8"
+      }
+    }
+  ]
+}

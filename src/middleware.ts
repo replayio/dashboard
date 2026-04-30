@@ -1,4 +1,10 @@
 import { COOKIES, HEADERS } from "@/constants";
+import {
+  acceptsMarkdown,
+  markdownSlugForPath,
+  shouldBypassAuthMiddleware,
+  withAgentLinkHeaders,
+} from "@/utils/agentDiscovery";
 import { getAccessToken, touchSession } from "@auth0/nextjs-auth0/edge";
 import { CookieSerializeOptions } from "cookie";
 import jwt from "jsonwebtoken";
@@ -9,6 +15,23 @@ import { AccessTokenCookie, setCookieValueServer } from "./utils/cookie";
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
   const { pathname } = nextUrl;
+
+  if (pathname.startsWith("/agent/markdown/")) {
+    return NextResponse.next();
+  }
+
+  if (request.method === "GET" && acceptsMarkdown(request)) {
+    const slug = markdownSlugForPath(pathname);
+    if (slug) {
+      const u = request.nextUrl.clone();
+      u.pathname = `/agent/markdown/${slug}`;
+      return NextResponse.rewrite(u);
+    }
+  }
+
+  if (shouldBypassAuthMiddleware(pathname)) {
+    return NextResponse.next();
+  }
 
   const response = NextResponse.next();
 
@@ -28,7 +51,7 @@ export async function middleware(request: NextRequest) {
     }
   } catch (thrown) {
     if (thrown instanceof URL) {
-      return NextResponse.redirect(thrown);
+      return withAgentLinkHeaders(request, NextResponse.redirect(thrown));
     }
 
     throw thrown;
@@ -51,7 +74,7 @@ export async function middleware(request: NextRequest) {
       const redirectURL = new URL(request.url);
       redirectURL.pathname = pathname;
 
-      return NextResponse.redirect(redirectURL);
+      return withAgentLinkHeaders(request, NextResponse.redirect(redirectURL));
     }
     case "/org/new": {
       const redirectURL = new URL(request.url);
@@ -85,7 +108,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return response;
+  return withAgentLinkHeaders(request, response);
 }
 
 export const config = {

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "node scripts/generate-agent-skills.mjs",
     "build": "next build",
     "dev": "npm run dev:prod",
     "dev:local": "DEVTOOLS_URL=http://localhost:8081 pnpm dev -- -p 8080",
