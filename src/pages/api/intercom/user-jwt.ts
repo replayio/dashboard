@@ -8,10 +8,7 @@ const SECRET = process.env.INTERCOM_IDENTITY_VERIFICATION_SECRET;
 /** Per Intercom's recommendation; short-lived to limit the impersonation window. */
 const EXPIRES_IN_SECONDS = 60 * 60;
 
-type Body =
-  | { jwt: string; expiresAt: number }
-  | { jwt: null }
-  | { error: string };
+type Body = { jwt: string; expiresAt: number } | { jwt: null } | { error: string };
 
 /**
  * Issues an HS256 JWT identifying the viewer to the Intercom Messenger.
