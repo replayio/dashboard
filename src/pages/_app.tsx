@@ -2,6 +2,7 @@ import { ApolloContextProvider } from "@/components/ApolloContext";
 import { initializeMixPanel } from "@/utils/mixpanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
+import { IntercomMessenger } from "@/components/IntercomMessenger";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SidebarProvider } from "@/components/SidebarContext";
@@ -110,6 +111,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
                 </UserSettingsProvider>
               </SidebarProvider>
             </ApolloContextProvider>
+            <IntercomMessenger />
           </SessionContextProvider>
         </EndToEndTestContextProvider>
       </ThemeProvider>
