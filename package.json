@@ -28,6 +28,7 @@
   "dependencies": {
     "@apollo/client": "^3.9.6",
     "@auth0/nextjs-auth0": "^3.5.0",
+    "@intercom/messenger-js-sdk": "^0.0.19",
     "@next/bundle-analyzer": "^14.2.3",
     "@replayio/overboard": "^0.4.1",
     "@stripe/react-stripe-js": "^2.6.2",
