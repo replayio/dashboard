@@ -18,6 +18,13 @@ type IntercomErrorBody = {
   errors?: Array<{ code?: string; message?: string; data?: { contact_id?: string } }>;
 };
 
+type IntercomContact = {
+  id?: string;
+  email?: string;
+  custom_attributes?: Record<string, unknown>;
+  updated_at?: number;
+};
+
 function intercomHeaders(): HeadersInit {
   return {
     Authorization: `Bearer ${INTERCOM_TOKEN!}`,
@@ -96,6 +103,35 @@ async function resolveIntercomCompanyRecordId(name: string): Promise<string | nu
   }
   const created = (await parseIntercomJson(createRes)) as { id?: string };
   return createRes.ok && created.id ? created.id : null;
+}
+
+async function searchContactByEmail(email: string): Promise<string | null> {
+  const normalized = email.trim().toLowerCase();
+  let searchRes: Response;
+  try {
+    searchRes = await fetch("https://api.intercom.io/contacts/search", {
+      method: "POST",
+      headers: intercomHeaders(),
+      body: JSON.stringify({
+        query: {
+          operator: "AND",
+          value: [{ field: "email", operator: "=", value: email.trim() }],
+        },
+        pagination: { per_page: 50 },
+      }),
+    });
+  } catch (e) {
+    if (isFetchFailure(e)) return null;
+    throw e;
+  }
+  const body = await parseIntercomJson(searchRes);
+  if (!searchRes.ok) return null;
+  const list = ((body as { data?: IntercomContact[] }).data ?? []).filter(
+    c => typeof c.email === "string" && c.email.trim().toLowerCase() === normalized
+  );
+  if (list.length === 0) return null;
+  const sorted = list.sort((a, b) => (b.updated_at ?? 0) - (a.updated_at ?? 0));
+  return sorted[0]?.id ?? null;
 }
 
 async function attachCompanyToContact(contactId: string, companyName: string): Promise<void> {
@@ -186,11 +222,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const data = await parseIntercomJson(intercomRes);
 
     if (!intercomRes.ok) {
-      const dupId = getExistingContactIdFromErrorBody(data);
-      if (dupId && isDuplicateContactError(intercomRes, data)) {
+      if (isDuplicateContactError(intercomRes, data)) {
+        let contactId = getExistingContactIdFromErrorBody(data);
+        if (!contactId) {
+          contactId = await searchContactByEmail(email);
+        }
+        if (!contactId) {
+          return res.status(intercomRes.status).json({
+            error: "Could not locate your Intercom contact. Please try again.",
+          });
+        }
         let putRes: Response;
         try {
-          putRes = await fetch(`https://api.intercom.io/contacts/${dupId}`, {
+          putRes = await fetch(`https://api.intercom.io/contacts/${contactId}`, {
             method: "PUT",
             headers: intercomHeaders(),
             body: JSON.stringify({
@@ -212,7 +256,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             error: putData?.errors?.[0]?.message || "Intercom API error",
           });
         }
-        const cid = (putData as { id?: string }).id ?? dupId;
+        const cid = (putData as { id?: string }).id ?? contactId;
         await attachCompanyToContact(cid, companyTrimmed);
         appendIntakeCompletedCookieOnApiResponse(res, authSub);
         return res.status(200).json({ ...(putData as object), authSub });
