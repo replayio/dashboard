@@ -34,6 +34,7 @@ export const URLS = {
   app: process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : process.env.APP_URL!,
+  dispatch: process.env.NEXT_PUBLIC_DISPATCH_URL || "https://dispatch.replay.io",
 };
 
 export const TEST_USER_3 = {

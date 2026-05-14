@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { mockGetTests } from "tests/mocks/utils/mockGetTests";
 import { mockGetTestsRunsForWorkspace } from "tests/mocks/utils/mockGetTestsRunsForWorkspace";
+import { mockGetWorkspace } from "tests/mocks/utils/mockGetWorkspace";
 import { partialToTestSuiteTest } from "tests/mocks/utils/partialToTestSuiteTest";
 import { partialToTestSuiteTestRecording } from "tests/mocks/utils/partialToTestSuiteTestRecording";
 import { DEFAULT_WORKSPACE_ID } from "./mocks/constants";
@@ -12,7 +13,77 @@ import { navigateToPage } from "./utils/navigateToPage";
 import { openContextMenu } from "./utils/openContextMenu";
 import { waitForUrlChange } from "./utils/waitForUrlChange";
 
+const EIGHTH_TEST_RECORDING_ID = "recording-eighth-test-ai-tool-calls";
+const EIGHTH_TEST_RECORDING_ID_2 = "recording-eighth-test-missing-ai-tool-calls";
+const AI_TOOL_CALLS_LOG = [
+  JSON.stringify({
+    type: "assistant",
+    message: {
+      content: [
+        {
+          type: "tool_use",
+          id: "toolu_bash",
+          name: "Bash",
+          input: { command: "pnpm test" },
+        },
+      ],
+    },
+  }),
+  JSON.stringify({
+    type: "user",
+    message: {
+      content: [
+        {
+          type: "tool_result",
+          tool_use_id: "toolu_bash",
+          content: "tests passed",
+        },
+      ],
+    },
+  }),
+].join("\n");
+
 test("test-suites-runs-3: failed run in temp branch without source", async ({ page }) => {
+  await page.route("**/nut/fetch-analysis-artifact", async route => {
+    const corsHeaders = {
+      "access-control-allow-headers": "authorization, content-type",
+      "access-control-allow-methods": "POST, OPTIONS",
+      "access-control-allow-origin": "*",
+    };
+
+    if (route.request().method() === "OPTIONS") {
+      await route.fulfill({
+        headers: corsHeaders,
+        status: 204,
+      });
+      return;
+    }
+
+    const postData = route.request().postDataJSON() as {
+      fileName?: string;
+      recordingId?: string;
+    };
+
+    if (
+      postData.fileName === "claude-raw-log.jsonl" &&
+      postData.recordingId === EIGHTH_TEST_RECORDING_ID
+    ) {
+      await route.fulfill({
+        body: AI_TOOL_CALLS_LOG,
+        contentType: "application/x-ndjson",
+        headers: corsHeaders,
+        status: 200,
+      });
+    } else {
+      await route.fulfill({
+        body: "missing",
+        contentType: "text/plain",
+        headers: corsHeaders,
+        status: 404,
+      });
+    }
+  });
+
   await navigateToPage({
     mockGraphQLData,
     page,
@@ -117,6 +188,15 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({ pa
     const rows = page.locator('[data-test-name="TestExecution-RecordingRow"]');
     await expect(rows).toHaveCount(2);
 
+    const aiToolCalls = page.locator('[data-test-id="TestExecution-AIToolCalls"]');
+    await expect(aiToolCalls).toBeVisible();
+    await expect(
+      aiToolCalls.locator('[data-test-name="TestExecution-AIToolCall-Row"]')
+    ).toHaveCount(1);
+    await expect(aiToolCalls).toContainText("Bash");
+    await expect(aiToolCalls).toContainText("pnpm test");
+    await expect(aiToolCalls).toContainText("tests passed");
+
     const errors = page.locator('[data-test-id="TestExecution-Errors"]');
     await expect(errors).toBeVisible();
     const errorRows = errors.locator('[data-test-name="TestExecution-Error-Row"]');
@@ -141,11 +221,16 @@ test("test-suites-runs-3: failed run in temp branch without source", async ({ pa
     await expect(await selectedTestsRow.textContent()).toContain("Eighth test");
 
     await expect(page.locator('[data-test-name="TestExecution-RecordingRow"]')).toHaveCount(2);
+    await expect(page.locator('[data-test-id="TestExecution-AIToolCalls"]')).toBeVisible();
     await expect(page.locator('[data-test-id="TestExecution-Errors"]')).toBeVisible();
   }
 });
 
 const mockGraphQLData: MockGraphQLData = {
+  GetWorkspace: mockGetWorkspace({
+    isTest: true,
+    retentionLimitDays: 30,
+  }),
   GetTests: mockGetTests([
     partialToTestSuiteTest({
       status: "passed",
@@ -192,7 +277,10 @@ const mockGraphQLData: MockGraphQLData = {
       errors: ["This is an error message"],
       executions: [
         {
-          recordings: [partialToTestSuiteTestRecording(), partialToTestSuiteTestRecording()],
+          recordings: [
+            partialToTestSuiteTestRecording({ id: EIGHTH_TEST_RECORDING_ID }),
+            partialToTestSuiteTestRecording({ id: EIGHTH_TEST_RECORDING_ID_2 }),
+          ],
         },
       ],
       status: "flaky",
