@@ -33,6 +33,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const githubUrlPath = pathname.match(/^\/https?:\/+github\.com\/(.+)$/);
+  const githubPath = githubUrlPath?.[1];
+  if (githubPath) {
+    const redirectURL = new URL(request.url);
+    redirectURL.pathname = `/github.com/${githubPath}`;
+    return NextResponse.redirect(redirectURL);
+  }
+
   const response = NextResponse.next();
 
   const { ua } = userAgent(request);
@@ -253,6 +261,7 @@ async function redirectIfProtectedRoute(request: NextRequest) {
     pathname === "/" ||
     pathname === "/home" ||
     pathname === "/intake" ||
+    pathname.startsWith("/github.com") ||
     pathname.startsWith("/org") ||
     pathname.startsWith("/team") ||
     pathname.startsWith("/user")
