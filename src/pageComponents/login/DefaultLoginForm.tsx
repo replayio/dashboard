@@ -1,19 +1,22 @@
 import { ExternalLink } from "@/components/ExternalLink";
 import { Icon } from "@/components/Icon";
+import { GitHubLogo } from "@/pageComponents/login/GitHubLogo";
 import { GoogleLogo } from "@/pageComponents/login/GoogleLogo";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
 import { useState } from "react";
 
-type AuthPending = "google" | "email" | null;
+type AuthPending = "github" | "google" | "email" | null;
 
 const pillBase =
   "w-full flex items-center justify-center gap-3 rounded-full px-5 py-3.5 font-medium text-sm transition-colors min-h-[52px]";
 
 export function DefaultLoginForm({
+  onGitHubLogin,
   onLogin,
   onEmailLogin,
   onSSOLogin,
 }: {
+  onGitHubLogin: () => void;
   onLogin: () => void;
   onEmailLogin: () => void;
   onSSOLogin: () => void;
@@ -38,15 +41,48 @@ export function DefaultLoginForm({
           disabled={isBusy}
           onClick={() => {
             if (isBusy) return;
+            setPending("github");
+            onGitHubLogin();
+          }}
+          className={`${pillBase} bg-login-btn-primary-bg text-login-btn-primary-fg hover:bg-login-btn-primary-hover cursor-pointer disabled:opacity-70 disabled:pointer-events-none disabled:cursor-not-allowed shadow-sm`}
+        >
+          {pending === "github" ? (
+            <>
+              <Icon
+                className="w-5 h-5 shrink-0 animate-spin text-login-btn-primary-fg"
+                type="loading-spinner"
+              />
+              Redirecting…
+            </>
+          ) : (
+            <>
+              <GitHubLogo /> Continue with GitHub
+            </>
+          )}
+        </button>
+
+        <div className="flex items-center gap-3 w-full">
+          <hr className="flex-1 border-login-divider" />
+          <span className="text-login-fg-secondary text-[10px] font-medium uppercase tracking-wider">
+            Or
+          </span>
+          <hr className="flex-1 border-login-divider" />
+        </div>
+
+        <button
+          type="button"
+          disabled={isBusy}
+          onClick={() => {
+            if (isBusy) return;
             setPending("google");
             onLogin();
           }}
-          className={`${pillBase} bg-login-btn-primary-bg text-login-btn-primary-fg hover:bg-login-btn-primary-hover cursor-pointer disabled:opacity-70 disabled:pointer-events-none disabled:cursor-not-allowed shadow-sm`}
+          className={`${pillBase} border border-login-btn-outline-border bg-login-input-bg text-login-fg hover:bg-login-btn-outline-hover cursor-pointer disabled:opacity-60 disabled:pointer-events-none disabled:cursor-not-allowed`}
         >
           {pending === "google" ? (
             <>
               <Icon
-                className="w-5 h-5 shrink-0 animate-spin text-login-btn-primary-fg"
+                className="w-5 h-5 shrink-0 animate-spin text-login-fg"
                 type="loading-spinner"
               />
               Redirecting…

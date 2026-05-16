@@ -1,12 +1,24 @@
 import { COOKIES } from "@/constants";
+import {
+  handleAuth0ConnectAccount,
+  handleAuth0ConnectAccountCallback,
+  githubConnection,
+  githubScopes,
+} from "@/lib/githubConnectedAccount";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { handleAuth, handleCallback, handleLogin, handleLogout } from "@auth0/nextjs-auth0";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default handleAuth({
+  connect: handleAuth0ConnectAccount,
+
   login: (req: NextApiRequest, res: NextApiResponse) => {
     const { origin, returnTo } = handleOriginAndReturnTo(req, res);
+    const connection = getValueFromArrayOrString(req.query.connection);
+    const connectionScope =
+      connection === githubConnection() ? githubScopes().join(" ") : undefined;
+
     return handleLogin(req, res, {
       authorizationParams: {
         audience: "https://api.replay.io",
@@ -14,7 +26,8 @@ export default handleAuth({
         response_type: "code" as "code",
         scope: "openid offline_access",
         prompt: getValueFromArrayOrString(req.query.prompt),
-        connection: getValueFromArrayOrString(req.query.connection),
+        connection,
+        connection_scope: connectionScope,
         redirect_uri: `${origin}/api/auth/callback`,
         // ad attribution - forwarded to auth0 /authorize as custom query
         // params so the post-login action can read them from
@@ -30,7 +43,11 @@ export default handleAuth({
     return handleLogout(req, res, { returnTo });
   },
 
-  callback: (req: NextApiRequest, res: NextApiResponse) => {
+  callback: async (req: NextApiRequest, res: NextApiResponse) => {
+    if (await handleAuth0ConnectAccountCallback(req, res)) {
+      return;
+    }
+
     if (req.query.error_description) {
       const searchParams = new URLSearchParams({
         type: "auth",
@@ -72,13 +89,14 @@ function pickAdAttributionParams(req: NextApiRequest) {
 function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse) {
   const origin = getValueFromArrayOrString(req.query.origin) || process.env.AUTH0_BASE_URL!;
   const returnTo = origin + (getValueFromArrayOrString(req.query.returnTo) || "/");
+  const redirectUri = `${origin}/api/auth/callback`;
 
-  // We'll need to pass returnTo to the callback handler, otherwise
+  // We'll need to pass the origin-specific redirect URI to the callback handler, otherwise
   // Auth0 will reject login requests for the domains of other apps.
   // We store it in a cookie so that it's available when the callback handler is called.
   res.setHeader(
     "Set-Cookie",
-    cookie.serialize(COOKIES.authReturnTo, returnTo, {
+    cookie.serialize(COOKIES.authReturnTo, redirectUri, {
       secure: origin.startsWith("https://"),
       httpOnly: true,
       path: "/",
