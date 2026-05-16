@@ -1,11 +1,12 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import type { GitHubRepositoryTreeView } from "@/lib/githubPullRequest";
-import { GitHubRepositoryTabs } from "@/pageComponents/github/GitHubRepositoryTabs";
+import { GitHubRepositoryTopBar } from "@/pageComponents/github/GitHubRepositoryTabs";
+import { SpriteTerminalPanel } from "@/pageComponents/github/SpriteTerminalPanel";
 import { FileTree, useFileTree } from "@pierre/trees/react";
 import type { Monaco } from "@monaco-editor/react";
+import { Loader2, RefreshCw, Save, Server } from "lucide-react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { type CSSProperties, useEffect, useMemo } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   loading: () => <EditorLoading />,
@@ -19,6 +20,64 @@ type GitHubRepositoryEditorProps = {
   onSelectPath: (path: string) => void;
 };
 
+type CodespriteStatus = "creating" | "error" | "idle" | "ready";
+
+type CodespriteFsEntry = {
+  mtime: number;
+  path: string;
+  size: number;
+  type: "directory" | "file";
+};
+
+type CodespriteState = {
+  content: string;
+  cwd: string | null;
+  dirty: boolean;
+  entityUrl: string | null;
+  error: string | null;
+  entries: CodespriteFsEntry[];
+  projectPathHint: string | null;
+  saving: boolean;
+  selectedPath: string | null;
+  spriteName: string | null;
+  status: CodespriteStatus;
+};
+
+type CodespriteResponse = {
+  cwd?: string;
+  entityUrl?: string;
+  error?: string;
+  projectPathHint?: string;
+  spriteName?: string;
+};
+
+type CodespriteSnapshotResponse = {
+  cwd?: string;
+  defaultFile?: string | null;
+  entries?: CodespriteFsEntry[];
+  error?: string;
+  spriteName?: string;
+};
+
+type CodespriteReadResponse = {
+  contentBase64?: string;
+  error?: string;
+};
+
+const initialCodespriteState: CodespriteState = {
+  content: "",
+  cwd: null,
+  dirty: false,
+  entityUrl: null,
+  error: null,
+  entries: [],
+  projectPathHint: null,
+  saving: false,
+  selectedPath: null,
+  spriteName: null,
+  status: "idle",
+};
+
 export function GitHubRepositoryEditor({
   onSelectPath,
   owner,
@@ -26,6 +85,8 @@ export function GitHubRepositoryEditor({
   repositoryTree,
 }: GitHubRepositoryEditorProps) {
   const { repository, selectedFile, tree, truncated } = repositoryTree;
+  const [codesprite, setCodesprite] = useState<CodespriteState>(initialCodespriteState);
+  const codespriteReady = codesprite.status === "ready" && !!codesprite.entityUrl;
   const filePaths = useMemo(
     () => new Set(tree.filter(entry => entry.type === "blob").map(entry => entry.path)),
     [tree]
@@ -37,99 +98,364 @@ export function GitHubRepositoryEditor({
       }),
     [tree]
   );
+  const codespriteFilePaths = useMemo(
+    () =>
+      new Set(codesprite.entries.filter(entry => entry.type === "file").map(entry => entry.path)),
+    [codesprite.entries]
+  );
+  const codespriteTreePaths = useMemo(
+    () =>
+      codesprite.entries.map(entry => {
+        return entry.type === "directory" ? `${entry.path}/` : entry.path;
+      }),
+    [codesprite.entries]
+  );
   const selectedPath = selectedFile?.path ?? null;
-  const language = selectedPath ? languageFromPath(selectedPath) : "plaintext";
+  const activePath = codespriteReady ? codesprite.selectedPath : selectedPath;
+  const activeContent = codespriteReady ? codesprite.content : selectedFile?.content;
+  const activeLanguage = activePath ? languageFromPath(activePath) : "plaintext";
+  const isBusy = codesprite.status === "creating";
+
+  const readCodespriteFile = useCallback(
+    async (path: string, context?: { entityUrl: string; projectPathHint: string | null }) => {
+      const entityUrl = context?.entityUrl ?? codesprite.entityUrl;
+      if (!entityUrl) return;
+
+      setCodesprite(current => ({
+        ...current,
+        dirty: false,
+        error: null,
+        selectedPath: path,
+      }));
+
+      const response = await fetch("/api/codesprite/editor-fs", {
+        body: JSON.stringify({
+          entityUrl,
+          operation: "readFile",
+          path,
+          projectPathHint: context?.projectPathHint ?? codesprite.projectPathHint,
+        }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const payload = (await response.json().catch(() => null)) as CodespriteReadResponse | null;
+      if (!response.ok || !payload?.contentBase64) {
+        throw new Error(payload?.error ?? "Unable to read codesprite file.");
+      }
+      const content = base64ToText(payload.contentBase64);
+
+      setCodesprite(current => ({
+        ...current,
+        content,
+        dirty: false,
+        selectedPath: path,
+      }));
+    },
+    [codesprite.entityUrl, codesprite.projectPathHint]
+  );
+
+  const loadCodespriteSnapshot = useCallback(
+    async (context: {
+      entityUrl: string;
+      preferredPath?: string | null;
+      projectPathHint: string | null;
+    }) => {
+      const response = await fetch("/api/codesprite/editor-fs", {
+        body: JSON.stringify({
+          entityUrl: context.entityUrl,
+          operation: "snapshot",
+          projectPathHint: context.projectPathHint,
+        }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const payload = (await response
+        .json()
+        .catch(() => null)) as CodespriteSnapshotResponse | null;
+      if (!response.ok || !payload?.entries) {
+        throw new Error(payload?.error ?? "Unable to load codesprite workspace.");
+      }
+
+      const nextPath =
+        context.preferredPath && payload.entries.some(entry => entry.path === context.preferredPath)
+          ? context.preferredPath
+          : payload.defaultFile ??
+            payload.entries.find(entry => entry.type === "file")?.path ??
+            null;
+
+      setCodesprite(current => ({
+        ...current,
+        cwd: payload.cwd ?? current.cwd,
+        entries: payload.entries ?? [],
+        selectedPath: nextPath,
+        spriteName: payload.spriteName ?? current.spriteName,
+      }));
+
+      if (nextPath) {
+        await readCodespriteFile(nextPath, context);
+      }
+    },
+    [readCodespriteFile]
+  );
+
+  async function handleCreateCodesprite() {
+    setCodesprite(current => ({
+      ...current,
+      error: null,
+      status: "creating",
+    }));
+
+    try {
+      const response = await fetch("/api/codesprite", {
+        body: JSON.stringify({
+          repository: {
+            defaultBranch: repository.defaultBranch,
+            fullName: repository.fullName,
+            name: repository.name,
+          },
+        }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const payload = (await response.json().catch(() => null)) as CodespriteResponse | null;
+      if (!response.ok || !payload?.entityUrl || !payload.projectPathHint) {
+        throw new Error(payload?.error ?? "Unable to create codesprite.");
+      }
+
+      setCodesprite(current => ({
+        ...current,
+        cwd: payload.cwd ?? null,
+        entityUrl: payload.entityUrl ?? null,
+        projectPathHint: payload.projectPathHint ?? null,
+        spriteName: payload.spriteName ?? null,
+        status: "ready",
+      }));
+      await loadCodespriteSnapshot({
+        entityUrl: payload.entityUrl,
+        preferredPath: selectedPath,
+        projectPathHint: payload.projectPathHint,
+      });
+    } catch (error) {
+      setCodesprite(current => ({
+        ...current,
+        error: error instanceof Error ? error.message : "Unable to create codesprite.",
+        status: "error",
+      }));
+    }
+  }
+
+  async function handleRefreshCodesprite() {
+    if (!codesprite.entityUrl) return;
+    try {
+      await loadCodespriteSnapshot({
+        entityUrl: codesprite.entityUrl,
+        preferredPath: codesprite.selectedPath,
+        projectPathHint: codesprite.projectPathHint,
+      });
+    } catch (error) {
+      setCodesprite(current => ({
+        ...current,
+        error: error instanceof Error ? error.message : "Unable to refresh codesprite.",
+      }));
+    }
+  }
+
+  async function handleSaveCodesprite() {
+    if (!codesprite.entityUrl || !codesprite.selectedPath || codesprite.saving) return;
+
+    setCodesprite(current => ({ ...current, error: null, saving: true }));
+    try {
+      const response = await fetch("/api/codesprite/editor-fs", {
+        body: JSON.stringify({
+          contentBase64: textToBase64(codesprite.content),
+          entityUrl: codesprite.entityUrl,
+          operation: "writeFile",
+          path: codesprite.selectedPath,
+          projectPathHint: codesprite.projectPathHint,
+        }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+      if (!response.ok) {
+        throw new Error(payload?.error ?? "Unable to save codesprite file.");
+      }
+      setCodesprite(current => ({ ...current, dirty: false, saving: false }));
+    } catch (error) {
+      setCodesprite(current => ({
+        ...current,
+        error: error instanceof Error ? error.message : "Unable to save codesprite file.",
+        saving: false,
+      }));
+    }
+  }
+
+  function handleCodespriteContentChange(value: string | undefined) {
+    setCodesprite(current => ({
+      ...current,
+      content: value ?? "",
+      dirty: true,
+    }));
+  }
 
   return (
-      <main className="min-h-full bg-[#0a0a0a] p-6 text-zinc-100">
-      <div className="mx-auto flex max-w-7xl flex-col gap-5">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div className="min-w-0">
-            <div className="text-sm font-medium text-zinc-500">GitHub</div>
-            <div className="mt-1 flex min-w-0 items-center gap-2 text-sm text-zinc-500">
-              <Link
-                className="truncate text-zinc-400 no-underline hover:text-zinc-100 hover:underline"
-                href={`/github.com/${encodeURIComponent(owner)}`}
-              >
-                {owner}
-              </Link>
-              <span>/</span>
-              <span className="truncate">{repository.name}</span>
-            </div>
-            <h1 className="my-0 mt-2 truncate text-3xl font-semibold tracking-normal">
-              {repository.name}
-            </h1>
-          </div>
-          <GitHubRepositoryTabs active="code" owner={owner} repo={repo} />
-        </header>
-
+    <main className="flex h-full min-h-[680px] flex-col bg-[#0a0a0a] text-zinc-100">
+      <GitHubRepositoryTopBar active="code" owner={owner} repo={repo} repoName={repository.name} />
+      <div className="flex min-h-0 flex-1 flex-col">
         {truncated ? (
-          <div className="rounded-md border border-yellow-500/25 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200">
+          <div className="border-b border-yellow-500/25 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200 md:px-6">
             GitHub truncated this repository tree, so some files may be missing from the browser.
           </div>
         ) : null}
 
-        <section className="overflow-hidden rounded-lg border border-white/10 bg-[#050505] shadow-2xl shadow-black/30">
-          <div className="grid h-[calc(100vh-190px)] min-h-[620px] grid-cols-[280px_minmax(0,1fr)]">
+        <section className="min-h-0 w-full flex-1 overflow-hidden bg-[#050505]">
+          <div className="grid h-full min-h-0 grid-cols-[260px_minmax(0,1fr)] md:grid-cols-[280px_minmax(0,1fr)]">
             <aside className="min-h-0 border-r border-white/10 bg-[#151515]">
-              <div className="flex h-11 items-center gap-2 border-b border-white/10 px-4">
-                <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-                <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-                <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                <span className="ml-2 min-w-0 truncate text-sm font-medium text-zinc-300">
-                  {repository.name}
-                </span>
-              </div>
               <RepositoryFileTree
-                filePaths={filePaths}
-                onSelectPath={onSelectPath}
-                paths={treePaths}
-                selectedPath={selectedPath}
+                filePaths={codespriteReady ? codespriteFilePaths : filePaths}
+                onSelectPath={path => {
+                  if (codespriteReady) {
+                    void readCodespriteFile(path).catch(error => {
+                      setCodesprite(current => ({
+                        ...current,
+                        error:
+                          error instanceof Error
+                            ? error.message
+                            : "Unable to read codesprite file.",
+                      }));
+                    });
+                    return;
+                  }
+                  onSelectPath(path);
+                }}
+                paths={codespriteReady ? codespriteTreePaths : treePaths}
+                selectedPath={activePath}
               />
             </aside>
 
-            <section className="min-w-0 bg-[#050505]">
+            <section className="min-h-0 min-w-0 bg-[#050505]">
               <div className="flex h-11 items-center justify-between border-b border-white/10 bg-[#090909] px-3">
                 <div className="inline-flex h-8 max-w-[65%] items-center rounded-md bg-[#1c1c1c] px-3 text-sm font-medium text-zinc-200">
-                  <span className="truncate">{selectedPath ?? "No previewable file"}</span>
+                  <span className="truncate">{activePath ?? "No previewable file"}</span>
                 </div>
-                <div className="text-xs text-zinc-500">
-                  {repository.defaultBranch ? repository.defaultBranch : "default branch"}
+                <div className="flex shrink-0 items-center gap-2">
+                  {codesprite.error ? (
+                    <span
+                      className="max-w-96 truncate text-xs text-red-300"
+                      title={codesprite.error}
+                    >
+                      {codesprite.error}
+                    </span>
+                  ) : codespriteReady ? (
+                    <span
+                      className="max-w-44 truncate text-xs text-zinc-500"
+                      title={codesprite.cwd ?? undefined}
+                    >
+                      {codesprite.spriteName ?? "codesprite"}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-zinc-500">
+                      {repository.defaultBranch ? repository.defaultBranch : "default branch"}
+                    </span>
+                  )}
+                  {codespriteReady ? (
+                    <>
+                      <button
+                        className="inline-flex h-7 items-center gap-1 rounded border border-white/10 px-2 text-xs text-zinc-300 hover:bg-white/10 hover:text-white disabled:opacity-50"
+                        disabled={codesprite.saving || !codesprite.dirty}
+                        onClick={handleSaveCodesprite}
+                        type="button"
+                      >
+                        {codesprite.saving ? (
+                          <Loader2 className="size-3 animate-spin" />
+                        ) : (
+                          <Save className="size-3" />
+                        )}
+                        Save
+                      </button>
+                      <button
+                        className="inline-flex h-7 items-center gap-1 rounded border border-white/10 px-2 text-xs text-zinc-300 hover:bg-white/10 hover:text-white"
+                        onClick={handleRefreshCodesprite}
+                        type="button"
+                      >
+                        <RefreshCw className="size-3" />
+                        Refresh
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="inline-flex h-7 items-center gap-1 rounded bg-white px-2 text-xs font-medium text-black hover:bg-zinc-200 disabled:opacity-60"
+                      disabled={isBusy}
+                      onClick={handleCreateCodesprite}
+                      type="button"
+                    >
+                      {isBusy ? (
+                        <Loader2 className="size-3 animate-spin" />
+                      ) : (
+                        <Server className="size-3" />
+                      )}
+                      Create codesprite
+                    </button>
+                  )}
                 </div>
               </div>
 
-              {selectedFile ? (
-                <MonacoEditor
-                  beforeMount={defineReplayMonacoTheme}
-                  height="calc(100% - 44px)"
-                  language={selectedFile.isBinary ? "plaintext" : language}
-                  options={{
-                    automaticLayout: true,
-                    contextmenu: false,
-                    fontFamily:
-                      "Berkeley Mono, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-                    fontLigatures: false,
-                    fontSize: 14,
-                    lineHeight: 22,
-                    lineNumbersMinChars: 4,
-                    minimap: { enabled: false },
-                    padding: { bottom: 32, top: 20 },
-                    readOnly: true,
-                    renderLineHighlight: "none",
-                    scrollBeyondLastLine: false,
-                    scrollbar: {
-                      alwaysConsumeMouseWheel: false,
-                      horizontalScrollbarSize: 10,
-                      verticalScrollbarSize: 10,
-                    },
-                    smoothScrolling: true,
-                    wordWrap: "off",
-                  }}
-                  path={`github://${repository.fullName}/${selectedFile.path}`}
-                  theme="replay-github-dark"
-                  value={selectedFile.content}
-                  width="100%"
-                />
+              {activeContent !== undefined && activePath ? (
+                <div className="flex h-[calc(100%-44px)] min-h-0 flex-col">
+                  <div className="min-h-0 flex-1">
+                    <MonacoEditor
+                      beforeMount={defineReplayMonacoTheme}
+                      height="100%"
+                      language={
+                        codespriteReady
+                          ? activeLanguage
+                          : selectedFile?.isBinary
+                            ? "plaintext"
+                            : activeLanguage
+                      }
+                      onChange={codespriteReady ? handleCodespriteContentChange : undefined}
+                      options={{
+                        automaticLayout: true,
+                        contextmenu: false,
+                        fontFamily:
+                          "Berkeley Mono, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                        fontLigatures: false,
+                        fontSize: 14,
+                        lineHeight: 22,
+                        lineNumbersMinChars: 4,
+                        minimap: { enabled: false },
+                        padding: { bottom: 32, top: 20 },
+                        readOnly: !codespriteReady,
+                        renderLineHighlight: "none",
+                        scrollBeyondLastLine: false,
+                        scrollbar: {
+                          alwaysConsumeMouseWheel: false,
+                          horizontalScrollbarSize: 10,
+                          verticalScrollbarSize: 10,
+                        },
+                        smoothScrolling: true,
+                        wordWrap: "off",
+                      }}
+                      path={
+                        codespriteReady
+                          ? `codesprite://${repository.fullName}/${activePath}`
+                          : `github://${repository.fullName}/${activePath}`
+                      }
+                      theme="replay-github-dark"
+                      value={activeContent}
+                      width="100%"
+                    />
+                  </div>
+                  {codespriteReady && codesprite.entityUrl ? (
+                    <div className="h-72 min-h-48 shrink-0">
+                      <SpriteTerminalPanel
+                        entityUrl={codesprite.entityUrl}
+                        projectPathHint={codesprite.projectPathHint}
+                        storageKey={repository.fullName}
+                      />
+                    </div>
+                  ) : null}
+                </div>
               ) : (
                 <div className="flex h-[calc(100%-44px)] items-center justify-center text-sm text-zinc-500">
                   Select a file to preview it.
@@ -196,21 +522,23 @@ function RepositoryFileTree({
 
   return (
     <FileTree
-      className="h-[calc(100%_-_44px)]"
+      className="h-full"
       model={model}
-      style={{
-        "--trees-accent-override": "#1fb7ff",
-        "--trees-bg-muted-override": "#1f2937",
-        "--trees-bg-override": "#151515",
-        "--trees-border-color-override": "rgba(255,255,255,0.08)",
-        "--trees-fg-muted-override": "#71717a",
-        "--trees-fg-override": "#a1a1aa",
-        "--trees-font-family-override":
-          "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-        "--trees-font-size-override": "13px",
-        "--trees-selected-bg-override": "#1f2937",
-        "--trees-selected-fg-override": "#22d3ee",
-      } as CSSProperties}
+      style={
+        {
+          "--trees-accent-override": "#1fb7ff",
+          "--trees-bg-muted-override": "#1f2937",
+          "--trees-bg-override": "#151515",
+          "--trees-border-color-override": "rgba(255,255,255,0.08)",
+          "--trees-fg-muted-override": "#71717a",
+          "--trees-fg-override": "#a1a1aa",
+          "--trees-font-family-override":
+            "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+          "--trees-font-size-override": "13px",
+          "--trees-selected-bg-override": "#1f2937",
+          "--trees-selected-fg-override": "#22d3ee",
+        } as CSSProperties
+      }
     />
   );
 }
@@ -228,6 +556,25 @@ function EditorLoading() {
       </div>
     </div>
   );
+}
+
+function textToBase64(value: string) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.slice(index, index + chunkSize));
+  }
+  return window.btoa(binary);
+}
+
+function base64ToText(value: string) {
+  const binary = window.atob(value);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return new TextDecoder().decode(bytes);
 }
 
 function expandedDirectoryPaths(path: string) {

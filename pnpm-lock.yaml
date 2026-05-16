@@ -35,6 +35,12 @@ dependencies:
   '@stripe/stripe-js':
     specifier: ^3.0.10
     version: 3.0.10
+  '@xterm/addon-fit':
+    specifier: ^0.11.0
+    version: 0.11.0
+  '@xterm/xterm':
+    specifier: ^6.0.0
+    version: 6.0.0
   base-x:
     specifier: ^4.0.0
     version: 4.0.0
@@ -1868,9 +1874,9 @@ packages:
       '@types/ws': 8.5.10
       graphql: 16.8.1
       graphql-ws: 5.15.0(graphql@16.8.1)
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -1937,9 +1943,9 @@ packages:
       '@graphql-tools/utils': 10.1.0(graphql@16.8.1)
       '@types/ws': 8.5.10
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -2246,10 +2252,10 @@ packages:
       '@types/ws': 8.5.10
       '@whatwg-node/fetch': 0.8.8
       graphql: 15.4.0
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.16.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -2273,10 +2279,10 @@ packages:
       '@types/ws': 8.5.10
       '@whatwg-node/fetch': 0.9.17
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.20.1)
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.16.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -4912,7 +4918,7 @@ packages:
       terminate: 2.6.1
       txml: 3.2.5
       uuid: 8.3.2
-      ws: 8.16.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4955,7 +4961,7 @@ packages:
       uuid: 8.3.2
       winston: 3.13.0
       winston-loki: 6.1.2
-      ws: 8.16.0
+      ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -5778,6 +5784,14 @@ packages:
 
   /@xstate/fsm@1.6.5:
     resolution: {integrity: sha512-b5o1I6aLNeYlU/3CPlj/Z91ybk1gUsKT+5NAJI+2W4UjvS5KLG28K9v5UvNoFVjHV8PajVZ00RH3vnjyQO7ZAw==}
+    dev: false
+
+  /@xterm/addon-fit@0.11.0:
+    resolution: {integrity: sha512-jYcgT6xtVYhnhgxh3QgYDnnNMYTcf8ElbxxFzX0IZo+vabQqSPAjC3c1wJrKB5E19VwQei89QCiZZP86DCPF7g==}
+    dev: false
+
+  /@xterm/xterm@6.0.0:
+    resolution: {integrity: sha512-TQwDdQGtwwDt+2cgKDLn0IRaSxYu1tSUjgKarSDkUM0ZNiSRXFpjxEsvc/Zgc5kq5omJ+V0a8/kIM2WD3sMOYg==}
     dev: false
 
   /@xtuc/ieee754@1.2.0:
@@ -10758,12 +10772,12 @@ packages:
       ws: 8.13.0
     dev: true
 
-  /isomorphic-ws@5.0.0(ws@8.16.0):
+  /isomorphic-ws@5.0.0(ws@8.20.1):
     resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.16.0
+      ws: 8.20.1
     dev: true
 
   /isstream@0.1.2:
@@ -11400,7 +11414,7 @@ packages:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.16.0
+      ws: 8.20.1
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -16121,8 +16135,8 @@ packages:
         optional: true
     dev: true
 
-  /ws@8.16.0:
-    resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
+  /ws@8.20.1:
+    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1

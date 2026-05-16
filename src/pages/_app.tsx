@@ -13,14 +13,21 @@ import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { User } from "@/graphql/types";
 import { captureAdAttribution } from "@/utils/adAttribution";
 import { decompress } from "@/utils/compression";
-import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
+import {
+  AccessTokenCookie,
+  deleteCookieValueClient,
+  isSecureEnvironment,
+  setCookieValueClient,
+} from "@/utils/cookie";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { listenForAccessToken } from "@/utils/replayBrowser";
+import cookie from "cookie";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
+import "@xterm/xterm/css/xterm.css";
 import "use-context-menu/styles.css";
 import "../global.css";
 import "../shiki.css";
@@ -48,7 +55,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
   }
 
   static getInitialProps = async (context: AppContext) => {
-    const accessToken = getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.accessToken]);
+    let accessToken = getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.accessToken]);
     const accessTokenSource = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.accessTokenSource]
     );
@@ -59,7 +66,20 @@ export default class MyApp extends App<AppProps<PageProps>> {
       ? decompress<MockGraphQLData>(mockGraphQLDataString)
       : null;
 
-    const user = accessToken ? await getCurrentUser(accessToken, mockGraphQLData) : null;
+    let user = null;
+    if (accessToken) {
+      try {
+        user = await getCurrentUser(accessToken, mockGraphQLData);
+      } catch (error) {
+        clearAccessTokenCookie(context);
+        redirectProtectedRouteToLogin(context);
+        accessToken = "";
+        if (process.env.NODE_ENV !== "production") {
+          const message = error instanceof Error ? error.message : String(error);
+          console.warn("Failed to fetch current user; clearing session", message);
+        }
+      }
+    }
 
     return {
       pageProps: {
@@ -140,5 +160,54 @@ function ErrorFallback() {
         </p>
       </div>
     </section>
+  );
+}
+
+function clearAccessTokenCookie(context: AppContext) {
+  const res = context.ctx.res;
+  if (res) {
+    const serialized = cookie.serialize(COOKIES.accessToken, "", {
+      maxAge: 0,
+      path: "/",
+      sameSite: "lax",
+      secure: isSecureEnvironment(),
+    });
+    const current = res.getHeader("Set-Cookie");
+    if (!current) {
+      res.setHeader("Set-Cookie", serialized);
+    } else if (Array.isArray(current)) {
+      res.setHeader("Set-Cookie", [...current, serialized]);
+    } else {
+      res.setHeader("Set-Cookie", [String(current), serialized]);
+    }
+  } else if (typeof window !== "undefined") {
+    deleteCookieValueClient(COOKIES.accessToken);
+  }
+}
+
+function redirectProtectedRouteToLogin(context: AppContext) {
+  const pathname = context.ctx.asPath ?? context.ctx.pathname ?? "/";
+  if (!isProtectedPathname(pathname)) {
+    return;
+  }
+
+  const loginPath = `/login?${new URLSearchParams({ returnTo: pathname })}`;
+  if (context.ctx.res && !context.ctx.res.headersSent) {
+    context.ctx.res.writeHead(307, { Location: loginPath });
+    context.ctx.res.end();
+  } else if (typeof window !== "undefined") {
+    window.location.replace(loginPath);
+  }
+}
+
+function isProtectedPathname(pathname: string) {
+  return (
+    pathname === "/" ||
+    pathname === "/home" ||
+    pathname === "/intake" ||
+    pathname.startsWith("/github.com") ||
+    pathname.startsWith("/org") ||
+    pathname.startsWith("/team") ||
+    pathname.startsWith("/user")
   );
 }

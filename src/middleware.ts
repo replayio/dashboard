@@ -137,7 +137,11 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
   const prevAccessTokenCookieRaw = cookieStore.get(COOKIES.accessToken);
   let prevAccessTokenCookie: AccessTokenCookie | undefined;
   if (prevAccessTokenCookieRaw) {
-    prevAccessTokenCookie = JSON.parse(prevAccessTokenCookieRaw.value);
+    try {
+      prevAccessTokenCookie = JSON.parse(prevAccessTokenCookieRaw.value);
+    } catch {
+      setCookieValueServer(response, COOKIES.accessToken, "", { maxAge: 0 });
+    }
   }
 
   try {
@@ -183,14 +187,27 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     return data;
   }
 
-  if (prevAccessTokenCookie?.token) {
+  if (prevAccessTokenCookie?.token && !isExpiredJwt(prevAccessTokenCookie.token)) {
     return prevAccessTokenCookie;
+  }
+  if (prevAccessTokenCookie?.token) {
+    setCookieValueServer(response, COOKIES.accessToken, "", { maxAge: 0 });
   }
 
   return {
     source: null,
     token: null,
   };
+}
+
+function isExpiredJwt(token: string) {
+  const decodedToken = jwt.decode(token, { json: true });
+  if (!decodedToken || typeof decodedToken.exp !== "number") {
+    return false;
+  }
+
+  const now = Math.floor(Date.now() / 1000);
+  return decodedToken.exp <= now;
 }
 
 async function redirectIfMobile(request: NextRequest) {

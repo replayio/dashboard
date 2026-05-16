@@ -77,6 +77,10 @@ export function CurrentUser() {
     window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);
   };
 
+  if (!user) {
+    return null;
+  }
+
   const menu = isOpen && (
     <div
       ref={menuRef}

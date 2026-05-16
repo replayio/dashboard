@@ -3,7 +3,7 @@ import { DefaultLayout } from "@/components/layout/DefaultLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGithubApi } from "@/hooks/useGithubApi";
 import type { GitHubRepositoryPullRequestList } from "@/lib/githubPullRequest";
-import { GitHubRepositoryTabs } from "@/pageComponents/github/GitHubRepositoryTabs";
+import { GitHubRepositoryTopBar } from "@/pageComponents/github/GitHubRepositoryTabs";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
@@ -66,47 +66,34 @@ export default function GitHubRepositoryPullsPage({
       <Head>
         <title>{`${repository.fullName} pull requests · Replay`}</title>
       </Head>
-      <main className="min-h-full bg-[#0a0a0a] p-6 text-zinc-100">
-        <div className="mx-auto flex max-w-6xl flex-col gap-5">
-          <header className="flex flex-wrap items-end justify-between gap-4">
-            <div className="min-w-0">
-              <div className="text-sm font-medium text-zinc-500">GitHub</div>
-              <div className="mt-1 flex min-w-0 items-center gap-2 text-sm text-zinc-500">
-                <Link
-                  className="truncate text-zinc-400 no-underline hover:text-zinc-100 hover:underline"
-                  href={`/github.com/${encodeURIComponent(owner)}`}
-                >
-                  {owner}
-                </Link>
-                <span>/</span>
-                <Link
-                  className="truncate text-zinc-400 no-underline hover:text-zinc-100 hover:underline"
-                  href={`/github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`}
-                >
-                  {repository.name}
-                </Link>
+      <main className="flex h-full min-h-[680px] flex-col bg-[#0a0a0a] text-zinc-100">
+        <GitHubRepositoryTopBar
+          active="pulls"
+          owner={owner}
+          repo={repo}
+          repoName={repository.name}
+        />
+        <div className="min-h-0 flex-1 overflow-auto bg-[#141414]">
+          <section className="w-full">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 md:px-6">
+              <div className="min-w-0">
+                <h1 className="my-0 truncate text-base font-semibold text-zinc-100">
+                  Pull requests
+                </h1>
+                <div className="mt-1 text-xs text-zinc-500">
+                  {repository.private ? "Private" : "Public"}
+                  {repository.defaultBranch ? ` · ${repository.defaultBranch}` : ""}
+                </div>
               </div>
-              <h1 className="my-0 mt-2 truncate text-3xl font-semibold tracking-normal">
-                Pull requests
-              </h1>
-              <div className="mt-2 text-sm text-zinc-500">
-                {repository.private ? "Private" : "Public"}
-                {repository.defaultBranch ? ` · ${repository.defaultBranch}` : ""}
-              </div>
-            </div>
-            <GitHubRepositoryTabs active="pulls" owner={owner} repo={repo} />
-          </header>
-
-          <section className="overflow-hidden rounded-lg border border-white/10 bg-[#141414]">
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-              <h2 className="my-0 text-base font-semibold text-zinc-100">Pull requests</h2>
-              <span className="text-sm text-zinc-500">{pullRequests.length} pull requests</span>
+              <span className="shrink-0 text-sm text-zinc-500">
+                {pullRequests.length} pull requests
+              </span>
             </div>
             <div className="divide-y divide-white/10">
               {pullRequests.length ? (
                 pullRequests.map(pullRequest => (
                   <Link
-                    className="flex items-start justify-between gap-4 px-4 py-3 text-zinc-100 no-underline hover:bg-white/[0.04]"
+                    className="flex items-start justify-between gap-4 px-4 py-3 text-zinc-100 no-underline hover:bg-white/[0.04] md:px-6"
                     href={`/github.com/${encodeURIComponent(owner)}/${encodeURIComponent(
                       repo
                     )}/pull/${pullRequest.number}`}
@@ -135,7 +122,7 @@ export default function GitHubRepositoryPullsPage({
                   </Link>
                 ))
               ) : (
-                <div className="px-4 py-8 text-sm text-zinc-500">
+                <div className="px-4 py-8 text-sm text-zinc-500 md:px-6">
                   No pull requests found for this repository.
                 </div>
               )}
@@ -143,7 +130,7 @@ export default function GitHubRepositoryPullsPage({
           </section>
 
           <ExternalLink
-            className="self-start text-sm font-medium text-zinc-300 no-underline hover:text-white hover:underline"
+            className="block px-4 py-4 text-sm font-medium text-zinc-300 no-underline hover:text-white hover:underline md:px-6"
             href={repository.htmlUrl}
           >
             Open repository in GitHub
@@ -162,16 +149,9 @@ function GitHubRepositoryPullsLoading({ owner, repo }: { owner: string; repo: st
       <Head>
         <title>{`${owner}/${repo} pull requests · Replay`}</title>
       </Head>
-      <main className="min-h-full bg-[#0a0a0a] p-6 text-zinc-100">
-        <div className="mx-auto flex max-w-6xl flex-col gap-5">
-          <header className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <div className="text-sm font-medium text-zinc-500">GitHub</div>
-              <h1 className="my-0 mt-2 text-3xl font-semibold">Pull requests</h1>
-              <Skeleton className="mt-3 h-4 w-40 bg-white/10" />
-            </div>
-            <GitHubRepositoryTabs active="pulls" owner={owner} repo={repo} />
-          </header>
+      <main className="flex h-full min-h-[680px] flex-col bg-[#0a0a0a] text-zinc-100">
+        <GitHubRepositoryTopBar active="pulls" owner={owner} repo={repo} />
+        <div className="min-h-0 flex-1 overflow-auto bg-[#141414]">
           <PullRequestListSkeleton />
         </div>
       </main>
@@ -215,14 +195,14 @@ function GitHubRepositoryPullsError({
 
 function PullRequestListSkeleton() {
   return (
-    <section className="overflow-hidden rounded-lg border border-white/10 bg-[#141414]">
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+    <section className="w-full">
+      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 md:px-6">
         <Skeleton className="h-5 w-28 bg-white/10" />
         <Skeleton className="h-4 w-24 bg-white/10" />
       </div>
       <div className="divide-y divide-white/10">
         {Array.from({ length: 8 }).map((_, index) => (
-          <div className="flex items-start justify-between gap-4 px-4 py-3" key={index}>
+          <div className="flex items-start justify-between gap-4 px-4 py-3 md:px-6" key={index}>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <Skeleton className="h-4 w-10 bg-white/10" />
@@ -251,11 +231,7 @@ function PullRequestState({
 }: {
   pullRequest: GitHubRepositoryPullRequestList["pullRequests"][number];
 }) {
-  const state = pullRequest.mergedAt
-    ? "Merged"
-    : pullRequest.draft
-      ? "Draft"
-      : pullRequest.state;
+  const state = pullRequest.mergedAt ? "Merged" : pullRequest.draft ? "Draft" : pullRequest.state;
   const className = pullRequest.mergedAt
     ? "bg-violet-500/15 text-violet-300"
     : pullRequest.draft

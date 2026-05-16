@@ -3,11 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGithubApi } from "@/hooks/useGithubApi";
 import type { GitHubRepositoryTreeView } from "@/lib/githubPullRequest";
 import { GitHubRepositoryEditor } from "@/pageComponents/github/GitHubRepositoryEditor";
-import { GitHubRepositoryTabs } from "@/pageComponents/github/GitHubRepositoryTabs";
+import { GitHubRepositoryTopBar } from "@/pageComponents/github/GitHubRepositoryTabs";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 type RepositoryTreeResponse = {
@@ -92,37 +91,12 @@ function GitHubRepositoryLoading({ owner, repo }: { owner: string; repo: string 
       <Head>
         <title>{`${owner}/${repo} · GitHub · Replay`}</title>
       </Head>
-      <main className="min-h-full bg-[#0a0a0a] p-6 text-zinc-100">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5">
-          <header className="flex flex-wrap items-end justify-between gap-4">
-            <div className="min-w-0">
-              <div className="text-sm font-medium text-zinc-500">GitHub</div>
-              <div className="mt-1 flex min-w-0 items-center gap-2 text-sm text-zinc-500">
-                <Link
-                  className="truncate text-zinc-400 no-underline hover:text-zinc-100 hover:underline"
-                  href={`/github.com/${encodeURIComponent(owner)}`}
-                >
-                  {owner}
-                </Link>
-                <span>/</span>
-                <span className="truncate">{repo}</span>
-              </div>
-              <h1 className="my-0 mt-2 truncate text-3xl font-semibold tracking-normal">
-                {repo}
-              </h1>
-            </div>
-            <GitHubRepositoryTabs active="code" owner={owner} repo={repo} />
-          </header>
-
-          <section className="overflow-hidden rounded-lg border border-white/10 bg-[#050505]">
-            <div className="grid h-[calc(100vh-190px)] min-h-[620px] grid-cols-[280px_minmax(0,1fr)]">
-              <aside className="border-r border-white/10 bg-[#151515]">
-                <div className="flex h-11 items-center gap-2 border-b border-white/10 px-4">
-                  <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-                  <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-                  <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                  <Skeleton className="ml-2 h-4 w-32 bg-white/10" />
-                </div>
+      <main className="flex h-full min-h-[680px] flex-col bg-[#0a0a0a] text-zinc-100">
+        <GitHubRepositoryTopBar active="code" owner={owner} repo={repo} />
+        <div className="flex min-h-0 flex-1 flex-col">
+          <section className="min-h-0 w-full flex-1 overflow-hidden bg-[#050505]">
+            <div className="grid h-full min-h-0 grid-cols-[260px_minmax(0,1fr)] md:grid-cols-[280px_minmax(0,1fr)]">
+              <aside className="min-h-0 border-r border-white/10 bg-[#151515]">
                 <div className="space-y-2 p-4">
                   {Array.from({ length: 18 }).map((_, index) => (
                     <Skeleton
@@ -136,7 +110,7 @@ function GitHubRepositoryLoading({ owner, repo }: { owner: string; repo: string 
                   ))}
                 </div>
               </aside>
-              <section className="min-w-0 bg-[#050505]">
+              <section className="min-h-0 min-w-0 bg-[#050505]">
                 <div className="flex h-11 items-center border-b border-white/10 bg-[#090909] px-3">
                   <Skeleton className="h-8 w-64 bg-white/10" />
                 </div>
