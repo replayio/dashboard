@@ -190,6 +190,7 @@ export enum WorkspaceSubscriptionStatus {
 }
 
 export type PlanKey =
+  // Legacy keys (existing subscriptions remain on these; hidden from picker).
   | "org-v1"
   | "team-v1"
   | "test-team-v1"
@@ -201,12 +202,29 @@ export type PlanKey =
   | "org-annual-contract-v1"
   | "team-oss-v1"
   | "team-internal-v1"
-  | "testsuites-v1";
+  | "testsuites-v1"
+  // v2 pricing keys.
+  | "free-v1"
+  | "growth-monthly-v1"
+  | "growth-annual-v1"
+  | "enterprise-v1";
+
+export type PlanTier = "free" | "growth" | "enterprise" | "legacy";
+
+export type PlanInterval = "month" | "year" | "contract" | "none";
+
+export type PlanVisibility = "public" | "hidden";
 
 export type Plan = {
   id: string;
   key: PlanKey;
   name: string;
+  // v2 fields. Optional so legacy `Plan` consumers stay compatible.
+  tier?: PlanTier;
+  interval?: PlanInterval | null;
+  visibility?: PlanVisibility;
+  displayName?: string | null;
+  monthlyPriceCents?: number | null;
 };
 
 export type SubscriptionStatus = `${WorkspaceSubscriptionStatus}`;

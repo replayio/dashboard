@@ -134,5 +134,41 @@ export function pricingDetailsForSubscription(subscription: WorkspaceSubscriptio
         discount: 0,
         trial: false,
       };
+    // v2 pricing keys. Growth / Free are workspace-level (not per-seat) prices,
+    // so we don't compute a per-seat amount here. The exact price is rendered
+    // on the plan picker page; this struct is only used for the legacy Billing
+    // surface which doesn't multiply by seats for v2 plans.
+    case "free-v1":
+      return {
+        billingSchedule: "monthly",
+        displayName: "Free",
+        seatPrice: 0,
+        discount: 0,
+        trial: false,
+      };
+    case "growth-monthly-v1":
+      return {
+        billingSchedule: "monthly",
+        displayName: "Growth",
+        seatPrice: 0,
+        discount: 0,
+        trial: isTrialSubscription(subscription),
+      };
+    case "growth-annual-v1":
+      return {
+        billingSchedule: "annual",
+        displayName: "Growth",
+        seatPrice: 0,
+        discount: 0,
+        trial: isTrialSubscription(subscription),
+      };
+    case "enterprise-v1":
+      return {
+        billingSchedule: "contract",
+        displayName: "Enterprise",
+        seatPrice: 0,
+        discount: 0,
+        trial: false,
+      };
   }
 }
