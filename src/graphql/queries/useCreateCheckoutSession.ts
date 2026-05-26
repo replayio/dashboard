@@ -21,28 +21,26 @@ export function useCreateCheckoutSession() {
   const { error, isLoading, mutate } = useGraphQLMutation<
     CreateWorkspaceCheckoutSessionMutation,
     CreateWorkspaceCheckoutSessionVariables
-  >(
-    gql`
-      mutation CreateWorkspaceCheckoutSession(
-        $workspaceId: ID!
-        $planKey: String!
-        $successUrl: String!
-        $cancelUrl: String!
-      ) {
-        createWorkspaceCheckoutSession(
-          input: {
-            workspaceId: $workspaceId
-            planKey: $planKey
-            successUrl: $successUrl
-            cancelUrl: $cancelUrl
-          }
-        ) {
-          url
-          sessionId
+  >(gql`
+    mutation CreateWorkspaceCheckoutSession(
+      $workspaceId: ID!
+      $planKey: String!
+      $successUrl: String!
+      $cancelUrl: String!
+    ) {
+      createWorkspaceCheckoutSession(
+        input: {
+          workspaceId: $workspaceId
+          planKey: $planKey
+          successUrl: $successUrl
+          cancelUrl: $cancelUrl
         }
+      ) {
+        url
+        sessionId
       }
-    `
-  );
+    }
+  `);
 
   const createCheckoutSession = useCallback(
     async (vars: CreateWorkspaceCheckoutSessionVariables) => {

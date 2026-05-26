@@ -34,9 +34,8 @@ export const GET_AVAILABLE_PLANS = gql`
 `;
 
 export function useAvailablePlans() {
-  const { data, error, isLoading, refetch } = useGraphQLQuery<GetAvailablePlansQuery>(
-    GET_AVAILABLE_PLANS
-  );
+  const { data, error, isLoading, refetch } =
+    useGraphQLQuery<GetAvailablePlansQuery>(GET_AVAILABLE_PLANS);
 
   const plans = useMemo<Plan[] | undefined>(() => {
     if (!data?.availablePlans) return undefined;

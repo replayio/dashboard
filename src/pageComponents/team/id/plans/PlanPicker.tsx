@@ -39,8 +39,7 @@ export function PlanPicker({
 }: PlanPickerProps) {
   const router = useRouter();
   const { plans, isLoading, error } = useAvailablePlans();
-  const { createCheckoutSession, isLoading: isCheckoutPending } =
-    useCreateCheckoutSession();
+  const { createCheckoutSession, isLoading: isCheckoutPending } = useCreateCheckoutSession();
   const { selectFreePlan, isLoading: isFreePending } = useSelectFreePlan();
 
   const [cadence, setCadence] = useState<BillingCadence>("annual");
@@ -116,9 +115,7 @@ export function PlanPicker({
   if (error) {
     return (
       <Message className="m-6">
-        <p className="text-sm text-destructive">
-          Could not load plans: {error.message}
-        </p>
+        <p className="text-sm text-destructive">Could not load plans: {error.message}</p>
       </Message>
     );
   }
@@ -139,11 +136,8 @@ export function PlanPicker({
       {isLegacyCurrent && (
         <div className="rounded-md border border-border bg-muted/50 px-4 py-3 text-sm text-muted-foreground">
           You&apos;re on the{" "}
-          <span className="font-medium text-foreground">
-            {currentPlanName ?? "legacy"}
-          </span>{" "}
-          plan. Selecting a new plan below will cancel your current subscription
-          and start a new one.
+          <span className="font-medium text-foreground">{currentPlanName ?? "legacy"}</span> plan.
+          Selecting a new plan below will cancel your current subscription and start a new one.
         </div>
       )}
 
@@ -173,13 +167,9 @@ export function PlanPicker({
           emphasized
           title={PLAN_TIER_UI_CONFIG.growth.title}
           description={PLAN_TIER_UI_CONFIG.growth.description}
-          priceDisplay={
-            <PriceDisplay amountCents={growthPlan?.monthlyPriceCents ?? null} />
-          }
+          priceDisplay={<PriceDisplay amountCents={growthPlan?.monthlyPriceCents ?? null} />}
           priceSubtitle={
-            cadence === "annual"
-              ? "per month, billed annually"
-              : "per month, billed monthly"
+            cadence === "annual" ? "per month, billed annually" : "per month, billed monthly"
           }
           inheritsFromLabel={PLAN_TIER_UI_CONFIG.growth.inheritsFromLabel}
           features={PLAN_TIER_UI_CONFIG.growth.features}
@@ -188,8 +178,7 @@ export function PlanPicker({
           ctaLoading={isCheckoutPending}
           ctaDisabled={!growthPlan || !BILLING_V2_CHECKOUT_ENABLED}
           isCurrent={
-            currentPlanKey === "growth-monthly-v1" ||
-            currentPlanKey === "growth-annual-v1"
+            currentPlanKey === "growth-monthly-v1" || currentPlanKey === "growth-annual-v1"
           }
           data-test-id="PlanPicker-Card-Growth"
         />

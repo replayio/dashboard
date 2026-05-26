@@ -50,9 +50,7 @@ export function PlanCard({
     <div
       className={
         "relative flex flex-col rounded-lg border p-6 bg-card text-card-foreground " +
-        (emphasized
-          ? "border-primary shadow-lg "
-          : "border-border ") +
+        (emphasized ? "border-primary shadow-lg " : "border-border ") +
         (isLegacy ? "opacity-60" : "")
       }
       data-test-id={testId}
@@ -73,9 +71,7 @@ export function PlanCard({
 
       <div className="mb-6">
         <div className="text-4xl font-bold leading-none">{priceDisplay}</div>
-        {priceSubtitle && (
-          <div className="mt-2 text-xs text-muted-foreground">{priceSubtitle}</div>
-        )}
+        {priceSubtitle && <div className="mt-2 text-xs text-muted-foreground">{priceSubtitle}</div>}
       </div>
 
       <div className="my-2 border-t border-border" />

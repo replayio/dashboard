@@ -24,16 +24,13 @@ export default function Page({
   const checkoutStatus = getValueFromArrayOrString(router.query.checkout);
 
   const { subscription, refetch } = useWorkspaceSubscription(workspaceId);
-  const [pollingForCheckout, setPollingForCheckout] = useState(
-    checkoutStatus === "success"
-  );
+  const [pollingForCheckout, setPollingForCheckout] = useState(checkoutStatus === "success");
 
   const currentPlanKey: PlanKey | null = useMemo(() => {
     return (subscription?.plan?.key as PlanKey | undefined) ?? initialPlanKey ?? null;
   }, [subscription, initialPlanKey]);
 
-  const currentPlanName: string | null =
-    subscription?.plan?.name ?? initialPlanName ?? null;
+  const currentPlanName: string | null = subscription?.plan?.name ?? initialPlanName ?? null;
 
   // Stripe Checkout success flow: webhook reconciles plan_id asynchronously,
   // so poll the subscription query until it settles or we time out.
@@ -91,9 +88,7 @@ export default function Page({
 
 Page.Layout = TeamLayout;
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ id: string }>
-) {
+export async function getServerSideProps(context: GetServerSidePropsContext<{ id: string }>) {
   if (!BILLING_V2_PICKER_ENABLED) {
     return {
       notFound: true,
@@ -115,18 +110,12 @@ export async function getServerSideProps(
     return redirectWithState({ context, pathname: `/team/${workspaceId}/recordings` });
   }
 
-  const mockGraphQLDataString = getValueFromArrayOrString(
-    req?.headers?.[HEADERS.mockGraphQLData]
-  );
+  const mockGraphQLDataString = getValueFromArrayOrString(req?.headers?.[HEADERS.mockGraphQLData]);
   const mockGraphQLData = mockGraphQLDataString
     ? decompress<MockGraphQLData>(mockGraphQLDataString)
     : null;
 
-  const { planKey } = await getWorkspaceHasSubscription(
-    workspaceId,
-    accessToken,
-    mockGraphQLData
-  );
+  const { planKey } = await getWorkspaceHasSubscription(workspaceId, accessToken, mockGraphQLData);
 
   return {
     props: {

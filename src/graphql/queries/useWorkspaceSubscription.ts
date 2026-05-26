@@ -67,11 +67,7 @@ export function useWorkspaceSubscription(workspaceId: string) {
     // subscription row yet. Callers (e.g. BillingContext) already treat
     // `undefined` as "still loading/absent", so we mirror that behaviour
     // rather than throwing.
-    if (
-      !data?.node ||
-      !("subscription" in data.node) ||
-      !data.node.subscription
-    ) {
+    if (!data?.node || !("subscription" in data.node) || !data.node.subscription) {
       return undefined;
     }
 

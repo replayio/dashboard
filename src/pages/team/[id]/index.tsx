@@ -26,9 +26,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext<any>
   // route them to the plan picker before anything else. Legacy workspaces
   // always have a subscription, so this is a no-op for them.
   if (BILLING_V2_PICKER_ENABLED) {
-    const accessToken = getValueFromArrayOrString(
-      context.req?.headers?.[HEADERS.accessToken]
-    );
+    const accessToken = getValueFromArrayOrString(context.req?.headers?.[HEADERS.accessToken]);
     if (accessToken) {
       const mockGraphQLDataString = getValueFromArrayOrString(
         context.req?.headers?.[HEADERS.mockGraphQLData]

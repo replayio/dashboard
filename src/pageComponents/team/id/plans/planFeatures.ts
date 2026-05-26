@@ -21,8 +21,7 @@ export const PLAN_TIER_UI_CONFIG: Record<PlanTierUiConfig["tier"], PlanTierUiCon
     tier: "free",
     eyebrow: "FREE",
     title: "Evaluate Replay with real recordings",
-    description:
-      "Works with CI Agent and Replay MCP — no time limit, no credit card required.",
+    description: "Works with CI Agent and Replay MCP — no time limit, no credit card required.",
     ctaLabel: "Start for free",
     features: [
       "25 AI analyses per month",

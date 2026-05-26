@@ -29,11 +29,10 @@ export function useCreateWorkspaceV2() {
   const { accessToken } = useContext(SessionContext);
   assert(accessToken != null, "accessToken is required");
 
-  const {
-    error,
-    isLoading,
-    mutate,
-  } = useGraphQLMutation<CreateWorkspaceV2Mutation, CreateWorkspaceV2Variables>(
+  const { error, isLoading, mutate } = useGraphQLMutation<
+    CreateWorkspaceV2Mutation,
+    CreateWorkspaceV2Variables
+  >(
     gql`
       mutation CreateWorkspaceV2($name: String!) {
         createWorkspaceV2(input: { name: $name }) {
