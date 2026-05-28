@@ -32,12 +32,7 @@ const FREE: StripePlan = {
   amount: 0,
   interval: "month",
   tier: "free",
-  features: [
-    "1 project",
-    "50 AI analyses per month",
-    "1 CI integration",
-    "Community support",
-  ],
+  features: ["1 project", "50 AI analyses per month", "1 CI integration", "Community support"],
 };
 
 const GROWTH_MONTHLY: StripePlan = {
@@ -97,12 +92,7 @@ export const PLANS = {
 } as const;
 
 /** All plans as an ordered array (Free → Growth Monthly → Growth Annual → Enterprise) */
-export const PLANS_LIST: StripePlan[] = [
-  FREE,
-  GROWTH_MONTHLY,
-  GROWTH_ANNUAL,
-  ENTERPRISE,
-];
+export const PLANS_LIST: StripePlan[] = [FREE, GROWTH_MONTHLY, GROWTH_ANNUAL, ENTERPRISE];
 
 /**
  * Look up a plan by its Stripe Price ID.
