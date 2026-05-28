@@ -12,7 +12,7 @@ import { COOKIES, HEADERS } from "@/constants";
 import { getCurrentUser } from "@/graphql/queries/getCurrentUser";
 import { User } from "@/graphql/types";
 import { captureAdAttribution } from "@/utils/adAttribution";
-import { decompress } from "@/utils/compression";
+import { compress, decompress } from "@/utils/compression";
 import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { listenForAccessToken } from "@/utils/replayBrowser";
@@ -21,6 +21,7 @@ import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { MockGraphQLData } from "@/testing/mockGraphQLTypes";
+import { DEV_SEED_ENABLED, DEV_SEED_TOKEN } from "@/lib/dev-seed";
 import "use-context-menu/styles.css";
 import "../global.css";
 import "../shiki.css";
@@ -52,9 +53,20 @@ export default class MyApp extends App<AppProps<PageProps>> {
     const accessTokenSource = getValueFromArrayOrString(
       context.ctx.req?.headers?.[HEADERS.accessTokenSource]
     );
-    const mockGraphQLDataString = getValueFromArrayOrString(
-      context.ctx.req?.headers?.[HEADERS.mockGraphQLData]
-    );
+
+    // Dev-seed mode: inject the seed mock data so all client-side
+    // GraphQL queries get realistic responses without hitting the API.
+    let mockGraphQLDataString: string | undefined;
+
+    if (DEV_SEED_ENABLED && accessToken === DEV_SEED_TOKEN) {
+      // Lazy-import to keep the seed data out of the production bundle.
+      const { default: devSeedData } = await import("@/lib/dev-seed-data");
+      mockGraphQLDataString = compress(devSeedData);
+    } else {
+      mockGraphQLDataString =
+        getValueFromArrayOrString(context.ctx.req?.headers?.[HEADERS.mockGraphQLData]) || undefined;
+    }
+
     const mockGraphQLData = mockGraphQLDataString
       ? decompress<MockGraphQLData>(mockGraphQLDataString)
       : null;
