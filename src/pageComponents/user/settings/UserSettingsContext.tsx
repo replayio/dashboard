@@ -1,5 +1,6 @@
 import { Account } from "@/pageComponents/user/settings/Account";
 import { Legal } from "@/pageComponents/user/settings/Legal";
+import { PlanSelection } from "@/pageComponents/user/settings/PlanSelection";
 import { Support } from "@/pageComponents/user/settings/Support";
 import { UserApiKeys } from "@/pageComponents/user/settings/UserApiKeys";
 import { Icon, IconType } from "@/components/Icon";
@@ -16,9 +17,15 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-export type UserSettingsRoute = "account" | "api-keys" | "support" | "legal";
+export type UserSettingsRoute = "account" | "api-keys" | "support" | "legal" | "subscription";
 
-const VALID_ROUTES: UserSettingsRoute[] = ["account", "api-keys", "support", "legal"];
+const VALID_ROUTES: UserSettingsRoute[] = [
+  "account",
+  "api-keys",
+  "support",
+  "legal",
+  "subscription",
+];
 
 type UserSettingsContextValue = {
   openModal: (route?: UserSettingsRoute) => void;
@@ -64,6 +71,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const navItems: { route: UserSettingsRoute; label: string; iconType: IconType }[] = [
     { route: "account", label: "Account", iconType: "account" },
     { route: "api-keys", label: "API keys", iconType: "api-keys" },
+    { route: "subscription", label: "Subscription", iconType: "billing" },
     { route: "support", label: "Support", iconType: "support" },
     { route: "legal", label: "Legal", iconType: "legal" },
   ];
@@ -81,6 +89,9 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
       break;
     case "support":
       panel = <Support />;
+      break;
+    case "subscription":
+      panel = <PlanSelection />;
       break;
   }
 
