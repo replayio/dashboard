@@ -82,9 +82,7 @@ export function Account() {
           ) : (
             <div className="text-sm text-muted-foreground">No active subscription</div>
           )}
-          {portalError && (
-            <div className="text-xs text-destructive mt-1">{portalError}</div>
-          )}
+          {portalError && <div className="text-xs text-destructive mt-1">{portalError}</div>}
         </div>
         {subscription ? (
           <Button
@@ -96,11 +94,7 @@ export function Account() {
             Manage Subscription
           </Button>
         ) : !isSubLoading ? (
-          <Button
-            variant="solid"
-            size="small"
-            onClick={() => openModal("subscription")}
-          >
+          <Button variant="solid" size="small" onClick={() => openModal("subscription")}>
             Choose a Plan
           </Button>
         ) : null}

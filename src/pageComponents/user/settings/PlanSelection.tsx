@@ -86,9 +86,7 @@ function PlanCard({
           )}
         </div>
         <div className="text-lg font-bold text-foreground">{formatPrice(plan)}</div>
-        {priceSubline && (
-          <div className="text-xs text-muted-foreground">{priceSubline}</div>
-        )}
+        {priceSubline && <div className="text-xs text-muted-foreground">{priceSubline}</div>}
       </div>
 
       {/* Features */}

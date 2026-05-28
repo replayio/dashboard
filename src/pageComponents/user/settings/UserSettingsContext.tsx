@@ -19,7 +19,13 @@ import { createPortal } from "react-dom";
 
 export type UserSettingsRoute = "account" | "api-keys" | "support" | "legal" | "subscription";
 
-const VALID_ROUTES: UserSettingsRoute[] = ["account", "api-keys", "support", "legal", "subscription"];
+const VALID_ROUTES: UserSettingsRoute[] = [
+  "account",
+  "api-keys",
+  "support",
+  "legal",
+  "subscription",
+];
 
 type UserSettingsContextValue = {
   openModal: (route?: UserSettingsRoute) => void;
