@@ -10,8 +10,7 @@
  */
 
 export const DEV_SEED_ENABLED =
-  process.env.NEXT_PUBLIC_DEV_SEED_USER === "true" &&
-  process.env.NODE_ENV !== "production";
+  process.env.NEXT_PUBLIC_DEV_SEED_USER === "true" && process.env.NODE_ENV !== "production";
 
 /** Sentinel access token that signals "dev seed mode" in getCurrentUser. */
 export const DEV_SEED_TOKEN = "dev-seed-token";

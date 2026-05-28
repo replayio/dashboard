@@ -16,8 +16,7 @@ import { AccessTokenCookie, setCookieValueServer } from "./utils/cookie";
 // which would pull in the full module into the Edge Runtime bundle.
 // We keep them in sync with src/lib/dev-seed.ts by using the same literals.
 const _DEV_SEED_ENABLED =
-  process.env.NEXT_PUBLIC_DEV_SEED_USER === "true" &&
-  process.env.NODE_ENV !== "production";
+  process.env.NEXT_PUBLIC_DEV_SEED_USER === "true" && process.env.NODE_ENV !== "production";
 const _DEV_SEED_TOKEN = "dev-seed-token";
 
 export async function middleware(request: NextRequest) {
