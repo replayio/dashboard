@@ -1,4 +1,5 @@
 import { Account } from "@/pageComponents/user/settings/Account";
+import { PlanSelection } from "@/pageComponents/user/settings/PlanSelection";
 import { Legal } from "@/pageComponents/user/settings/Legal";
 import { Support } from "@/pageComponents/user/settings/Support";
 import { UserApiKeys } from "@/pageComponents/user/settings/UserApiKeys";
@@ -16,9 +17,9 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-export type UserSettingsRoute = "account" | "api-keys" | "support" | "legal";
+export type UserSettingsRoute = "account" | "api-keys" | "support" | "legal" | "subscription";
 
-const VALID_ROUTES: UserSettingsRoute[] = ["account", "api-keys", "support", "legal"];
+const VALID_ROUTES: UserSettingsRoute[] = ["account", "api-keys", "support", "legal", "subscription"];
 
 type UserSettingsContextValue = {
   openModal: (route?: UserSettingsRoute) => void;
@@ -66,6 +67,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     { route: "api-keys", label: "API keys", iconType: "api-keys" },
     { route: "support", label: "Support", iconType: "support" },
     { route: "legal", label: "Legal", iconType: "legal" },
+    { route: "subscription", label: "Subscription", iconType: "billing" },
   ];
 
   let panel: ReactNode = null;
@@ -81,6 +83,9 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
       break;
     case "support":
       panel = <Support />;
+      break;
+    case "subscription":
+      panel = <PlanSelection />;
       break;
   }
 
