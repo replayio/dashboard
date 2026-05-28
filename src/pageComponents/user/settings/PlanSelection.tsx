@@ -119,7 +119,7 @@ function PlanCard({ plan, isCurrentPlan }: { plan: StripePlan; isCurrentPlan: bo
 
       <div className="mt-auto pt-2">
         {plan.tier === "enterprise" ? (
-          <a href="mailto:sales@replay.io" className="block">
+          <a href="https://www.replay.io/contact" target="_blank" rel="noopener noreferrer" className="block">
             <Button className="w-full" variant="outline">
               Contact Sales
             </Button>
