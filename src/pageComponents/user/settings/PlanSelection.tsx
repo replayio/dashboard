@@ -53,13 +53,7 @@ export function PlanSelection() {
   );
 }
 
-function PlanCard({
-  plan,
-  isCurrentPlan,
-}: {
-  plan: StripePlan;
-  isCurrentPlan: boolean;
-}) {
+function PlanCard({ plan, isCurrentPlan }: { plan: StripePlan; isCurrentPlan: boolean }) {
   const [isPending, setIsPending] = useState(false);
 
   const handleSubscribe = useCallback(async () => {
@@ -94,14 +88,10 @@ function PlanCard({
   const priceLabel = formatPrice(plan);
 
   const isHighlighted = plan.tier === "growth";
-  const borderClass = isHighlighted
-    ? "border-primary/60"
-    : "border-border";
+  const borderClass = isHighlighted ? "border-primary/60" : "border-border";
 
   return (
-    <div
-      className={`relative flex flex-col gap-4 rounded-lg border ${borderClass} bg-card p-5`}
-    >
+    <div className={`relative flex flex-col gap-4 rounded-lg border ${borderClass} bg-card p-5`}>
       {isHighlighted && (
         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
           <span className="rounded-full bg-primary px-3 py-0.5 text-xs font-semibold text-primary-foreground">
@@ -112,9 +102,7 @@ function PlanCard({
 
       <div className="flex flex-col gap-1">
         <div className="text-base font-semibold text-foreground">{plan.name}</div>
-        <div className="text-2xl font-bold text-foreground">
-          {priceLabel}
-        </div>
+        <div className="text-2xl font-bold text-foreground">{priceLabel}</div>
         {plan.tier === "growth" && plan.interval === "year" && (
           <div className="text-xs text-muted-foreground">$3,588 billed annually</div>
         )}
