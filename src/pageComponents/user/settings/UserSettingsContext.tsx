@@ -81,9 +81,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     setAccessTokenInBrowserPrefs(null);
     deleteCookieValueClient(COOKIES.defaultPathname);
     deleteCookieValueClient(COOKIES.accessToken);
-    window.location.replace(
-      `/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`
-    );
+    window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);
   }, []);
 
   // Handle openSettings query param

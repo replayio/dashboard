@@ -96,11 +96,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     const workspaceNode = data?.node;
-    if (
-      !workspaceNode ||
-      !("subscription" in workspaceNode) ||
-      !workspaceNode.subscription
-    ) {
+    if (!workspaceNode || !("subscription" in workspaceNode) || !workspaceNode.subscription) {
       return res.status(200).json({ subscription: null });
     }
 
