@@ -7,6 +7,7 @@ import { Icon, IconType } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useStripeSubscription } from "@/hooks/useStripeSubscription";
+import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
 import {
   createContext,
@@ -48,6 +49,9 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const { subscription, isLoading: subscriptionLoading, refetch } = useStripeSubscription();
+  // In e2e test mode, skip the subscription gate so tests are not blocked by the overlay.
+  const { mockGraphQLData: e2eMockData } = useContext(EndToEndTestContext);
+  const isE2EMode = e2eMockData !== null;
 
   const openModal = useCallback((r: UserSettingsRoute = "account") => {
     setRoute(r);
@@ -159,7 +163,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
 
   // Subscription gate — blocks all app access until user selects a plan.
   // Shown when subscription fetch is complete and user has no active subscription.
-  const showGate = !subscriptionLoading && subscription === null;
+  const showGate = !isE2EMode && !subscriptionLoading && subscription === null;
 
   const gate =
     showGate &&
