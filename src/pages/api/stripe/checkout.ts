@@ -45,6 +45,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const isFreeTier = priceId === PLANS.FREE.priceId;
 
+    // Ensure the Stripe customer email is current (guarantees Checkout prefill)
+    await stripe.customers.update(customerId, {
+      email: session.user.email ?? "",
+    });
+
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
