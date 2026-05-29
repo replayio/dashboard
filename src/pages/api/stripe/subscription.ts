@@ -1,20 +1,20 @@
-import stripeClient from "@/lib/stripe";
-import { getPlanByPriceId } from "@/lib/stripe-config";
-import { findStripeCustomer } from "@/lib/stripe-helpers";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { getSession } from "@auth0/nextjs-auth0";
+import { gql } from "@apollo/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export interface SubscriptionPlan {
   name: string;
   key: string;
-  priceId: string;
+  /** @deprecated priceId is no longer used — plan catalog lives in the backend */
+  priceId?: string;
 }
 
 export interface ActiveSubscription {
   plan: SubscriptionPlan;
   status: string;
-  /** Unix timestamp (seconds) when the current billing period ends */
-  currentPeriodEnd: number;
+  /** Unix timestamp (seconds) when the current billing period ends — may be null */
+  currentPeriodEnd: number | null;
   cancelAtPeriodEnd: boolean;
   seatCount: number;
 }
@@ -22,20 +22,17 @@ export interface ActiveSubscription {
 type ResponseBody = { subscription: ActiveSubscription | null } | { error: string };
 
 /**
- * GET /api/stripe/subscription
+ * GET /api/stripe/subscription?workspaceId=...
  *
- * Returns the current user's active (or trialing) Stripe subscription.
- * Stripe is the source of truth — no local subscription state is stored.
+ * Returns the workspace subscription status by querying the backend GraphQL
+ * (node -> Workspace -> subscription). The backend is the source of truth —
+ * no direct Stripe API calls are made from the dashboard.
  *
- * currentPeriodEnd comes from the first subscription item's current_period_end
- * (the Stripe 2026-05-27 API removed top-level current_period_end in favour of
- * per-item billing periods).
+ * Accepts workspaceId as a query param. Returns { subscription: null } when:
+ *   - workspaceId is missing
+ *   - Backend returns no subscription for the workspace
  *
- * Returns { subscription: null } when:
- *   - User has no Stripe customer record
- *   - User has no active or trialing subscription
- *
- * Never returns a 404 for missing subscriptions — always { subscription: null }.
+ * Never returns 404 for missing subscriptions — always { subscription: null }.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseBody>) {
   if (req.method !== "GET") {
@@ -50,56 +47,75 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(401).json({ error: "Unauthorized" });
   }
 
+  const workspaceId = req.query.workspaceId as string | undefined;
+  if (!workspaceId) {
+    // No workspace — return null gracefully (not an error)
+    return res.status(200).json({ subscription: null });
+  }
+
   try {
-    const customerId = await findStripeCustomer(session.user.sub);
-    if (!customerId) {
+    const { data, errors } = await graphQLQuery<{
+      node: {
+        __typename?: string;
+        id?: string;
+        subscription?: {
+          id: string;
+          status: string;
+          plan?: {
+            key: string;
+            name: string;
+          } | null;
+        } | null;
+      } | null;
+    }>({
+      accessToken: session.accessToken as string,
+      mockGraphQLData: null,
+      query: gql`
+        query GetWorkspaceSubscriptionForBilling($workspaceId: ID!) {
+          node(id: $workspaceId) {
+            ... on Workspace {
+              id
+              subscription {
+                id
+                status
+                plan {
+                  key
+                  name
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: { workspaceId },
+    });
+
+    if (errors && errors.length > 0) {
+      console.error("[/api/stripe/subscription] GraphQL errors:", errors);
+      return res.status(500).json({ error: errors[0]?.message ?? "GraphQL error" });
+    }
+
+    const workspaceNode = data?.node;
+    if (
+      !workspaceNode ||
+      !("subscription" in workspaceNode) ||
+      !workspaceNode.subscription
+    ) {
       return res.status(200).json({ subscription: null });
     }
 
-    // Check active first, then trialing
-    const [activeResult, trialingResult] = await Promise.all([
-      stripeClient.subscriptions.list({
-        customer: customerId,
-        status: "active",
-        expand: ["data.items.data.price"],
-        limit: 1,
-      }),
-      stripeClient.subscriptions.list({
-        customer: customerId,
-        status: "trialing",
-        expand: ["data.items.data.price"],
-        limit: 1,
-      }),
-    ]);
-
-    const subscription = activeResult.data[0] ?? trialingResult.data[0] ?? null;
-
-    if (!subscription) {
-      return res.status(200).json({ subscription: null });
-    }
-
-    // Get the first subscription item's price and period info.
-    // The Stripe 2026-05-27 API surfaces current_period_end on SubscriptionItem,
-    // not on the top-level Subscription object.
-    const firstItem = subscription.items.data[0];
-    if (!firstItem) {
-      return res.status(200).json({ subscription: null });
-    }
-
-    const price = firstItem.price;
-    const plan = getPlanByPriceId(price.id);
-
-    const resolvedPlan: SubscriptionPlan = plan
-      ? { name: plan.name, key: plan.key, priceId: price.id }
-      : { name: price.nickname ?? "Unknown Plan", key: price.id, priceId: price.id };
+    const sub = workspaceNode.subscription;
 
     return res.status(200).json({
       subscription: {
-        plan: resolvedPlan,
-        status: subscription.status,
-        currentPeriodEnd: firstItem.current_period_end,
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
-        seatCount: firstItem.quantity ?? 1,
+        plan: {
+          key: sub.plan?.key ?? "unknown",
+          name: sub.plan?.name ?? "Unknown",
+        },
+        status: sub.status,
+        currentPeriodEnd: null,
+        cancelAtPeriodEnd: false,
+        seatCount: 1,
       },
     });
   } catch (err) {

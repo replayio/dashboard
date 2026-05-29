@@ -1,23 +1,68 @@
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { SessionContext } from "@/components/SessionContext";
 import { useStripeSubscription } from "@/hooks/useStripeSubscription";
-import { PLANS_BY_TIER, PlanTierGroup, StripePlan } from "@/lib/stripe-config";
-import { useCallback, useContext, useState } from "react";
+import {
+  BackendPlan,
+  normalizeBackendPlan,
+  groupPlansByTier,
+  PlanTierGroup,
+  StripePlan,
+} from "@/lib/stripe-config";
+import { useCallback, useEffect, useState } from "react";
 
 type BillingInterval = "month" | "year";
 
+async function fetchPlansFromBackend(): Promise<PlanTierGroup[]> {
+  const res = await fetch("/api/stripe/plans");
+  if (!res.ok) {
+    throw new Error(`Failed to load plans: ${res.status}`);
+  }
+  const data = (await res.json()) as { plans: BackendPlan[] };
+  const normalized = data.plans.map(normalizeBackendPlan);
+  return groupPlansByTier(normalized);
+}
+
 /**
- * PlanSelection — shows Free, Growth, and Enterprise tiers with a monthly/yearly
- * billing toggle. Growth shows the discounted annual price when yearly is selected.
+ * PlanSelection — shows plan tiers with a monthly/yearly billing toggle.
+ * Plans are fetched dynamically from the backend availablePlans GraphQL query.
  *
  * Shown in the "subscription" panel of the User Settings modal when the user
  * has no active subscription, and also as the full-screen subscription gate.
  */
 export function PlanSelection() {
-  const { subscription, isLoading } = useStripeSubscription();
+  const { subscription, isLoading: isSubLoading, workspaceId } = useStripeSubscription();
   const [interval, setInterval] = useState<BillingInterval>("month");
+  const [planGroups, setPlanGroups] = useState<PlanTierGroup[] | null>(null);
+  const [plansLoading, setPlansLoading] = useState(true);
+  const [plansError, setPlansError] = useState<string | null>(null);
+
+  // Fetch available plans from backend
+  useEffect(() => {
+    let cancelled = false;
+    setPlansLoading(true);
+    setPlansError(null);
+
+    fetchPlansFromBackend()
+      .then(groups => {
+        if (!cancelled) {
+          setPlanGroups(groups);
+          setPlansLoading(false);
+        }
+      })
+      .catch(err => {
+        if (!cancelled) {
+          setPlansError(err instanceof Error ? err.message : "Failed to load plans");
+          setPlansLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const isLoading = isSubLoading || plansLoading;
 
   if (isLoading) {
     return (
@@ -26,6 +71,19 @@ export function PlanSelection() {
       </div>
     );
   }
+
+  if (plansError) {
+    return (
+      <div className="flex flex-col gap-4 py-8 text-center">
+        <p className="text-sm text-muted-foreground">{plansError}</p>
+        <Button variant="outline" size="small" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
+      </div>
+    );
+  }
+
+  const groups = planGroups ?? [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -76,12 +134,13 @@ export function PlanSelection() {
 
       {/* 3-card grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {PLANS_BY_TIER.map(tierGroup => (
+        {groups.map(tierGroup => (
           <PlanCard
             key={tierGroup.tier}
             tierGroup={tierGroup}
             interval={interval}
             currentPlanKey={subscription?.plan.key}
+            workspaceId={workspaceId}
           />
         ))}
       </div>
@@ -93,28 +152,33 @@ function PlanCard({
   tierGroup,
   interval,
   currentPlanKey,
+  workspaceId,
 }: {
   tierGroup: PlanTierGroup;
   interval: BillingInterval;
   currentPlanKey: string | undefined;
+  workspaceId: string | null;
 }) {
   const plan: StripePlan = interval === "month" ? tierGroup.monthly : tierGroup.yearly;
   const isCurrentPlan = currentPlanKey === plan.key;
   const [isPending, setIsPending] = useState(false);
-  const { user } = useContext(SessionContext);
 
   const handleSubscribe = useCallback(async () => {
-    if (isPending || !plan.priceId) return;
+    if (isPending) return;
+    if (!workspaceId) {
+      console.error("[PlanCard] no workspaceId available");
+      return;
+    }
     setIsPending(true);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId: plan.priceId, email: user?.email }),
+        body: JSON.stringify({ planKey: plan.key, workspaceId }),
       });
 
       if (!res.ok) {
-        console.error("[PlanSelection] checkout error:", res.status);
+        console.error("[PlanCard] checkout error:", res.status);
         setIsPending(false);
         return;
       }
@@ -127,10 +191,10 @@ function PlanCard({
         setIsPending(false);
       }
     } catch (err) {
-      console.error("[PlanSelection] checkout error:", err);
+      console.error("[PlanCard] checkout error:", err);
       setIsPending(false);
     }
-  }, [isPending, plan.priceId, user?.email]);
+  }, [isPending, plan.key, workspaceId]);
 
   const isHighlighted = tierGroup.tier === "growth";
   const borderClass = isHighlighted ? "border-primary/60" : "border-border";
@@ -149,19 +213,23 @@ function PlanCard({
       <div className="flex flex-col gap-1">
         <div className="text-base font-semibold text-foreground">{tierGroup.name}</div>
         <div className="text-2xl font-bold text-foreground">{priceLabel}</div>
-        {tierGroup.tier === "growth" && interval === "year" && (
-          <div className="text-xs text-muted-foreground">$3,588 billed annually</div>
+        {tierGroup.tier === "growth" && interval === "year" && plan.monthlyPriceCents !== null && (
+          <div className="text-xs text-muted-foreground">
+            ${Math.round((plan.monthlyPriceCents * 12) / 100).toLocaleString()} billed annually
+          </div>
         )}
       </div>
 
-      <ul className="flex flex-col gap-1.5">
-        {plan.features.map(feature => (
-          <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
-            <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" type="check" />
-            <span>{feature}</span>
-          </li>
-        ))}
-      </ul>
+      {plan.features.length > 0 && (
+        <ul className="flex flex-col gap-1.5">
+          {plan.features.map(feature => (
+            <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
+              <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" type="check" />
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="mt-auto pt-2">
         {tierGroup.tier === "enterprise" ? (
@@ -183,7 +251,7 @@ function PlanCard({
           <Button
             className="w-full"
             variant={isHighlighted ? "solid" : "outline"}
-            disabled={isPending}
+            disabled={isPending || !workspaceId}
             onClick={handleSubscribe}
           >
             {isPending ? "Redirecting…" : tierGroup.tier === "free" ? "Get Started" : "Subscribe"}
@@ -196,15 +264,15 @@ function PlanCard({
 
 function formatPrice(plan: StripePlan): string {
   if (plan.tier === "enterprise") return "Custom";
-  if (plan.amount === 0) return "$0/mo";
-  if (plan.amount === undefined) return "—";
+  if (plan.monthlyPriceCents === null) return "—";
+  if (plan.monthlyPriceCents === 0) return "$0/mo";
 
   if (plan.interval === "year") {
     // Show per-month equivalent
-    const perMonth = Math.round(plan.amount / 12 / 100);
+    const perMonth = Math.round(plan.monthlyPriceCents / 100);
     return `$${perMonth}/mo`;
   }
 
-  const dollars = Math.round(plan.amount / 100);
+  const dollars = Math.round(plan.monthlyPriceCents / 100);
   return `$${dollars}/mo`;
 }

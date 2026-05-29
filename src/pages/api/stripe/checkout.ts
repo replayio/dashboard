@@ -1,7 +1,6 @@
-import stripe from "@/lib/stripe";
-import { getOrCreateStripeCustomer } from "@/lib/stripe-helpers";
-import { PLANS } from "@/lib/stripe-config";
+import { graphQLQuery } from "@/graphql/graphQLQuery";
 import { getSession } from "@auth0/nextjs-auth0";
+import { gql } from "@apollo/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const APP_URL = process.env.APP_URL || "http://localhost:8080";
@@ -11,12 +10,19 @@ type ResponseBody = { url: string } | { error: string };
 /**
  * POST /api/stripe/checkout
  *
- * Creates a Stripe Checkout Session for the authenticated user.
- * Looks up or creates a Stripe customer mapped to the Auth0 user ID.
- * Returns the Checkout redirect URL.
+ * Creates a checkout flow for the authenticated user's workspace.
+ * Body: { planKey: string; workspaceId: string }
  *
- * For the free tier ($0), sets payment_method_collection: if_required so
- * Stripe does not prompt the user for a credit card.
+ * Free tier (planKey starts with "free"): calls selectFreePlan mutation — no
+ * Stripe Checkout session needed. Returns { url: successUrl } for client redirect.
+ *
+ * Paid plans: calls createWorkspaceCheckoutSession mutation on the backend,
+ * which creates the Stripe Checkout session with replay_managed metadata and
+ * returns the redirect URL.
+ *
+ * Dashboard does NOT call the Stripe SDK for checkout — only the backend does.
+ * Price IDs are not passed from the client — the backend resolves them from the
+ * plans table.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseBody>) {
   if (req.method !== "POST") {
@@ -31,45 +37,94 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { priceId, email: bodyEmail } = req.body as { priceId?: string; email?: string };
-  if (!priceId) {
-    return res.status(400).json({ error: "Missing priceId" });
+  const { planKey, workspaceId } = req.body as {
+    planKey?: string;
+    workspaceId?: string;
+  };
+
+  if (!planKey) {
+    return res.status(400).json({ error: "Missing planKey" });
+  }
+  if (!workspaceId) {
+    return res.status(400).json({ error: "Missing workspaceId" });
   }
 
-  // The Auth0 session (openid offline_access scope) does not include the email
-  // claim, so we rely on the email the client already has from the backend
-  // (SessionContext.user.email). Fall back to any session email if present.
-  const email = (typeof bodyEmail === "string" && bodyEmail) || session.user.email || "";
+  const successUrl = APP_URL + "/home?openSettings=subscription&checkout=success";
+  const cancelUrl = APP_URL + "/home?openSettings=subscription&checkout=cancelled";
 
   try {
-    const customerId = await getOrCreateStripeCustomer(
-      session.user.sub,
-      email,
-      session.user.name ?? ""
-    );
+    const accessToken = session.accessToken as string;
 
-    const isFreeTier = priceId === PLANS.FREE.priceId;
+    // Free tier: selectFreePlan mutation — no Stripe Checkout session needed
+    if (planKey.startsWith("free")) {
+      const { data, errors } = await graphQLQuery<{
+        selectFreePlan: { success: boolean };
+      }>({
+        accessToken,
+        mockGraphQLData: null,
+        query: gql`
+          mutation SelectFreePlan($workspaceId: ID!) {
+            selectFreePlan(input: { workspaceId: $workspaceId }) {
+              success
+            }
+          }
+        `,
+        variables: { workspaceId },
+      });
 
-    // Ensure the Stripe customer email is current (guarantees Checkout prefill)
-    if (email) {
-      await stripe.customers.update(customerId, { email });
+      if (errors && errors.length > 0) {
+        console.error("[/api/stripe/checkout] selectFreePlan errors:", errors);
+        return res.status(500).json({ error: errors[0]?.message ?? "GraphQL error" });
+      }
+
+      if (!data?.selectFreePlan?.success) {
+        return res.status(500).json({ error: "Failed to assign free plan" });
+      }
+
+      // Return successUrl so client redirects to the success page
+      return res.status(200).json({ url: successUrl });
     }
 
-    const checkoutSession = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: "subscription",
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: APP_URL + "/home?openSettings=subscription&checkout=success",
-      cancel_url: APP_URL + "/home?openSettings=subscription&checkout=cancelled",
-      // Skip credit card collection for $0 subscriptions
-      payment_method_collection: isFreeTier ? "if_required" : "always",
+    // Paid plans: backend creates the Stripe Checkout session with correct metadata
+    const { data, errors } = await graphQLQuery<{
+      createWorkspaceCheckoutSession: { url: string; sessionId: string };
+    }>({
+      accessToken,
+      mockGraphQLData: null,
+      query: gql`
+        mutation CreateWorkspaceCheckoutSession(
+          $workspaceId: ID!
+          $planKey: String!
+          $successUrl: String!
+          $cancelUrl: String!
+        ) {
+          createWorkspaceCheckoutSession(
+            input: {
+              workspaceId: $workspaceId
+              planKey: $planKey
+              successUrl: $successUrl
+              cancelUrl: $cancelUrl
+            }
+          ) {
+            url
+            sessionId
+          }
+        }
+      `,
+      variables: { workspaceId, planKey, successUrl, cancelUrl },
     });
 
-    if (!checkoutSession.url) {
+    if (errors && errors.length > 0) {
+      console.error("[/api/stripe/checkout] createWorkspaceCheckoutSession errors:", errors);
+      return res.status(500).json({ error: errors[0]?.message ?? "GraphQL error" });
+    }
+
+    const checkoutUrl = data?.createWorkspaceCheckoutSession?.url;
+    if (!checkoutUrl) {
       return res.status(500).json({ error: "Failed to create checkout session" });
     }
 
-    return res.status(200).json({ url: checkoutSession.url });
+    return res.status(200).json({ url: checkoutUrl });
   } catch (err) {
     console.error("[/api/stripe/checkout] error:", err);
     return res.status(500).json({ error: "Internal server error" });

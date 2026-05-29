@@ -1,100 +1,43 @@
+/**
+ * stripe-config.ts — type definitions for plan data fetched from the backend.
+ *
+ * Plans are NO longer hardcoded here — the catalog is sourced from the backend
+ * `availablePlans` GraphQL query (plans table, synced from Stripe via webhook).
+ *
+ * UI components should fetch plans via GET /api/stripe/plans and use the
+ * normalizeBackendPlan() helper to convert to the local StripePlan shape.
+ */
+
+import { type BackendPlan } from "@/pages/api/stripe/plans";
+
+export type { BackendPlan };
+
 export type PlanTier = "free" | "growth" | "enterprise";
 export type PlanInterval = "month" | "year" | "none";
 
+/** Normalised plan shape used by UI components */
 export interface StripePlan {
   /** Stable key for referencing this plan in code (e.g., "free-v1") */
   key: string;
   /** Display name shown to users */
   name: string;
-  /** Stripe Price ID — undefined for enterprise (contact sales) */
-  priceId: string | undefined;
-  /** Price in cents (0 for free, undefined for enterprise) */
-  amount: number | undefined;
+  /** Stripe Price ID / billingId — null for enterprise (contact sales) */
+  billingId: string | null;
+  /** Price per month in cents (0 for free, null for enterprise) */
+  monthlyPriceCents: number | null;
   /** Billing interval */
   interval: PlanInterval;
   /** Internal tier grouping */
   tier: PlanTier;
-  /** Feature list for marketing / plan comparison UI */
+  /**
+   * Feature bullet list for plan card UI.
+   * Populated by normalizeBackendPlan from the backend features field, or an
+   * empty array if the backend does not yet return features.
+   */
   features: string[];
 }
 
-/**
- * PLANS — canonical plan catalog for Replay subscription tiers.
- *
- * All Stripe products are tagged with `metadata.replay_managed=true` in the
- * Stripe dashboard so they can be filtered in queries. Free tier creates a
- * real $0 Stripe subscription — not "no subscription".
- */
-const FREE: StripePlan = {
-  key: "free-v1",
-  name: "Free",
-  priceId: "price_1TZEsXEfKucJn4vk68YK7hSN",
-  amount: 0,
-  interval: "month",
-  tier: "free",
-  features: ["1 project", "50 AI analyses per month", "1 CI integration", "Community support"],
-};
-
-const GROWTH_MONTHLY: StripePlan = {
-  key: "growth-monthly-v1",
-  name: "Growth (Monthly)",
-  priceId: "price_1TZFBKEfKucJn4vkrUyAo6yw",
-  amount: 34900, // $349.00
-  interval: "month",
-  tier: "growth",
-  features: [
-    "Unlimited projects",
-    "500 AI analyses per month",
-    "All CI integrations (GitHub Actions, CircleCI, Jenkins, BuildKite)",
-    "All coding agent integrations (Claude Code, Codex, Cursor, Copilot, Windsurf)",
-    "Email support",
-  ],
-};
-
-const GROWTH_ANNUAL: StripePlan = {
-  key: "growth-annual-v1",
-  name: "Growth (Annual)",
-  priceId: "price_1TZFClEfKucJn4vkTvonRsAr",
-  amount: 358800, // $3,588.00/yr ($299/mo)
-  interval: "year",
-  tier: "growth",
-  features: [
-    "Unlimited projects",
-    "500 AI analyses per month",
-    "All CI integrations (GitHub Actions, CircleCI, Jenkins, BuildKite)",
-    "All coding agent integrations (Claude Code, Codex, Cursor, Copilot, Windsurf)",
-    "Email support",
-  ],
-};
-
-const ENTERPRISE: StripePlan = {
-  key: "enterprise-v1",
-  name: "Enterprise",
-  priceId: undefined, // Contact sales
-  amount: undefined,
-  interval: "none",
-  tier: "enterprise",
-  features: [
-    "Everything in Growth",
-    "Custom seat count",
-    "Dedicated support",
-    "SSO/SAML",
-    "Custom contracts",
-  ],
-};
-
-/** Named plan constants for direct reference in code */
-export const PLANS = {
-  FREE,
-  GROWTH_MONTHLY,
-  GROWTH_ANNUAL,
-  ENTERPRISE,
-} as const;
-
-/** All plans as an ordered array (Free → Growth Monthly → Growth Annual → Enterprise) */
-export const PLANS_LIST: StripePlan[] = [FREE, GROWTH_MONTHLY, GROWTH_ANNUAL, ENTERPRISE];
-
-/** Groups plans by tier with monthly and yearly variants for the billing toggle UI */
+/** Groups plans by tier for the monthly/yearly billing toggle UI */
 export interface PlanTierGroup {
   tier: PlanTier;
   name: string;
@@ -102,16 +45,57 @@ export interface PlanTierGroup {
   yearly: StripePlan;
 }
 
-export const PLANS_BY_TIER: PlanTierGroup[] = [
-  { tier: "free", name: "Free", monthly: FREE, yearly: FREE },
-  { tier: "growth", name: "Growth", monthly: GROWTH_MONTHLY, yearly: GROWTH_ANNUAL },
-  { tier: "enterprise", name: "Enterprise", monthly: ENTERPRISE, yearly: ENTERPRISE },
-];
+/** Enterprise tier key constant — Contact Sales flow, no checkout */
+export const ENTERPRISE_TIER: PlanTier = "enterprise";
 
 /**
- * Look up a plan by its Stripe Price ID.
- * Returns undefined for Enterprise (no price ID) or unknown IDs.
+ * Convert a backend plan response to the normalised StripePlan shape.
  */
-export function getPlanByPriceId(priceId: string): StripePlan | undefined {
-  return PLANS_LIST.find(p => p.priceId === priceId);
+export function normalizeBackendPlan(p: BackendPlan): StripePlan {
+  return {
+    key: p.key,
+    name: p.displayName || p.name,
+    billingId: p.billingId ?? null,
+    monthlyPriceCents: p.monthlyPriceCents ?? null,
+    interval: (p.interval as PlanInterval) || "month",
+    tier: (p.tier as PlanTier) || "growth",
+    features: [],
+  };
+}
+
+/**
+ * Group a flat list of normalised plans by tier for the billing-toggle UI.
+ * For each tier the monthly and yearly variants are paired; if only one
+ * interval is available it is used for both slots.
+ */
+export function groupPlansByTier(plans: StripePlan[]): PlanTierGroup[] {
+  const byTier = new Map<PlanTier, { monthly?: StripePlan; yearly?: StripePlan }>();
+
+  for (const plan of plans) {
+    const entry = byTier.get(plan.tier) ?? {};
+    if (plan.interval === "year") {
+      entry.yearly = plan;
+    } else {
+      entry.monthly = plan;
+    }
+    byTier.set(plan.tier, entry);
+  }
+
+  const tierOrder: PlanTier[] = ["free", "growth", "enterprise"];
+  const groups: PlanTierGroup[] = [];
+
+  for (const tier of tierOrder) {
+    const entry = byTier.get(tier);
+    if (!entry) continue;
+    const monthly = entry.monthly ?? entry.yearly!;
+    const yearly = entry.yearly ?? entry.monthly!;
+    groups.push({
+      tier,
+      name: monthly.name,
+      monthly,
+      yearly,
+    });
+  }
+
+  return groups;
 }
