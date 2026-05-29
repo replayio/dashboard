@@ -8,6 +8,7 @@ import { IconButton } from "@/components/IconButton";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import { EndToEndTestContext } from "@/components/EndToEndTestContext";
+import { SessionContext } from "@/components/SessionContext";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
 import { COOKIES } from "@/constants";
 import {
@@ -50,6 +51,8 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const { subscription, isLoading: subscriptionLoading, refetch } = useStripeSubscription();
+  const sessionCtx = useContext(SessionContext);
+  const isLoggedIn = Boolean(sessionCtx?.user);
   // In e2e test mode, skip the subscription gate so tests are not blocked by the overlay.
   // e2eSkipIntake cookie is set by navigateToPage() for ALL Playwright e2e tests.
   // mockGraphQLData covers tests that pass mock data explicitly.
@@ -168,7 +171,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
 
   // Subscription gate — blocks all app access until user selects a plan.
   // Shown when subscription fetch is complete and user has no active subscription.
-  const showGate = !isE2EMode && !subscriptionLoading && subscription === null;
+  const showGate = !isE2EMode && isLoggedIn && !subscriptionLoading && subscription === null;
 
   const gate =
     showGate &&
