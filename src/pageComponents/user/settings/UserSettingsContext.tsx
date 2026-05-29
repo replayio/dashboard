@@ -189,6 +189,14 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
             </p>
           </div>
           <PlanSelection />
+          <div className="mt-4 text-center">
+            <a
+              href="/api/auth/logout"
+              className="text-sm text-muted-foreground underline hover:text-foreground transition-colors"
+            >
+              Log out
+            </a>
+          </div>
         </div>
       </div>,
       document.body
