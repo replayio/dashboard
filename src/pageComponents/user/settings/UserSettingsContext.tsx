@@ -9,6 +9,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
+import { COOKIES } from "@/constants";
 import {
   createContext,
   ReactNode,
@@ -50,8 +51,13 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
 
   const { subscription, isLoading: subscriptionLoading, refetch } = useStripeSubscription();
   // In e2e test mode, skip the subscription gate so tests are not blocked by the overlay.
+  // e2eSkipIntake cookie is set by navigateToPage() for ALL Playwright e2e tests.
+  // mockGraphQLData covers tests that pass mock data explicitly.
   const { mockGraphQLData: e2eMockData } = useContext(EndToEndTestContext);
-  const isE2EMode = e2eMockData !== null;
+  const isE2EMode =
+    e2eMockData !== null ||
+    (typeof document !== "undefined" &&
+      document.cookie.includes(COOKIES.e2eSkipIntake));
 
   const openModal = useCallback((r: UserSettingsRoute = "account") => {
     setRoute(r);
