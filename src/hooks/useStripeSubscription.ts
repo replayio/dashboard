@@ -1,5 +1,6 @@
+import { SessionContext } from "@/components/SessionContext";
 import { ActiveSubscription } from "@/pages/api/stripe/subscription";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export interface UseStripeSubscriptionResult {
   subscription: ActiveSubscription | null;
@@ -21,11 +22,26 @@ export function useStripeSubscription(): UseStripeSubscriptionResult {
   const [error, setError] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
 
+  // Only query the subscription endpoint when the user is authenticated.
+  // On unauthenticated pages (e.g. /login) there's no Auth0 session, so the
+  // request would 401 — which the browser logs as a red console error even
+  // though we handle it. Gating on the access token avoids that noise and the
+  // pointless network call.
+  const { accessToken } = useContext(SessionContext) ?? {};
+  const isAuthenticated = Boolean(accessToken);
+
   const refetch = useCallback(() => {
     setTick(t => t + 1);
   }, []);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setSubscription(null);
+      setIsLoading(false);
+      setError(null);
+      return;
+    }
+
     let cancelled = false;
 
     const fetchSubscription = async () => {
@@ -67,7 +83,7 @@ export function useStripeSubscription(): UseStripeSubscriptionResult {
     return () => {
       cancelled = true;
     };
-  }, [tick]);
+  }, [tick, isAuthenticated]);
 
   return { subscription, isLoading, error, refetch };
 }

@@ -11,6 +11,8 @@ import { EndToEndTestContext } from "@/components/EndToEndTestContext";
 import { SessionContext } from "@/components/SessionContext";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
 import { COOKIES } from "@/constants";
+import { deleteCookieValueClient } from "@/utils/cookie";
+import { setAccessTokenInBrowserPrefs } from "@/utils/replayBrowser";
 import {
   createContext,
   ReactNode,
@@ -48,6 +50,8 @@ export function useUserSettings() {
 export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const [route, setRoute] = useState<UserSettingsRoute>("account");
   const [isOpen, setIsOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const signingOutRef = useRef(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const { subscription, isLoading: subscriptionLoading, refetch } = useStripeSubscription();
@@ -68,6 +72,18 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
 
   const closeModal = useCallback(() => {
     setIsOpen(false);
+  }, []);
+
+  const onSignOut = useCallback(() => {
+    if (signingOutRef.current) return;
+    signingOutRef.current = true;
+    setSigningOut(true);
+    setAccessTokenInBrowserPrefs(null);
+    deleteCookieValueClient(COOKIES.defaultPathname);
+    deleteCookieValueClient(COOKIES.accessToken);
+    window.location.replace(
+      `/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`
+    );
   }, []);
 
   // Handle openSettings query param
@@ -190,12 +206,24 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
           </div>
           <PlanSelection />
           <div className="mt-4 text-center">
-            <a
-              href="/api/auth/logout"
-              className="text-sm text-muted-foreground underline hover:text-foreground transition-colors"
+            <button
+              type="button"
+              disabled={signingOut}
+              onClick={onSignOut}
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground underline hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-70 disabled:no-underline"
             >
-              Log out
-            </a>
+              {signingOut ? (
+                <>
+                  <Icon
+                    className="h-4 w-4 shrink-0 animate-spin text-muted-foreground"
+                    type="loading-spinner"
+                  />
+                  Signing out…
+                </>
+              ) : (
+                "Log out"
+              )}
+            </button>
           </div>
         </div>
       </div>,

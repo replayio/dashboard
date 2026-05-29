@@ -31,24 +31,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { priceId } = req.body as { priceId?: string };
+  const { priceId, email: bodyEmail } = req.body as { priceId?: string; email?: string };
   if (!priceId) {
     return res.status(400).json({ error: "Missing priceId" });
   }
 
+  // The Auth0 session (openid offline_access scope) does not include the email
+  // claim, so we rely on the email the client already has from the backend
+  // (SessionContext.user.email). Fall back to any session email if present.
+  const email = (typeof bodyEmail === "string" && bodyEmail) || session.user.email || "";
+
   try {
     const customerId = await getOrCreateStripeCustomer(
       session.user.sub,
-      session.user.email ?? "",
+      email,
       session.user.name ?? ""
     );
 
     const isFreeTier = priceId === PLANS.FREE.priceId;
 
     // Ensure the Stripe customer email is current (guarantees Checkout prefill)
-    await stripe.customers.update(customerId, {
-      email: session.user.email ?? "",
-    });
+    if (email) {
+      await stripe.customers.update(customerId, { email });
+    }
 
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,

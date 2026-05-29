@@ -1,9 +1,10 @@
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { SessionContext } from "@/components/SessionContext";
 import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import { PLANS_BY_TIER, PlanTierGroup, StripePlan } from "@/lib/stripe-config";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
 type BillingInterval = "month" | "year";
 
@@ -100,6 +101,7 @@ function PlanCard({
   const plan: StripePlan = interval === "month" ? tierGroup.monthly : tierGroup.yearly;
   const isCurrentPlan = currentPlanKey === plan.key;
   const [isPending, setIsPending] = useState(false);
+  const { user } = useContext(SessionContext);
 
   const handleSubscribe = useCallback(async () => {
     if (isPending || !plan.priceId) return;
@@ -108,7 +110,7 @@ function PlanCard({
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId: plan.priceId }),
+        body: JSON.stringify({ priceId: plan.priceId, email: user?.email }),
       });
 
       if (!res.ok) {
@@ -128,7 +130,7 @@ function PlanCard({
       console.error("[PlanSelection] checkout error:", err);
       setIsPending(false);
     }
-  }, [isPending, plan.priceId]);
+  }, [isPending, plan.priceId, user?.email]);
 
   const isHighlighted = tierGroup.tier === "growth";
   const borderClass = isHighlighted ? "border-primary/60" : "border-border";
