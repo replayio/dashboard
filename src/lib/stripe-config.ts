@@ -94,6 +94,20 @@ export const PLANS = {
 /** All plans as an ordered array (Free → Growth Monthly → Growth Annual → Enterprise) */
 export const PLANS_LIST: StripePlan[] = [FREE, GROWTH_MONTHLY, GROWTH_ANNUAL, ENTERPRISE];
 
+/** Groups plans by tier with monthly and yearly variants for the billing toggle UI */
+export interface PlanTierGroup {
+  tier: PlanTier;
+  name: string;
+  monthly: StripePlan;
+  yearly: StripePlan;
+}
+
+export const PLANS_BY_TIER: PlanTierGroup[] = [
+  { tier: "free", name: "Free", monthly: FREE, yearly: FREE },
+  { tier: "growth", name: "Growth", monthly: GROWTH_MONTHLY, yearly: GROWTH_ANNUAL },
+  { tier: "enterprise", name: "Enterprise", monthly: ENTERPRISE, yearly: ENTERPRISE },
+];
+
 /**
  * Look up a plan by its Stripe Price ID.
  * Returns undefined for Enterprise (no price ID) or unknown IDs.

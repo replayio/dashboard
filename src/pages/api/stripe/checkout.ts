@@ -1,5 +1,6 @@
 import stripe from "@/lib/stripe";
 import { getOrCreateStripeCustomer } from "@/lib/stripe-helpers";
+import { PLANS } from "@/lib/stripe-config";
 import { getSession } from "@auth0/nextjs-auth0";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -13,6 +14,9 @@ type ResponseBody = { url: string } | { error: string };
  * Creates a Stripe Checkout Session for the authenticated user.
  * Looks up or creates a Stripe customer mapped to the Auth0 user ID.
  * Returns the Checkout redirect URL.
+ *
+ * For the free tier ($0), sets payment_method_collection: if_required so
+ * Stripe does not prompt the user for a credit card.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseBody>) {
   if (req.method !== "POST") {
@@ -39,12 +43,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       session.user.name ?? ""
     );
 
+    const isFreeTier = priceId === PLANS.FREE.priceId;
+
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: APP_URL + "/home?openSettings=subscription&checkout=success",
       cancel_url: APP_URL + "/home?openSettings=subscription&checkout=cancelled",
+      // Skip credit card collection for $0 subscriptions
+      payment_method_collection: isFreeTier ? "if_required" : "always",
     });
 
     if (!checkoutSession.url) {

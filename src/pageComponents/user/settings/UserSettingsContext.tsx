@@ -5,6 +5,8 @@ import { Support } from "@/pageComponents/user/settings/Support";
 import { UserApiKeys } from "@/pageComponents/user/settings/UserApiKeys";
 import { Icon, IconType } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
 import {
   createContext,
@@ -45,6 +47,8 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const { subscription, isLoading: subscriptionLoading, refetch } = useStripeSubscription();
+
   const openModal = useCallback((r: UserSettingsRoute = "account") => {
     setRoute(r);
     setIsOpen(true);
@@ -54,6 +58,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     setIsOpen(false);
   }, []);
 
+  // Handle openSettings query param
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -63,6 +68,19 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
       window.history.replaceState(null, "", window.location.pathname);
     }
   }, [openModal]);
+
+  // Handle checkout=success query param — refetch subscription to lift the gate
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") === "success") {
+      refetch();
+      // Remove the query param so a page refresh doesn't re-trigger
+      const next = new URL(window.location.href);
+      next.searchParams.delete("checkout");
+      window.history.replaceState(null, "", next.toString());
+    }
+  }, [refetch]);
 
   useModalDismissSignal(modalRef, closeModal, isOpen);
 
@@ -102,7 +120,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     >
       <div
         ref={modalRef}
-        className="flex h-[85vh] max-h-[700px] w-full max-w-4xl overflow-hidden rounded-xl border border-border bg-card shadow-xl"
+        className="flex h-[85vh] max-h-[700px] w-full max-w-6xl overflow-hidden rounded-xl border border-border bg-card shadow-xl"
         onClick={e => e.stopPropagation()}
       >
         {/* Sidebar */}
@@ -139,10 +157,36 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     </div>
   );
 
+  // Subscription gate — blocks all app access until user selects a plan.
+  // Shown when subscription fetch is complete and user has no active subscription.
+  const showGate = !subscriptionLoading && subscription === null;
+
+  const gate =
+    showGate &&
+    typeof document !== "undefined" &&
+    createPortal(
+      <div
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md"
+        data-test-name="SubscriptionGate"
+      >
+        <div className="flex w-full max-w-6xl flex-col gap-2 overflow-auto rounded-xl border border-border bg-card p-8 shadow-2xl mx-4 max-h-[90vh]">
+          <div className="mb-2 text-center">
+            <h1 className="text-2xl font-bold text-foreground">Get started with Replay</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Choose a plan to access the dashboard.
+            </p>
+          </div>
+          <PlanSelection />
+        </div>
+      </div>,
+      document.body
+    );
+
   return (
     <UserSettingsContext.Provider value={value}>
       {children}
       {typeof document !== "undefined" && createPortal(modal, document.body)}
+      {gate}
     </UserSettingsContext.Provider>
   );
 }
