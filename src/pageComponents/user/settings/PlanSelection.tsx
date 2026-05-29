@@ -2,18 +2,21 @@ import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useStripeSubscription } from "@/hooks/useStripeSubscription";
-import { PLANS_LIST, StripePlan } from "@/lib/stripe-config";
+import { PLANS_BY_TIER, PlanTierGroup, StripePlan } from "@/lib/stripe-config";
 import { useCallback, useState } from "react";
 
+type BillingInterval = "month" | "year";
+
 /**
- * PlanSelection — shows all four pricing tiers (Free, Growth Monthly,
- * Growth Annual, Enterprise) and handles Stripe Checkout redirects.
+ * PlanSelection — shows Free, Growth, and Enterprise tiers with a monthly/yearly
+ * billing toggle. Growth shows the discounted annual price when yearly is selected.
  *
  * Shown in the "subscription" panel of the User Settings modal when the user
- * has no active subscription.
+ * has no active subscription, and also as the full-screen subscription gate.
  */
 export function PlanSelection() {
   const { subscription, isLoading } = useStripeSubscription();
+  const [interval, setInterval] = useState<BillingInterval>("month");
 
   if (isLoading) {
     return (
@@ -24,28 +27,60 @@ export function PlanSelection() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <div>
         <h2 className="text-lg font-semibold text-foreground">Choose a Plan</h2>
-        {subscription && (
+        {subscription ? (
           <p className="text-sm text-muted-foreground mt-1">
             You are currently on the{" "}
             <span className="font-medium text-foreground">{subscription.plan.name}</span> plan.
           </p>
-        )}
-        {!subscription && (
+        ) : (
           <p className="text-sm text-muted-foreground mt-1">
             Select a plan to get started with Replay.
           </p>
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {PLANS_LIST.map(plan => (
+      {/* Billing interval toggle */}
+      <div className="flex items-center justify-center">
+        <div className="inline-flex rounded-lg border border-border bg-muted/40 p-1 gap-1">
+          <button
+            type="button"
+            onClick={() => setInterval("month")}
+            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+              interval === "month"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Monthly
+          </button>
+          <button
+            type="button"
+            onClick={() => setInterval("year")}
+            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+              interval === "year"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Yearly
+            <span className="ml-1.5 rounded-full bg-primary/15 px-1.5 py-0.5 text-xs font-semibold text-primary">
+              Save 14%
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* 3-card grid */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {PLANS_BY_TIER.map(tierGroup => (
           <PlanCard
-            key={plan.key}
-            plan={plan}
-            isCurrentPlan={subscription?.plan.key === plan.key}
+            key={tierGroup.tier}
+            tierGroup={tierGroup}
+            interval={interval}
+            currentPlanKey={subscription?.plan.key}
           />
         ))}
       </div>
@@ -53,7 +88,17 @@ export function PlanSelection() {
   );
 }
 
-function PlanCard({ plan, isCurrentPlan }: { plan: StripePlan; isCurrentPlan: boolean }) {
+function PlanCard({
+  tierGroup,
+  interval,
+  currentPlanKey,
+}: {
+  tierGroup: PlanTierGroup;
+  interval: BillingInterval;
+  currentPlanKey: string | undefined;
+}) {
+  const plan: StripePlan = interval === "month" ? tierGroup.monthly : tierGroup.yearly;
+  const isCurrentPlan = currentPlanKey === plan.key;
   const [isPending, setIsPending] = useState(false);
 
   const handleSubscribe = useCallback(async () => {
@@ -85,10 +130,9 @@ function PlanCard({ plan, isCurrentPlan }: { plan: StripePlan; isCurrentPlan: bo
     }
   }, [isPending, plan.priceId]);
 
-  const priceLabel = formatPrice(plan);
-
-  const isHighlighted = plan.tier === "growth";
+  const isHighlighted = tierGroup.tier === "growth";
   const borderClass = isHighlighted ? "border-primary/60" : "border-border";
+  const priceLabel = formatPrice(plan);
 
   return (
     <div className={`relative flex flex-col gap-4 rounded-lg border ${borderClass} bg-card p-5`}>
@@ -101,9 +145,9 @@ function PlanCard({ plan, isCurrentPlan }: { plan: StripePlan; isCurrentPlan: bo
       )}
 
       <div className="flex flex-col gap-1">
-        <div className="text-base font-semibold text-foreground">{plan.name}</div>
+        <div className="text-base font-semibold text-foreground">{tierGroup.name}</div>
         <div className="text-2xl font-bold text-foreground">{priceLabel}</div>
-        {plan.tier === "growth" && plan.interval === "year" && (
+        {tierGroup.tier === "growth" && interval === "year" && (
           <div className="text-xs text-muted-foreground">$3,588 billed annually</div>
         )}
       </div>
@@ -118,7 +162,7 @@ function PlanCard({ plan, isCurrentPlan }: { plan: StripePlan; isCurrentPlan: bo
       </ul>
 
       <div className="mt-auto pt-2">
-        {plan.tier === "enterprise" ? (
+        {tierGroup.tier === "enterprise" ? (
           <a
             href="https://www.replay.io/contact"
             target="_blank"
@@ -140,7 +184,7 @@ function PlanCard({ plan, isCurrentPlan }: { plan: StripePlan; isCurrentPlan: bo
             disabled={isPending}
             onClick={handleSubscribe}
           >
-            {isPending ? "Redirecting…" : plan.tier === "free" ? "Get Started" : "Subscribe"}
+            {isPending ? "Redirecting…" : tierGroup.tier === "free" ? "Get Started" : "Subscribe"}
           </Button>
         )}
       </div>
