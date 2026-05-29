@@ -53,5 +53,24 @@ export async function navigateToPage({
       url: `${host}/`,
     },
   ]);
+  // Mock the Stripe subscription REST endpoint so the subscription gate does not
+  // block e2e tests. In test environments there is no real Stripe/Auth0 config,
+  // so the real endpoint would 500 → subscription=null → gate fires over the UI.
+  await page.route("**/api/stripe/subscription", route => {
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        subscription: {
+          plan: { name: "Free", key: "free-v1", priceId: "price_1TZEsXEfKucJn4vk68YK7hSN" },
+          status: "active",
+          currentPeriodEnd: Math.floor(Date.now() / 1000) + 86400 * 30,
+          cancelAtPeriodEnd: false,
+          seatCount: 1,
+        },
+      }),
+    });
+  });
+
   await page.goto(url.toString());
 }

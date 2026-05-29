@@ -56,8 +56,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const { mockGraphQLData: e2eMockData } = useContext(EndToEndTestContext);
   const isE2EMode =
     e2eMockData !== null ||
-    (typeof document !== "undefined" &&
-      document.cookie.includes(COOKIES.e2eSkipIntake));
+    (typeof document !== "undefined" && document.cookie.includes(COOKIES.e2eSkipIntake));
 
   const openModal = useCallback((r: UserSettingsRoute = "account") => {
     setRoute(r);
