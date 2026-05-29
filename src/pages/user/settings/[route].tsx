@@ -3,7 +3,7 @@ import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const VALID_ROUTES = ["account", "api-keys", "support", "legal"];
+const VALID_ROUTES = ["account", "api-keys", "support", "legal", "subscription"];
 
 export default function Page() {
   const router = useRouter();
