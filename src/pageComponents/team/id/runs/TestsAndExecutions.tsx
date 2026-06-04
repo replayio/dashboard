@@ -1,5 +1,6 @@
 import { Icon } from "@/components/Icon";
 import { LoadingProgressBar } from "@/components/LoadingProgressBar";
+import { AIToolCalls } from "@/pageComponents/team/id/runs/AIToolCalls";
 import { CenterAlignedPrompt } from "@/pageComponents/team/id/runs/CenterAlignedPrompt";
 import { ExpandableSection } from "@/pageComponents/team/id/runs/ExpandableSection";
 import { TestExecutionRow } from "@/pageComponents/team/id/runs/TestExecutionRow";
@@ -72,6 +73,7 @@ export function TestsAndExecutions() {
         </TestExecutionMessage>
       )}
 
+      <AIToolCalls test={selectedTest} />
       <TestRunErrors test={selectedTest} />
     </>
   );

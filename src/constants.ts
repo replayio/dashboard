@@ -9,6 +9,7 @@ export const INTERCOM_CONTACT_ATTR = {
 export const COOKIES = {
   accessToken: "replay:access-token",
   authReturnTo: "replay:auth-return-to",
+  auth0ConnectAccount: "replay:auth0-connect-account",
   browserAuth: "replay:browser-auth",
   /** Set by Playwright via navigateToPage so CI e2e skips intake (no Intercom fixture for test users). */
   e2eSkipIntake: "replay:dashboard:e2e-skip-intake",
@@ -34,6 +35,7 @@ export const URLS = {
   app: process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : process.env.APP_URL!,
+  dispatch: process.env.NEXT_PUBLIC_DISPATCH_URL || "https://dispatch.replay.io",
 };
 
 export const TEST_USER_3 = {

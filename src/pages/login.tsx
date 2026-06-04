@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 
 const defaultConnection = "google-oauth2";
 const emailConnection = "Username-Password-Authentication";
+const githubConnection = "github";
 
 const AD_ATTR_KEYS = [
   "li_fat_id",
@@ -85,6 +86,7 @@ export default function Page() {
   } else {
     return (
       <DefaultLoginForm
+        onGitHubLogin={() => onLogin(githubConnection)}
         onLogin={() => onLogin(defaultConnection)}
         onEmailLogin={() => onLogin(emailConnection)}
         onSSOLogin={() => setSSOLogin(true)}
