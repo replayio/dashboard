@@ -1,19 +1,20 @@
 import { COOKIES, URLS } from "@/constants";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
-import { handleAuth, handleCallback, handleLogin, handleLogout } from "@auth0/nextjs-auth0";
+import {
+  Claims,
+  handleAuth,
+  handleCallback,
+  handleLogin,
+  handleLogout,
+  Session,
+} from "@auth0/nextjs-auth0";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
 // In local dev the Auth0 Post-Login Action can't reach localhost:3001, so we
 // call ensureUserForAuth ourselves in afterCallback to register the user in the
 // local DB. Failures are logged but never abort the login.
-async function ensureUserInLocalDb(user: {
-  sub: string;
-  email?: string;
-  name?: string;
-  nickname?: string;
-  picture?: string;
-}) {
+async function ensureUserInLocalDb(user: Claims) {
   try {
     const body = JSON.stringify({
       query: `mutation EnsureUser($authId: String!, $email: String!, $name: String!, $nickname: String, $picture: String, $secret: String!) {
@@ -76,7 +77,7 @@ export default handleAuth({
     } else {
       return handleCallback(req, res, {
         redirectUri: req.cookies[COOKIES.authReturnTo],
-        afterCallback: async (_req, _res, session) => {
+        afterCallback: async (_req: NextApiRequest, _res: NextApiResponse, session: Session) => {
           await ensureUserInLocalDb(session.user);
           return session;
         },

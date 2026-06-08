@@ -10,7 +10,6 @@ import { useContext } from "react";
 
 export default function Page({
   route,
-  stripeKey,
   workspaceId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { user } = useContext(SessionContext);
@@ -25,7 +24,7 @@ export default function Page({
 
   return (
     <div className="w-full h-full p-2">
-      <WorkspaceSettings route={route} stripeKey={stripeKey} workspace={workspace} />
+      <WorkspaceSettings route={route} workspace={workspace} />
     </div>
   );
 }
@@ -38,11 +37,7 @@ export async function getServerSideProps({
 }: GetServerSidePropsContext<{ id: string }>) {
   assert(params?.id != null, '"id" parameter is required');
 
-  const stripeKey = process.env.STRIPE_KEY;
-  assert(stripeKey != null, "STRIPE_KEY is required");
-  assert(stripeKey.startsWith("pk_"), "STRIPE_KEY must be a publishable key (pk_ prefix)");
-
   return {
-    props: { route: query.route as string, stripeKey, workspaceId: params.id },
+    props: { route: query.route as string, workspaceId: params.id },
   };
 }
