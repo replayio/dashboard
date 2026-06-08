@@ -64,11 +64,11 @@ Testing billing flows end-to-end requires three services running simultaneously.
 
 ### Services
 
-| Service | Repo | Port | Purpose |
-|---|---|---|---|
-| GraphQL API | `backend` | 3001 | Database, subscriptions, plans |
-| Dashboard (this repo) | `dashboard` | 8080 | UI |
-| Webhook relay | `replay-endpoints` | 3002 | Stripe webhook processing |
+| Service               | Repo               | Port | Purpose                        |
+| --------------------- | ------------------ | ---- | ------------------------------ |
+| GraphQL API           | `backend`          | 3001 | Database, subscriptions, plans |
+| Dashboard (this repo) | `dashboard`        | 8080 | UI                             |
+| Webhook relay         | `replay-endpoints` | 3002 | Stripe webhook processing      |
 
 Start them in this order: backend → replay-endpoints → dashboard.
 
@@ -121,10 +121,10 @@ Open [localhost:8080](http://localhost:8080/). Sign in with one of the seed user
 
 The backend hardcodes several secrets in `src/graphql-api/secrets.ts` for local dev. These are not environment variables — they are fixed values that the other repos must match:
 
-| Secret | Value |
-|---|---|
-| `FRONTEND_API_SECRET` | `omNN-4K*GiHhqUH8-7mUB6Ecz8ZPBtcqH68V` |
-| `MANUAL_ADMIN_API_SECRET` | `secret used for manual operations run by the Replay org` |
+| Secret                     | Value                                                      |
+| -------------------------- | ---------------------------------------------------------- |
+| `FRONTEND_API_SECRET`      | `omNN-4K*GiHhqUH8-7mUB6Ecz8ZPBtcqH68V`                     |
+| `MANUAL_ADMIN_API_SECRET`  | `secret used for manual operations run by the Replay org`  |
 | `BACKEND_ADMIN_API_SECRET` | `backend secret that we use for backend-only graphQL APIs` |
 
 These are dev-only values committed to the repo. Do not use them in production.
