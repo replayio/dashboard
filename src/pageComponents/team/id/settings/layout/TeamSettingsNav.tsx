@@ -50,14 +50,14 @@ export function TeamSettingsNav() {
         route="members"
         workspaceId={workspace.id}
       />
-      {currentUserIsAdmin && (
+      {/* {currentUserIsAdmin && (
         <TeamSettingsNavLink
           workspaceId={workspace.id}
           label="Billing"
           route="billing"
           iconType="billing"
         />
-      )}
+      )} */}
       {(currentUserIsAdmin || currentUserIsDeveloper) && (
         <TeamSettingsNavLink
           workspaceId={workspace.id}

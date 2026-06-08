@@ -54,7 +54,12 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const signingOutRef = useRef(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const { subscription, isLoading: subscriptionLoading, refetch } = useStripeSubscription();
+  const {
+    subscription,
+    isLoading: subscriptionLoading,
+    workspaceId,
+    refetch,
+  } = useStripeSubscription();
   const sessionCtx = useContext(SessionContext);
   const isLoggedIn = Boolean(sessionCtx?.user);
   // In e2e test mode, skip the subscription gate so tests are not blocked by the overlay.
@@ -184,8 +189,13 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   );
 
   // Subscription gate — blocks all app access until user selects a plan.
-  // Shown when subscription fetch is complete and user has no active subscription.
-  const showGate = !isE2EMode && isLoggedIn && !subscriptionLoading && subscription === null;
+  // Shown for any logged-in user with no active subscription, including users
+  // who have no workspace yet (they can create one as part of the plan flow).
+  const showGate =
+    !isE2EMode &&
+    isLoggedIn &&
+    !subscriptionLoading &&
+    (subscription === null || subscription.status === "canceled");
 
   const gate =
     showGate &&

@@ -11,7 +11,10 @@ type ResponseBody = { url: string } | { error: string };
  * POST /api/stripe/checkout
  *
  * Creates a checkout flow for the authenticated user's workspace.
- * Body: { planKey: string; workspaceId: string }
+ * Body: { planKey: string; workspaceId?: string }
+ *
+ * If workspaceId is omitted (new users with no workspace), a workspace is
+ * auto-created via createWorkspaceV2 before proceeding.
  *
  * Free tier (planKey starts with "free"): calls selectFreePlan mutation — no
  * Stripe Checkout session needed. Returns { url: successUrl } for client redirect.
@@ -37,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { planKey, workspaceId } = req.body as {
+  const { planKey, workspaceId: bodyWorkspaceId } = req.body as {
     planKey?: string;
     workspaceId?: string;
   };
@@ -45,15 +48,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (!planKey) {
     return res.status(400).json({ error: "Missing planKey" });
   }
-  if (!workspaceId) {
-    return res.status(400).json({ error: "Missing workspaceId" });
-  }
 
   const successUrl = APP_URL + "/home?openSettings=subscription&checkout=success";
   const cancelUrl = APP_URL + "/home?openSettings=subscription&checkout=cancelled";
 
   try {
     const accessToken = session.accessToken as string;
+
+    // Auto-create a workspace for users who don't have one yet
+    let workspaceId: string;
+    if (bodyWorkspaceId) {
+      workspaceId = bodyWorkspaceId;
+    } else {
+      const { data: wsData, errors: wsErrors } = await graphQLQuery<{
+        createWorkspaceV2: { workspace: { id: string } };
+      }>({
+        accessToken,
+        mockGraphQLData: null,
+        query: gql`
+          mutation CreateWorkspaceV2($name: String!) {
+            createWorkspaceV2(input: { name: $name }) {
+              workspace {
+                id
+              }
+            }
+          }
+        `,
+        variables: { name: "My Team" },
+      });
+
+      if (wsErrors && wsErrors.length > 0) {
+        console.error("[/api/stripe/checkout] createWorkspaceV2 errors:", wsErrors);
+        return res
+          .status(500)
+          .json({ error: wsErrors[0]?.message ?? "Failed to create workspace" });
+      }
+
+      const newWorkspaceId = wsData?.createWorkspaceV2?.workspace?.id;
+      if (!newWorkspaceId) {
+        return res.status(500).json({ error: "Failed to create workspace" });
+      }
+      workspaceId = newWorkspaceId;
+    }
 
     // Free tier: selectFreePlan mutation — no Stripe Checkout session needed
     if (planKey.startsWith("free")) {

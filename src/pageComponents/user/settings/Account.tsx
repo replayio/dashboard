@@ -49,15 +49,21 @@ function SubscriptionSection({
 }: {
   onNavigateToSubscription: () => void;
 }) {
-  const { subscription, isLoading } = useStripeSubscription();
+  const { subscription: rawSubscription, isLoading, workspaceId } = useStripeSubscription();
+  // Treat canceled subscriptions the same as no subscription
+  const subscription = rawSubscription?.status === "canceled" ? null : rawSubscription;
   const [isPortalPending, setIsPortalPending] = useState(false);
 
   const openBillingPortal = useCallback(async () => {
-    if (isPortalPending) return;
+    if (isPortalPending || !workspaceId) return;
     setIsPortalPending(true);
 
     try {
-      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const res = await fetch("/api/stripe/portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ workspaceId }),
+      });
       if (!res.ok) {
         console.error("[Account] portal error:", res.status);
         setIsPortalPending(false);
@@ -74,7 +80,7 @@ function SubscriptionSection({
       console.error("[Account] portal error:", err);
       setIsPortalPending(false);
     }
-  }, [isPortalPending]);
+  }, [isPortalPending, workspaceId]);
 
   return (
     <div className="flex items-center justify-between py-4 border-b border-border">
@@ -86,7 +92,19 @@ function SubscriptionSection({
           <div className="text-sm text-muted-foreground">
             <span className="font-medium text-foreground">{subscription.plan.name}</span>
             {" — "}
-            <span className="capitalize">{subscription.status}</span>
+            {subscription.cancelAtPeriodEnd ? (
+              <>
+                <span>Active</span>
+                {subscription.currentPeriodEnd && (
+                  <span className="ml-1 text-xs text-amber-500">
+                    (Update scheduled, cancels{" "}
+                    {new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString()})
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="capitalize">{subscription.status}</span>
+            )}
           </div>
         ) : (
           <div className="text-sm text-muted-foreground">No active subscription</div>

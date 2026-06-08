@@ -61,6 +61,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         subscription?: {
           id: string;
           status: string;
+          effectiveUntil?: string | null;
+          seatCount?: number;
           plan?: {
             key: string;
             name: string;
@@ -78,6 +80,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
               subscription {
                 id
                 status
+                effectiveUntil
+                seatCount
                 plan {
                   key
                   name
@@ -101,6 +105,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     const sub = workspaceNode.subscription;
+    const periodEndMs = sub.effectiveUntil ? Date.parse(sub.effectiveUntil) : null;
 
     return res.status(200).json({
       subscription: {
@@ -109,9 +114,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           name: sub.plan?.name ?? "Unknown",
         },
         status: sub.status,
-        currentPeriodEnd: null,
-        cancelAtPeriodEnd: false,
-        seatCount: 1,
+        currentPeriodEnd: periodEndMs != null ? Math.floor(periodEndMs / 1000) : null,
+        cancelAtPeriodEnd: sub.status === "canceling",
+        seatCount: sub.seatCount ?? 1,
       },
     });
   } catch (err) {

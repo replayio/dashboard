@@ -6,6 +6,7 @@ import {
   BackendPlan,
   normalizeBackendPlan,
   groupPlansByTier,
+  PLAN_CONTENT,
   PlanTierGroup,
   StripePlan,
 } from "@/lib/stripe-config";
@@ -37,7 +38,6 @@ export function PlanSelection() {
   const [plansLoading, setPlansLoading] = useState(true);
   const [plansError, setPlansError] = useState<string | null>(null);
 
-  // Fetch available plans from backend
   useEffect(() => {
     let cancelled = false;
     setPlansLoading(true);
@@ -89,11 +89,19 @@ export function PlanSelection() {
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="text-lg font-semibold text-foreground">Choose a Plan</h2>
-        {subscription ? (
-          <p className="text-sm text-muted-foreground mt-1">
-            You are currently on the{" "}
-            <span className="font-medium text-foreground">{subscription.plan.name}</span> plan.
-          </p>
+        {subscription && subscription.status !== "canceled" ? (
+          <div className="mt-1">
+            <p className="text-sm text-muted-foreground">
+              You are currently on the{" "}
+              <span className="font-medium text-foreground">{subscription.plan.name}</span> plan.
+            </p>
+            {subscription.cancelAtPeriodEnd && subscription.currentPeriodEnd && (
+              <p className="text-xs text-amber-500 mt-0.5">
+                Update scheduled — current plan active until{" "}
+                {new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString()}
+              </p>
+            )}
+          </div>
         ) : (
           <p className="text-sm text-muted-foreground mt-1">
             Select a plan to get started with Replay.
@@ -132,14 +140,18 @@ export function PlanSelection() {
         </div>
       </div>
 
-      {/* 3-card grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {/* Plan card grid */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {groups.map(tierGroup => (
           <PlanCard
             key={tierGroup.tier}
             tierGroup={tierGroup}
             interval={interval}
-            currentPlanKey={subscription?.plan.key}
+            currentPlanKey={
+              subscription?.status !== "canceled" ? subscription?.plan.key : undefined
+            }
+            hasActiveSubscription={!!subscription && subscription.status !== "canceled"}
+            cancelAtPeriodEnd={subscription?.cancelAtPeriodEnd ?? false}
             workspaceId={workspaceId}
           />
         ))}
@@ -152,29 +164,36 @@ function PlanCard({
   tierGroup,
   interval,
   currentPlanKey,
+  hasActiveSubscription,
+  cancelAtPeriodEnd,
   workspaceId,
 }: {
   tierGroup: PlanTierGroup;
   interval: BillingInterval;
   currentPlanKey: string | undefined;
+  hasActiveSubscription: boolean;
+  cancelAtPeriodEnd: boolean;
   workspaceId: string | null;
 }) {
   const plan: StripePlan = interval === "month" ? tierGroup.monthly : tierGroup.yearly;
   const isCurrentPlan = currentPlanKey === plan.key;
+  const isExistingSubscriberChange =
+    hasActiveSubscription && !isCurrentPlan && tierGroup.tier !== "enterprise";
+  // Free → paid upgrades use Checkout (creates new subscription, auto-cancels free).
+  // Paid → paid switches use the portal (avoids Stripe's per-seat "Quantity: 0" issue).
+  const currentPlanIsFree = currentPlanKey?.startsWith("free") ?? false;
+  const usePortalForChange = isExistingSubscriberChange && !currentPlanIsFree;
   const [isPending, setIsPending] = useState(false);
 
   const handleSubscribe = useCallback(async () => {
     if (isPending) return;
-    if (!workspaceId) {
-      console.error("[PlanCard] no workspaceId available");
-      return;
-    }
     setIsPending(true);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planKey: plan.key, workspaceId }),
+        // workspaceId may be null for new users — checkout API auto-creates a workspace
+        body: JSON.stringify({ planKey: plan.key, workspaceId: workspaceId ?? undefined }),
       });
 
       if (!res.ok) {
@@ -186,7 +205,6 @@ function PlanCard({
       const data = (await res.json()) as { url?: string };
       if (data.url) {
         window.location.href = data.url;
-        // Don't reset isPending — we're navigating away
       } else {
         setIsPending(false);
       }
@@ -196,42 +214,96 @@ function PlanCard({
     }
   }, [isPending, plan.key, workspaceId]);
 
-  const isHighlighted = tierGroup.tier === "growth";
-  const borderClass = isHighlighted ? "border-primary/60" : "border-border";
-  const priceLabel = formatPrice(plan);
+  const handleOpenPortal = useCallback(async () => {
+    if (isPending || !workspaceId) return;
+    setIsPending(true);
+    try {
+      const res = await fetch("/api/stripe/portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ workspaceId }),
+      });
+      if (!res.ok) {
+        console.error("[PlanCard] portal error:", res.status);
+        setIsPending(false);
+        return;
+      }
+      const data = (await res.json()) as { url?: string };
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setIsPending(false);
+      }
+    } catch (err) {
+      console.error("[PlanCard] portal error:", err);
+      setIsPending(false);
+    }
+  }, [isPending, workspaceId]);
+
+  const isHighlighted = tierGroup.highlighted;
+  const content = PLAN_CONTENT[tierGroup.tier];
+  const features = content?.features ?? plan.features;
+  const tagline = content?.tagline ?? tierGroup.name;
+  const description = content?.description ?? null;
+  const featureHeader = content?.featureHeader ?? "INCLUDES";
+  const { priceNumber, pricePeriod } = formatPrice(plan, interval);
 
   return (
-    <div className={`relative flex flex-col gap-4 rounded-lg border ${borderClass} bg-card p-5`}>
+    <div
+      className={`relative flex flex-col rounded-lg border bg-card ${
+        isHighlighted ? "border-primary/60" : "border-border"
+      }`}
+    >
       {isHighlighted && (
-        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-          <span className="rounded-full bg-primary px-3 py-0.5 text-xs font-semibold text-primary-foreground">
-            Popular
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+          <span className="w-fit whitespace-nowrap rounded-full bg-primary px-3 py-0.5 text-xs font-semibold text-primary-foreground">
+            MOST POPULAR
           </span>
         </div>
       )}
 
-      <div className="flex flex-col gap-1">
-        <div className="text-base font-semibold text-foreground">{tierGroup.name}</div>
-        <div className="text-2xl font-bold text-foreground">{priceLabel}</div>
-        {tierGroup.tier === "growth" && interval === "year" && plan.monthlyPriceCents !== null && (
-          <div className="text-xs text-muted-foreground">
-            ${Math.round((plan.monthlyPriceCents * 12) / 100).toLocaleString()} billed annually
-          </div>
+      <div className="flex flex-col p-5 gap-3">
+        {/* Tier label */}
+        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {tierGroup.name}
+        </div>
+
+        {/* Tagline */}
+        <div className="text-xl font-bold leading-snug text-foreground">{tagline}</div>
+
+        {/* Description */}
+        {description && <div className="text-sm text-muted-foreground">{description}</div>}
+      </div>
+
+      <div className="border-t border-border" />
+
+      {/* Price section */}
+      <div className="flex flex-col px-5 py-4 gap-0.5">
+        <div className="text-3xl font-bold text-foreground">{priceNumber}</div>
+        <div className="text-sm text-muted-foreground">{pricePeriod}</div>
+      </div>
+
+      <div className="border-t border-border" />
+
+      {/* Features */}
+      <div className="flex flex-col px-5 py-4 gap-3 flex-1">
+        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {featureHeader}
+        </div>
+        {features.length > 0 && (
+          <ul className="flex flex-col gap-2">
+            {features.map(feature => (
+              <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" type="check" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
 
-      {plan.features.length > 0 && (
-        <ul className="flex flex-col gap-1.5">
-          {plan.features.map(feature => (
-            <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
-              <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" type="check" />
-              <span>{feature}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <div className="mt-auto pt-2">
+      {/* CTA */}
+      <div className="px-5 pb-5 mt-auto">
         {tierGroup.tier === "enterprise" ? (
           <a
             href="https://www.replay.io/contact"
@@ -245,16 +317,20 @@ function PlanCard({
           </a>
         ) : isCurrentPlan ? (
           <Button className="w-full" variant="outline" disabled>
-            Current Plan
+            {cancelAtPeriodEnd ? "Update Scheduled" : "Current Plan"}
           </Button>
         ) : (
           <Button
             className="w-full"
             variant={isHighlighted ? "solid" : "outline"}
-            disabled={isPending || !workspaceId}
-            onClick={handleSubscribe}
+            disabled={isPending || (usePortalForChange && !workspaceId)}
+            onClick={usePortalForChange ? handleOpenPortal : handleSubscribe}
           >
-            {isPending ? "Redirecting…" : tierGroup.tier === "free" ? "Get Started" : "Subscribe"}
+            {isPending
+              ? "Redirecting…"
+              : isExistingSubscriberChange
+                ? "Update Plan"
+                : "Get Started"}
           </Button>
         )}
       </div>
@@ -262,17 +338,26 @@ function PlanCard({
   );
 }
 
-function formatPrice(plan: StripePlan): string {
-  if (plan.tier === "enterprise") return "Custom";
-  if (plan.monthlyPriceCents === null) return "—";
-  if (plan.monthlyPriceCents === 0) return "$0/mo";
-
-  if (plan.interval === "year") {
-    // Show per-month equivalent
-    const perMonth = Math.round(plan.monthlyPriceCents / 100);
-    return `$${perMonth}/mo`;
+function formatPrice(
+  plan: StripePlan,
+  interval: BillingInterval
+): { priceNumber: string; pricePeriod: string } {
+  if (plan.tier === "enterprise") {
+    return { priceNumber: "Custom", pricePeriod: "usage-based or seat-based" };
+  }
+  if (plan.monthlyPriceCents === null) {
+    return { priceNumber: "—", pricePeriod: "" };
+  }
+  if (plan.monthlyPriceCents === 0) {
+    return { priceNumber: "$0", pricePeriod: "always free" };
   }
 
-  const dollars = Math.round(plan.monthlyPriceCents / 100);
-  return `$${dollars}/mo`;
+  const perMonth = Math.round(plan.monthlyPriceCents / 100);
+  if (interval === "year") {
+    return {
+      priceNumber: `$${perMonth}`,
+      pricePeriod: "per month · billed annually",
+    };
+  }
+  return { priceNumber: `$${perMonth}`, pricePeriod: "per month" };
 }
