@@ -3,6 +3,7 @@ import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 import { Workspace } from "@/graphql/types";
 // import { Billing } from "@/pageComponents/team/id/settings/Billing";
 import { DeleteWorkspace } from "@/pageComponents/team/id/settings/DeleteWorkspace";
+import { General } from "@/pageComponents/team/id/settings/General";
 import { Organization } from "@/pageComponents/team/id/settings/Organization";
 import { TeamMembers } from "@/pageComponents/team/id/settings/TeamMembers";
 import { WorkspaceApiKeys } from "@/pageComponents/team/id/settings/WorkspaceApiKeys";
@@ -48,6 +49,15 @@ export function WorkspaceSettings({
     case "delete": {
       if (currentUserIsAdmin) {
         content = <DeleteWorkspace workspaceId={workspaceId} />;
+      }
+      break;
+    }
+    case "general": {
+      // Organization workspaces rename via the "Organization" panel, which also
+      // holds org-only settings; non-org (e.g. v2 team) workspaces use this
+      // lightweight rename panel.
+      if (currentUserIsAdmin && !workspace.isOrganization) {
+        content = <General workspaceId={workspaceId} />;
       }
       break;
     }
