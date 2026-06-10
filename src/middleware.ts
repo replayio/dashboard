@@ -89,12 +89,16 @@ export async function middleware(request: NextRequest) {
 
       return withAgentLinkHeaders(request, NextResponse.redirect(redirectURL));
     }
-    case "/org/new": {
+    // Team/org creation is disabled: each account is limited to a single
+    // workspace. Redirect all standard-team/org creation entry points to /home.
+    // (Test suite creation at /team/new/tests is still allowed.)
+    case "/org/new":
+    case "/team/new":
+    case "/team/new/standard": {
       const redirectURL = new URL(request.url);
-      redirectURL.pathname = "/team/new/standard";
-      redirectURL.searchParams.set("type", "org");
+      redirectURL.pathname = "/home";
 
-      return NextResponse.redirect(redirectURL);
+      return withAgentLinkHeaders(request, NextResponse.redirect(redirectURL));
     }
   }
 

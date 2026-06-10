@@ -29,8 +29,9 @@ export function DeleteWorkspace({ workspaceId }: { workspaceId: string }) {
             This action cannot be undone
           </div>
           <p className="text-sm text-muted-foreground">
-            This will permanently delete this workspace and all associated replays, API keys,
-            sourcemaps, and team member associations.
+            This will permanently delete this workspace and all data associated with this
+            organization — including all replays, API keys, sourcemaps, and team member associations
+            — and your subscription will be canceled. This action cannot be undone.
           </p>
         </div>
         <div className="flex flex-row gap-3">

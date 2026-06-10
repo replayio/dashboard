@@ -98,12 +98,6 @@ export function LeftNav({
               isActive={false}
               label="Create test suite"
             />
-            <LeftNavLink
-              href="/team/new/standard"
-              iconType="create"
-              isActive={false}
-              label="Create new team"
-            />
             <hr className="w-full mx-auto my-3 border-border" />
           </nav>
         </div>
