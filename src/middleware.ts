@@ -12,6 +12,13 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { AccessTokenCookie, setCookieValueServer } from "./utils/cookie";
 
+// Dev-seed constants inlined here to avoid importing from @/lib/dev-seed,
+// which would pull in the full module into the Edge Runtime bundle.
+// We keep them in sync with src/lib/dev-seed.ts by using the same literals.
+const _DEV_SEED_ENABLED =
+  process.env.NEXT_PUBLIC_DEV_SEED_USER === "true" && process.env.NODE_ENV !== "production";
+const _DEV_SEED_TOKEN = "dev-seed-token";
+
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
   const { pathname } = nextUrl;
@@ -31,6 +38,12 @@ export async function middleware(request: NextRequest) {
 
   if (shouldBypassAuthMiddleware(pathname)) {
     return NextResponse.next();
+  }
+
+  // Dev-seed: redirect /login straight to /home so no Auth0 flow is needed.
+  if (_DEV_SEED_ENABLED && pathname === "/login") {
+    const homeUrl = new URL("/home", request.url);
+    return withAgentLinkHeaders(request, NextResponse.redirect(homeUrl));
   }
 
   const response = NextResponse.next();
@@ -76,12 +89,16 @@ export async function middleware(request: NextRequest) {
 
       return withAgentLinkHeaders(request, NextResponse.redirect(redirectURL));
     }
-    case "/org/new": {
+    // Team/org creation is disabled: each account is limited to a single
+    // workspace. Redirect all standard-team/org creation entry points to /home.
+    // (Test suite creation at /team/new/tests is still allowed.)
+    case "/org/new":
+    case "/team/new":
+    case "/team/new/standard": {
       const redirectURL = new URL(request.url);
-      redirectURL.pathname = "/team/new/standard";
-      redirectURL.searchParams.set("type", "org");
+      redirectURL.pathname = "/home";
 
-      return NextResponse.redirect(redirectURL);
+      return withAgentLinkHeaders(request, NextResponse.redirect(redirectURL));
     }
   }
 
@@ -120,6 +137,15 @@ async function getAccessTokenForSession(request: NextRequest, response: NextResp
     return {
       source: null,
       token: null,
+    };
+  }
+
+  // Dev-seed: synthesise a fake access token so the rest of middleware
+  // and _app.tsx treat the user as authenticated without Auth0.
+  if (_DEV_SEED_ENABLED) {
+    return {
+      source: "dev-seed" as const,
+      token: _DEV_SEED_TOKEN,
     };
   }
 
@@ -210,6 +236,11 @@ async function redirectIfMobile(request: NextRequest) {
  * is authoritative; a missing or stale cookie still sends the user through /intake once to re-sync.
  */
 function redirectToIntakeIfNeeded(request: NextRequest, accessToken: string) {
+  // Dev-seed users skip intake: they have no Intercom record.
+  if (_DEV_SEED_ENABLED && accessToken === _DEV_SEED_TOKEN) {
+    return;
+  }
+
   const { pathname, search } = request.nextUrl;
   if (
     pathname === "/intake" ||
@@ -246,6 +277,11 @@ function redirectToIntakeIfNeeded(request: NextRequest, accessToken: string) {
 }
 
 async function redirectIfProtectedRoute(request: NextRequest) {
+  // Dev-seed: always considered "logged in" so protected routes are accessible.
+  if (_DEV_SEED_ENABLED) {
+    return;
+  }
+
   const { nextUrl } = request;
   const { pathname, search } = nextUrl;
 

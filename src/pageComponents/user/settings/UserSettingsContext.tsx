@@ -1,10 +1,18 @@
 import { Account } from "@/pageComponents/user/settings/Account";
 import { Legal } from "@/pageComponents/user/settings/Legal";
+import { PlanSelection } from "@/pageComponents/user/settings/PlanSelection";
 import { Support } from "@/pageComponents/user/settings/Support";
 import { UserApiKeys } from "@/pageComponents/user/settings/UserApiKeys";
 import { Icon, IconType } from "@/components/Icon";
 import { IconButton } from "@/components/IconButton";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { useStripeSubscription } from "@/hooks/useStripeSubscription";
+import { EndToEndTestContext } from "@/components/EndToEndTestContext";
+import { SessionContext } from "@/components/SessionContext";
 import useModalDismissSignal from "@/hooks/useModalDismissSignal";
+import { COOKIES } from "@/constants";
+import { deleteCookieValueClient } from "@/utils/cookie";
+import { setAccessTokenInBrowserPrefs } from "@/utils/replayBrowser";
 import {
   createContext,
   ReactNode,
@@ -16,9 +24,15 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-export type UserSettingsRoute = "account" | "api-keys" | "support" | "legal";
+export type UserSettingsRoute = "account" | "api-keys" | "support" | "legal" | "subscription";
 
-const VALID_ROUTES: UserSettingsRoute[] = ["account", "api-keys", "support", "legal"];
+const VALID_ROUTES: UserSettingsRoute[] = [
+  "account",
+  "api-keys",
+  "support",
+  "legal",
+  "subscription",
+];
 
 type UserSettingsContextValue = {
   openModal: (route?: UserSettingsRoute) => void;
@@ -36,7 +50,25 @@ export function useUserSettings() {
 export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const [route, setRoute] = useState<UserSettingsRoute>("account");
   const [isOpen, setIsOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const signingOutRef = useRef(false);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const {
+    subscription,
+    isLoading: subscriptionLoading,
+    workspaceId,
+    refetch,
+  } = useStripeSubscription();
+  const sessionCtx = useContext(SessionContext);
+  const isLoggedIn = Boolean(sessionCtx?.user);
+  // In e2e test mode, skip the subscription gate so tests are not blocked by the overlay.
+  // e2eSkipIntake cookie is set by navigateToPage() for ALL Playwright e2e tests.
+  // mockGraphQLData covers tests that pass mock data explicitly.
+  const { mockGraphQLData: e2eMockData } = useContext(EndToEndTestContext);
+  const isE2EMode =
+    e2eMockData !== null ||
+    (typeof document !== "undefined" && document.cookie.includes(COOKIES.e2eSkipIntake));
 
   const openModal = useCallback((r: UserSettingsRoute = "account") => {
     setRoute(r);
@@ -47,6 +79,17 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     setIsOpen(false);
   }, []);
 
+  const onSignOut = useCallback(() => {
+    if (signingOutRef.current) return;
+    signingOutRef.current = true;
+    setSigningOut(true);
+    setAccessTokenInBrowserPrefs(null);
+    deleteCookieValueClient(COOKIES.defaultPathname);
+    deleteCookieValueClient(COOKIES.accessToken);
+    window.location.replace(`/api/auth/logout?${new URLSearchParams({ origin: location.origin })}`);
+  }, []);
+
+  // Handle openSettings query param
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -57,6 +100,19 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     }
   }, [openModal]);
 
+  // Handle checkout=success query param — refetch subscription to lift the gate
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") === "success") {
+      refetch();
+      // Remove the query param so a page refresh doesn't re-trigger
+      const next = new URL(window.location.href);
+      next.searchParams.delete("checkout");
+      window.history.replaceState(null, "", next.toString());
+    }
+  }, [refetch]);
+
   useModalDismissSignal(modalRef, closeModal, isOpen);
 
   const value: UserSettingsContextValue = { openModal, closeModal };
@@ -64,6 +120,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
   const navItems: { route: UserSettingsRoute; label: string; iconType: IconType }[] = [
     { route: "account", label: "Account", iconType: "account" },
     { route: "api-keys", label: "API keys", iconType: "api-keys" },
+    { route: "subscription", label: "Subscription", iconType: "billing" },
     { route: "support", label: "Support", iconType: "support" },
     { route: "legal", label: "Legal", iconType: "legal" },
   ];
@@ -82,6 +139,9 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     case "support":
       panel = <Support />;
       break;
+    case "subscription":
+      panel = <PlanSelection />;
+      break;
   }
 
   const modal = isOpen && (
@@ -91,7 +151,7 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     >
       <div
         ref={modalRef}
-        className="flex h-[85vh] max-h-[700px] w-full max-w-4xl overflow-hidden rounded-xl border border-border bg-card shadow-xl"
+        className="flex h-[85vh] max-h-[700px] w-full max-w-6xl overflow-hidden rounded-xl border border-border bg-card shadow-xl"
         onClick={e => e.stopPropagation()}
       >
         {/* Sidebar */}
@@ -128,10 +188,61 @@ export function UserSettingsProvider({ children }: { children: ReactNode }) {
     </div>
   );
 
+  // Subscription gate — blocks all app access until user selects a plan.
+  // Shown for any logged-in user with no active subscription, including users
+  // who have no workspace yet (they can create one as part of the plan flow).
+  const showGate =
+    !isE2EMode &&
+    isLoggedIn &&
+    !subscriptionLoading &&
+    (subscription === null || subscription.status === "canceled");
+
+  const gate =
+    showGate &&
+    typeof document !== "undefined" &&
+    createPortal(
+      <div
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md"
+        data-test-name="SubscriptionGate"
+      >
+        <div className="flex w-full max-w-6xl flex-col gap-2 overflow-auto rounded-xl border border-border bg-card p-8 shadow-2xl mx-4 max-h-[90vh]">
+          <div className="mb-2 text-center">
+            <h1 className="text-2xl font-bold text-foreground">Get started with Replay</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Choose a plan to access the dashboard.
+            </p>
+          </div>
+          <PlanSelection />
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              disabled={signingOut}
+              onClick={onSignOut}
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground underline hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-70 disabled:no-underline"
+            >
+              {signingOut ? (
+                <>
+                  <Icon
+                    className="h-4 w-4 shrink-0 animate-spin text-muted-foreground"
+                    type="loading-spinner"
+                  />
+                  Signing out…
+                </>
+              ) : (
+                "Log out"
+              )}
+            </button>
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+
   return (
     <UserSettingsContext.Provider value={value}>
       {children}
       {typeof document !== "undefined" && createPortal(modal, document.body)}
+      {gate}
     </UserSettingsContext.Provider>
   );
 }

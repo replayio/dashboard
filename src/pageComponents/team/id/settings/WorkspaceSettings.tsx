@@ -1,8 +1,9 @@
 import { SessionContext } from "@/components/SessionContext";
 import { useGetWorkspaceMembers } from "@/graphql/queries/getWorkspaceMembers";
 import { Workspace } from "@/graphql/types";
-import { Billing } from "@/pageComponents/team/id/settings/Billing";
+// import { Billing } from "@/pageComponents/team/id/settings/Billing";
 import { DeleteWorkspace } from "@/pageComponents/team/id/settings/DeleteWorkspace";
+import { General } from "@/pageComponents/team/id/settings/General";
 import { Organization } from "@/pageComponents/team/id/settings/Organization";
 import { TeamMembers } from "@/pageComponents/team/id/settings/TeamMembers";
 import { WorkspaceApiKeys } from "@/pageComponents/team/id/settings/WorkspaceApiKeys";
@@ -11,11 +12,11 @@ import { ReactNode, useContext, useEffect } from "react";
 
 export function WorkspaceSettings({
   route,
-  stripeKey,
+  // stripeKey,
   workspace,
 }: {
   route: string;
-  stripeKey: string;
+  // stripeKey: string;
   workspace: Workspace;
 }) {
   const workspaceId = workspace.id;
@@ -39,15 +40,24 @@ export function WorkspaceSettings({
       }
       break;
     }
-    case "billing": {
-      if (currentUserIsAdmin) {
-        content = <Billing stripeKey={stripeKey} workspaceId={workspaceId} />;
-      }
-      break;
-    }
+    // case "billing": {
+    //   if (currentUserIsAdmin) {
+    //     content = <Billing stripeKey={stripeKey} workspaceId={workspaceId} />;
+    //   }
+    //   break;
+    // }
     case "delete": {
       if (currentUserIsAdmin) {
         content = <DeleteWorkspace workspaceId={workspaceId} />;
+      }
+      break;
+    }
+    case "general": {
+      // Organization workspaces rename via the "Organization" panel, which also
+      // holds org-only settings; non-org (e.g. v2 team) workspaces use this
+      // lightweight rename panel.
+      if (currentUserIsAdmin && !workspace.isOrganization) {
+        content = <General workspaceId={workspaceId} />;
       }
       break;
     }

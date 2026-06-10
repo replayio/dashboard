@@ -1,8 +1,45 @@
-import { COOKIES } from "@/constants";
+import { COOKIES, URLS } from "@/constants";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
-import { handleAuth, handleCallback, handleLogin, handleLogout } from "@auth0/nextjs-auth0";
+import {
+  Claims,
+  handleAuth,
+  handleCallback,
+  handleLogin,
+  handleLogout,
+  Session,
+} from "@auth0/nextjs-auth0";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
+
+// In local dev the Auth0 Post-Login Action can't reach localhost:3001, so we
+// call ensureUserForAuth ourselves in afterCallback to register the user in the
+// local DB. Failures are logged but never abort the login.
+async function ensureUserInLocalDb(user: Claims) {
+  try {
+    const body = JSON.stringify({
+      query: `mutation EnsureUser($authId: String!, $email: String!, $name: String!, $nickname: String, $picture: String, $secret: String!) {
+        ensureUserForAuth(input: { authId: $authId, email: $email, name: $name, nickname: $nickname, picture: $picture, secret: $secret }) {
+          id
+        }
+      }`,
+      variables: {
+        authId: user.sub,
+        email: user.email ?? "",
+        name: user.name ?? user.email ?? "",
+        nickname: user.nickname ?? null,
+        picture: user.picture ?? null,
+        secret: "supersecretpassword123",
+      },
+    });
+    await fetch(`${URLS.api}/v1/graphql`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+    });
+  } catch (err) {
+    console.warn("[auth callback] ensureUserInLocalDb failed:", err);
+  }
+}
 
 export default handleAuth({
   login: (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,7 +49,7 @@ export default handleAuth({
         audience: "https://api.replay.io",
         code_challenge_method: "S256",
         response_type: "code" as "code",
-        scope: "openid offline_access",
+        scope: "openid profile email offline_access",
         prompt: getValueFromArrayOrString(req.query.prompt),
         connection: getValueFromArrayOrString(req.query.connection),
         redirect_uri: `${origin}/api/auth/callback`,
@@ -40,6 +77,10 @@ export default handleAuth({
     } else {
       return handleCallback(req, res, {
         redirectUri: req.cookies[COOKIES.authReturnTo],
+        afterCallback: async (_req: NextApiRequest, _res: NextApiResponse, session: Session) => {
+          await ensureUserInLocalDb(session.user);
+          return session;
+        },
       });
     }
   },
