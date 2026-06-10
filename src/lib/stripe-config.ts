@@ -58,7 +58,7 @@ export const PLAN_CONTENT: Record<
     description: "25 analyses a month, no time limit, no credit card required.",
     featureHeader: "INCLUDES",
     features: [
-      "25 AI analyses per month",
+      "20 AI analyses per month",
       "CI Agent integration",
       "Replay MCP for IDE debugging",
       "Replay DevTools access",
@@ -68,10 +68,10 @@ export const PLAN_CONTENT: Record<
   individual: {
     tagline: "For individuals using Replay beyond the basics",
     description:
-      "150 analyses a month — the right volume for solo builders running a handful of apps or workflows.",
+      "50 analyses a month — the right volume for solo builders running a handful of apps or workflows.",
     featureHeader: "EVERYTHING IN FREE, PLUS",
     features: [
-      "150 AI analyses per month",
+      "50 AI analyses per month",
       "Unlimited recordings",
       "All CI integrations",
       "All coding agent integrations",
@@ -81,10 +81,10 @@ export const PLAN_CONTENT: Record<
   team: {
     tagline: "For startups and small teams moving fast",
     description:
-      "500 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
+      "350 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
     featureHeader: "EVERYTHING IN INDIVIDUAL, PLUS",
     features: [
-      "500 AI analyses per month",
+      "300 AI analyses per month",
       "All CI integrations (GitHub Actions, CircleCI, Jenkins, BuildKite)",
       "All coding agent integrations (Claude Code, Codex, Cursor, Copilot, Windsurf)",
       "Priority email support",
@@ -93,10 +93,10 @@ export const PLAN_CONTENT: Record<
   growth: {
     tagline: "For startups and small teams moving fast",
     description:
-      "500 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
+      "350 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
     featureHeader: "EVERYTHING IN INDIVIDUAL, PLUS",
     features: [
-      "500 AI analyses per month",
+      "350 AI analyses per month",
       "All CI integrations (GitHub Actions, CircleCI, Jenkins, BuildKite)",
       "All coding agent integrations (Claude Code, Codex, Cursor, Copilot, Windsurf)",
       "Priority email support",
@@ -108,7 +108,7 @@ export const PLAN_CONTENT: Record<
       "Custom analysis volume, contracts, and support — for however your organization uses Replay.",
     featureHeader: "EVERYTHING IN TEAM, PLUS",
     features: [
-      "Unlimited AI analyses",
+      "Custom analysis volume",
       "Priority support and dedicated onboarding",
       "SLA guarantees",
       "SSO and advanced access controls",
@@ -173,6 +173,28 @@ export function groupPlansByTier(plans: StripePlan[]): PlanTierGroup[] {
       monthly,
       yearly,
       highlighted,
+    });
+  }
+
+  // Enterprise is always shown (to the right of the other tiers). It has no
+  // Stripe price, so there is no row in the plans table and it never appears in
+  // `plans` — synthesize it here unless the backend already provided one.
+  if (!groups.some(group => group.tier === "enterprise")) {
+    const enterprisePlan: StripePlan = {
+      key: "enterprise",
+      name: "Enterprise",
+      billingId: null,
+      monthlyPriceCents: null,
+      interval: "none",
+      tier: "enterprise",
+      features: [],
+    };
+    groups.push({
+      tier: "enterprise",
+      name: enterprisePlan.name,
+      monthly: enterprisePlan,
+      yearly: enterprisePlan,
+      highlighted: false,
     });
   }
 

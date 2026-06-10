@@ -87,31 +87,32 @@ export function PlanSelection() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-lg font-semibold text-foreground">Choose a Plan</h2>
-        {subscription && subscription.status !== "canceled" ? (
-          <div className="mt-1">
-            <p className="text-sm text-muted-foreground">
-              You are currently on the{" "}
-              <span className="font-medium text-foreground">{subscription.plan.name}</span> plan.
-            </p>
-            {subscription.cancelAtPeriodEnd && subscription.currentPeriodEnd && (
-              <p className="text-xs text-amber-500 mt-0.5">
-                Update scheduled — current plan active until{" "}
-                {new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString()}
+      {/* Header row: title/subtitle on the left, billing toggle centered */}
+      <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">Choose a Plan</h2>
+          {subscription && subscription.status !== "canceled" ? (
+            <div className="mt-1">
+              <p className="text-sm text-muted-foreground">
+                You are currently on the{" "}
+                <span className="font-medium text-foreground">{subscription.plan.name}</span> plan.
               </p>
-            )}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground mt-1">
-            Select a plan to get started with Replay.
-          </p>
-        )}
-      </div>
+              {subscription.cancelAtPeriodEnd && subscription.currentPeriodEnd && (
+                <p className="text-xs text-amber-500 mt-0.5">
+                  Update scheduled — current plan active until{" "}
+                  {new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString()}
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground mt-1">
+              Select a plan to get started with Replay.
+            </p>
+          )}
+        </div>
 
-      {/* Billing interval toggle */}
-      <div className="flex items-center justify-center">
-        <div className="inline-flex rounded-lg border border-border bg-muted/40 p-1 gap-1">
+        {/* Billing interval toggle — centered within the header row */}
+        <div className="inline-flex shrink-0 self-start rounded-lg border border-border bg-muted/40 p-1 gap-1 sm:absolute sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2">
           <button
             type="button"
             onClick={() => setInterval("month")}
@@ -140,8 +141,11 @@ export function PlanSelection() {
         </div>
       </div>
 
-      {/* Plan card grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Plan card grid.
+          On large screens each card is a subgrid spanning 4 shared row tracks
+          (header / price / features / CTA) so those sections line up across
+          all cards regardless of how much content each one has. */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[auto_auto_1fr_auto]">
         {groups.map(tierGroup => (
           <PlanCard
             key={tierGroup.tier}
@@ -246,11 +250,11 @@ function PlanCard({
   const tagline = content?.tagline ?? tierGroup.name;
   const description = content?.description ?? null;
   const featureHeader = content?.featureHeader ?? "INCLUDES";
-  const { priceNumber, pricePeriod } = formatPrice(plan, interval);
+  const { priceNumber, pricePeriod } = formatPrice(plan);
 
   return (
     <div
-      className={`relative flex flex-col rounded-lg border bg-card ${
+      className={`relative flex flex-col rounded-lg border bg-card lg:row-span-4 lg:grid lg:[grid-template-rows:subgrid] ${
         isHighlighted ? "border-primary/60" : "border-border"
       }`}
     >
@@ -275,18 +279,14 @@ function PlanCard({
         {description && <div className="text-sm text-muted-foreground">{description}</div>}
       </div>
 
-      <div className="border-t border-border" />
-
       {/* Price section */}
-      <div className="flex flex-col px-5 py-4 gap-0.5">
+      <div className="flex flex-col px-5 py-4 gap-0.5 border-t border-border">
         <div className="text-3xl font-bold text-foreground">{priceNumber}</div>
         <div className="text-sm text-muted-foreground">{pricePeriod}</div>
       </div>
 
-      <div className="border-t border-border" />
-
       {/* Features */}
-      <div className="flex flex-col px-5 py-4 gap-3 flex-1">
+      <div className="flex flex-col px-5 py-4 gap-3 flex-1 border-t border-border">
         <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {featureHeader}
         </div>
@@ -338,10 +338,7 @@ function PlanCard({
   );
 }
 
-function formatPrice(
-  plan: StripePlan,
-  interval: BillingInterval
-): { priceNumber: string; pricePeriod: string } {
+function formatPrice(plan: StripePlan): { priceNumber: string; pricePeriod: string } {
   if (plan.tier === "enterprise") {
     return { priceNumber: "Custom", pricePeriod: "usage-based or seat-based" };
   }
@@ -353,7 +350,10 @@ function formatPrice(
   }
 
   const perMonth = Math.round(plan.monthlyPriceCents / 100);
-  if (interval === "year") {
+  // Base the period label on the resolved plan's actual interval, not the
+  // toggle. Tiers without a yearly variant (e.g. Individual) fall back to their
+  // monthly plan in the "yearly" slot, so they must not claim "billed annually".
+  if (plan.interval === "year") {
     return {
       priceNumber: `$${perMonth}`,
       pricePeriod: "per month · billed annually",
