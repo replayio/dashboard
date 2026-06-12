@@ -1,5 +1,4 @@
 import { Button } from "@/components/Button";
-import { Icon } from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import {
@@ -142,10 +141,9 @@ export function PlanSelection() {
       </div>
 
       {/* Plan card grid.
-          On large screens each card is a subgrid spanning 4 shared row tracks
-          (header / price / features / CTA) so those sections line up across
-          all cards regardless of how much content each one has. */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[auto_auto_1fr_auto]">
+          On large screens each card is a subgrid spanning 3 shared row tracks
+          (header+price / copy / CTA) so those sections line up across all cards. */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[auto_auto_1fr]">
         {groups.map(tierGroup => (
           <PlanCard
             key={tierGroup.tier}
@@ -246,15 +244,13 @@ function PlanCard({
 
   const isHighlighted = tierGroup.highlighted;
   const content = PLAN_CONTENT[tierGroup.tier];
-  const features = content?.features ?? plan.features;
   const tagline = content?.tagline ?? tierGroup.name;
   const description = content?.description ?? null;
-  const featureHeader = content?.featureHeader ?? "INCLUDES";
   const { priceNumber, pricePeriod } = formatPrice(plan);
 
   return (
     <div
-      className={`relative flex flex-col rounded-lg border bg-card lg:row-span-4 lg:grid lg:[grid-template-rows:subgrid] ${
+      className={`relative flex flex-col rounded-lg border bg-card lg:row-span-3 lg:grid lg:[grid-template-rows:subgrid] ${
         isHighlighted ? "border-primary/60" : "border-border"
       }`}
     >
@@ -266,43 +262,27 @@ function PlanCard({
         </div>
       )}
 
-      <div className="flex flex-col p-5 gap-3">
-        {/* Tier label */}
-        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      <div className="flex flex-col gap-4 p-5 pb-0">
+        <div
+          className={`text-xs font-semibold uppercase tracking-wider ${
+            isHighlighted ? "text-primary" : "text-muted-foreground"
+          }`}
+        >
           {tierGroup.name}
         </div>
-
-        {/* Tagline */}
-        <div className="text-xl font-bold leading-snug text-foreground">{tagline}</div>
-
-        {/* Description */}
-        {description && <div className="text-sm text-muted-foreground">{description}</div>}
-      </div>
-
-      {/* Price section */}
-      <div className="flex flex-col px-5 py-4 gap-0.5 border-t border-border">
-        <div className="text-3xl font-bold text-foreground">{priceNumber}</div>
-        <div className="text-sm text-muted-foreground">{pricePeriod}</div>
-      </div>
-
-      {/* Features */}
-      <div className="flex flex-col px-5 py-4 gap-3 flex-1 border-t border-border">
-        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {featureHeader}
+        <div className="flex flex-col gap-1">
+          <div className="text-[2rem] font-bold leading-none tracking-tight text-foreground">
+            {priceNumber}
+          </div>
+          {pricePeriod && <div className="text-sm text-muted-foreground">{pricePeriod}</div>}
         </div>
-        {features.length > 0 && (
-          <ul className="flex flex-col gap-2">
-            {features.map(feature => (
-              <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" type="check" />
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
-      {/* CTA */}
+      <div className="flex flex-1 flex-col gap-2.5 px-5 py-5">
+        <div className="text-lg font-bold leading-snug text-foreground">{tagline}</div>
+        {description && <div className="text-sm leading-relaxed text-muted-foreground">{description}</div>}
+      </div>
+
       <div className="px-5 pb-5 mt-auto">
         {tierGroup.tier === "enterprise" ? (
           <a
@@ -340,7 +320,10 @@ function PlanCard({
 
 function formatPrice(plan: StripePlan): { priceNumber: string; pricePeriod: string } {
   if (plan.tier === "enterprise") {
-    return { priceNumber: "Custom", pricePeriod: "usage-based or seat-based" };
+    return {
+      priceNumber: "Custom",
+      pricePeriod: "usage-based or seat-based · negotiated together",
+    };
   }
   if (plan.monthlyPriceCents === null) {
     return { priceNumber: "—", pricePeriod: "" };
