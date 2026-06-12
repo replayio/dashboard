@@ -280,7 +280,9 @@ function PlanCard({
 
       <div className="flex flex-1 flex-col gap-2.5 px-5 py-5">
         <div className="text-lg font-bold leading-snug text-foreground">{tagline}</div>
-        {description && <div className="text-sm leading-relaxed text-muted-foreground">{description}</div>}
+        {description && (
+          <div className="text-sm leading-relaxed text-muted-foreground">{description}</div>
+        )}
       </div>
 
       <div className="px-5 pb-5 mt-auto">
