@@ -49,71 +49,30 @@ export interface PlanTierGroup {
 /** Enterprise tier key constant — Contact Sales flow, no checkout */
 export const ENTERPRISE_TIER: PlanTier = "enterprise";
 
-export const PLAN_CONTENT: Record<
-  string,
-  { tagline: string; description: string; featureHeader: string; features: string[] }
-> = {
+export const PLAN_CONTENT: Record<string, { tagline: string; description: string }> = {
   free: {
     tagline: "Try Replay with no commitment",
-    description: "25 analyses a month, no time limit, no credit card required.",
-    featureHeader: "INCLUDES",
-    features: [
-      "20 AI analyses per month",
-      "CI Agent integration",
-      "Replay MCP for IDE debugging",
-      "Replay DevTools access",
-      "Community support",
-    ],
+    description: "20 analyses a month, no time limit, no credit card required.",
   },
   individual: {
     tagline: "For individuals using Replay beyond the basics",
     description:
       "50 analyses a month — the right volume for solo builders running a handful of apps or workflows.",
-    featureHeader: "EVERYTHING IN FREE, PLUS",
-    features: [
-      "50 AI analyses per month",
-      "Unlimited recordings",
-      "All CI integrations",
-      "All coding agent integrations",
-      "Email support",
-    ],
   },
   team: {
     tagline: "For startups and small teams moving fast",
     description:
-      "350 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
-    featureHeader: "EVERYTHING IN INDIVIDUAL, PLUS",
-    features: [
-      "300 AI analyses per month",
-      "All CI integrations (GitHub Actions, CircleCI, Jenkins, BuildKite)",
-      "All coding agent integrations (Claude Code, Codex, Cursor, Copilot, Windsurf)",
-      "Priority email support",
-    ],
+      "300 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
   },
   growth: {
     tagline: "For startups and small teams moving fast",
     description:
-      "350 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
-    featureHeader: "EVERYTHING IN INDIVIDUAL, PLUS",
-    features: [
-      "350 AI analyses per month",
-      "All CI integrations (GitHub Actions, CircleCI, Jenkins, BuildKite)",
-      "All coding agent integrations (Claude Code, Codex, Cursor, Copilot, Windsurf)",
-      "Priority email support",
-    ],
+      "300 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
   },
   enterprise: {
     tagline: "For organizations using Replay at scale",
     description:
       "Custom analysis volume, contracts, and support — for however your organization uses Replay.",
-    featureHeader: "EVERYTHING IN TEAM, PLUS",
-    features: [
-      "Custom analysis volume",
-      "Priority support and dedicated onboarding",
-      "SLA guarantees",
-      "SSO and advanced access controls",
-      "Roadmap input and joint planning",
-    ],
   },
 };
 
