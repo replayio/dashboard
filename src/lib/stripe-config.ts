@@ -52,22 +52,22 @@ export const ENTERPRISE_TIER: PlanTier = "enterprise";
 export const PLAN_CONTENT: Record<string, { tagline: string; description: string }> = {
   free: {
     tagline: "Try Replay with no commitment",
-    description: "20 analyses a month, no time limit, no credit card required.",
+    description: "25 credits a month, no time limit, no credit card required.",
   },
   individual: {
     tagline: "For individuals using Replay beyond the basics",
     description:
-      "50 analyses a month — the right volume for solo builders running a handful of apps or workflows.",
+      "50 credits a month — the right volume for solo builders running a handful of apps or workflows.",
   },
   team: {
     tagline: "For startups and small teams moving fast",
     description:
-      "300 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
+      "500 credits a month for teams that ship often and need consistent coverage — however they use Replay.",
   },
   growth: {
     tagline: "For startups and small teams moving fast",
     description:
-      "300 analyses a month for teams that ship often and need consistent coverage — however they use Replay.",
+      "500 credits a month for teams that ship often and need consistent coverage — however they use Replay.",
   },
   enterprise: {
     tagline: "For organizations using Replay at scale",
