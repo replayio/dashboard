@@ -91,17 +91,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       workspaceId = newWorkspaceId;
     }
 
-    // Free tier: selectFreePlan mutation — no Stripe Checkout session needed
+    // Free tier: selectFreePlan mutation — no Stripe Checkout session needed.
+    // The backend mutation returns the created subscription (not a success flag).
     if (planKey.startsWith("free")) {
       const { data, errors } = await graphQLQuery<{
-        selectFreePlan: { success: boolean };
+        selectFreePlan: { subscription: { id: string } | null };
       }>({
         accessToken,
         mockGraphQLData: null,
         query: gql`
           mutation SelectFreePlan($workspaceId: ID!) {
             selectFreePlan(input: { workspaceId: $workspaceId }) {
-              success
+              subscription {
+                id
+              }
             }
           }
         `,
@@ -113,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return res.status(500).json({ error: errors[0]?.message ?? "GraphQL error" });
       }
 
-      if (!data?.selectFreePlan?.success) {
+      if (!data?.selectFreePlan?.subscription?.id) {
         return res.status(500).json({ error: "Failed to assign free plan" });
       }
 
