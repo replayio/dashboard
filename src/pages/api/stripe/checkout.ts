@@ -14,7 +14,7 @@ type ResponseBody = { url: string } | { error: string };
  * Body: { planKey: string; workspaceId?: string }
  *
  * If workspaceId is omitted (new users with no workspace), a workspace is
- * auto-created via createWorkspaceV2 before proceeding.
+ * auto-resolved via ensureBillingWorkspace before proceeding.
  *
  * Free tier (planKey starts with "free"): calls selectFreePlan mutation — no
  * Stripe Checkout session needed. Returns { url: successUrl } for client redirect.
@@ -61,13 +61,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       workspaceId = bodyWorkspaceId;
     } else {
       const { data: wsData, errors: wsErrors } = await graphQLQuery<{
-        createWorkspaceV2: { workspace: { id: string } };
+        ensureBillingWorkspace: { workspace: { id: string } };
       }>({
         accessToken,
         mockGraphQLData: null,
         query: gql`
-          mutation CreateWorkspaceV2($name: String!) {
-            createWorkspaceV2(input: { name: $name }) {
+          mutation EnsureBillingWorkspace($name: String!) {
+            ensureBillingWorkspace(input: { name: $name }) {
               workspace {
                 id
               }
@@ -78,15 +78,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       });
 
       if (wsErrors && wsErrors.length > 0) {
-        console.error("[/api/stripe/checkout] createWorkspaceV2 errors:", wsErrors);
+        console.error("[/api/stripe/checkout] ensureBillingWorkspace errors:", wsErrors);
         return res
           .status(500)
-          .json({ error: wsErrors[0]?.message ?? "Failed to create workspace" });
+          .json({ error: wsErrors[0]?.message ?? "Failed to resolve workspace" });
       }
 
-      const newWorkspaceId = wsData?.createWorkspaceV2?.workspace?.id;
+      const newWorkspaceId = wsData?.ensureBillingWorkspace?.workspace?.id;
       if (!newWorkspaceId) {
-        return res.status(500).json({ error: "Failed to create workspace" });
+        return res.status(500).json({ error: "Failed to resolve workspace" });
       }
       workspaceId = newWorkspaceId;
     }
