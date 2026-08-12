@@ -68,7 +68,30 @@ export default handleAuth({
   },
 
   callback: (req: NextApiRequest, res: NextApiResponse) => {
-    if (req.query.error_description) {
+    const error = getValueFromArrayOrString(req.query.error);
+    const errorDescription = getValueFromArrayOrString(req.query.error_description);
+    const isEmailNotVerified =
+      error === "access_denied" &&
+      (errorDescription === "email_not_verified" ||
+        errorDescription?.toLowerCase().includes("verify your email"));
+
+    if (isEmailNotVerified) {
+      const returnToCookie = req.cookies[COOKIES.authReturnTo];
+      let returnTo = "/";
+      if (returnToCookie) {
+        try {
+          const url = new URL(returnToCookie);
+          returnTo = url.pathname + url.search;
+        } catch {
+          returnTo = returnToCookie;
+        }
+      }
+      const searchParams = new URLSearchParams({ returnTo });
+      res.redirect(`/verify-email?${searchParams.toString()}`);
+      return;
+    }
+
+    if (errorDescription) {
       const searchParams = new URLSearchParams({
         type: "auth",
         message: getValueFromArrayOrString(req.query.error_description)!,
