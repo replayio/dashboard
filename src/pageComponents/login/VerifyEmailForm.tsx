@@ -49,7 +49,11 @@ export function VerifyEmailForm() {
         className="w-14 h-14 flex items-center justify-center rounded-2xl bg-login-input-bg border border-login-card-border text-login-fg-secondary"
         aria-hidden
       >
-        {verified ? <CheckCircle2 size={24} strokeWidth={1.75} /> : <Mail size={24} strokeWidth={1.75} />}
+        {verified ? (
+          <CheckCircle2 size={24} strokeWidth={1.75} />
+        ) : (
+          <Mail size={24} strokeWidth={1.75} />
+        )}
       </div>
 
       {!verified && (
