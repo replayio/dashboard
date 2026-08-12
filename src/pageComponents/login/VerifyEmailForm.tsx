@@ -1,5 +1,5 @@
+import { Icon } from "@/components/Icon";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
-import { CheckCircle2, Mail } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const pillBase =
@@ -50,9 +50,9 @@ export function VerifyEmailForm() {
         aria-hidden
       >
         {verified ? (
-          <CheckCircle2 size={24} strokeWidth={1.75} />
+          <Icon className="w-6 h-6" type="step-complete" />
         ) : (
-          <Mail size={24} strokeWidth={1.75} />
+          <Icon className="w-6 h-6" type="email" />
         )}
       </div>
 
