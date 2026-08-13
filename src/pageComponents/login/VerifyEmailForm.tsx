@@ -7,6 +7,7 @@ const pillBase =
   "w-full flex items-center justify-center gap-3 rounded-full px-5 py-3.5 font-medium text-sm transition-colors min-h-[52px]";
 
 const emailConnection = "Username-Password-Authentication";
+const VERIFY_EMAIL_SIGN_IN_KEY = "replay:verify-email-sign-in";
 
 function isVerifiedSuccess(searchParams: ReturnType<typeof useSearchParams>): boolean {
   if (!searchParams) return false;
@@ -21,6 +22,24 @@ export function VerifyEmailForm() {
   const verified = isVerifiedSuccess(searchParams);
 
   useEffect(() => {
+    const pending = sessionStorage.getItem(VERIFY_EMAIL_SIGN_IN_KEY);
+    if (pending) {
+      sessionStorage.removeItem(VERIFY_EMAIL_SIGN_IN_KEY);
+      let storedReturnTo = returnTo;
+      try {
+        storedReturnTo = JSON.parse(pending).returnTo ?? returnTo;
+      } catch {
+        /* use returnTo from URL */
+      }
+      const params = new URLSearchParams({
+        connection: emailConnection,
+        returnTo: storedReturnTo,
+        origin: location.origin,
+        prompt: "login",
+      });
+      window.location.href = `/api/auth/login?${params}`;
+      return;
+    }
     if (searchParams?.get("signIn") !== "1") return;
     const params = new URLSearchParams({
       connection: emailConnection,
@@ -32,8 +51,8 @@ export function VerifyEmailForm() {
   }, [returnTo, searchParams]);
 
   function onBackToSignIn() {
-    const verifyParams = new URLSearchParams({ signIn: "1", returnTo });
-    window.location.href = `/api/auth/logout?returnTo=${encodeURIComponent(`/verify-email?${verifyParams}`)}`;
+    sessionStorage.setItem(VERIFY_EMAIL_SIGN_IN_KEY, JSON.stringify({ returnTo }));
+    window.location.href = `/api/auth/logout?returnTo=${encodeURIComponent("/verify-email")}`;
   }
 
   return (
