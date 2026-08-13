@@ -1,13 +1,12 @@
 import { Icon } from "@/components/Icon";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const pillBase =
   "w-full flex items-center justify-center gap-3 rounded-full px-5 py-3.5 font-medium text-sm transition-colors min-h-[52px]";
 
 const emailConnection = "Username-Password-Authentication";
-const VERIFY_EMAIL_SIGN_IN_KEY = "replay:verify-email-sign-in";
 
 function isVerifiedSuccess(searchParams: ReturnType<typeof useSearchParams>): boolean {
   if (!searchParams) return false;
@@ -21,26 +20,14 @@ export function VerifyEmailForm() {
   const returnTo = searchParams?.get("returnTo") || "/";
   const verified = isVerifiedSuccess(searchParams);
 
+  // Auth0's logout hop lands back here with signIn=1 to resume the login it just cleared the session
+  // for. Reading it from the URL means the redirecting state renders on the first paint, so the card
+  // below never appears on the way to the login screen.
+  const resumeSignIn = searchParams?.get("signIn") === "1";
+  const [leavingToSignIn, setLeavingToSignIn] = useState(resumeSignIn);
+
   useEffect(() => {
-    const pending = sessionStorage.getItem(VERIFY_EMAIL_SIGN_IN_KEY);
-    if (pending) {
-      sessionStorage.removeItem(VERIFY_EMAIL_SIGN_IN_KEY);
-      let storedReturnTo = returnTo;
-      try {
-        storedReturnTo = JSON.parse(pending).returnTo ?? returnTo;
-      } catch {
-        /* use returnTo from URL */
-      }
-      const params = new URLSearchParams({
-        connection: emailConnection,
-        returnTo: storedReturnTo,
-        origin: location.origin,
-        prompt: "login",
-      });
-      window.location.href = `/api/auth/login?${params}`;
-      return;
-    }
-    if (searchParams?.get("signIn") !== "1") return;
+    if (!resumeSignIn) return;
     const params = new URLSearchParams({
       connection: emailConnection,
       returnTo,
@@ -48,11 +35,25 @@ export function VerifyEmailForm() {
       prompt: "login",
     });
     window.location.href = `/api/auth/login?${params}`;
-  }, [returnTo, searchParams]);
+  }, [resumeSignIn, returnTo]);
 
   function onBackToSignIn() {
-    sessionStorage.setItem(VERIFY_EMAIL_SIGN_IN_KEY, JSON.stringify({ returnTo }));
-    window.location.href = `/api/auth/logout?returnTo=${encodeURIComponent("/verify-email")}`;
+    setLeavingToSignIn(true);
+    // Auth0 matches Allowed Logout URLs on the path only, so signIn rides along in the query.
+    const verifyParams = new URLSearchParams({ signIn: "1", returnTo });
+    window.location.href = `/api/auth/logout?returnTo=${encodeURIComponent(`/verify-email?${verifyParams}`)}`;
+  }
+
+  if (leavingToSignIn) {
+    return (
+      <div
+        className="w-full max-w-[480px] bg-login-card border border-login-card-border rounded-3xl shadow-lg px-10 py-10 flex flex-col items-center gap-4 text-center"
+        data-testid="verify-email-redirecting"
+      >
+        <Icon className="w-6 h-6 animate-spin" type="loading-spinner" />
+        <p className="text-login-fg-secondary text-sm mb-0">Taking you to sign in…</p>
+      </div>
+    );
   }
 
   return (
