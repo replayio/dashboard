@@ -1,6 +1,7 @@
 import { Icon } from "@/components/Icon";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
 import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const pillBase =
   "w-full flex items-center justify-center gap-3 rounded-full px-5 py-3.5 font-medium text-sm transition-colors min-h-[52px]";
@@ -19,16 +20,20 @@ export function VerifyEmailForm() {
   const returnTo = searchParams?.get("returnTo") || "/";
   const verified = isVerifiedSuccess(searchParams);
 
-  function onBackToSignIn() {
+  useEffect(() => {
+    if (searchParams?.get("signIn") !== "1") return;
     const params = new URLSearchParams({
       connection: emailConnection,
       returnTo,
       origin: location.origin,
       prompt: "login",
     });
-    const loginPath = `/api/auth/login?${params}`;
-    // Clear any Auth0 session left over from a denied pre-verification login.
-    window.location.href = `/api/auth/logout?returnTo=${encodeURIComponent(loginPath)}`;
+    window.location.href = `/api/auth/login?${params}`;
+  }, [returnTo, searchParams]);
+
+  function onBackToSignIn() {
+    const verifyParams = new URLSearchParams({ signIn: "1", returnTo });
+    window.location.href = `/api/auth/logout?returnTo=${encodeURIComponent(`/verify-email?${verifyParams}`)}`;
   }
 
   return (
