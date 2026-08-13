@@ -1,6 +1,6 @@
 import { Icon } from "@/components/Icon";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const pillBase =
   "w-full flex items-center justify-center gap-3 rounded-full px-5 py-3.5 font-medium text-sm transition-colors min-h-[52px]";
@@ -15,7 +15,6 @@ function isVerifiedSuccess(searchParams: ReturnType<typeof useSearchParams>): bo
 }
 
 export function VerifyEmailForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const returnTo = searchParams?.get("returnTo") || "/";
   const verified = isVerifiedSuccess(searchParams);
@@ -25,8 +24,11 @@ export function VerifyEmailForm() {
       connection: emailConnection,
       returnTo,
       origin: location.origin,
+      prompt: "login",
     });
-    router.push(`/api/auth/login?${params}`);
+    const loginPath = `/api/auth/login?${params}`;
+    // Clear any Auth0 session left over from a denied pre-verification login.
+    window.location.href = `/api/auth/logout?returnTo=${encodeURIComponent(loginPath)}`;
   }
 
   return (
