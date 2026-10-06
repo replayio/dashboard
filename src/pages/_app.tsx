@@ -1,4 +1,5 @@
 import { ApolloContextProvider } from "@/components/ApolloContext";
+import { SelfHealingIdentity } from "@/components/SelfHealingIdentity";
 import { initializeMixPanel } from "@/utils/mixpanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
@@ -16,6 +17,7 @@ import { compress, decompress } from "@/utils/compression";
 import { AccessTokenCookie, setCookieValueClient } from "@/utils/cookie";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import { listenForAccessToken } from "@/utils/replayBrowser";
+import { getSelfHealingCapture } from "@/utils/selfHealingCapture";
 import App, { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ComponentType, PropsWithChildren } from "react";
@@ -94,6 +96,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
       });
     }
     initializeMixPanel();
+    getSelfHealingCapture();
 
     // belt-and-suspenders: landing-page captures on replay.io first-touch,
     // but users who land directly on app.replay.io (bookmark, direct ad
@@ -124,6 +127,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
               </SidebarProvider>
             </ApolloContextProvider>
             <IntercomMessenger />
+            <SelfHealingIdentity />
           </SessionContextProvider>
         </EndToEndTestContextProvider>
       </ThemeProvider>
