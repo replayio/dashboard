@@ -1,8 +1,13 @@
+// Importing for side effects: initializes Self Healing capture (FullStory +
+// network/interaction recording) at module scope, before the app renders.
+import "@/utils/selfHealingCapture";
+
 import { ApolloContextProvider } from "@/components/ApolloContext";
 import { initializeMixPanel } from "@/utils/mixpanel";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { EndToEndTestContextProvider } from "@/components/EndToEndTestContext";
 import { IntercomMessenger } from "@/components/IntercomMessenger";
+import { SelfHealingIdentity } from "@/components/SelfHealingIdentity";
 import { SessionContextProvider } from "@/components/SessionContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SidebarProvider } from "@/components/SidebarContext";
@@ -124,6 +129,7 @@ export default class MyApp extends App<AppProps<PageProps>> {
               </SidebarProvider>
             </ApolloContextProvider>
             <IntercomMessenger />
+            <SelfHealingIdentity />
           </SessionContextProvider>
         </EndToEndTestContextProvider>
       </ThemeProvider>
