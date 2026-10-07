@@ -2,6 +2,7 @@ import { Button } from "@/components/Button";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Icon } from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { BILLING_V2_PICKER_ENABLED } from "@/constants";
 import { useActivateWorkspaceSubscription } from "@/graphql/queries/useActivateWorkspaceSubscription";
 import { useRemovePaymentMethod } from "@/graphql/queries/useRemovePaymentMethod";
 import { WorkspaceSubscription } from "@/graphql/types";
@@ -17,6 +18,7 @@ import {
 import { isPlanBeta, isPlanPricingPerSeat } from "@/utils/test-suites";
 import assert from "assert";
 import { format } from "date-fns";
+import Link from "next/link";
 import { ReactNode, useContext } from "react";
 
 export function BillingPriceDetails() {
@@ -47,6 +49,23 @@ function SubscriptionDefaultView({ subscription }: { subscription: WorkspaceSubs
   return (
     <div className="flex flex-col gap-6 h-full py-4">
       <PricingDetailsPanel subscription={subscription} />
+      <ChangePlanLink />
+    </div>
+  );
+}
+
+function ChangePlanLink() {
+  const { workspaceId } = useContext(BillingContext);
+  if (!BILLING_V2_PICKER_ENABLED) return null;
+  return (
+    <div>
+      <Link
+        href={`/team/${workspaceId}/plans`}
+        className="text-sm font-medium text-primary hover:underline"
+        data-test-id="Billing-ChangePlanLink"
+      >
+        Change plan →
+      </Link>
     </div>
   );
 }
