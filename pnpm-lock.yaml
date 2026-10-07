@@ -11,9 +11,6 @@ dependencies:
   '@auth0/nextjs-auth0':
     specifier: ^3.5.0
     version: 3.5.0(next@14.1.0)
-  '@fullstory/browser':
-    specifier: ^2.1.2
-    version: 2.1.2
   '@intercom/messenger-js-sdk':
     specifier: ^0.0.19
     version: 0.0.19
@@ -23,9 +20,6 @@ dependencies:
   '@replayio/overboard':
     specifier: ^0.4.1
     version: 0.4.1(react-dom@18.2.0)(react@18.2.0)
-  '@replayio/self-healing-capture':
-    specifier: 0.1.1
-    version: 0.1.1(@fullstory/browser@2.1.2)
   '@stripe/react-stripe-js':
     specifier: ^2.6.2
     version: 2.6.2(@stripe/stripe-js@3.0.10)(react-dom@18.2.0)(react@18.2.0)
@@ -1162,16 +1156,6 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
     dev: true
-
-  /@fullstory/browser@2.1.2:
-    resolution: {integrity: sha512-/QZfY1k4iSq8x4Mt//YzniX5dUk4EXFLpHIA9MxZS6IU5aRJuJ3q7+SDBWqh3XZGyS5IcWuA16kNeOm9GwSAXA==}
-    dependencies:
-      '@fullstory/snippet': 2.1.0
-    dev: false
-
-  /@fullstory/snippet@2.1.0:
-    resolution: {integrity: sha512-iuwwwa9AG9OSBnKoPxGdX69Hyu3tX1pw1rhuB02RArpeGW7jnUpDnIOrn0Y07B2PSTJqiQzp1b4P/jLzHCI9Ew==}
-    dev: false
 
   /@graphql-codegen/add@5.0.2(graphql@16.8.1):
     resolution: {integrity: sha512-ouBkSvMFUhda5VoKumo/ZvsZM9P5ZTyDsI8LW18VxSNWOjrTeLXBWHG8Gfaai0HwhflPtCYVABbriEcOmrRShQ==}
@@ -3095,14 +3079,6 @@ packages:
       - supports-color
       - utf-8-validate
     dev: true
-
-  /@replayio/self-healing-capture@0.1.1(@fullstory/browser@2.1.2):
-    resolution: {integrity: sha512-crKh4t1pc9GXAulFVR8Kou/pbp+i8nhU98DbJ7oDR0Ryjrgv/XQ/PjlKixosADR7uznicCksfD/XawvdbgRMjA==}
-    peerDependencies:
-      '@fullstory/browser': ^2.1.0
-    dependencies:
-      '@fullstory/browser': 2.1.2
-    dev: false
 
   /@replayio/sourcemap-upload@2.0.3:
     resolution: {integrity: sha512-ZFKW5ZhSosDjWBXpp3n9+DFwOos8QUv2BqQkKOBYFri6ogmLB6ayctbHkL00wGztfGm1BBh0JQ3yJ4pvDplJGw==}
