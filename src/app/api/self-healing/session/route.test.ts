@@ -6,7 +6,19 @@
  * @jest/globals imports keep the cypress-bundled chai types from shadowing expect.
  */
 import { describe, it, expect, jest, beforeEach, afterAll } from "@jest/globals";
+import * as undici from "undici";
 import { POST } from "@/app/api/self-healing/session/route";
+
+// CI runs the unit tests on Node 16, which predates the fetch-API globals that
+// Next.js server code (and this handler) assumes. Backfill them from undici.
+// Handlers resolve these globals at call time, so a top-level backfill is enough.
+// Namespace access keeps the DOM-global names (Request, Response) unshadowed.
+const globalsWithFetch = globalThis as unknown as Record<string, unknown>;
+if (!globalsWithFetch.Response) {
+  globalsWithFetch.Response = undici.Response;
+  globalsWithFetch.Request = undici.Request;
+  globalsWithFetch.fetch = undici.fetch;
+}
 
 const upstreamBody = JSON.stringify({ status: "stored", session_id: "abc123" });
 
@@ -60,7 +72,9 @@ describe("self-healing session forwarding route", () => {
   it("forwards the request body to the sessions endpoint with a bearer token", async () => {
     process.env.SELF_HEALING_URL = "https://self-healing.replay.io";
     process.env.SELF_HEALING_API_KEY = "test-key";
-    global.fetch = jest.fn<typeof global.fetch>().mockResolvedValue(mockUpstream(200, upstreamBody));
+    global.fetch = jest
+      .fn<typeof global.fetch>()
+      .mockResolvedValue(mockUpstream(200, upstreamBody));
 
     const payload = { session_url: "https://fs.replay.io/s/123" };
     const response = await POST(makeRequest(payload));
@@ -84,7 +98,9 @@ describe("self-healing session forwarding route", () => {
     process.env.SELF_HEALING_URL = "https://self-healing.replay.io";
     process.env.SELF_HEALING_API_KEY = "test-key";
     const upstreamError = JSON.stringify({ error: "bad session payload" });
-    global.fetch = jest.fn<typeof global.fetch>().mockResolvedValue(mockUpstream(400, upstreamError));
+    global.fetch = jest
+      .fn<typeof global.fetch>()
+      .mockResolvedValue(mockUpstream(400, upstreamError));
 
     const response = await POST(makeRequest({}));
 

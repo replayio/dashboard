@@ -7,7 +7,10 @@ export function SelfHealingIdentity() {
   const { user } = useContext(SessionContext);
 
   useEffect(() => {
-    selfHealingCapture.identify(user ? { id: user.id, name: user.name, email: user.email } : null);
+    if (!selfHealingCapture) return;
+    selfHealingCapture.identify(
+      user ? { id: user.id, name: user.name, email: user.email } : null
+    );
   }, [user]);
 
   return null;
