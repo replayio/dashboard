@@ -53,7 +53,14 @@ function createMockReqRes(body: Buffer = Buffer.from("{}"), method = "POST") {
     _body: undefined as unknown,
   };
 
-  return { req, res: res as unknown as NextApiResponse & { _body: unknown; statusCode: number; headers: Record<string, string> } };
+  return {
+    req,
+    res: res as unknown as NextApiResponse & {
+      _body: unknown;
+      statusCode: number;
+      headers: Record<string, string>;
+    },
+  };
 }
 
 describe("/api/self-healing/session", () => {

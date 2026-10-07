@@ -8,7 +8,7 @@ export function getSelfHealingCapture() {
     capture = initCapture({
       orgId: process.env.NEXT_PUBLIC_FULLSTORY_ORG_ID!,
       endpoint: "/api/self-healing/session",
-      onError: (error) => console.error("Session capture failed", error),
+      onError: error => console.error("Session capture failed", error),
     });
   }
   return capture;
