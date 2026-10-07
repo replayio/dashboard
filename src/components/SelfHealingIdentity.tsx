@@ -8,9 +8,7 @@ export function SelfHealingIdentity() {
 
   useEffect(() => {
     if (!selfHealingCapture) return;
-    selfHealingCapture.identify(
-      user ? { id: user.id, name: user.name, email: user.email } : null
-    );
+    selfHealingCapture.identify(user ? { id: user.id, name: user.name, email: user.email } : null);
   }, [user]);
 
   return null;
