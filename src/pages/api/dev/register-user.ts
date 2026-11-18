@@ -16,6 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(404).end();
   }
 
+  const secret = process.env.AUTH0_ENSURE_USER_FOR_AUTH_SECRET;
+  if (!secret) {
+    return res.status(500).json({ error: "AUTH0_ENSURE_USER_FOR_AUTH_SECRET not set" });
+  }
+
   const session = await getSession(req, res);
   if (!session) {
     return res.status(401).json({ error: "Not logged in" });
@@ -35,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       name: name ?? email ?? "",
       nickname: nickname ?? null,
       picture: picture ?? null,
-      secret: "supersecretpassword123",
+      secret,
     },
   });
 
