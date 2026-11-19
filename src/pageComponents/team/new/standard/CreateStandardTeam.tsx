@@ -5,7 +5,9 @@ import { Input } from "@/components/Input";
 import { Message } from "@/components/Message";
 import { ReplayLogo } from "@/components/ReplayLogo";
 import { SessionContext } from "@/components/SessionContext";
+import { BILLING_V2_PICKER_ENABLED } from "@/constants";
 import { useCreateWorkspace } from "@/graphql/queries/createWorkspace";
+import { useCreateWorkspaceV2 } from "@/graphql/queries/useCreateWorkspaceV2";
 import { getPlanKey } from "@/utils/test-suites";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -24,18 +26,32 @@ export function CreateStandardTeam({ type }: { type: WorkspaceType }) {
   const [bypassTrial, setBypassTrial] = useState(false);
   const [name, setName] = useState("");
 
-  const { createWorkspace, error } = useCreateWorkspace();
+  const { createWorkspace, error: legacyError } = useCreateWorkspace();
+  const { createWorkspaceV2, error: v2Error } = useCreateWorkspaceV2();
+
+  // Internal users can still opt into the legacy "bypass trial" flow even
+  // when v2 is enabled, since that path needs a specific legacy plan key.
+  const useV2Flow = BILLING_V2_PICKER_ENABLED && !(isInternalUser && bypassTrial);
+  const error = useV2Flow ? v2Error : legacyError;
 
   const onCreateTeam = async () => {
     if (name.trim()) {
       setIsPending(true);
 
-      const id = await createWorkspace(
-        name,
-        getPlanKey({ isInternal: isInternalUser && bypassTrial, isOrg, teamType: "standard" })
-      );
-      if (id) {
-        router.replace(`/team/${id}/recordings`);
+      let id: string | undefined;
+      if (useV2Flow) {
+        id = await createWorkspaceV2(name);
+        if (id) {
+          router.replace(`/team/${id}/plans`);
+        }
+      } else {
+        id = await createWorkspace(
+          name,
+          getPlanKey({ isInternal: isInternalUser && bypassTrial, isOrg, teamType: "standard" })
+        );
+        if (id) {
+          router.replace(`/team/${id}/recordings`);
+        }
       }
 
       setIsPending(false);

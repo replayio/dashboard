@@ -36,6 +36,17 @@ export const URLS = {
     : process.env.APP_URL!,
 };
 
+// Toggle the v2 pricing UX (plan picker + Stripe Checkout). When disabled,
+// new workspaces continue to receive a legacy plan key at signup and the
+// existing Billing UI is the only billing surface.
+export const BILLING_V2_PICKER_ENABLED =
+  process.env.NEXT_PUBLIC_BILLING_V2_PICKER_ENABLED === "true";
+
+// Toggle Stripe Checkout independently. When disabled, the picker still
+// renders but the Growth tier shows "Coming soon" instead of redirecting.
+export const BILLING_V2_CHECKOUT_ENABLED =
+  process.env.NEXT_PUBLIC_BILLING_V2_CHECKOUT_ENABLED === "true";
+
 export const TEST_USER_3 = {
   email: "frontende2e3@replay.io",
   password: process.env.TEST_USER_3_PASSWORD!,
