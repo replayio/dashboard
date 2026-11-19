@@ -13,6 +13,8 @@ export type AdAttribution = {
   li_fat_id?: string;
   twclid?: string;
   rdt_cid?: string;
+  fbclid?: string;
+  gclid?: string;
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
@@ -24,6 +26,8 @@ const AD_ATTR_KEYS = [
   "li_fat_id",
   "twclid",
   "rdt_cid",
+  "fbclid",
+  "gclid",
   "utm_source",
   "utm_medium",
   "utm_campaign",
