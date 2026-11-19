@@ -15,6 +15,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 // call ensureUserForAuth ourselves in afterCallback to register the user in the
 // local DB. Failures are logged but never abort the login.
 async function ensureUserInLocalDb(user: Claims) {
+  const secret = process.env.AUTH0_ENSURE_USER_FOR_AUTH_SECRET;
+  if (!secret) {
+    console.warn(
+      "[auth callback] AUTH0_ENSURE_USER_FOR_AUTH_SECRET not set, skipping ensureUserForAuth"
+    );
+    return;
+  }
   try {
     const body = JSON.stringify({
       query: `mutation EnsureUser($authId: String!, $email: String!, $name: String!, $nickname: String, $picture: String, $secret: String!) {
@@ -28,14 +35,22 @@ async function ensureUserInLocalDb(user: Claims) {
         name: user.name ?? user.email ?? "",
         nickname: user.nickname ?? null,
         picture: user.picture ?? null,
-        secret: "supersecretpassword123",
+        secret,
       },
     });
-    await fetch(`${URLS.api}/v1/graphql`, {
+    const res = await fetch(`${URLS.api}/v1/graphql`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body,
     });
+    const json = await res.json().catch(() => null);
+    if (!res.ok || json?.errors) {
+      console.warn(
+        "[auth callback] ensureUserForAuth failed:",
+        res.status,
+        json?.errors?.[0]?.message
+      );
+    }
   } catch (err) {
     console.warn("[auth callback] ensureUserInLocalDb failed:", err);
   }
