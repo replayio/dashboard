@@ -1,0 +1,16 @@
+# Socket repository config: https://docs.socket.dev/docs/repository-config
+#
+# `gptAnomaly` rules mark AI-detected code anomalies ("not a real vulnerability").
+# Both flagged packages are the deliberate Self Healing integration on this
+# dashboard: @replayio/self-healing-capture is Replay's own capture SDK and
+# @fullstory/snippet is the transitive FullStory analytics loader pulled in by
+# the pinned @fullStory/browser. Same alert set as previously merged PR #225.
+# See socket-security bot comments on PRs #225 and #227 for the alert details.
+version: v2
+rules:
+  - type: gptAnomaly
+    package: "@replayio/self-healing-capture"
+    version: "0.1.3"
+  - type: gptAnomaly
+    package: "@fullstory/snippet"
+    version: "2.1.0"
