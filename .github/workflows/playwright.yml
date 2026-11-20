@@ -89,7 +89,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "24"
 
       # Install (and cache) PNPM dependencies
       - name: Checkout
@@ -97,7 +97,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "24"
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:

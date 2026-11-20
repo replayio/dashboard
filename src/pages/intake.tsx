@@ -4,17 +4,11 @@ import { ReplayLogo } from "@/components/ReplayLogo";
 import { COOKIES } from "@/constants";
 import { LoginMessaging } from "@/pageComponents/login/LoginMessaging";
 import { setCookieValueClient } from "@/utils/cookie";
+import { getSafeReturnPath } from "@/utils/getSafeReturnPath";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 const SKIP_NO_RESPONSE_VALUE = "No Response";
-
-function getSafeReturnPath(raw: string | null): string {
-  if (!raw || typeof raw !== "string") return "/home";
-  const t = raw.trim();
-  if (!t.startsWith("/") || t.startsWith("//")) return "/home";
-  return t;
-}
 
 const pillBase =
   "w-full flex items-center justify-center rounded-full px-5 py-3.5 font-medium text-sm transition-colors min-h-[52px]";
@@ -22,7 +16,7 @@ const pillBase =
 export default function IntakePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnTo = getSafeReturnPath(searchParams?.get("returnTo") ?? null);
+  const returnTo = searchParams?.get("returnTo") || "/home";
 
   const [mounted, setMounted] = useState(false);
   const [statusLoading, setStatusLoading] = useState(true);
@@ -47,7 +41,7 @@ export default function IntakePage() {
           opts?.sessionOnly ? undefined : { maxAge: 60 * 60 * 24 * 365 }
         );
       }
-      window.location.assign(returnTo);
+      window.location.assign(getSafeReturnPath(returnTo, window.location.origin, "/home"));
     },
     [returnTo]
   );

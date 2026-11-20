@@ -1,4 +1,5 @@
 import { COOKIES, URLS } from "@/constants";
+import { getSafeReturnPath } from "@/utils/getSafeReturnPath";
 import { getValueFromArrayOrString } from "@/utils/getValueFromArrayOrString";
 import {
   Claims,
@@ -58,7 +59,11 @@ async function ensureUserInLocalDb(user: Claims) {
 
 export default handleAuth({
   login: (req: NextApiRequest, res: NextApiResponse) => {
-    const { origin, returnTo } = handleOriginAndReturnTo(req, res);
+    const { origin, returnTo } = handleOriginAndReturnTo(
+      req,
+      res,
+      getValueFromArrayOrString(req.query.origin) || process.env.AUTH0_BASE_URL!
+    );
     return handleLogin(req, res, {
       authorizationParams: {
         audience: "https://api.replay.io",
@@ -78,7 +83,8 @@ export default handleAuth({
   },
 
   logout: (req: NextApiRequest, res: NextApiResponse) => {
-    const { returnTo } = handleOriginAndReturnTo(req, res);
+    // signed-out visitors get redirected straight to returnTo without auth0 checking it
+    const { returnTo } = handleOriginAndReturnTo(req, res, getLogoutOrigin(req));
     return handleLogout(req, res, { returnTo });
   },
 
@@ -147,10 +153,33 @@ function pickAdAttributionParams(req: NextApiRequest) {
   return out;
 }
 
+// keep the caller's origin only when it's the host this request came in on. x-forwarded-host is
+// the original host when devtools proxies its own domain to us under next dev
+function getLogoutOrigin(req: NextApiRequest) {
+  const host = getValueFromArrayOrString(req.headers["x-forwarded-host"]) || req.headers.host;
+  try {
+    const url = new URL(getValueFromArrayOrString(req.query.origin) ?? "");
+    if ((url.protocol === "https:" || url.protocol === "http:") && url.host === host) {
+      return url.origin;
+    }
+  } catch {}
+
+  // same base url the auth0 sdk uses, then this request's own host
+  const baseUrl = process.env.AUTH0_BASE_URL || process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
+  if (baseUrl) return /^https?:\/\//.test(baseUrl) ? baseUrl : `https://${baseUrl}`;
+  const proto =
+    getValueFromArrayOrString(req.headers["x-forwarded-proto"]) === "http" ? "http" : "https";
+  try {
+    return new URL(`${proto}://${host ?? ""}`).origin;
+  } catch {
+    return "";
+  }
+}
+
 // This app also handles auth for the domain of the devtools app.
-function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse) {
-  const origin = getValueFromArrayOrString(req.query.origin) || process.env.AUTH0_BASE_URL!;
-  const returnTo = origin + (getValueFromArrayOrString(req.query.returnTo) || "/");
+function handleOriginAndReturnTo(req: NextApiRequest, res: NextApiResponse, origin: string) {
+  const returnTo =
+    origin + getSafeReturnPath(getValueFromArrayOrString(req.query.returnTo), origin);
 
   // We'll need to pass returnTo to the callback handler, otherwise
   // Auth0 will reject login requests for the domains of other apps.
