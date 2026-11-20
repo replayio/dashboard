@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import { EmptyLayout } from "@/components/EmptyLayout";
 import { ReplayLogo } from "@/components/ReplayLogo";
+import { getSafeReturnPath } from "@/utils/getSafeReturnPath";
 import assert from "assert";
 import dynamic from "next/dynamic";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
@@ -25,7 +26,7 @@ export default function Page({
 
   const onClick = () => {
     if (url) {
-      router.push(url);
+      router.push(getSafeReturnPath(url, location.origin));
     }
   };
 

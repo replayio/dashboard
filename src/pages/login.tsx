@@ -5,6 +5,7 @@ import { DefaultLoginForm } from "@/pageComponents/login/DefaultLoginForm";
 import { ReplayBrowserLoginForm } from "@/pageComponents/login/ReplayBrowserLoginForm";
 import { SSOLoginForm } from "@/pageComponents/login/SSOLoginForm";
 import { readAdAttribution } from "@/utils/adAttribution";
+import { getSafeReturnPath } from "@/utils/getSafeReturnPath";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -68,7 +69,7 @@ export default function Page() {
       <AccountSwitcherForm
         name={user.name}
         label={returnTo === "/" ? "Continue to Library" : "Continue with this account"}
-        onContinue={() => router.push(returnTo)}
+        onContinue={() => router.push(getSafeReturnPath(returnTo, location.origin))}
         onSwitch={() => setSwitchAccount(true)}
       />
     );
